@@ -1,0 +1,10 @@
+<a class="text-{{ colortext }} d-flex justify-content-between btn btn-{{ color }}" [routerLink]="path">
+
+    @if (icon != null) {
+        <div class="d-flex justify-content-between">
+          <div class="me-2"><i class="{{ icon }}"></i></div>
+        </div>
+      }
+      <ng-content></ng-content>
+
+</a>

@@ -1,0 +1,16 @@
+.gallery{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.dropzone-content{
+    width: 160px;
+    height: 200px;
+}
+
+.placeholder-images{
+    width: 160px;
+    height: 200px;
+    border: 1px dashed #ccc;
+}

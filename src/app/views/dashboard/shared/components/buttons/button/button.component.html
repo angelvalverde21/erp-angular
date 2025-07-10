@@ -1,0 +1,16 @@
+<button type="button" class="text-{{ colortext }} d-flex justify-content-between align-items-center btn btn-{{ color }}" (click)="clickButton()" [disabled]="disabled">
+
+  @if (icon != null) {
+    @if (loadingIcon) {
+      <app-loading *ngIf="loadingIcon" size="sm" class="me-2"></app-loading>
+    } @else {
+      <div class="me-2"><i class="{{ icon }}"></i></div>
+    }
+  } 
+  
+  <ng-content></ng-content>
+
+</button>
+
+
+

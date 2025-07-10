@@ -1,0 +1,11 @@
+<button type="button" class="text-white d-flex justify-content-between align-items-center btn btn-primary px-4" (click)="clickButton()" [disabled]="disabled">
+
+    @if (loadingIcon) {
+      <app-loading *ngIf="loadingIcon" size="sm" class="me-2"></app-loading>
+    } @else {
+      <div class="me-2"><fa-icon [icon]="icon"></fa-icon></div>
+    }
+  
+  <ng-content></ng-content>
+
+</button>

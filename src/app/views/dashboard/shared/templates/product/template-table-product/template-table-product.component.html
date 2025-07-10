@@ -1,0 +1,46 @@
+<!-- {{ products | json }} -->
+
+<c-card-body>
+    <table [striped]="true" cTable>
+
+        <!-- cabeceras -->
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">#</th>
+                <th style="width: 110px;" scope="col">Imagen</th>
+                <th scope="col">Producto</th>
+                <th class="text-center" scope="col">Acciones</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <!-- contenido en bucle -->
+            <tr *ngFor="let product of products">
+
+                <th class="text-center" scope="row">{{ product.id }}</th>
+                <td style="width: 110px;"><img [src]="product.image.url_thumbnail" (error)="onImageError($event)" width="75"
+                        height="100px" alt=""></td>
+                <td>
+                    <h5>{{ product.name }}</h5>
+                    <div class="stock">Stock Global: {{ product.sku?.quantity }}</div>
+                </td>
+                <td class="text-center">
+
+                    <div class="my-3">
+                        <app-drop-down-actions [product]="product"></app-drop-down-actions>
+                    </div>
+                    <div>
+                        {{ product.created_at | dateCustom }}
+                    </div>
+
+                </td>
+
+            </tr>
+            
+        </tbody>
+
+    </table>
+
+</c-card-body>

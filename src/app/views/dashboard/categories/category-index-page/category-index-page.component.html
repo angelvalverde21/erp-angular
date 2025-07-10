@@ -1,0 +1,34 @@
+<app-loading *ngIf="loading" size="md"></app-loading>
+
+
+<div class="card" *ngIf="!loading">
+
+    <div class="card-header d-flex justify-content-between pt-3 pb-3">
+        <div class="title">Categorias</div>
+        <app-button-link icon="fa-solid fa-plus" [path]="['create']">Crear Categoria</app-button-link>
+      </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Creado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let category of categories">
+                        <th scope="row">{{ category.id }}</th>
+                        <td>{{ category.name }}</td>
+                        <td>{{ category.created_at | dateCustom }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+
+</div>

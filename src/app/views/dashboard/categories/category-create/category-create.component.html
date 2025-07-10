@@ -1,0 +1,42 @@
+
+<app-loading *ngIf="loading"></app-loading>
+
+<form [formGroup]="form" *ngIf="!loading">
+
+    <div class="row mb-3">
+        <div class="col-lg-12">
+            <app-input-group [icon]="editIcon">
+                <input formControlName="name" type="text" class="form-control" placeholder="Categoria"
+                    aria-label="name" aria-describedby="basic-tiktok" />
+            </app-input-group>
+        </div>
+
+        <div class="col-lg-12 col-12">
+            <div class="category-list mb-3">
+                <app-loading *ngIf="loadingSubcategories"></app-loading>
+                <app-category-selected *ngIf="!loadingSubcategories" formControlName="category_id"
+                    [categories]="categories"></app-category-selected>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-12">
+            <div class="options d-flex mb-3">
+                <app-button-check formControlName="has_color" class="me-2">Colores</app-button-check>
+                <app-button-check formControlName="has_size">Dimensiones</app-button-check>
+            </div>
+        </div>
+
+
+        <div class="col-lg-12 col-12">
+            <hr>
+            <div class="create-category d-flex  flex-row-reverse">
+                <app-button (action)="create()" color="primary" icon="fa-solid fa-plus" [disabled]="disabledButton"
+                    [loadingIcon]="loadingIcon">Crear Categoria</app-button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- {{ form.value | json }} -->
+
+</form>

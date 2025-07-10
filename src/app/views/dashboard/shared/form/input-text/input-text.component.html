@@ -1,0 +1,8 @@
+<c-input-group class="mb-3">
+    <span cInputGroupText id="basic-addon1">{{ name }}</span>
+    <input [attr.aria-describedby]="name"
+           [attr.aria-label]="name"
+           cFormControl
+           placeholder="{{ name }}"
+    />
+  </c-input-group>

@@ -1,0 +1,28 @@
+<div class="search mb-3">
+    
+    <form class="d-flex py-2">
+
+        <div class="input-group w-100">
+
+            <!-- campo de busqueda -->
+
+            <input class="form-control px-3 py-2" [(ngModel)]="search" (keyup.enter)="keyEnter($event)"
+                (keyup)="keyUpSearch($event)" name="search" type="search" placeholder="Buscar" aria-label="Search">
+                
+            <!-- boton para buscar -->
+            <button type="button" class="btn" [disabled]="search && btnActive ? false : true"
+                [ngClass]="{'btn-dark': search && btnActive, 'btn-secondary': !(search && btnActive)}"
+                (click)="clickSearch($event)">
+
+                <!-- icono de busqueda que esta activo solo cuando hay texto -->
+                <i *ngIf="!iconLoading" class="fa-solid fa-magnifying-glass"></i>
+
+                <!-- icono loading que solo se muestra cuando hay mas de 4 caracteres o se pulso enter -->
+                <app-loading size="sm" *ngIf="iconLoading"></app-loading>
+
+            </button>
+        </div>
+
+    </form>
+
+</div>

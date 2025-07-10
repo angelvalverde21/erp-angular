@@ -1,0 +1,48 @@
+<!-- <h3>Galeria</h3> -->
+
+<div ngbAccordion [closeOthers]="true" class="mt-3">
+
+    <div ngbAccordionItem [collapsed]="items[0] !== 'First'">
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>Galeria</button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+                <ng-template>
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <app-gallery></app-gallery>
+                        </div>
+                        <div class="col-lg-4">
+                            <app-sizes></app-sizes>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+
+    <div ngbAccordionItem [collapsed]="items[0] !== 'second'">
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>Galeria</button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+                <ng-template>
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <app-gallery></app-gallery>
+                        </div>
+                        <div class="col-lg-4">
+                            <app-sizes></app-sizes>
+                        </div>
+                    </div>
+
+                </ng-template>
+            </div>
+        </div>
+    </div>
+
+</div>
