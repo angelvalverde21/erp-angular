@@ -1,6 +1,10 @@
 <!-- <h3>Galeria</h3> -->
 
-<div ngbAccordion [closeOthers]="true" class="mt-3">
+<button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.expandAll()">Todos los colores</button>
+<button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.collapseAll()">Collapse all</button>
+
+
+<div ngbAccordion [closeOthers]="true" class="mt-3" #accordion="ngbAccordion">
 
     <div ngbAccordionItem [collapsed]="items[0] !== 'First'">
         <h2 ngbAccordionHeader>
@@ -46,3 +50,4 @@
     </div>
 
 </div>
+

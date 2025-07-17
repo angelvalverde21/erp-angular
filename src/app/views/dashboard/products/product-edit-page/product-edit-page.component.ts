@@ -9,19 +9,19 @@ import {
  } from '@angular/forms';
 import { ProductService } from '../product.service';
 import { CategoryService } from '../../categories/category.service';
-
-import { ButtonLinkComponent } from "../../shared/components/buttons/button-link/button-link.component";
 import { ButtonComponent } from "../../shared/components/buttons/button/button.component";
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { UploadDropzoneComponent } from '../../shared/upload-dropzone/upload-dropzone.component';
 import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
 // import { UploadDropzoneComponent } from '@shared/upload-dropzone/upload-dropzone.component';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import { ProductColorsComponent } from './product-colors/product-colors.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPenToSquare, faImage } from '@fortawesome/free-solid-svg-icons';
+
 import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { ButtonAddComponent } from '../../shared/components/buttons/button-add/button-add.component';
 
 
 @Component({
@@ -29,21 +29,23 @@ import { InputGroupComponent } from '../../shared/form/input-group/input-group.c
   imports: [
     LoadingComponent, 
     InputGroupComponent,
-    ButtonLinkComponent, 
     ButtonComponent, 
     CommonModule, 
     ReactiveFormsModule,
-    UploadDropzoneComponent,
     GalleryComponent,
-    ProductColorsComponent,
-    
+    NgbAccordionModule,
+    FontAwesomeModule,
+    ButtonAddComponent
     ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss'
 })
 export class ProductEditPageComponent implements OnInit, OnDestroy {
 
-  editIcon = faPenToSquare;
+  faPenToSquare = faPenToSquare;
+  faImage = faImage;
+
+   items = ['First', 'Second', 'Third'];
   
   constructor(private fb: FormBuilder, private _product: ProductService, private _category: CategoryService, private route: ActivatedRoute) {
     this.route.params.subscribe(params => {

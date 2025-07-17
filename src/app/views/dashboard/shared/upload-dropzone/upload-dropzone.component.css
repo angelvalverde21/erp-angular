@@ -1,11 +1,11 @@
 .dropzone {
     border: 2px dashed #61d800;
-    background: #F3F4F6;
+    /* background: #F3F4F6; */
     background-size: contain;      /* Ajusta la imagen para cubrir todo el área */
     background-repeat: no-repeat; /* Evita que la imagen se repita */
     background-position: center;  /* Centra la imagen en el contenedor */
-    background-color: #f0f0f0;  
-    background-color: rgba(240, 240, 240, 0.8);
-    min-height: 80px !important;
-    padding: 10px 20px !important;
+    /* background-color: #f0f0f0;   */
+    /* background-color: rgba(240, 240, 240, 0.8); */
+    /* min-height: 80px !important; */
+    padding: 0 !important;
 }

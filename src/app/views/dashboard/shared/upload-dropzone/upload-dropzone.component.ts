@@ -4,11 +4,12 @@ import { AuthService } from 'src/app/core/auth/auth.service';
 import { environment } from 'src/app/core/environments/environment';
 
 // import { AuthService } from '@core/auth/auth.service';
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-upload-dropzone',
-  imports: [],
+  imports: [FontAwesomeModule],
   templateUrl: './upload-dropzone.component.html',
   styleUrl: './upload-dropzone.component.css',
 })
@@ -27,9 +28,11 @@ export class UploadDropzoneComponent {
 
   @Input() parallelUploads: number = 4;
   @Input() path: string = "";
-  @Input() title: string = "Agregar Imagenes";
+  @Input() title: string = "";
   @Input() dir: string = "products/colors";
   @Input() usage: string = "colors";
+
+  faCamera = faCamera;
   
   constructor(
     private _auth : AuthService,
@@ -74,7 +77,12 @@ export class UploadDropzoneComponent {
         'Authorization': `Bearer ${this._auth.getToken()}`, // Agrega el token de autenticación en los headers
       },
       // dictDefaultMessage: `<div>Sube tus archivos aquí</div> <i class="fas fa-camera" style="font-size: 18pt;"></i>`,
-      dictDefaultMessage: `<div class="mb-2">${this.title}</div><i class="fas fa-camera" style="font-size: 18pt;"></i>`,
+      dictDefaultMessage: `<div class="mb-2">${this.title}</div>
+                            <div style="background: #FFF; padding: 5px; border-radius: 5px; border: 1px dashed #ccc; opacity: 0.5;">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24" fill="currentColor">
+                              <path d="M149.1 64.5c6.5-11.2 18.5-18.5 31.6-18.5h150.7c13.1 0 25.1 7 31.6 18.5l14.5 25.5H464c26.5 0 48 21.5 48 48v256c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V138c0-26.5 21.5-48 48-48h86.5l14.6-25.5zM256 400c79.5 0 144-64.5 144-144S335.5 112 256 112 112 176.5 112 256s64.5 144 144 144zm0-48a96 96 0 1 1 0-192 96 96 0 1 1 0 192z"/>
+                              </svg>
+                            </div>`,
       acceptedFiles: 'image/*',
       // paramName: 'file',
       maxFilesize: 10, // Tamaño máximo en MB
