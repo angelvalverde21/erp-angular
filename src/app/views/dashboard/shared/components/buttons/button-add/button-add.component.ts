@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -13,7 +13,8 @@ export class ButtonAddComponent {
   faPlus = faPlus;
   
   @Output() action = new EventEmitter<void>();
-
+  @Input() color: string = 'dark'; 
+  
   constructor() {
     // Puedes inicializar cualquier lógica aquí si es necesario
   } 
