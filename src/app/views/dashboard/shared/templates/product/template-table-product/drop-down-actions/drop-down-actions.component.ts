@@ -11,8 +11,8 @@ import {
 
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../../../../core/environments/environment';
-
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPen, faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-drop-down-actions',
@@ -23,14 +23,12 @@ import { environment } from '../../../../../../../core/environments/environment'
     DropdownMenuDirective,
     DropdownToggleDirective,
     RouterLink,
-    CommonModule
+    CommonModule,
+    FontAwesomeModule
   ],
   templateUrl: './drop-down-actions.component.html',
   styleUrl: './drop-down-actions.component.scss'
 })
-
-
-
 
 export class DropDownActionsComponent implements OnInit{
 
@@ -38,6 +36,9 @@ export class DropDownActionsComponent implements OnInit{
   @Input() product: any;
   // showStoreNameInSlug: boolean = false;
   items: any;
+
+  faPen = faPen;
+  faGlobe = faGlobe;
 
   constructor(){
 
@@ -52,7 +53,7 @@ export class DropDownActionsComponent implements OnInit{
     this.items = [
       {
         "text" : "Editar",
-        "icon" : "fa-solid fa-pen",
+        "icon" : faPen,
         "link" : [ 
            
            
@@ -61,7 +62,7 @@ export class DropDownActionsComponent implements OnInit{
       },
       {
         "text" : "Ver Online",
-        "icon" : "fa-solid fa-globe",
+        "icon" : faGlobe,
         "link" : [...prefix, 'online', this.product.id]
       },
       // {
@@ -69,11 +70,11 @@ export class DropDownActionsComponent implements OnInit{
       //   "icon" : "fa-solid fa-warehouse",
       //   "link" : [...prefix, 'warehouses', this.product.id]
       // },
-      {
-        "text" : "Reportes",
-        "icon" : "fa-solid fa-chart-simple",
-        "link" : [...prefix, 'reports', this.product.id]
-      }
+      // {
+      //   "text" : "Reportes",
+      //   "icon" : "fa-solid fa-chart-simple",
+      //   "link" : [...prefix, 'reports', this.product.id]
+      // }
     ]
 
     if (environment.storeName != null) {

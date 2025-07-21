@@ -17,12 +17,13 @@ import { Subscription } from 'rxjs';
 import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
 // import { UploadDropzoneComponent } from '@shared/upload-dropzone/upload-dropzone.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPenToSquare, faImage } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faImage, faGear } from '@fortawesome/free-solid-svg-icons';
 
 import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonAddComponent } from '../../shared/components/buttons/button-add/button-add.component';
-
+import { OptionsComponent } from './options/options.component';
+import { ProductColorsComponent } from './product-colors/product-colors.component';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -35,7 +36,9 @@ import { ButtonAddComponent } from '../../shared/components/buttons/button-add/b
     GalleryComponent,
     NgbAccordionModule,
     FontAwesomeModule,
-    ButtonAddComponent
+    ButtonAddComponent,
+    OptionsComponent,
+    ProductColorsComponent
     ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss'
@@ -44,7 +47,7 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
 
   faPenToSquare = faPenToSquare;
   faImage = faImage;
-
+  faGear = faGear;
    items = ['First', 'Second', 'Third'];
   
   constructor(private fb: FormBuilder, private _product: ProductService, private _category: CategoryService, private route: ActivatedRoute) {

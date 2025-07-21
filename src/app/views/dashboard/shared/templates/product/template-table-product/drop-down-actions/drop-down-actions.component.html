@@ -3,6 +3,9 @@
         Acciones
     </button>
     <ul cDropdownMenu>
-      <li *ngFor="let item of items"><a [routerLink]="item.link" cDropdownItem class="d-flex align-items-center py-2"><i class="{{ item.icon }} me-2"></i> {{ item.text }}</a></li>
+      <li *ngFor="let item of items"><a [routerLink]="item.link" cDropdownItem class="d-flex align-items-center py-2">
+        <fa-icon [icon]="item.icon" class="me-2"></fa-icon>
+        {{ item.text }}</a>
+      </li>
     </ul>
   </c-dropdown>

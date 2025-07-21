@@ -1,53 +1,16 @@
-<!-- <h3>Galeria</h3> -->
+<div class="color d-flex justify-content-between">
 
-<button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.expandAll()">Todos los colores</button>
-<button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.collapseAll()">Collapse all</button>
+      <app-gallery></app-gallery>
 
 
-<div ngbAccordion [closeOthers]="true" class="mt-3" #accordion="ngbAccordion">
+      <div class="gallery-item">
 
-    <div ngbAccordionItem [collapsed]="items[0] !== 'First'">
-        <h2 ngbAccordionHeader>
-            <button ngbAccordionButton>Galeria</button>
-        </h2>
-        <div ngbAccordionCollapse>
-            <div ngbAccordionBody>
-                <ng-template>
+            <h5>Inventario</h5>
 
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <app-gallery></app-gallery>
-                        </div>
-                        <div class="col-lg-4">
-                            <app-sizes></app-sizes>
-                        </div>
-                    </div>
-                </ng-template>
-            </div>
-        </div>
-    </div>
+            <hr>
 
-    <div ngbAccordionItem [collapsed]="items[0] !== 'second'">
-        <h2 ngbAccordionHeader>
-            <button ngbAccordionButton>Galeria</button>
-        </h2>
-        <div ngbAccordionCollapse>
-            <div ngbAccordionBody>
-                <ng-template>
+            <app-sizes></app-sizes>
+      </div>
 
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <app-gallery></app-gallery>
-                        </div>
-                        <div class="col-lg-4">
-                            <app-sizes></app-sizes>
-                        </div>
-                    </div>
-
-                </ng-template>
-            </div>
-        </div>
-    </div>
 
 </div>
-

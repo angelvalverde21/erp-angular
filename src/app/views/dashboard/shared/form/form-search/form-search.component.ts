@@ -10,7 +10,8 @@ import { SlugBaseService } from '../../services/slug/slug-base.service';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { DashboardService } from '../../../dashboard.service';
 // import { DashboardService } from '@erp/store/store.service';
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-form-search',
@@ -18,6 +19,7 @@ import { DashboardService } from '../../../dashboard.service';
     CommonModule,
     FormsModule,
     LoadingComponent,
+    FontAwesomeModule
 ],
   templateUrl: './form-search.component.html',
   styleUrl: './form-search.component.css'
@@ -27,6 +29,8 @@ export class FormSearchComponent implements OnInit {
   searchSubject: Subject<string> = new Subject();
 
   iconLoading: boolean = false;
+
+  faMagnifyingGlass = faMagnifyingGlass;
   
   search: string = '';
   store: any;

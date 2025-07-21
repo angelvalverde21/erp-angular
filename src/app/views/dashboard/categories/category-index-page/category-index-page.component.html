@@ -6,29 +6,37 @@
     <div class="card-header d-flex justify-content-between pt-3 pb-3">
         <div class="title">Categorias</div>
         <app-button-link icon="fa-solid fa-plus" [path]="['create']">Crear Categoria</app-button-link>
-      </div>
+    </div>
 
     <div class="card-body">
 
         <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Creado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let category of categories">
-                        <th scope="row">{{ category.id }}</th>
-                        <td>{{ category.name }}</td>
-                        <td>{{ category.created_at | dateCustom }}</td>
-                    </tr>
-                </tbody>
-            </table>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let category of categories">
+                    <div>
+                        <h5>{{ category.name }}</h5>
+                        <p class="text-muted">
+                            @if(category.has_color && category.has_size){
+                                <span class="badge bg-primary me-1">Colores</span>
+                                <span class="badge bg-secondary">Tallas</span>
+                            }@else if(category.has_color){
+                                <span class="badge bg-primary">Colores</span>
+
+                            }@else{
+                                <span class="badge bg-secondary">Tallas</span>
+                            }
+                        </p>
+
+                    </div>
+                    <span>
+                        <button class="btn btn-outline-secondary"><fa-icon [icon]="faEdit" class="me-2"></fa-icon> Editar</button>
+                    </span>
+                </li>
+            </ul>
+
         </div>
-        
+
     </div>
 
 </div>
