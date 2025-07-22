@@ -76,7 +76,9 @@
 
     <div class="card-header py-3 bg-primary-subtle d-flex justify-content-between align-items-center">
       <div><fa-icon [icon]="faImage" class="me-2"></fa-icon>Galeria</div>
-      <div><app-button-add color="primary">Colores</app-button-add></div>
+      <div>
+        <app-button-add color="primary" *ngIf="product.category.has_color">Colores</app-button-add>
+      </div>
     </div>
 
     <div class="card-body">

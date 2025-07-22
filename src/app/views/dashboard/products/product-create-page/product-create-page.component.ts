@@ -29,7 +29,7 @@ import { CategorySelectedComponent } from '../../categories/category-selected/ca
 import { CategoryCreateComponent } from "../../categories/category-create/category-create.component";
 // import { OnlyUppercaseDirective } from '../../../directives/only-uppercase.directive';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { faPenToSquare, faPlus, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faPlus, faArrowLeft, faTags } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -60,6 +60,7 @@ export class ProductCreatePageComponent {
   editIcon = faPenToSquare;
   faPlus = faPlus;
   faArrowLeft = faArrowLeft;
+  faTags = faTags;
 
   constructor(private fb: FormBuilder, private _product: ProductService, private _category: CategoryService) {}
 

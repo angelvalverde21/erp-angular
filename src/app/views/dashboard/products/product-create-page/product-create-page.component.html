@@ -14,48 +14,48 @@
 
       <div class="row mb-3">
         <div class="col-lg-8">
-          <app-input-group [icon]="editIcon">
-            <input formControlName="name" type="text" class="form-control" placeholder="Product Name" aria-label="name"
+          <app-input-group text="Titulo" [icon]="editIcon">
+            <input formControlName="name" type="text" class="form-control" placeholder="Nombre del producto" aria-label="name"
               aria-describedby="basic-name" />
           </app-input-group>
         </div>
 
         <div class="col-lg-4">
-          <app-input-group icontext="S/.">
+          <app-input-group text="Precio" icontext="S/.">
             <input formControlName="price" type="number" step="0.01" class="form-control" placeholder="0.00"
               aria-label="price" aria-describedby="basic-price" />
           </app-input-group>
         </div>
 
         <div class="col-lg-12 col-12">
+          <label class="mb-2">Descripcion</label>
           <textarea formControlName="body" class="form-control mb-3" placeholder="Descripcion"></textarea>
         </div>
 
         <div class="col-lg-12 col-12">
-          <app-input-group>
+          <app-input-group text="Tags" [icon]="faTags">
             <input formControlName="tags" type="text" class="form-control" placeholder="tags" aria-label="price"
               aria-describedby="basic-price" />
           </app-input-group>
         </div>
 
-        <div class="col-lg-12 col-12 d-flex justify-content-between align-items-center mb-3">
+        <div class="col-lg-12 col-12 mb-3">
 
           <!-- Listar categorias -->
-          <div class="category w-100 me-2">
-            <app-loading *ngIf="loadingSubcategories"></app-loading>
-            <app-category-selected 
-              *ngIf="!loadingSubcategories" 
-              formControlName="category_id" 
-              [categories]="categories"
-              (emitCategorySelected)="fnCategorySelected($event)"
-            >
-            </app-category-selected>
-          </div>
 
-          <!-- Boton para crear categoria -->
-          <div class="create-category">
-            <app-button color="secondary" [icon]="faPlus" (click)="toggleLiveDemo()">Crear</app-button>
-            <!-- <app-button-link icon="fa-solid fa-plus" color="secondary" [path]="['/categories/create']">Crear Categoria</app-button-link> -->
+          <label class="mb-2">Categorias</label>
+          <div class="categorias d-flex justify-content-between align-items-center">
+            <div class="category w-100 me-2">
+              <app-loading *ngIf="loadingSubcategories"></app-loading>
+              <app-category-selected *ngIf="!loadingSubcategories" formControlName="category_id"
+                [categories]="categories" (emitCategorySelected)="fnCategorySelected($event)">
+              </app-category-selected>
+            </div>
+            <!-- Boton para crear categoria -->
+            <div class="create-category">
+              <app-button color="secondary" [icon]="faPlus" (click)="toggleLiveDemo()">Crear</app-button>
+              <!-- <app-button-link icon="fa-solid fa-plus" color="secondary" [path]="['/categories/create']">Crear Categoria</app-button-link> -->
+            </div>
           </div>
 
         </div>
