@@ -4,7 +4,7 @@
     @if (loadingIcon) {
       <app-loading *ngIf="loadingIcon" size="sm" class="me-2"></app-loading>
     } @else {
-      <div class="me-2"><i class="{{ icon }}"></i></div>
+      <fa-icon [icon]="icon" class="me-2"></fa-icon>
     }
   } 
   

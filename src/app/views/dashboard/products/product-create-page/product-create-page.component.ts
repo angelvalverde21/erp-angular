@@ -10,7 +10,7 @@ import {
   FormsModule
 } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
@@ -20,7 +20,6 @@ import { CategoryService } from '../../categories/category.service';
 
 import {
   ButtonCloseDirective,
-  ButtonDirective,
   ModalBodyComponent,
   ModalComponent,
   ModalHeaderComponent,
@@ -30,7 +29,7 @@ import { CategorySelectedComponent } from '../../categories/category-selected/ca
 import { CategoryCreateComponent } from "../../categories/category-create/category-create.component";
 // import { OnlyUppercaseDirective } from '../../../directives/only-uppercase.directive';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faPlus, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -43,7 +42,6 @@ import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
     ButtonComponent,
     ButtonLinkComponent,
     CategorySelectedComponent,
-    JsonPipe,
     ButtonCloseDirective,
     ModalBodyComponent,
     ModalComponent,
@@ -60,7 +58,9 @@ import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 export class ProductCreatePageComponent {
 
   editIcon = faPenToSquare;
-  
+  faPlus = faPlus;
+  faArrowLeft = faArrowLeft;
+
   constructor(private fb: FormBuilder, private _product: ProductService, private _category: CategoryService) {}
 
   categories: any[] = [];
@@ -79,7 +79,7 @@ export class ProductCreatePageComponent {
     'ESTANDAR',
   ];
 
-  selectedItems = [];
+  // selectedItems = [];
 
   ngOnInit(): void {
 

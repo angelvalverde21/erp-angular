@@ -14,6 +14,7 @@ export class InputGroupComponent{
   
   @Input() icon: IconDefinition | null = null;
   @Input() icontext: string = '';
+  @Input() text: string = '';
   @Input() col: string = '';
   @Input() mb: number = 3;
 

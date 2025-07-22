@@ -30,6 +30,29 @@ export const navItems: INavData[] = [
     url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/settings` : '/settings',
     iconComponent: { name: 'cil-settings' }
   },
+
+    {
+    name: 'Website',
+    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/settings` : '/settings',
+    iconComponent: { name: 'cil-world' },
+        children: [
+      {
+        name: 'Carousel',
+        url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/dashboard` : '/warehouses/1/orders',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Ofertas',
+        url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/dashboard` : '/warehouses/1/orders/create',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Reporte',
+        url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/dashboard` : '/warehouses/1/orders/reports',
+        icon: 'nav-icon-bullet'
+      }
+    ]
+  },
   // {
   //   name: 'Warehouses',
   //   url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/dashboard` : '/warehouses',

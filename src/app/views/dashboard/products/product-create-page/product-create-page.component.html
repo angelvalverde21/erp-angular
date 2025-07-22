@@ -4,9 +4,10 @@
 
   <div class="card">
 
-    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center pt-3 pb-3">
+    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center pt-3 pb-3">
       <div>Crear Producto</div>
-      <app-button-link icon="fa-solid fa-arrow-left" color="dark" colortext="text-white " [path]="['..']">Volver</app-button-link>
+      <app-button-link [icon]="faArrowLeft" color="dark" colortext="text-white "
+        [path]="['products']">Volver</app-button-link>
     </div>
 
     <div class="card-body">
@@ -42,14 +43,18 @@
           <!-- Listar categorias -->
           <div class="category w-100 me-2">
             <app-loading *ngIf="loadingSubcategories"></app-loading>
-            <app-category-selected *ngIf="!loadingSubcategories" formControlName="category_id" [categories]="categories"
-              (emitCategorySelected)="fnCategorySelected($event)"></app-category-selected>
+            <app-category-selected 
+              *ngIf="!loadingSubcategories" 
+              formControlName="category_id" 
+              [categories]="categories"
+              (emitCategorySelected)="fnCategorySelected($event)"
+            >
+            </app-category-selected>
           </div>
 
           <!-- Boton para crear categoria -->
-          <div class="create-category" style="width: 200px;">
-            <app-button color="secondary" icon="fa-solid fa-plus" class="w-100" (click)="toggleLiveDemo()">Crear
-              Categoria</app-button>
+          <div class="create-category">
+            <app-button color="secondary" [icon]="faPlus" (click)="toggleLiveDemo()">Crear</app-button>
             <!-- <app-button-link icon="fa-solid fa-plus" color="secondary" [path]="['/categories/create']">Crear Categoria</app-button-link> -->
           </div>
 
@@ -62,14 +67,14 @@
         <div class="col-lg-12 col-12 d-flex justify-content-between align-items-center mb-3" *ngIf="this.has_size">
 
           <ng-select class="mb-3 w-100" formControlName="sizes" [items]="items" [multiple]="true" [addTag]="true"
-            bindLabel="name" [(ngModel)]="selectedItems" placeholder="Escribe y presiona coma o enter">
+            bindLabel="name" placeholder="Escribe y presiona coma o enter">
           </ng-select>
 
         </div>
 
       </div>
 
-      <app-button color="success" colortext="white" icon="fa-solid fa-plus" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
+      <app-button color="dark" [icon]="faPlus" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
         (action)="create()">Crear Producto</app-button>
 
       <!-- {{ form.value | json }} -->

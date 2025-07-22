@@ -1,6 +1,8 @@
 <app-form-search></app-form-search>
 
-<app-template-table-product *ngIf="!loading" [products]="products"></app-template-table-product>
+
+<app-product-list-template *ngIf="!loading" [products]="products"></app-product-list-template>
+<!-- <app-template-table-product *ngIf="!loading" [products]="products"></app-template-table-product> -->
 
 <app-loading *ngIf="loading"></app-loading>
 

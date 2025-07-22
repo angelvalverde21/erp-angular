@@ -17,13 +17,15 @@ import { Subscription } from 'rxjs';
 import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
 // import { UploadDropzoneComponent } from '@shared/upload-dropzone/upload-dropzone.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPenToSquare, faImage, faGear } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faGear, faSave, faShirt, faTags } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
 
 import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonAddComponent } from '../../shared/components/buttons/button-add/button-add.component';
 import { OptionsComponent } from './options/options.component';
 import { ProductColorsComponent } from './product-colors/product-colors.component';
+import { FormSearchComponent } from '../../shared/form/form-search/form-search.component';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -38,7 +40,8 @@ import { ProductColorsComponent } from './product-colors/product-colors.componen
     FontAwesomeModule,
     ButtonAddComponent,
     OptionsComponent,
-    ProductColorsComponent
+    ProductColorsComponent,
+    FormSearchComponent
     ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss'
@@ -48,7 +51,12 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
   faPenToSquare = faPenToSquare;
   faImage = faImage;
   faGear = faGear;
-   items = ['First', 'Second', 'Third'];
+  faSave = faSave;
+  faShirt = faShirt;
+  faCircleCheck = faCircleCheck;
+  faTags = faTags;
+
+  items = ['First', 'Second', 'Third'];
   
   constructor(private fb: FormBuilder, private _product: ProductService, private _category: CategoryService, private route: ActivatedRoute) {
     this.route.params.subscribe(params => {

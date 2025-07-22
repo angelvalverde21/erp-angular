@@ -9,7 +9,9 @@ export const environment = {
 
     apiPublic: 'http://laravel.test/api/v1/public',
     apiPrivate: 'http://laravel.test/api/v1/private',
-    
+    apiDashboard: 'http://laravel.test/api/v1/dashboard',
+
+
     izipay_endpoint: 'https://static.micuentaweb.pe/',
     izipay_public_key: '54188994:testpublickey_E7OdGPxEHDfby1tn8Ctt4in5IGq3BxTdQeXiwUdp0G3QJ',
 

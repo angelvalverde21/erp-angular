@@ -15,7 +15,7 @@ import { ButtonComponent } from '../../shared/components/buttons/button/button.c
 import { CommonModule, JsonPipe } from '@angular/common';
 import { ButtonCheckComponent } from '../../shared/components/buttons/button-check/button-check.component';
 import { CategorySelectedComponent } from '../category-selected/category-selected.component';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-category-create',
@@ -43,6 +43,7 @@ export class CategoryCreateComponent {
   @Output() categoryUpdated = new EventEmitter<boolean>();
   
   editIcon = faPenToSquare;
+  faPlus = faPlus;
   
   constructor(
     private fb: FormBuilder,

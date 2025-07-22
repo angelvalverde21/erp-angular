@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { CommonService } from '../../shared/services/common.service';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { TemplateTableProductComponent } from '../../shared/templates/product/template-table-product/template-table-product.component';
+import { ProductListTemplateComponent } from '../../shared/templates/product/product-list-template/product-list-template.component';
 
 // import { CardPlaceHolderComponent } from 'src/app/erp/shared/cards/card-place-holder/card-place-holder.component';
 
@@ -16,6 +17,7 @@ import { TemplateTableProductComponent } from '../../shared/templates/product/te
     TemplateTableProductComponent, 
     LoadingComponent,
     CommonModule,
+    ProductListTemplateComponent
     // CardPlaceHolderComponent
   ],
   templateUrl: './product-search-page.component.html',

@@ -16,7 +16,7 @@ export class ProductService {
 
   constructor(private http: HttpClient) {
 
-    this.baseUrl = `${environment.apiPrivate}/${environment.storeName}/products`;
+    this.baseUrl = `${environment.apiDashboard}/${environment.storeName}/products`;
 
   }
 
