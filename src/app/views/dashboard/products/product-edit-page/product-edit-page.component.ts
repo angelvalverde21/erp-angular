@@ -24,8 +24,8 @@ import { InputGroupComponent } from '../../shared/form/input-group/input-group.c
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonAddComponent } from '../../shared/components/buttons/button-add/button-add.component';
 import { OptionsComponent } from './options/options.component';
-import { ProductColorsComponent } from './product-colors/product-colors.component';
 import { FormSearchComponent } from '../../shared/form/form-search/form-search.component';
+import { ProductColorComponent } from './product-color/product-color.component';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -40,7 +40,7 @@ import { FormSearchComponent } from '../../shared/form/form-search/form-search.c
     FontAwesomeModule,
     ButtonAddComponent,
     OptionsComponent,
-    ProductColorsComponent,
+    ProductColorComponent,
     FormSearchComponent
     ],
   templateUrl: './product-edit-page.component.html',

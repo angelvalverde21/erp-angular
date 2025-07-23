@@ -15,7 +15,9 @@
     <div class="gallery-item d-flex flex-column align-items-center justify-content-center">
 
         <img height="250" class="mb-3"
-            src="https://erp.3b.pe/storage/images/products/colors/e55858ae2323fa42e0129d1af4ce0554.jpg" alt="">
+            [src]="thumbnail" alt="">
+
+            <!-- {{ image | json }} -->
 
         <button class="btn btn-outline-secondary" (click)="openVerticallyCentered(content)"><fa-icon
                 [icon]="faImage"></fa-icon></button>
@@ -24,9 +26,7 @@
 
     </div>
 
-
 </div>
-
 
 <ng-template #content let-modal>
     <div class="modal-header">
@@ -34,7 +34,6 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-
 
         <div class="upload mb-3">
             <app-upload-dropzone [path]="'products/colors/store'"></app-upload-dropzone>

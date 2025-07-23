@@ -59,7 +59,7 @@ export class UploadDropzoneComponent {
   ngOnInit(): void {
 
     this.dropzoneId = `dropzone-${this.toKebabCase(this.title)}-${Math.floor(Math.random() * 1000)}`;
-    this.url =  environment.apiPrivate + '/' + environment.storeName + `/` + this.path; // Actualiza esto con la URL de tu servidor
+    this.url =  environment.apiDashboard + '/' + environment.storeName + `/` + this.path; // Actualiza esto con la URL de tu servidor
     console.log(this.url);
   }
   

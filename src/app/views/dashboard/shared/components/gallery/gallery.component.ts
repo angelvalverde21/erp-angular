@@ -7,7 +7,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { UploadDropzoneComponent } from '../../upload-dropzone/upload-dropzone.component';
-import { SizesComponent } from '../../../products/product-edit-page/product-colors/sizes/sizes.component';
 import {
   NgbCarouselConfig,
   NgbCarouselModule,
@@ -24,7 +23,6 @@ import { ButtonComponent } from '../buttons/button/button.component';
   selector: 'app-gallery',
   imports: [
     UploadDropzoneComponent,
-    SizesComponent,
     NgbCarouselModule,
     CommonModule,
     ButtonAddComponent,
@@ -51,6 +49,10 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
   images = [944, 1011, 984].map((n) => `https://picsum.photos/id/${n}/900/500`);
 
+  @Input() thumbnail: string = 'https://picsum.photos/id/${n}/900/500'; 
+  @Input() group_id: number = 0; 
+  
+
   constructor(
     config: NgbCarouselConfig,
     configModal: NgbModalConfig,
@@ -73,4 +75,5 @@ export class GalleryComponent implements OnInit, OnDestroy {
   closeModal() {
     this.modal.close();
   }
+  
 }

@@ -34,7 +34,7 @@ export const navItems: INavData[] = [
     {
     name: 'Website',
     url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/settings` : '/settings',
-    iconComponent: { name: 'cil-world' },
+    iconComponent: { name: 'cil-house' },
         children: [
       {
         name: 'Carousel',
