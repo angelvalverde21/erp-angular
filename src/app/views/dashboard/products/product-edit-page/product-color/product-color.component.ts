@@ -6,8 +6,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { SizesComponent } from './sizes/sizes.component';
-import { GalleryComponent } from '../../../shared/components/gallery/gallery.component';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -18,22 +17,20 @@ import {
   faUpDownLeftRight,
   faCircleCheck,
 } from '@fortawesome/free-solid-svg-icons';
-import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { UploadDropzoneComponent } from '../../../shared/upload-dropzone/upload-dropzone.component';
 import { ColorService } from './color.service';
-import { ImageService } from './images/image.service';
+import { ImageService } from './image/image.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { ImageComponent } from './image/image.component';
 @Component({
   selector: 'app-product-color',
   imports: [
     SizesComponent,
-    GalleryComponent,
-    JsonPipe,
-    ButtonComponent,
     FontAwesomeModule,
     UploadDropzoneComponent,
     CommonModule,
     LoadingComponent,
+    ImageComponent
   ],
   templateUrl: './product-color.component.html',
   styleUrl: './product-color.component.scss',
@@ -52,6 +49,7 @@ export class ProductColorComponent implements OnInit, OnDestroy {
   images: any[] = [];
 
   loading: boolean = false;
+ 
 
   constructor(
     config: NgbModalConfig,
@@ -94,21 +92,13 @@ export class ProductColorComponent implements OnInit, OnDestroy {
     // this.images.
   }
 
-  borrarImage(id: number) {
-    console.log('Borrando imagen con ID:', id);
+  reListImages(id: any) {
 
-    this._image.setProductAndColorId(this.color.product_id, this.color.id);
-
-    // this.loading = true;
+    // this.images = this.images.filter((image) => image.id !== id);/
+    console.log('Re-listing images after deletion of ID:', id);
+    
     this.images = this.images.filter((image) => image.id !== id);
 
-    this._image.destroy(id).subscribe((resp: any) => {
-      console.log(resp);
-      // this.loading = false;
-      if (resp.success) {
-        this.images = this.images.filter((image) => image.id !== id);
-      }
-    });
-
   }
+
 }

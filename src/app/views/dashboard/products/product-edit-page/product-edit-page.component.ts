@@ -26,6 +26,7 @@ import { ButtonAddComponent } from '../../shared/components/buttons/button-add/b
 import { OptionsComponent } from './options/options.component';
 import { FormSearchComponent } from '../../shared/form/form-search/form-search.component';
 import { ProductColorComponent } from './product-color/product-color.component';
+import { ButtonAddColorComponent } from '../../shared/components/buttons/button-add-color/button-add-color.component';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -41,7 +42,8 @@ import { ProductColorComponent } from './product-color/product-color.component';
     ButtonAddComponent,
     OptionsComponent,
     ProductColorComponent,
-    FormSearchComponent
+    FormSearchComponent,
+    ButtonAddColorComponent
     ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss'

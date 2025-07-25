@@ -1,80 +1,65 @@
 <div class="color d-flex justify-content-between align-items-center">
 
-<div class="gallery d-flex justify-content-between align-items-center flex-wrap">
+    <div class="gallery d-flex justify-content-between align-items-center flex-wrap">
 
-    <div class="gallery-item d-flex flex-column align-items-center justify-content-center">
+        <div class="gallery-item d-flex flex-column align-items-center justify-content-center">
 
-        <img height="250" class="mb-3"
-            [src]="color.image.url_thumbnail" alt="">
+            <img height="250" class="mb-3" [src]="color.image.url_thumbnail" alt="">
 
             <!-- {{ image | json }} -->
 
-        @if (color.count_images > 1) {
-        <button class="btn btn-outline-secondary" (click)="openVerticallyCentered(content)"><fa-icon
-                [icon]="faImages"></fa-icon></button>
-        } @else {
+            @if (color.count_images > 1) {
+            <button class="btn btn-outline-secondary" (click)="openVerticallyCentered(content)"><fa-icon
+                    [icon]="faImages"></fa-icon></button>
+            } @else {
 
-        <button class="btn btn-outline-secondary" (click)="openVerticallyCentered(content)"><fa-icon
-                [icon]="faImage"></fa-icon></button>
-        }
-        
-    </div>
+            <button class="btn btn-outline-secondary" (click)="openVerticallyCentered(content)"><fa-icon
+                    [icon]="faImage"></fa-icon></button>
+            }
 
-</div>
-
-<ng-template #content let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Galeria de imagenes</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-
-        <div class="upload mb-3">
- 
-            <app-upload-dropzone [path]="`products/${color.product_id}/colors/${color.id}/images`" (fileUpload)="fileUpload($event)"></app-upload-dropzone>
         </div>
 
-        <app-loading *ngIf="loading"></app-loading>
+    </div>
 
-        <ul class="list-group" *ngIf="!loading">
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">Galeria de imagenes</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
 
-            <li class="list-group-item" *ngFor="let image of images">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="image text-center">
-                        <img height="150" class="mb-3"
-                            [src]="image.url_thumbnail"
-                            alt="">
-                    </div>
+            <div class="upload mb-3">
 
-                    <div class="acciones">
-                        <!-- <button class="btn btn-outline-secondary me-2"><fa-icon [icon]="faCircleCheck"
-                                class="me-2"></fa-icon>Defecto</button> -->
-                        <button class="btn btn-outline-secondary me-2"><fa-icon [icon]="faUpDownLeftRight"
-                                class="me-2"></fa-icon>Mover</button>
+                <app-upload-dropzone [path]="`products/${color.product_id}/colors/${color.id}/images`"
+                    (fileUpload)="fileUpload($event)"></app-upload-dropzone>
+            </div>
 
-                        <button class="btn btn-outline-danger" (click)="borrarImage(image.id)"><fa-icon [icon]="faTrash"></fa-icon></button>
+            <app-loading *ngIf="loading"></app-loading>
 
-                    </div>
-                </div>
-            </li>
-        </ul>
+            <ul class="list-group" *ngIf="!loading">
+
+                <li class="list-group-item p-0" *ngFor="let image of images">
+
+                    <app-image [image]="image" (imageIdDelete)="reListImages($event)"></app-image>
+
+                </li>
+            </ul>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Cerrar</button>
+        </div>
+    </ng-template>
+
+    <!-- {{ color | json }} -->
+
+    <div class="inventario" *ngIf="color.product?.category.has_size">
+
+        <h5>Inventario</h5>
+        <app-sizes></app-sizes>
 
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Cerrar</button>
-    </div>
-</ng-template>
-
-      <!-- {{ color | json }} -->
-
-      <div class="inventario" *ngIf="color.product?.category.has_size">
-
-            <h5>Inventario</h5>
-            <app-sizes></app-sizes>
-
-      </div>
 
 </div>
 
 <hr>
-

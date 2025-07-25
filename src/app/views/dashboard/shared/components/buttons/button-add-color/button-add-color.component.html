@@ -1,0 +1,15 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+  <h4 class="modal-title">Modal title</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <app-upload-dropzone [path]="'products/' + product_id + '/colors'"
+      (fileUpload)="fileUpload($event)"></app-upload-dropzone>
+  </div>
+  <div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
+
+<app-button [icon]="faPlus" color="primary" (click)="openVerticallyCentered(content)">Colores</app-button>

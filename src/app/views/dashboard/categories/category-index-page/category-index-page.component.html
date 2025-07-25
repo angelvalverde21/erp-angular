@@ -18,20 +18,15 @@
                     <div>
                         <h5>{{ category.name }}</h5>
                         <p class="text-muted">
-                            @if(category.has_color && category.has_size){
-                            <span class="badge bg-primary me-1">Colores</span>
-                            <span class="badge bg-secondary">Tallas</span>
-                            }@else if(category.has_color){
-                            <span class="badge bg-primary">Colores</span>
-
-                            }@else{
+                            @if(category.has_size){
+                            <!-- <span class="badge bg-primary me-1">Colores</span> -->
                             <span class="badge bg-secondary">Tallas</span>
                             }
                         </p>
 
                     </div>
                     <div class="d-flex justify-content-end align-items-center">
-                        <app-button-link color="outline-secondary" class="me-2" [icon]="faLink" [path]="['categories', category.name]">Ver</app-button-link>
+                        <app-button-link color="outline-secondary" class="me-2" [icon]="faLink" [path]="['categories', 'slug', category.slug]">Ver</app-button-link>
                         <app-button-link color="secondary" [icon]="faEdit" [path]="['categories', category.name]">Editar</app-button-link>
                     </div>
                 </li>

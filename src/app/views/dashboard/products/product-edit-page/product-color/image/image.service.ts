@@ -15,12 +15,12 @@ export class ImageService {
   baseUrl: string = '';
 
   constructor(private http: HttpClient) {
-
+    this.baseUrl = `${environment.apiDashboard}/${environment.storeName}/images`;
   }
 
-  setProductAndColorId(productId: number, colorId: number): void {
-    this.baseUrl = `${environment.apiDashboard}/${environment.storeName}/products/${productId}/colors/${colorId}/images`;
-  }
+  // setProductAndColorId(productId: number, colorId: number): void {
+    
+  // }
 
   // Obtiene la lista de todos los Coloros (equivalente a index() en Laravel)
   index(): Observable<any[]> {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/app/core/environments/environment';
+import { environment } from '../../../core/environments/environment';
 
 
 @Injectable({
@@ -12,11 +12,11 @@ export class CategoryService {
 
   name: string | null = null;
   url: string = '';
-  urlPrivate: string = environment.apiPrivate;
+  url_base: string = environment.apiDashboard;
 
   constructor(private http: HttpClient) {
     this.name = environment.storeName;
-    this.url = `${this.urlPrivate}/${this.name}/categories`;
+    this.url = `${this.url_base}/${this.name}/categories`;
     console.log(this.url);
   }
 
@@ -26,7 +26,7 @@ export class CategoryService {
   }
 
   show(id: number | null): Observable<any> {
-    const url = `${this.url}/id`;
+    const url = `${this.url}/${id}`;
     return this.http.get(url);
   }
 
@@ -40,6 +40,12 @@ export class CategoryService {
   update(data: [], id: number | null): Observable<any> {
     const url = `${this.url}/${id}/update`;
     return this.http.post(url, data);
+  }
+
+  
+  showProductBySlug(slug: string | null): Observable<any> {
+    const url = `${this.url}/slug/${slug}`;
+    return this.http.get(url);
   }
 
 }

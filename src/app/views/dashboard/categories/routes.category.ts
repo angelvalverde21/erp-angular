@@ -15,6 +15,13 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'slug/:slug',
+        loadComponent: () => import( '../categories/category-index-slug-page/category-index-slug-page.component' ).then((m) => m.CategoryIndexSlugPageComponent),
+        data: {
+          title: 'Todas'
+        }
+      },
+      {
         path: 'create',
         loadComponent: () => import('../categories/category-create-page/category-create-page.component').then(m => m.CategoryCreatePageComponent),
         data: {
