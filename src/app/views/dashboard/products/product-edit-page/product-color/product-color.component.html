@@ -4,7 +4,7 @@
 
         <div class="gallery-item d-flex flex-column align-items-center justify-content-center">
 
-            <img height="250" class="mb-3" [src]="color.image.url_thumbnail" alt="">
+            <img height="125" class="mb-3" [src]="color.image.url_thumbnail" alt="">
 
             <!-- {{ image | json }} -->
 
@@ -21,16 +21,23 @@
 
     </div>
 
+    <!-- modal -->
+
     <ng-template #content let-modal>
         <div class="modal-header">
-            <h4 class="modal-title">Galeria de imagenes</h4>
+            <h5 class="modal-titled-flex align-items-center justify-content-between">
+                <span class="me-2"><fa-icon [icon]="faImage"></fa-icon></span> 
+                <span>Variantes</span>
+            </h5> 
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
         <div class="modal-body">
 
             <div class="upload mb-3">
 
-                <app-upload-dropzone [path]="`products/${color.product_id}/colors/${color.id}/images`"
+                <!-- {{ color | json }} -->
+
+                <app-upload-dropzone bordeColor="#9BA2AD" [path]="`products/${color.product_id}/colors/${color.id}/images`"
                     (fileUpload)="fileUpload($event)"></app-upload-dropzone>
             </div>
 
@@ -62,4 +69,4 @@
 
 </div>
 
-<hr>
+<!-- <hr> -->

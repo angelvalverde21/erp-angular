@@ -1,19 +1,23 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faPalette } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../button/button.component';
 import { UploadDropzoneComponent } from '../../../upload-dropzone/upload-dropzone.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 @Component({
   selector: 'app-button-add-color',
-  imports: [ButtonComponent, UploadDropzoneComponent],
+  imports: [ButtonComponent, UploadDropzoneComponent, FontAwesomeModule],
   templateUrl: './button-add-color.component.html',
   styleUrl: './button-add-color.component.scss',
   encapsulation: ViewEncapsulation.None,
@@ -22,6 +26,10 @@ import { UploadDropzoneComponent } from '../../../upload-dropzone/upload-dropzon
 export class ButtonAddColorComponent implements OnInit, OnDestroy {
   modal: any;
   faPlus = faPlus;
+  faPalette = faPalette;
+
+  @Output() colorCreate = new EventEmitter<[]>();
+  
 
   constructor(config: NgbModalConfig, private modalService: NgbModal) {
     // customize default values of modals used by this component tree
@@ -41,8 +49,10 @@ export class ButtonAddColorComponent implements OnInit, OnDestroy {
     this.modal.close();
   }
 
-  fileUpload(event: any) {
-    console.log('File uploaded:', event);
+  fileUpload(color: any) { //el file upload devuelve en realidad un color
+    // Emit the uploaded file event
+    this.colorCreate.emit(color);
+    console.log('File uploaded:', color);
     // Aquí puedes manejar el evento de carga de archivos
     // Por ejemplo, enviar el archivo al servidor o procesarlo de alguna manera
   } 

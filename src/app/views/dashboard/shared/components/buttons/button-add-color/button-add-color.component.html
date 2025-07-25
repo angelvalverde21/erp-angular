@@ -1,10 +1,13 @@
 <ng-template #content let-modal>
   <div class="modal-header">
-  <h4 class="modal-title">Modal title</h4>
+  <h5 class="modal-title d-flex align-items-center">
+    <span class="me-2" style="color: #5756D6"><fa-icon [icon]="faPalette"></fa-icon></span>
+    <span>Agregar Colores</span>
+  </h5>
   <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
-    <app-upload-dropzone [path]="'products/' + product_id + '/colors'"
+    <app-upload-dropzone bordeColor="#5756D6" [path]="'products/' + product_id + '/colors'"
       (fileUpload)="fileUpload($event)"></app-upload-dropzone>
   </div>
   <div class="modal-footer">

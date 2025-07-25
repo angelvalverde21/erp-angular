@@ -43,7 +43,7 @@ import { ButtonAddColorComponent } from '../../shared/components/buttons/button-
     OptionsComponent,
     ProductColorComponent,
     FormSearchComponent,
-    ButtonAddColorComponent
+    ButtonAddColorComponent,
     ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss'
@@ -148,4 +148,13 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  colorCreate(color: any) {
+    console.log('Color upload event:', color);
+    this.product.colors.unshift(color);
+    // Aquí puedes manejar el evento de carga de color
+    // Por ejemplo, enviar el color al servidor o procesarlo de alguna manera
+  }
+
 }
+
+

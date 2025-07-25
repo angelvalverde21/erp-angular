@@ -6,7 +6,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { SizesComponent } from './sizes/sizes.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -30,7 +30,8 @@ import { ImageComponent } from './image/image.component';
     UploadDropzoneComponent,
     CommonModule,
     LoadingComponent,
-    ImageComponent
+    ImageComponent,
+    JsonPipe
   ],
   templateUrl: './product-color.component.html',
   styleUrl: './product-color.component.scss',
@@ -96,7 +97,6 @@ export class ProductColorComponent implements OnInit, OnDestroy {
 
     // this.images = this.images.filter((image) => image.id !== id);/
     console.log('Re-listing images after deletion of ID:', id);
-    
     this.images = this.images.filter((image) => image.id !== id);
 
   }
