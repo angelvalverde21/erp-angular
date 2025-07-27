@@ -1,8 +1,10 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   TemplateRef,
 } from '@angular/core';
 import { SizesComponent } from './sizes/sizes.component';
@@ -38,6 +40,8 @@ import { ImageComponent } from './image/image.component';
 })
 export class ProductColorComponent implements OnInit, OnDestroy {
   @Input() color: any;
+  @Output() colorIdDelete = new EventEmitter<number>();
+  
   modal: any;
 
   faGear = faGear;
@@ -50,6 +54,7 @@ export class ProductColorComponent implements OnInit, OnDestroy {
   images: any[] = [];
 
   loading: boolean = false;
+  loadingDelete: boolean = false;
  
 
   constructor(
@@ -99,6 +104,27 @@ export class ProductColorComponent implements OnInit, OnDestroy {
     console.log('Re-listing images after deletion of ID:', id);
     this.images = this.images.filter((image) => image.id !== id);
 
+  }
+
+  borrarColor(color_id: number){
+
+
+    console.log('Borrando color con ID:', color_id);
+
+    this._color.setProductId(this.color.product_id);
+
+    this.loadingDelete = true;
+    // this.images = this.images.filter((image) => image.id !== id);/
+
+    this._color.destroy(color_id).subscribe((resp: any) => {
+      console.log(resp);
+      this.loadingDelete = false;
+      if (resp.success) {
+        console.log(resp);
+        this.colorIdDelete.emit(color_id);
+        // this.images = this.images.filter((image) => image.id !== id);
+      }
+    });
   }
 
 }

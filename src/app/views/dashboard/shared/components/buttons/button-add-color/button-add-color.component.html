@@ -8,11 +8,16 @@
   </div>
   <div class="modal-body">
     <app-upload-dropzone bordeColor="#5756D6" [path]="'products/' + product_id + '/colors'"
-      (fileUpload)="fileUpload($event)"></app-upload-dropzone>
+      (fileUpload)="fileUpload($event)" (fileTotalUpload)="filesComplete($event)"></app-upload-dropzone>
   </div>
   <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
   </div>
 </ng-template>
 
-<app-button [icon]="faPlus" color="primary" (click)="openVerticallyCentered(content)">Colores</app-button>
+<button type="button" class="text-{{ colortext }} d-flex justify-content-between align-items-center btn btn-{{ color }}" (click)="openVerticallyCentered(content)">
+
+  <fa-icon [icon]="faPlus" class="me-1"></fa-icon>
+  <ng-content></ng-content>
+
+</button>

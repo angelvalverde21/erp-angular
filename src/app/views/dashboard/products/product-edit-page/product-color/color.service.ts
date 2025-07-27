@@ -44,6 +44,8 @@ export class ColorService {
 
   // Elimina un Color por su ID (equivalente a destroy($id) en Laravel)
   destroy(id: number): Observable<any> {
+    console.log(this.baseUrl);
+    
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 

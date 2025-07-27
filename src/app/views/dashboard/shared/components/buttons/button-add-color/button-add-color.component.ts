@@ -13,7 +13,7 @@ import { faPlus, faPalette } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../button/button.component';
 import { UploadDropzoneComponent } from '../../../upload-dropzone/upload-dropzone.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-button-add-color',
@@ -28,7 +28,10 @@ export class ButtonAddColorComponent implements OnInit, OnDestroy {
   faPlus = faPlus;
   faPalette = faPalette;
 
+  @Input() colortext: string = ""; 
   @Output() colorCreate = new EventEmitter<[]>();
+  @Input() color: string = "primary"; 
+  
   
 
   constructor(config: NgbModalConfig, private modalService: NgbModal) {
@@ -53,8 +56,22 @@ export class ButtonAddColorComponent implements OnInit, OnDestroy {
     // Emit the uploaded file event
     this.colorCreate.emit(color);
     console.log('File uploaded:', color);
+
+    
     // Aquí puedes manejar el evento de carga de archivos
     // Por ejemplo, enviar el archivo al servidor o procesarlo de alguna manera
   } 
+
+  filesComplete(status: boolean){
+    Swal.fire({
+      icon: 'success',
+      title: 'Correcto',
+      text: 'Los colores han sido subidos correctamente',
+      confirmButtonText: 'OK',
+      showConfirmButton: true
+    })
+
+    this.closeModal();
+  }
 
 }

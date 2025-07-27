@@ -30,6 +30,7 @@ import { CategoryCreateComponent } from "../../categories/category-create/catego
 // import { OnlyUppercaseDirective } from '../../../directives/only-uppercase.directive';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { faPenToSquare, faPlus, faArrowLeft, faTags } from '@fortawesome/free-solid-svg-icons';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -62,7 +63,7 @@ export class ProductCreatePageComponent {
   faArrowLeft = faArrowLeft;
   faTags = faTags;
 
-  constructor(private fb: FormBuilder, private _product: ProductService, private _category: CategoryService) {}
+  constructor(private fb: FormBuilder, private _product: ProductService, private _category: CategoryService, private _router: Router) {}
 
   categories: any[] = [];
   loadingSubcategories: boolean = true;
@@ -157,6 +158,8 @@ export class ProductCreatePageComponent {
         this.form.reset();
         this.disabledButton = true;
         this.loadingIcon = false;
+        this._router.navigate(['/', 'products', resp.data.id]);
+        
       },
       error: (error: any) => {
         Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');

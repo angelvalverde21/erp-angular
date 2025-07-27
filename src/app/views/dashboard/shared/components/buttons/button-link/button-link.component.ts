@@ -2,7 +2,7 @@ import { JsonPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { environment } from 'src/app/core/environments/environment';
+import { environment } from '../../../../../../core/environments/environment';
 
 @Component({
   selector: 'app-button-link',

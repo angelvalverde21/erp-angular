@@ -6,7 +6,7 @@
 
   <div class="card mb-3">
 
-    <div class="card-header py-3 bg-primary text-white">
+    <div class="card-header py-3 bg-{{ colorTemplate }} text-white">
       <fa-icon [icon]="faPenToSquare" class="me-2"></fa-icon> Edicion Producto
     </div>
 
@@ -44,7 +44,7 @@
           <!-- <div style="font-style: italic;">Categoria: {{ product.category?.name || 'Sin Categoria' }}</div> -->
         </div>
 
-        <app-button color="primary" [icon]="faSave" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
+        <app-button color="{{ colorTemplate }}" [icon]="faSave" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
           (action)="update()">Actualizar Producto</app-button>
 
         <!-- {{ form.value | json }} -->
@@ -58,7 +58,7 @@
   <!-- tallas -->
   <div class="card mb-3" *ngIf="product.category.has_size">
 
-    <div class="card-header py-3 bg-primary-subtle d-flex justify-content-between align-items-center">
+    <div class="card-header py-3 bg-{{ colorTemplate }}-subtle d-flex justify-content-between align-items-center">
       <div><fa-icon [icon]="faCircleCheck" class="me-2"></fa-icon>Tallas</div>
     </div>
 
@@ -78,15 +78,17 @@
 
   <div class="card mb-3" *ngFor="let color of product.colors; let i = index">
     <!-- Solo se muestra en el primer color -->
-    <div class="card-header py-3 bg-primary-subtle d-flex justify-content-between align-items-center" *ngIf="i === 0">
+    <div class="card-header py-3 bg-{{ colorTemplate }}-subtle d-flex justify-content-between align-items-center" *ngIf="i === 0">
       <div>
-        <fa-icon [icon]="faImage" class="me-2"></fa-icon>Galería
+        <fa-icon [icon]="faImage" class="me-2"></fa-icon>
+        <span *ngIf="product.category.has_size">Colores</span>
+        <span *ngIf="!product.category.has_size">Galeria</span>
       </div>
-      <app-button-add-color *ngIf="product.category.has_color" [product_id]="product.id" (colorCreate)="colorCreate($event)"></app-button-add-color>
+      <app-button-add-color color="{{ colorTemplate }}" *ngIf="product.category.has_color" [product_id]="product.id" (colorCreate)="colorCreate($event)">Colores</app-button-add-color>
     </div>
 
-    <div class="card-body">
-      <app-product-color [color]="color"></app-product-color>
+    <div class="card-body p-0">
+      <app-product-color [color]="color" (colorIdDelete)="reListColors($event)"></app-product-color>
     </div>
   </div>
 

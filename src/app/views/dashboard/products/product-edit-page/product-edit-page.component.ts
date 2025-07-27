@@ -73,6 +73,8 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
   nameControl = new FormControl('');
   product_id: number | null = null;
   productSubscription! : Subscription;
+
+  colorTemplate = "dark";
   
   @Input() user_id: number | null = null;
   form!: FormGroup;
@@ -89,6 +91,10 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
       console.log(resp.data);  
       this.form.patchValue(resp.data);
       this.product = resp.data;
+      //  console.log(this.product.category);
+      if (this.product.category.has_size) {
+        this.colorTemplate = "primary";
+      }
       this.loading = false;
     });
 
@@ -153,6 +159,12 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
     this.product.colors.unshift(color);
     // Aquí puedes manejar el evento de carga de color
     // Por ejemplo, enviar el color al servidor o procesarlo de alguna manera
+  }
+
+  reListColors(color_id: number){
+    // this.images = this.images.filter((image) => image.id !== id);/
+    console.log('Re-listing images after deletion of ID:', color_id);
+    this.product.colors = this.product.colors.filter((color: any) => color.id !== color_id);
   }
 
 }
