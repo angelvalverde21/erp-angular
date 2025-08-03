@@ -27,6 +27,7 @@ import { OptionsComponent } from './options/options.component';
 import { FormSearchComponent } from '../../shared/form/form-search/form-search.component';
 import { ProductColorComponent } from './product-color/product-color.component';
 import { ButtonAddColorComponent } from '../../shared/components/buttons/button-add-color/button-add-color.component';
+import { UploadDropzoneComponent } from '../../shared/upload-dropzone/upload-dropzone.component';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -44,10 +45,12 @@ import { ButtonAddColorComponent } from '../../shared/components/buttons/button-
     ProductColorComponent,
     FormSearchComponent,
     ButtonAddColorComponent,
+    UploadDropzoneComponent
     ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss'
 })
+
 export class ProductEditPageComponent implements OnInit, OnDestroy {
 
   faPenToSquare = faPenToSquare;

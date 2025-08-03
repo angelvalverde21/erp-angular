@@ -13,7 +13,7 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
 import { FormSearchComponent } from '../../shared/form/form-search/form-search.component';
 import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
 import { environment } from '../../../../core/environments/environment';
-import { ProductListTemplateComponent } from '../../shared/templates/product/product-list-template/product-list-template.component';
+import { ProductListTemplateComponent } from '../../shared/templates/product-list-template/product-list-template.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';

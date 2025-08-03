@@ -107,7 +107,7 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Ayuda',
-    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/ayuda` : 'https://coreui.io/angular/docs/',
+    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/ayuda` : 'https://3b.pe',
     iconComponent: { name: 'cil-description' },
     attributes: { target: '_blank' }
   }
