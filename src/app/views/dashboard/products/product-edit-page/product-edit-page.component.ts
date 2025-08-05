@@ -24,6 +24,7 @@ import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormSearchComponent } from '../../shared/form/form-search/form-search.component';
 import { ProductColorComponent } from './product-color/product-color.component';
 import { UploadDropzoneComponent } from '../../shared/upload-dropzone/upload-dropzone.component';
+import { ColorsComponent } from './colors/colors.component';
 
 
 @Component({
@@ -34,7 +35,7 @@ import { UploadDropzoneComponent } from '../../shared/upload-dropzone/upload-dro
     ButtonComponent, 
     CommonModule, 
     ReactiveFormsModule,
-
+    ColorsComponent,
     NgbAccordionModule,
     FontAwesomeModule,
     ProductColorComponent,

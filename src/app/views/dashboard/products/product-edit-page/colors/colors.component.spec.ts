@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ColorSizeComponent } from './color-size.component';
+import { ColorsComponent } from './colors.component';
 
-describe('ColorSizeComponent', () => {
-  let component: ColorSizeComponent;
-  let fixture: ComponentFixture<ColorSizeComponent>;
+describe('ColorsComponent', () => {
+  let component: ColorsComponent;
+  let fixture: ComponentFixture<ColorsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ColorSizeComponent]
+      imports: [ColorsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ColorSizeComponent);
+    fixture = TestBed.createComponent(ColorsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

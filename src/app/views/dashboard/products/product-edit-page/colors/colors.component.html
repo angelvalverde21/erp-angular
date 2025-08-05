@@ -1,0 +1,15 @@
+<!-- {{ colors | json }} -->
+<div *ngIf="has_size; else onlyOneColor">
+    Tambien habra colores
+</div>
+
+<ng-template #onlyOneColor>
+
+    <!-- Esto se ejecutara una sola vez -->
+    <ng-container *ngFor="let color of colors">
+
+        <app-gallery [path]="`products/${color.product_id}/colors/${color.id}`"></app-gallery>
+
+    </ng-container>
+
+</ng-template>

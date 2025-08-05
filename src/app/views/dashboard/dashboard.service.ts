@@ -13,11 +13,13 @@ import { environment } from '../../core/environments/environment';
 export class DashboardService {
 
   baseUrl: string  = environment.apiPublic;
+  newBaseUrl: string  = "";
 
   constructor(
     private http: HttpClient, 
     private router: Router,
   ) {
+    this.newBaseUrl = `${environment.apiDashboard}/${environment.storeName}`;
   }
   
   isValid(name: string): Observable<boolean> {
@@ -93,5 +95,8 @@ export class DashboardService {
   }
 
 
+  getGallery(path: string = ""): Observable<any> {
+    return this.http.get(`${this.newBaseUrl}/${path}`);
+  }
 
 }
