@@ -1,0 +1,136 @@
+<app-form-search></app-form-search>
+
+<app-loading *ngIf="loading"></app-loading>
+
+<form [formGroup]="form" *ngIf="!loading">
+
+  <div class="card mb-3">
+
+    <div class="card-header py-3 bg-{{ colorTemplate }} text-white">
+      <fa-icon [icon]="faPenToSquare" class="me-2"></fa-icon> Edicion Producto
+    </div>
+
+    <div class="card-body">
+
+      <div class="row mb-3">
+        <div class="col-lg-8">
+          <app-input-group text="Titulo" [icon]="faPenToSquare">
+            <input formControlName="name" type="text" class="form-control" placeholder="Product Name" aria-label="name"
+              aria-describedby="basic-name" />
+          </app-input-group>
+        </div>
+
+        <div class="col-lg-4">
+          <app-input-group text="Precio" icontext="S/.">
+            <input formControlName="price" type="number" step="0.01" class="form-control" placeholder="0.00"
+              aria-label="price" aria-describedby="basic-price" />
+          </app-input-group>
+        </div>
+
+        <div class="col-lg-12 col-12">
+          <label class="mb-2">Descripcion</label>
+          <textarea formControlName="body" class="form-control mb-3" placeholder="Descripcion"></textarea>
+        </div>
+
+        <div class="col-lg-12 col-12">
+          <app-input-group text="Tags" [icon]="faTags">
+            <input formControlName="tags" type="text" class="form-control" placeholder="tags" aria-label="price"
+              aria-describedby="basic-price" />
+          </app-input-group>
+        </div>
+
+        <div class="col-lg-12 col-12 d-flex justify-content-between align-items-center mb-3">
+          <span class="badge bg-secondary me-1 ng-star-inserted">{{ product.category?.name || 'Sin Categoria' }}</span>
+          <!-- <div style="font-style: italic;">Categoria: {{ product.category?.name || 'Sin Categoria' }}</div> -->
+        </div>
+
+        <app-button color="{{ colorTemplate }}" [icon]="faSave" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
+          (action)="update()">Actualizar Producto</app-button>
+
+        <!-- {{ form.value | json }} -->
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- tallas -->
+  <div class="card mb-3" *ngIf="product.category.has_size">
+
+    <div class="card-header py-3 bg-{{ colorTemplate }}-subtle d-flex justify-content-between align-items-center">
+      <div><fa-icon [icon]="faCircleCheck" class="me-2"></fa-icon>Tallas</div>
+    </div>
+
+    <div class="card-body">
+
+      <span class="badge bg-secondary me-1 ng-star-inserted" *ngFor="let size of product.sizes">{{ size.name }}</span>
+
+    </div>
+
+  </div>
+
+  <!-- colores -->
+
+  <!-- <div>
+
+  </div> -->
+
+  <div *ngIf="product.category.has_size; else onlyOneColor">
+
+    <div class="card mb-3" *ngFor="let color of product.colors; let i = index">
+
+      <!-- Solo se muestra en el primer color -->
+
+      <div class="card-header py-3 bg-{{ colorTemplate }}-subtle d-flex justify-content-between align-items-center"
+        *ngIf="i === 0">
+        <div>
+          <fa-icon [icon]="faImage" class="me-2"></fa-icon>
+        </div>
+        <!-- <app-button-add-color color="{{ colorTemplate }}" *ngIf="product.category.has_color" [product_id]="product.id"
+          (colorCreate)="colorCreate($event)">Colores</app-button-add-color> -->
+      </div>
+
+      <div class="card-body p-0">
+        <app-product-color [color]="color" (colorIdDelete)="reListColors($event)"></app-product-color>
+      </div>
+
+    </div>
+
+  </div>
+
+  <ng-template #onlyOneColor>
+    <div class="card mb-3">
+
+      <div class="card-header py-3 bg-secondary text-white">
+        <fa-icon [icon]="faImage" class="me-2"></fa-icon>Galeria de Imagenes
+      </div>
+
+      <div class="card-body">
+        <app-upload-dropzone [path]="`products/${product.id}/colors/${color.id}/images`"></app-upload-dropzone>
+
+      </div>
+
+    </div>
+
+    <div class="card mb-3" *ngFor="let color of product.colors; let i = index">
+
+      <!-- Solo se muestra en el primer color -->
+
+      <div class="card-header py-3 bg-{{ colorTemplate }}-subtle d-flex justify-content-between align-items-center"
+        *ngIf="i === 0">
+        <div>
+          <fa-icon [icon]="faImage" class="me-2"></fa-icon>
+        </div>
+        <!-- <app-button-add-color color="{{ colorTemplate }}" *ngIf="product.category.has_color" [product_id]="product.id"
+          (colorCreate)="colorCreate($event)">Colores</app-button-add-color> -->
+      </div>
+
+      <div class="card-body p-0">
+        <app-product-color [color]="color" (colorIdDelete)="reListColors($event)"></app-product-color>
+      </div>
+
+    </div>
+  </ng-template>
+
+</form>
