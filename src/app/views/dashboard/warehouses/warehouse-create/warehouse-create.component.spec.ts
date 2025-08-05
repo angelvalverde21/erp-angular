@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RowSizeComponent } from './row-size.component';
+import { WarehouseCreateComponent } from './warehouse-create.component';
 
-describe('RowSizeComponent', () => {
-  let component: RowSizeComponent;
-  let fixture: ComponentFixture<RowSizeComponent>;
+describe('WarehouseCreateComponent', () => {
+  let component: WarehouseCreateComponent;
+  let fixture: ComponentFixture<WarehouseCreateComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RowSizeComponent]
+      imports: [WarehouseCreateComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RowSizeComponent);
+    fixture = TestBed.createComponent(WarehouseCreateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

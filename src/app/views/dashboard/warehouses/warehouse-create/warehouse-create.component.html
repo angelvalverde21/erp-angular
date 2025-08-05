@@ -1,0 +1,25 @@
+<app-loading *ngIf="loading"></app-loading>
+
+<form [formGroup]="form" *ngIf="!loading">
+
+    <div class="row mb-3">
+        <div class="col-lg-12">
+            <app-input-group text="Nombre de Sucursal" [icon]="faPenToSquare">
+                <input formControlName="name" type="text" class="form-control" placeholder="Sucursal"
+                    aria-label="name" aria-describedby="basic-name" />
+            </app-input-group>
+        </div>
+
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+
+            <app-button color="primary" [icon]="faSave" [disabled]="disabledButton"
+                [loadingIcon]="loadingIcon" (action)="create()">Crear Sucursal</app-button>
+        </div>
+    </div>
+
+</form>
+
+{{ form.value | json }}

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RowColorSizeComponent } from './row-color-size.component';
+import { ColorSizeComponent } from './color-size.component';
 
-describe('RowColorSizeComponent', () => {
-  let component: RowColorSizeComponent;
-  let fixture: ComponentFixture<RowColorSizeComponent>;
+describe('ColorSizeComponent', () => {
+  let component: ColorSizeComponent;
+  let fixture: ComponentFixture<ColorSizeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RowColorSizeComponent]
+      imports: [ColorSizeComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RowColorSizeComponent);
+    fixture = TestBed.createComponent(ColorSizeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

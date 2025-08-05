@@ -76,8 +76,8 @@
 
   </div> -->
 
-  <div *ngIf="product.colors.length > 0; else bloqueAlternativo">
-    
+  <div *ngIf="product.category.has_size; else onlyOneColor">
+
     <div class="card mb-3" *ngFor="let color of product.colors; let i = index">
 
       <!-- Solo se muestra en el primer color -->
@@ -86,11 +86,9 @@
         *ngIf="i === 0">
         <div>
           <fa-icon [icon]="faImage" class="me-2"></fa-icon>
-          <span *ngIf="product.category.has_size">Colores</span>
-          <span *ngIf="!product.category.has_size">Galeria</span>
         </div>
-        <app-button-add-color color="{{ colorTemplate }}" *ngIf="product.category.has_color" [product_id]="product.id"
-          (colorCreate)="colorCreate($event)">Colores</app-button-add-color>
+        <!-- <app-button-add-color color="{{ colorTemplate }}" *ngIf="product.category.has_color" [product_id]="product.id"
+          (colorCreate)="colorCreate($event)">Colores</app-button-add-color> -->
       </div>
 
       <div class="card-body p-0">
@@ -98,25 +96,41 @@
       </div>
 
     </div>
+
   </div>
 
-  <ng-template #bloqueAlternativo>
+  <ng-template #onlyOneColor>
+    <div class="card mb-3">
 
-    <div class="card">
-    
       <div class="card-header py-3 bg-secondary text-white">
         <fa-icon [icon]="faImage" class="me-2"></fa-icon>Galeria de Imagenes
       </div>
-    
+
       <div class="card-body">
-        <app-upload-dropzone></app-upload-dropzone>
+        <app-upload-dropzone [path]="`products/${product.id}/colors/${color.id}/images`"></app-upload-dropzone>
+
       </div>
-    
+
     </div>
 
+    <div class="card mb-3" *ngFor="let color of product.colors; let i = index">
+
+      <!-- Solo se muestra en el primer color -->
+
+      <div class="card-header py-3 bg-{{ colorTemplate }}-subtle d-flex justify-content-between align-items-center"
+        *ngIf="i === 0">
+        <div>
+          <fa-icon [icon]="faImage" class="me-2"></fa-icon>
+        </div>
+        <!-- <app-button-add-color color="{{ colorTemplate }}" *ngIf="product.category.has_color" [product_id]="product.id"
+          (colorCreate)="colorCreate($event)">Colores</app-button-add-color> -->
+      </div>
+
+      <div class="card-body p-0">
+        <app-product-color [color]="color" (colorIdDelete)="reListColors($event)"></app-product-color>
+      </div>
+
+    </div>
   </ng-template>
-  
-
-
 
 </form>

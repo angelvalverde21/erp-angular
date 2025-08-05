@@ -1,9 +1,12 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-button-check',
-  imports: [],
+  imports: [FontAwesomeModule],
   templateUrl: './button-check.component.html',
   styleUrl: './button-check.component.scss',
   providers: [
@@ -20,7 +23,7 @@ export class ButtonCheckComponent implements OnInit, ControlValueAccessor {
   @Input() color: string = "outline-secondary"; // Color del botón
   @Input() icon: string | null = "fa-regular fa-circle-check"; 
   @Input() size: string = "btn-sm"; 
-
+  faCircleCheck = faCircleCheck;
   selectedValue: boolean = false; // Valor seleccionado por defecto
 
   constructor() {}

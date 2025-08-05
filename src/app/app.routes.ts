@@ -26,6 +26,10 @@ export const routes: Routes = [
         loadChildren: () => import('./views/dashboard/categories/routes.category').then((m) => m.routes)
       },
       {
+        path: 'settings',
+        loadChildren: () => import('./views/dashboard/settings/route.settings').then((m) => m.routes)
+      },
+      {
         path: 'pages',
         loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
       }

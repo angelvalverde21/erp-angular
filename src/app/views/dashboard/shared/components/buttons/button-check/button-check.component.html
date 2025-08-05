@@ -1,10 +1,6 @@
 <button type="button" class="d-flex justify-content-between btn btn-{{ color }} {{ size }}" (click)="selected()">
 
-    @if (icon != null) {
-        <div class="d-flex justify-content-between">
-          <div class="me-2"><i class="{{ icon }}"></i></div>
-        </div>
-      }
+      <fa-icon  [icon]="faCircleCheck" class="me-2"></fa-icon>
       <ng-content></ng-content>
 
 </button>

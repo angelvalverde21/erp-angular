@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RowProductComponent } from './row-product.component';
+import { OneColorComponent } from './one-color.component';
 
-describe('RowProductComponent', () => {
-  let component: RowProductComponent;
-  let fixture: ComponentFixture<RowProductComponent>;
+describe('OneColorComponent', () => {
+  let component: OneColorComponent;
+  let fixture: ComponentFixture<OneColorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RowProductComponent]
+      imports: [OneColorComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RowProductComponent);
+    fixture = TestBed.createComponent(OneColorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

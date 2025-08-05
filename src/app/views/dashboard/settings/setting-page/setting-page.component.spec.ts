@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RowColorComponent } from './row-color.component';
+import { SettingPageComponent } from './setting-page.component';
 
-describe('RowColorComponent', () => {
-  let component: RowColorComponent;
-  let fixture: ComponentFixture<RowColorComponent>;
+describe('SettingPageComponent', () => {
+  let component: SettingPageComponent;
+  let fixture: ComponentFixture<SettingPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RowColorComponent]
+      imports: [SettingPageComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RowColorComponent);
+    fixture = TestBed.createComponent(SettingPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

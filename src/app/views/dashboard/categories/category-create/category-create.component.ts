@@ -59,6 +59,17 @@ export class CategoryCreateComponent {
     // });
   }
 
+  
+  private formInit(): void {
+    this.form = this.fb.group({
+      name: ['', [Validators.required]],
+      has_size: ['', [Validators.required]],
+      has_color: [true],
+      category_id: [null] //No es obligatorio porque sino no se podria crear las categorias padre
+    });
+  }
+
+
   ngOnInit(): void {
     this.formInit();
     // this.formLoad();
@@ -73,18 +84,10 @@ export class CategoryCreateComponent {
     });
   }
 
-  private formInit(): void {
-    this.form = this.fb.group({
-      name: ['', [Validators.required]],
-      has_size: [false],
-      has_color: [false],
-      category_id: [null]
-    });
-  }
-
   form!: FormGroup;
   loading: boolean = false;
   success: boolean = false;
+  activarSelected: boolean = true;
 
   loadCategories() {
 
@@ -119,7 +122,7 @@ export class CategoryCreateComponent {
       return;
     }else{
 
-      this._category.store(this.form.value).subscribe({
+      this._category.store(this.form.getRawValue()).subscribe({
         next: (resp: any) => {
 
           Swal.fire('Guardado', 'El registro ha sido creado', 'success');
@@ -132,6 +135,9 @@ export class CategoryCreateComponent {
           this.form.reset(); // Reinicia el formulario pero los valores de has_color y has_reset los coloca null
           this.categoryUpdated.emit(true); // Emitir el evento para notificar que se ha creado una categoría
 
+          this.form.get('has_size')?.setValue("");
+          this.form.get('has_size')?.enable();
+
         },
 
         error: (error: any) => {
@@ -141,6 +147,19 @@ export class CategoryCreateComponent {
       });
     }
 
+  }
+
+  categorySelected(category: any){
+    console.log(category);
+    if (category != null) {
+      category.has_size ? this.form.get('has_size')?.setValue(1, { emitEvent: false }) : this.form.get('has_size')?.setValue(0, { emitEvent: false });
+      // this.form.get('has_size')?.disable();
+      this.form.get('has_size')?.disable();
+      
+    }else{
+      this.form.get('has_size')?.setValue(0);
+      this.form.get('has_size')?.enable();
+    }
   }
 
 }

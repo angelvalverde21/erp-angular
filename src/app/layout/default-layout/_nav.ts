@@ -33,22 +33,22 @@ export const navItems: INavData[] = [
 
     {
     name: 'Website',
-    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/settings` : '/settings',
+    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/web` : '/web',
     iconComponent: { name: 'cil-house' },
         children: [
       {
         name: 'Carousel',
-        url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/dashboard` : '/warehouses/1/orders',
+        url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/website/carousel` : '/website/carousel',
         icon: 'nav-icon-bullet'
       },
       {
         name: 'Ofertas',
-        url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/dashboard` : '/warehouses/1/orders/create',
+        url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/website/deals` : '/website/deals',
         icon: 'nav-icon-bullet'
       },
       {
         name: 'Reporte',
-        url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/dashboard` : '/warehouses/1/orders/reports',
+        url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/website/reports` : '/website/reports',
         icon: 'nav-icon-bullet'
       }
     ]

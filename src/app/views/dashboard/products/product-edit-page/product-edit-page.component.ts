@@ -14,7 +14,6 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
 // import { UploadDropzoneComponent } from '@shared/upload-dropzone/upload-dropzone.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPenToSquare, faGear, faSave, faShirt, faTags } from '@fortawesome/free-solid-svg-icons';
@@ -22,12 +21,10 @@ import { faImage, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
 
 import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
-import { ButtonAddComponent } from '../../shared/components/buttons/button-add/button-add.component';
-import { OptionsComponent } from './options/options.component';
 import { FormSearchComponent } from '../../shared/form/form-search/form-search.component';
 import { ProductColorComponent } from './product-color/product-color.component';
-import { ButtonAddColorComponent } from '../../shared/components/buttons/button-add-color/button-add-color.component';
 import { UploadDropzoneComponent } from '../../shared/upload-dropzone/upload-dropzone.component';
+
 
 @Component({
   selector: 'app-product-edit-page',
@@ -37,14 +34,11 @@ import { UploadDropzoneComponent } from '../../shared/upload-dropzone/upload-dro
     ButtonComponent, 
     CommonModule, 
     ReactiveFormsModule,
-    GalleryComponent,
+
     NgbAccordionModule,
     FontAwesomeModule,
-    ButtonAddComponent,
-    OptionsComponent,
     ProductColorComponent,
     FormSearchComponent,
-    ButtonAddColorComponent,
     UploadDropzoneComponent
     ],
   templateUrl: './product-edit-page.component.html',
@@ -71,19 +65,24 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
 
   categories: any[] = [];
   loadingSubcategories: boolean = true;
-  disabledButton: boolean = true;
-  loadingIcon: boolean = false;
   nameControl = new FormControl('');
   product_id: number | null = null;
   productSubscription! : Subscription;
-
+  
   colorTemplate = "dark";
   
   @Input() user_id: number | null = null;
   form!: FormGroup;
   loading: boolean = true;
+
+  //botones de loading
   success: boolean = false;
+  disabledButton: boolean = true;
+  loadingIcon: boolean = false;
+
   product: any;
+  color: any;
+  colorQuantity: number = 0;
 
   ngOnInit(): void {
 
@@ -98,6 +97,14 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
       if (this.product.category.has_size) {
         this.colorTemplate = "primary";
       }
+
+      if (this.product.category.has_size) {
+        
+      } else {
+        this.color = this.product.colors[0];
+      }
+
+
       this.loading = false;
     });
 

@@ -1,0 +1,65 @@
+<app-loading *ngIf="loading"></app-loading>
+
+<form [formGroup]="form" *ngIf="!loading">
+
+    <div class="card mb-3">
+
+        <div class="card-header py-3 bg-{{ colorTemplate }} text-white">
+            Setting page
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+                <div class="col-lg-12">
+                    <app-input-group text="Titulo" [icon]="faPenToSquare">
+                        <input formControlName="name" type="text" class="form-control" placeholder="Product Name"
+                            aria-label="name" aria-describedby="basic-name" />
+                    </app-input-group>
+                </div>
+
+                <div class="col-lg-12">
+                    <app-input-group text="Email" [icon]="faEnvelope">
+                        <input formControlName="email" type="text" class="form-control" placeholder="Email"
+                            aria-label="email" aria-describedby="basic-name" />
+                    </app-input-group>
+                </div>
+
+                <div class="col-lg-4">
+                    <app-input-group text="Ruc" [icon]="faIdBadge">
+                        <input formControlName="ruc" type="text" class="form-control" placeholder="Ruc" aria-label="ruc"
+                            aria-describedby="basic-name" />
+                    </app-input-group>
+                </div>
+
+                <div class="col-lg-4">
+                    <app-input-group text="Phone" [icon]="faPhone">
+                        <input formControlName="phone" type="text" class="form-control" placeholder="Phone"
+                            aria-label="phone" aria-describedby="basic-name" />
+                    </app-input-group>
+
+                </div>
+
+                <div class="col-lg-4">
+                    <app-input-group text="Slug" [icon]="faIdBadge">
+                        <input formControlName="slug" type="text" class="form-control" placeholder="Slug"
+                            aria-label="Slug" aria-describedby="basic-name" />
+                    </app-input-group>
+                </div>
+
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+
+                    <app-button color="{{ colorTemplate }}" [icon]="faSave" [disabled]="disabledButton"
+                        [loadingIcon]="loadingIcon" (action)="update()">Actualizar Producto</app-button>
+                </div>
+            </div>
+    
+        </div>
+    </div>
+
+</form>
+
+<app-warehouse-index *ngIf="!loading"></app-warehouse-index>
