@@ -6,17 +6,13 @@ import { environment } from '../../../../../core/environments/environment';
 
 @Component({
   selector: 'app-colors',
-<<<<<<< HEAD
-  imports: [JsonPipe, CommonModule, GalleryComponent],
-=======
-  imports: [JsonPipe, CommonModule, UploadDropzoneComponent, GalleryComponent, ColorComponent],
->>>>>>> 9c06b31b1e8f6bd67fce69ad39454b70c57add49
+  imports: [JsonPipe, CommonModule, GalleryComponent, ColorComponent],
   templateUrl: './colors.component.html',
   styleUrl: './colors.component.scss'
 })
 export class ColorsComponent {
 
-  showComponentName = environment.showComponentName;
+  // showComponentName = environment.showComponentName;
 
   @Input() colors: any[] = []; 
   @Input() has_size: boolean = false;
