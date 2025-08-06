@@ -10,10 +10,8 @@ import {
   NgbCarouselModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { ButtonAddComponent } from '../buttons/button-add/button-add.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faGear, faImages, faImage, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { ButtonComponent } from '../buttons/button/button.component';
 import { DashboardService } from '../../../dashboard.service';
 import { Subscription } from 'rxjs';
 import { LoadingComponent } from '../loading/loading.component';
@@ -23,9 +21,7 @@ import { LoadingComponent } from '../loading/loading.component';
     UploadDropzoneComponent,
     NgbCarouselModule,
     CommonModule,
-    ButtonAddComponent,
     FontAwesomeModule,
-    ButtonComponent,
     UploadDropzoneComponent,
     LoadingComponent
   ],
