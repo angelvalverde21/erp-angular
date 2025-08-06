@@ -20,10 +20,10 @@ import {
   faCircleCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import { UploadDropzoneComponent } from '../../../shared/upload-dropzone/upload-dropzone.component';
-import { ColorService } from './color.service';
-import { ImageService } from './image/image.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
-import { ImageComponent } from './image/image.component';
+import { ImageComponent } from '../../../shared/components/gallery/image/image.component';
+import { ImageService } from '../../../shared/components/gallery/image/image.service';
+import { ColorService } from '../colors/color/color.service';
 @Component({
   selector: 'app-product-color',
   imports: [

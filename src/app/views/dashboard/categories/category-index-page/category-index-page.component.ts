@@ -6,7 +6,7 @@ import { ButtonLinkComponent } from '../../shared/components/buttons/button-link
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEdit, faPlus, faLink } from '@fortawesome/free-solid-svg-icons';
 import { RouterModule } from '@angular/router';
-
+import { CategoryIndexComponent } from '../category-index/category-index.component';
 @Component({
   selector: 'app-category-index-page',
   imports: [
@@ -14,7 +14,8 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     ButtonLinkComponent,
     FontAwesomeModule,
-    RouterModule
+    RouterModule,
+    CategoryIndexComponent
   ],
   templateUrl: './category-index-page.component.html',
   styleUrl: './category-index-page.component.scss'

@@ -12,25 +12,8 @@
 
         <div class="table-responsive">
 
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between align-items-center"
-                    *ngFor="let category of categories">
-                    <div>
-                        <h5>{{ category.name }}</h5>
-                        <p class="text-muted">
-                            @if(category.has_size){
-                            <!-- <span class="badge bg-primary me-1">Colores</span> -->
-                            <span class="badge bg-secondary">Tallas</span>
-                            }
-                        </p>
+            <app-category-index [categories]="categories"></app-category-index>
 
-                    </div>
-                    <div class="d-flex justify-content-end align-items-center">
-                        <app-button-link color="outline-secondary" class="me-2" [icon]="faLink" [path]="['categories', 'slug', category.slug]">Ver</app-button-link>
-                        <app-button-link color="secondary" [icon]="faEdit" [path]="['categories', category.name]">Editar</app-button-link>
-                    </div>
-                </li>
-            </ul>
 
         </div>
 

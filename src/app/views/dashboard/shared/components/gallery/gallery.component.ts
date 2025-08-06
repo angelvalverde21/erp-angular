@@ -17,6 +17,8 @@ import { ButtonComponent } from '../buttons/button/button.component';
 import { DashboardService } from '../../../dashboard.service';
 import { Subscription } from 'rxjs';
 import { LoadingComponent } from '../loading/loading.component';
+import { ImageComponent } from './image/image.component';
+
 @Component({
   selector: 'app-gallery',
   imports: [
@@ -27,7 +29,8 @@ import { LoadingComponent } from '../loading/loading.component';
     FontAwesomeModule,
     ButtonComponent,
     UploadDropzoneComponent,
-    LoadingComponent
+    LoadingComponent,
+    ImageComponent
   ],
   templateUrl: './gallery.component.html',
   styleUrl: './gallery.component.scss',
@@ -54,7 +57,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loading = true;
-    this._dashboard.getGallery(this.path + '/images').subscribe((resp:any) => {
+    this._dashboard.getGallery(this.path).subscribe((resp:any) => {
       this.images = resp.data;
       this.loading = false;
       console.log(resp);
@@ -71,6 +74,18 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
   }
 
+  fileUpload(event: any) {
+    console.log(event);
+    this.images.unshift(event);
+    // this.images.
+  }
 
   
+  reListImages(id: any) {
+
+    // this.images = this.images.filter((image) => image.id !== id);/
+    console.log('Re-listing images after deletion of ID:', id);
+    this.images = this.images.filter((image) => image.id !== id);
+
+  }
 }

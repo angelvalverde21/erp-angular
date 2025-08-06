@@ -1,5 +1,6 @@
 export const environment = {
 
+    showComponentName : true,
     production: false,
     showNameComponent: true,
     storeName: 'ara',
