@@ -18,7 +18,6 @@ import {
   faUpDownLeftRight,
   faCircleCheck,
 } from '@fortawesome/free-solid-svg-icons';
-import { UploadDropzoneComponent } from '../../../../shared/upload-dropzone/upload-dropzone.component';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { ImageComponent } from '../../../../shared/components/gallery/image/image.component';
 import { ImageService } from '../../../../shared/components/gallery/image/image.service';
@@ -28,7 +27,6 @@ import { GalleryComponent } from '../../../../shared/components/gallery/gallery.
   selector: 'app-color',
   imports: [
     FontAwesomeModule,
-    UploadDropzoneComponent,
     CommonModule,
     LoadingComponent,
     ImageComponent,

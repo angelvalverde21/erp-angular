@@ -31,7 +31,8 @@ export class ButtonAddColorComponent implements OnInit, OnDestroy {
   @Input() colortext: string = ""; 
   @Output() colorCreate = new EventEmitter<[]>();
   @Input() color: string = "primary"; 
-  
+    @Input() size: string = 'sm';
+
   
 
   constructor(config: NgbModalConfig, private modalService: NgbModal) {

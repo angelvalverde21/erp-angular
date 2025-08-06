@@ -38,16 +38,12 @@ export class ProductListTemplateComponent {
       text: "No podrás deshacer esta acción",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'No, cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         // Acción para eliminar el elemento
-
-        
-
         Swal.fire(
           'Eliminado!',
           'El elemento ha sido eliminado.',

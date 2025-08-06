@@ -30,6 +30,7 @@ export class LoginComponent {
   loading: boolean = false;
   buttonLoginActive: boolean = true;
   loadingIcon: boolean = false;
+  disabledButton: boolean = false;
   message: string = '';
   web: any;
 
@@ -83,6 +84,7 @@ export class LoginComponent {
 
     this.loadingIcon = true;
     this.buttonLoginActive = false;
+    this.disabledButton = true;
 
     this._auth.login(this.form.value).subscribe({
       next: (resp: any) => {
@@ -111,6 +113,7 @@ export class LoginComponent {
         this.message = resp.error.message;
         this.buttonLoginActive = true;
         this.loadingIcon = false;
+        this.disabledButton = false; //en caso de fallar el login activa nuevamente el boton
         console.log(resp);
       },
       complete: () => {

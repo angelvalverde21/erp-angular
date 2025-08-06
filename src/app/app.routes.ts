@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
+    redirectTo: 'products',
+    pathMatch: 'full',
   },
   {
     path: '',
@@ -12,6 +13,7 @@ export const routes: Routes = [
     data: {
       title: 'Home'
     },
+    canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',

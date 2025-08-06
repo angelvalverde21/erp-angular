@@ -14,7 +14,8 @@ export class ButtonAddComponent {
   
   @Output() action = new EventEmitter<void>();
   @Input() color: string = 'dark'; 
-  
+  @Input() size: string = 'sm';
+
   constructor() {
     // Puedes inicializar cualquier lógica aquí si es necesario
   } 

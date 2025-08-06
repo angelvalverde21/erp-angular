@@ -17,6 +17,7 @@ import { ProductListTemplateComponent } from '../../shared/templates/product-lis
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { ProductIndexComponent } from './product-index/product-index.component';
 
 @Component({
   selector: 'app-product-index-page',
@@ -28,7 +29,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
     FormSearchComponent,
     ButtonLinkComponent,
     ProductListTemplateComponent,
-    FontAwesomeModule
+    FontAwesomeModule,
+    ProductIndexComponent
 ],
   templateUrl: './product-index-page.component.html',
   styleUrl: './product-index-page.component.scss'

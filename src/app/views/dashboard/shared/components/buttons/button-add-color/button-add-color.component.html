@@ -15,7 +15,7 @@
   </div>
 </ng-template>
 
-<button type="button" class="text-{{ colortext }} d-flex justify-content-between align-items-center btn btn-{{ color }}" (click)="openVerticallyCentered(content)">
+<button type="button" class="text-{{ colortext }} d-flex justify-content-between align-items-center btn btn-{{ color }}  btn-{{size}}" (click)="openVerticallyCentered(content)">
 
   <fa-icon [icon]="faPlus" class="me-1"></fa-icon>
   <ng-content></ng-content>

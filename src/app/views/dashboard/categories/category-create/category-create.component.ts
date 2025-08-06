@@ -9,11 +9,9 @@ import { CategoryService } from '../category.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
-
 import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
-import { CommonModule, JsonPipe } from '@angular/common';
-import { ButtonCheckComponent } from '../../shared/components/buttons/button-check/button-check.component';
+import { CommonModule } from '@angular/common';
 import { CategorySelectedComponent } from '../category-selected/category-selected.component';
 import { faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -25,8 +23,6 @@ import { faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
     InputGroupComponent,
     ButtonComponent, 
     CommonModule, 
-    ButtonCheckComponent,
-    JsonPipe,
     CategorySelectedComponent
   ],
   templateUrl: './category-create.component.html',

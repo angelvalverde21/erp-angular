@@ -25,11 +25,11 @@ export const navItems: INavData[] = [
     url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/categories` : '/categories',
     iconComponent: { name: 'cil-list' }
   },
-  {
-    name: 'Settings',
-    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/settings` : '/settings',
-    iconComponent: { name: 'cil-settings' }
-  },
+  // {
+  //   name: 'Settings',
+  //   url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/settings` : '/settings',
+  //   iconComponent: { name: 'cil-settings' }
+  // },
 
     {
     name: 'Website',

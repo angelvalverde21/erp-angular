@@ -15,12 +15,11 @@ export class ButtonLinkComponent implements OnInit {
   @Input() icon: any;
   @Input() path: any;
   @Input() colortext: string = '';
+  @Input() size: string = 'sm';
+  
 
   // prefix: any[] = [];
   link: any[] = [];
-
-  constructor() {
-  }
 
   ngOnInit(): void {
     // console.log(this.path);

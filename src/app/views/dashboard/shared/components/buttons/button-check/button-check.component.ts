@@ -22,7 +22,7 @@ export class ButtonCheckComponent implements OnInit, ControlValueAccessor {
 
   @Input() color: string = "outline-secondary"; // Color del botón
   @Input() icon: string | null = "fa-regular fa-circle-check"; 
-  @Input() size: string = "btn-sm"; 
+  @Input() size: string = "sm"; 
   faCircleCheck = faCircleCheck;
   selectedValue: boolean = false; // Valor seleccionado por defecto
 

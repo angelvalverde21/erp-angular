@@ -1,4 +1,4 @@
-<div class="imagen-container p-3">
+<div class="overlay-content p-3">
     <div class="d-flex justify-content-between align-items-center">
         <div class="image">
             <img height="75" class="mb-3" [src]="image.url_thumbnail" alt="" (click)="open()">
@@ -16,7 +16,10 @@
 
     </div>
 
-    <div class="waitdelete d-flex align-items-center justify-content-center" *ngIf="loading">
-        <app-loading></app-loading>
-    </div>
+    @if(loading){
+        <div class="overlay">
+            <app-loading></app-loading>
+        </div>
+    }
+
 </div>

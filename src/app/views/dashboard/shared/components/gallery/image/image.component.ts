@@ -3,12 +3,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrash, faUpDownLeftRight } from '@fortawesome/free-solid-svg-icons';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { ImageService } from './image.service';
-import { CommonModule } from '@angular/common';
 import { LightboxModule, Lightbox } from 'ngx-lightbox';
 
 @Component({
   selector: 'app-image',
-  imports: [FontAwesomeModule, LoadingComponent, CommonModule, LightboxModule],
+  imports: [FontAwesomeModule, LoadingComponent, LightboxModule],
   templateUrl: './image.component.html',
   styleUrl: './image.component.scss',
   providers: [Lightbox]
