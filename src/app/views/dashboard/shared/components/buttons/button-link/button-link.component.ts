@@ -23,7 +23,7 @@ export class ButtonLinkComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.path);
+    // console.log(this.path);
     
     const prefix = environment.showStoreNameInSlug ? [environment.storeName] : ['/'];
     this.link = [...prefix, ...(Array.isArray(this.path) ? this.path : [this.path])];

@@ -1,19 +1,17 @@
-<app-upload-dropzone [path]="'products/colors/store'"></app-upload-dropzone>
+<div class="upload mb-3">
+
+    <!-- {{ color | json }} -->
+
+    <app-upload-dropzone bordeColor="#9BA2AD" [path]="path" (fileUpload)="fileUpload($event)"></app-upload-dropzone>
+</div>
 
 <app-loading *ngIf="loading"></app-loading>
 
-<ng-container *ngIf="!loading">
-    <ul class="list-group list-group-flush" *ngFor="let image of images">
+<ul class="list-group" *ngIf="!loading">
 
-        <div class="list-group-item p-3">
-            <div class="image">
-                <img height="75" class="mb-3" [src]="image.url_thumbnail" alt="">
-            </div>
+    <li class="list-group-item p-0" *ngFor="let image of images">
 
-            <!-- <div class="waitdelete d-flex align-items-center justify-content-center" *ngIf="loading">
-            <app-loading></app-loading>
-        </div> -->
-        </div>
+        <app-image [image]="image" (imageIdDelete)="reListImages($event)"></app-image>
 
-    </ul>
-</ng-container>
+    </li>
+</ul>

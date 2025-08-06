@@ -1,1 +1,65 @@
-<p>color works!</p>
+<div class="color-container p-3 d-flex justify-content-between align-items-center">
+
+    <div class="gallery d-flex justify-content-between align-items-center flex-wrap">
+
+        <div class="gallery-item d-flex flex-column align-items-center justify-content-center" style="min-width: 150px;">
+
+            <img height="125"  class="mb-3" [src]="color?.image.url_thumbnail" alt="">
+
+            <!-- {{ image | json }} -->
+
+            <div class="controls">
+
+                @if (color.count_images > 1) {
+                <button class="btn btn-outline-dark me-2" (click)="openVerticallyCentered(content)"><fa-icon
+                        [icon]="faImages"></fa-icon></button>
+                } @else {
+
+                <button class="btn btn-outline-dark me-2" (click)="openVerticallyCentered(content)"><fa-icon
+                        [icon]="faImage"></fa-icon></button>
+                }
+
+                <button class="btn btn-outline-danger" (click)="borrarColor(color.id)"><fa-icon
+                        [icon]="faTrash"></fa-icon></button>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <!-- modal -->
+
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h5 class="modal-titled-flex align-items-center justify-content-between">
+                <span class="me-2"><fa-icon [icon]="faImage"></fa-icon></span>
+                <span>Variantes</span> <!-- las variantes son las imagenes que tiene cada color -->
+            </h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+
+            <app-gallery bordeColor="#9BA2AD"
+                    [path]="`products/${color.product_id}/colors/${color.id}/images`"></app-gallery>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Cerrar</button>
+        </div>
+    </ng-template>
+
+    <!-- {{ color | json }} -->
+
+    <div class="inventario" *ngIf="color.product?.category.has_size">
+
+        <h5>Inventario</h5>
+        <!-- <app-sizes></app-sizes> -->
+
+    </div>
+
+    <div class="waitdelete d-flex align-items-center justify-content-center" *ngIf="loadingDelete">
+        <app-loading></app-loading>
+    </div>
+
+</div>

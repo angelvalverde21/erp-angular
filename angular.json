@@ -39,7 +39,8 @@
             ],
             "styles": [
               "src/scss/styles.scss",
-              "node_modules/dropzone/dist/dropzone.css"
+              "node_modules/dropzone/dist/dropzone.css",
+              "node_modules/ngx-lightbox/lightbox.css"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [],
