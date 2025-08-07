@@ -27,6 +27,13 @@ export const routes: Routes = [
         data: {
           title: 'Crear Categoria'
         }
+      },
+      {
+        path: ':category_id',
+        loadComponent: () => import('../categories/category-edit-page/category-edit-page.component').then(m => m.CategoryEditPageComponent),
+        data: {
+          title: 'Editar'
+        }
       }
     ]
   },

@@ -1,15 +1,16 @@
 <ul class="list-group list-group-flush">
+
     @for (category of categories; track category.id) {
         <li class="list-group-item">
             <app-category-row [category]="category"></app-category-row>
-        </li>
 
-        @for (children of category.children; track children.id) {
-        <li class="list-group-item">
+
+            @for (children of category.children; track children.id) {
+
             <app-category-row [category]="children" [is_children]="true"></app-category-row>
+
+            }
         </li>
-        }
-
-
     }
+
 </ul>

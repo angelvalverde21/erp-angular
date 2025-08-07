@@ -5,8 +5,11 @@
         <div class="content-list d-flex flex-row mb-2 mb-md-0 w-100">
             <!-- thumbanil -->
             <div class="image me-2 text-center" style="width: 150px;">
+                <a [routerLink]="['/','products', product.id]" class="img-link">
                 <img [src]="product.last_color?.image?.url_thumbnail" (error)="onImageError($event)" height="100"
                     alt="">
+                </a>
+
             </div>
 
             <!-- Description -->

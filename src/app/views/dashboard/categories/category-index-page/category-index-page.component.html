@@ -1,11 +1,12 @@
-<app-loading *ngIf="loading" size="md"></app-loading>
+@if(loading){
+<app-loading size="md"></app-loading>
+}@else{
+<div class="card">
 
-
-<div class="card" *ngIf="!loading">
-
-    <div class="card-header d-flex justify-content-between pt-3 pb-3">
+    <div class="card-header bg-dark text-white d-flex justify-content-between pt-3 pb-3">
         <div class="title">Categorias</div>
-        <app-button-link [icon]="faPlus" [path]="['categories', 'create']">Crear Categoria</app-button-link>
+        <app-button-link [icon]="faPlus" color="light" [path]="['categories', 'create']">Crear
+            Categoria</app-button-link>
     </div>
 
     <div class="card-body">
@@ -20,3 +21,4 @@
     </div>
 
 </div>
+}

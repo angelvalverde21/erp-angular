@@ -29,6 +29,8 @@ import { faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
   styleUrl: './category-create.component.scss'
 })
 
+
+
 export class CategoryCreateComponent {
 
   category_id: number | null = null;
@@ -46,13 +48,7 @@ export class CategoryCreateComponent {
     private _route: ActivatedRoute,
      private _category: CategoryService,
   ) {
-    
-    // this._route.params.subscribe((params) => {
-    //   this.category_id = params['category_id'];
-
-    //   console.log(this.category_id);
-      
-    // });
+  
   }
 
   

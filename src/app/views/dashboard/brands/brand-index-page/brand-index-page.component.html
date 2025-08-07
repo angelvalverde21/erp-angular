@@ -1,0 +1,31 @@
+@if(loading){
+<app-loading size="md"></app-loading>
+}@else{
+<div class="card">
+
+    <div class="card-header bg-dark text-white d-flex justify-content-between pt-3 pb-3">
+        <div class="title">Marcas</div>
+        <app-button-link [icon]="faPlus" color="light" [path]="['brands', 'create']">Crear
+            Marca</app-button-link>
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <ul class="list-group list-group-flush">
+
+                @for (brand of brands; track brand.id) {
+                <li class="list-group-item">
+                    {{ brand.name }}
+                </li>
+                }
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+}

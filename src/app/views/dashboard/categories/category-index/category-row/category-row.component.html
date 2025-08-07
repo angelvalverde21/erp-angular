@@ -1,4 +1,4 @@
-<div class="category-row d-flex justify-content-between align-items-center" [ngClass]="is_children ? 'ms-4' : 'mt-4'"
+<div class="category-row d-flex justify-content-between align-items-center my-3" [ngClass]="is_children ? 'justify' : 'mt-4'"
 >
     <div>
         <h5>  
@@ -9,11 +9,12 @@
             {{ category.name }} 
         </h5>
     </div>
+
     <div class="d-flex justify-content-end align-items-center">
         <app-button-link color="outline-secondary" class="me-2" [icon]="faLink"
             [path]="['categories', 'slug', category.slug]">Ver</app-button-link>
         <app-button-link [color]="colorButton" [icon]="faEdit"
-            [path]="['categories', category.name]">Editar</app-button-link>
+            [path]="['categories', category.id]">Editar</app-button-link>
     </div>
 
     <!-- {{ colorButton }} -->

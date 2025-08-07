@@ -9,9 +9,9 @@ import { BaseCrudService } from '../base-crud.service';
   providedIn: 'root'
 })
 
-export class CategoryService extends BaseCrudService {
+export class BrandService extends BaseCrudService {
 
-  protected baseUrl = `${environment.apiDashboard}/${environment.storeName}/categories`; 
+  protected baseUrl = `${environment.apiDashboard}/${environment.storeName}/brands`; 
 
   constructor(http: HttpClient) {
 

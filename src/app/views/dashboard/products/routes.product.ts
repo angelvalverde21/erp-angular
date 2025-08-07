@@ -14,7 +14,7 @@ export const routes: Routes = [
               './product-index-page/product-index-page.component'
             ).then((m) => m.ProductIndexPageComponent),
         data: {
-          title: 'Listado'
+          title: 'Todos'
         }
       },
       {
@@ -29,7 +29,7 @@ export const routes: Routes = [
         path: 'search/:search',
         loadComponent: () => import('./product-search-page/product-search-page.component').then(m => m.ProductSearchPageComponent),
         data: {
-          title: 'Search'
+          title: 'Buscar'
         }
       },
 

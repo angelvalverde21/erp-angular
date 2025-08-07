@@ -11,7 +11,6 @@ import { CategoryIndexComponent } from '../category-index/category-index.compone
   selector: 'app-category-index-page',
   imports: [
     LoadingComponent,
-    CommonModule,
     ButtonLinkComponent,
     FontAwesomeModule,
     RouterModule,

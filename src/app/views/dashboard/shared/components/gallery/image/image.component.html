@@ -1,14 +1,14 @@
 <div class="overlay-content p-3">
     <div class="d-flex justify-content-between align-items-center">
         <div class="image">
-            <img height="75" class="mb-3" [src]="image.url_thumbnail" alt="" (click)="open()">
+            <img height="150" class="mb-3" [src]="image.url_thumbnail" alt="" (click)="open()" style="cursor: pointer">
         </div>
 
         <div class="acciones">
             <!-- <button class="btn btn-outline-secondary me-2"><fa-icon [icon]="faCircleCheck"
                                 class="me-2"></fa-icon>Defecto</button> -->
-            <button class="btn btn-outline-secondary me-2"><fa-icon [icon]="faUpDownLeftRight"
-                    class="me-2"></fa-icon>Mover</button>
+            <!-- <button class="btn btn-outline-secondary me-2"><fa-icon [icon]="faUpDownLeftRight"
+                    class="me-2"></fa-icon>Mover</button> -->
 
             <button class="btn btn-outline-danger" (click)="borrarImage(image.id)"><fa-icon
                     [icon]="faTrash"></fa-icon></button>
