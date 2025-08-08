@@ -16,6 +16,7 @@ import { ButtonComponent } from '../../shared/components/buttons/button/button.c
 import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
 import Swal from 'sweetalert2';
 import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
+import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
 
 @Component({
   selector: 'app-category-edit-page',
@@ -26,6 +27,7 @@ import { ButtonLinkComponent } from '../../shared/components/buttons/button-link
     InputGroupComponent,
     FontAwesomeModule,
     ButtonLinkComponent,
+    GalleryComponent
   ],
   templateUrl: './category-edit-page.component.html',
   styleUrl: './category-edit-page.component.scss',

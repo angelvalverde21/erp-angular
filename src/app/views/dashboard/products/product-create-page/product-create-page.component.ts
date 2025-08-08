@@ -1,6 +1,13 @@
 /************ El Componente ***************************/
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -17,6 +24,8 @@ import { ButtonComponent } from '../../shared/components/buttons/button/button.c
 import { ProductService } from '../product.service';
 import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
 import { CategoryService } from '../../categories/category.service';
+
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
 import {
   ButtonCloseDirective,
@@ -38,6 +47,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BrandService } from '../../brands/brand.service';
+import { BrandCreateComponent } from '../../brands/brand-create/brand-create.component';
 
 @Component({
   selector: 'app-product-create-page',
@@ -55,12 +65,14 @@ import { BrandService } from '../../brands/brand.service';
     ModalHeaderComponent,
     ModalTitleDirective,
     CategoryCreateComponent,
+    BrandCreateComponent,
     // OnlyUppercaseDirective,
     NgSelectModule,
     FormsModule,
   ],
   templateUrl: './product-create-page.component.html',
   styleUrl: './product-create-page.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class ProductCreatePageComponent implements OnInit, OnDestroy {
   editIcon = faPenToSquare;
@@ -68,13 +80,20 @@ export class ProductCreatePageComponent implements OnInit, OnDestroy {
   faArrowLeft = faArrowLeft;
   faTags = faTags;
 
+  modal: any;
+
   constructor(
     private fb: FormBuilder,
     private _product: ProductService,
     private _category: CategoryService,
     private _router: Router,
-    private _brand: BrandService
-  ) {}
+    private _brand: BrandService,
+    configModal: NgbModalConfig,
+    private modalService: NgbModal
+  ) {
+    configModal.backdrop = 'static';
+    configModal.keyboard = false;
+  }
 
   categories: any[] = [];
   loadingSubcategories: boolean = true;
@@ -86,13 +105,16 @@ export class ProductCreatePageComponent implements OnInit, OnDestroy {
 
   items = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'ESTANDAR'];
 
+  brands: any[] = [];
   // selectedItems = [];
 
   initBrands() {
     this.loadingBrands = true;
     this.subscriptionBrands = this._brand.index().subscribe({
       next: (resp: any) => {
-        this.items = resp.data;
+        this.brands = resp.data;
+        console.log(this.brands);
+
         this.loadingBrands = false;
       },
       error: (error: any) => {
@@ -100,6 +122,14 @@ export class ProductCreatePageComponent implements OnInit, OnDestroy {
         this.loadingBrands = false;
       },
     });
+  }
+
+  relistBrands(brand: any) {
+    console.log('marcas re listadas');
+    console.log(brand);
+
+    this.brands = [brand, ...this.brands]; // nueva referencia
+    console.log(this.brands);
   }
 
   ngOnDestroy(): void {
@@ -147,7 +177,7 @@ export class ProductCreatePageComponent implements OnInit, OnDestroy {
       body: [''],
       tags: [''],
       price: ['', [Validators.required]],
-      brand_id: [''],
+      brand_id: [null],
       sizes: [[]],
       category_id: ['', [Validators.required]],
     });
@@ -216,5 +246,13 @@ export class ProductCreatePageComponent implements OnInit, OnDestroy {
     }
 
     console.log(this.has_size);
+  }
+
+  openVerticallyCentered(content: TemplateRef<any>) {
+    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
+  }
+
+  closeModal() {
+    this.modal.close();
   }
 }

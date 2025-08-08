@@ -14,8 +14,8 @@
             <div class="category-list mb-3">
                 <label class="mb-2">Subcategoria</label>
                 <app-loading *ngIf="loadingSubcategories"></app-loading>
-                <app-category-selected (emitCategorySelected)="categorySelected($event)" *ngIf="!loadingSubcategories" formControlName="category_id"
-                    [categories]="categories"></app-category-selected>
+                <app-category-selected (emitCategorySelected)="categorySelected($event)" *ngIf="!loadingSubcategories"
+                    formControlName="category_id" [categories]="categories"></app-category-selected>
             </div>
         </div>
 
@@ -37,10 +37,11 @@
 
         <div class="col-lg-12 col-12">
 
-            <div class="create-category d-flex  flex-row-reverse">
-                <app-button (action)="create()" color="primary" [icon]="faPlus" [disabled]="disabledButton"
-                    [loadingIcon]="loadingIcon">Crear Categoria</app-button>
-            </div>
+            <hr>
+
+            <app-button (action)="create()" color="primary" [icon]="faPlus" [disabled]="disabledButton"
+                [loadingIcon]="loadingIcon">Crear Categoria</app-button>
+
         </div>
 
     </div>

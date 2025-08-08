@@ -3,7 +3,7 @@ export const environment = {
     showComponentName : true,
     production: false,
     showNameComponent: true,
-    storeName: 'ara',
+    storeName: 'macrotechsac',
     showStoreNameInSlug: false, //true el link seria asi:  api/v1/private/ara/products, false el link seria asi:  api/v1/private/products
 
     urlBase:'http://localhost:4200',

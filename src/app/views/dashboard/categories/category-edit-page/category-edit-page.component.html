@@ -4,7 +4,7 @@
 
 <form [formGroup]="form">
 
-    <div class="card">
+    <div class="card mb-3">
 
         <div class="card-header bg-dark py-3 text-white d-flex justify-content-between align-items-center">
             Editar Categoria
@@ -52,4 +52,18 @@
     </div>
 
 </form>
+
+<div class="card mb-3">
+
+    <div class="card-header py-3 bg-dark-subtle">
+        <h6>Multimedia</h6>
+    </div>
+
+    <div class="card-body">
+
+        <app-gallery [path]=" `categories/${category.id}/images`"></app-gallery>
+
+    </div>
+
+</div>
 }

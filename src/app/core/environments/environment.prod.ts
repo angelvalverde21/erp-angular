@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
     showNameComponent: false,
-    storeName: 'ara',
+    storeName: 'macrotechsac',
     showStoreNameInSlug: false,
     parametroBase: 'store',
     urlBase:'https://macrotechsac.com',

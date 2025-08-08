@@ -19,6 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { Subscription } from 'rxjs';
 import { CarouselService } from '../carousel.service';
+import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
 @Component({
   selector: 'app-carousel-edit-page',
   imports: [
@@ -26,6 +27,7 @@ import { CarouselService } from '../carousel.service';
     InputGroupComponent,
     ReactiveFormsModule,
     ButtonComponent,
+    GalleryComponent
   ],
   templateUrl: './carousel-edit-page.component.html',
   styleUrl: './carousel-edit-page.component.scss'

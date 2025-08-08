@@ -2,7 +2,7 @@
 <app-loading></app-loading>
 }@else{
 
-<div class="card">
+<div class="card mb-3">
 
     <div class="card-header py-3 bg-dark text-white">
         Editar
@@ -35,6 +35,20 @@
             <!-- {{ form.getRawValue() | json }} -->
 
         </form>
+    </div>
+
+</div>
+
+<div class="card mb-3">
+
+    <div class="card-header py-3 bg-dark-subtle">
+        <h6>Multimedia</h6>
+    </div>
+
+    <div class="card-body">
+
+        <app-gallery [path]="`brands/${brand.id}/images`"></app-gallery>
+
     </div>
 
 </div>

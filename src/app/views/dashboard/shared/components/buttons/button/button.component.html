@@ -1,16 +1,18 @@
-<button type="button" class="text-{{ colortext }} d-flex justify-content-between align-items-center btn btn-{{ color }}" (click)="clickButton()" [disabled]="disabled">
+<div class="d-grid d-md-block">
+  <button type="button"
+    class="text-{{ colortext }} d-flex justify-content-center align-items-center btn btn-{{ color }}"
+    (click)="clickButton()" [disabled]="disabled">
 
-  @if (icon != null) {
+    @if (icon != null) {
     @if (loadingIcon) {
-      <app-loading *ngIf="loadingIcon" size="sm" class="me-2"></app-loading>
+    <app-loading *ngIf="loadingIcon" size="sm" class="me-2"></app-loading>
     } @else {
-      <fa-icon [icon]="icon" class="me-2"></fa-icon>
+    <fa-icon [icon]="icon" class="me-2"></fa-icon>
     }
-  } 
-  
-  <ng-content></ng-content>
+    }
 
-</button>
+    <ng-content></ng-content>
 
+  </button>
 
-
+</div>

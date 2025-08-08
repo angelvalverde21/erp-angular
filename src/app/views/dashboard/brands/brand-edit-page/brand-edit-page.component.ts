@@ -18,6 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BrandService } from '../brand.service';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { Subscription } from 'rxjs';
+import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
 
 @Component({
   selector: 'app-brand-edit-page',
@@ -26,6 +27,7 @@ import { Subscription } from 'rxjs';
     InputGroupComponent,
     ReactiveFormsModule,
     ButtonComponent,
+    GalleryComponent
   ],
   templateUrl: './brand-edit-page.component.html',
   styleUrl: './brand-edit-page.component.scss',

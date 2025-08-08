@@ -39,7 +39,7 @@ export class CategoryCreateComponent {
   disabledButton: boolean = true;
   loadingIcon: boolean = false;
   
-  @Output() categoryUpdated = new EventEmitter<boolean>();
+  @Output() emitCategoryCreate = new EventEmitter< any[] | boolean >();
   
   editIcon = faPenToSquare;
   faPlus = faPlus;
@@ -125,7 +125,7 @@ export class CategoryCreateComponent {
           
           this.loadCategories();
           this.form.reset(); // Reinicia el formulario pero los valores de has_color y has_reset los coloca null
-          this.categoryUpdated.emit(true); // Emitir el evento para notificar que se ha creado una categoría
+          this.emitCategoryCreate.emit(resp.data); // Emitir el evento para notificar que se ha creado una categoría
 
           this.form.get('has_size')?.setValue("");
           this.form.get('has_size')?.enable();

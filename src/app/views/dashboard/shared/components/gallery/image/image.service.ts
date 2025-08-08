@@ -38,7 +38,7 @@ export class ImageService {
   }
 
   // Envía datos actualizados de un Coloro existente (equivalente a update($id) en Laravel)
-    update(id: number | null, data: any): Observable<any> {
+  update(id: number | null, data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/${id}`, data);
   }
 

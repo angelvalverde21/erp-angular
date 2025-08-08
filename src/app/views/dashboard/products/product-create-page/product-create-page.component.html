@@ -45,15 +45,23 @@
         <app-loading></app-loading>
         }@else{
         <div class="col-lg-12 col-12">
+
           <label class="mb-2">Marcas</label>
-          <ng-select class="mb-3 w-100" formControlName="brand_id" [items]="items" [multiple]="true" [addTag]="true"
-            bindLabel="name" placeholder="Escribe y presiona coma o enter">
-          </ng-select>
+
+          <div class="control-brand mb-3 d-flex justify-content-between align-items-center">
+
+            <!-- ng control -->
+            <ng-select class="w-100 me-2" formControlName="brand_id" bindValue="id" [items]="brands" [addTag]="true" bindLabel="name"
+              placeholder="Escoja una marca">
+            </ng-select>
+
+            <!-- boton -->
+            <app-button color="outline-dark" size="" [icon]="faPlus"
+              (click)="openVerticallyCentered(content)">Marca</app-button>
+          </div>
+
         </div>
         }
-
-
-
 
         <div class="col-lg-12 col-12 mb-3">
 
@@ -62,10 +70,16 @@
           <label class="mb-2">Categorias</label>
           <div class="categorias d-flex justify-content-between align-items-center">
             <div class="category w-100 me-2">
-              <app-loading *ngIf="loadingSubcategories"></app-loading>
-              <app-category-selected *ngIf="!loadingSubcategories" formControlName="category_id"
-                [categories]="categories" (emitCategorySelected)="fnCategorySelected($event)">
+
+              @if(loadingSubcategories){
+
+              <app-loading></app-loading>
+              }@else{
+              <app-category-selected formControlName="category_id" [categories]="categories"
+                (emitCategorySelected)="fnCategorySelected($event)">
               </app-category-selected>
+              }
+
             </div>
             <!-- Boton para crear categoria -->
             <div class="create-category">
@@ -78,22 +92,24 @@
 
         <!-- lista que se despliega por si hay tallas -->
 
-        <div class="mb-3" *ngIf="this.has_size">Agregar tallas</div>
+        @if(has_size){
+        <div class="mb-3">Agregar tallas</div>
 
-        <div class="col-lg-12 col-12 d-flex justify-content-between align-items-center mb-3" *ngIf="this.has_size">
+        <div class="col-lg-12 col-12 d-flex justify-content-between align-items-center mb-3">
 
           <ng-select class="mb-3 w-100" formControlName="sizes" [items]="items" [multiple]="true" [addTag]="true"
             bindLabel="name" placeholder="Escribe y presiona coma o enter">
           </ng-select>
 
         </div>
+        }
 
       </div>
 
       <app-button color="dark" [icon]="faPlus" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
         (action)="create()">Crear Producto</app-button>
 
-      <!-- {{ form.value | json }} -->
+      {{ form.value | json }}
 
     </div>
 
@@ -104,10 +120,24 @@
 <c-modal id="liveDemoModal" alignment="center" size="lg" [visible]="visible"
   (visibleChange)="handleLiveDemoChange($event)">
   <c-modal-header>
-    <h5 cModalTitle>Modal title</h5>
+    <h5 cModalTitle>Crear Categoria</h5>
     <button (click)="toggleLiveDemo()" cButtonClose></button>
   </c-modal-header>
   <c-modal-body>
     <app-category-create (categoryUpdated)="initCategories()"></app-category-create>
   </c-modal-body>
 </c-modal>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Crear Marca</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body px-4">
+    <app-brand-create (emitBrandCreate)="relistBrands($event)"></app-brand-create>
+  </div>
+  <!-- <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+  </div> -->
+</ng-template>
