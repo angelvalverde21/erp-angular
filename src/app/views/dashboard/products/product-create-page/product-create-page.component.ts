@@ -1,13 +1,13 @@
 /************ El Componente ***************************/
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
-  FormsModule
+  FormsModule,
 } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
@@ -23,15 +23,21 @@ import {
   ModalBodyComponent,
   ModalComponent,
   ModalHeaderComponent,
-  ModalTitleDirective
+  ModalTitleDirective,
 } from '@coreui/angular';
 import { CategorySelectedComponent } from '../../categories/category-selected/category-selected.component';
-import { CategoryCreateComponent } from "../../categories/category-create/category-create.component";
+import { CategoryCreateComponent } from '../../categories/category-create/category-create.component';
 // import { OnlyUppercaseDirective } from '../../../directives/only-uppercase.directive';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { faPenToSquare, faPlus, faArrowLeft, faTags } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPenToSquare,
+  faPlus,
+  faArrowLeft,
+  faTags,
+} from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { Subscription } from 'rxjs';
+import { BrandService } from '../../brands/brand.service';
 
 @Component({
   selector: 'app-product-create-page',
@@ -51,66 +57,82 @@ import { ActivatedRoute, Router } from '@angular/router';
     CategoryCreateComponent,
     // OnlyUppercaseDirective,
     NgSelectModule,
-    FormsModule
-],
+    FormsModule,
+  ],
   templateUrl: './product-create-page.component.html',
-  styleUrl: './product-create-page.component.scss'
+  styleUrl: './product-create-page.component.scss',
 })
-export class ProductCreatePageComponent {
-
+export class ProductCreatePageComponent implements OnInit, OnDestroy {
   editIcon = faPenToSquare;
   faPlus = faPlus;
   faArrowLeft = faArrowLeft;
   faTags = faTags;
 
-  constructor(private fb: FormBuilder, private _product: ProductService, private _category: CategoryService, private _router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private _product: ProductService,
+    private _category: CategoryService,
+    private _router: Router,
+    private _brand: BrandService
+  ) {}
 
   categories: any[] = [];
   loadingSubcategories: boolean = true;
   disabledButton: boolean = true;
   loadingIcon: boolean = false;
   nameControl = new FormControl('');
-  
-  items = [
-    'XS', 
-    'S', 
-    'M', 
-    'L',
-    'XL',
-    'XXL',
-    'ESTANDAR',
-  ];
+  loadingBrands: boolean = false;
+  subscriptionBrands!: Subscription;
+
+  items = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'ESTANDAR'];
 
   // selectedItems = [];
 
-  ngOnInit(): void {
+  initBrands() {
+    this.loadingBrands = true;
+    this.subscriptionBrands = this._brand.index().subscribe({
+      next: (resp: any) => {
+        this.items = resp.data;
+        this.loadingBrands = false;
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.loadingBrands = false;
+      },
+    });
+  }
 
+  ngOnDestroy(): void {
+    if (this.subscriptionBrands) {
+      this.subscriptionBrands.unsubscribe();
+    }
+  }
+
+  ngOnInit(): void {
     this.formInit();
     this.formLoad();
+    this.initBrands();
+    this.initCategories();
 
-    this.loadCategories();
-
-    this.form.statusChanges.subscribe(status => {
-
+    this.form.statusChanges.subscribe((status) => {
       console.log(status);
 
       if (status === 'VALID') {
         this.disabledButton = false;
-      }else{
+      } else {
         this.disabledButton = true;
       }
     });
 
     //recibir cambios del categoria
-
   }
 
-  loadCategories() {
+  initCategories() {
     this._category.index().subscribe({
-      next: (resp: any) => {  
+      next: (resp: any) => {
         this.categories = resp.data;
         this.loadingSubcategories = false;
-      }
+      },
     });
   }
 
@@ -119,13 +141,13 @@ export class ProductCreatePageComponent {
   loading: boolean = false;
   success: boolean = false;
 
-
   private formInit(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       body: [''],
-      tags: ['', [Validators.required]],
+      tags: [''],
       price: ['', [Validators.required]],
+      brand_id: [''],
       sizes: [[]],
       category_id: ['', [Validators.required]],
     });
@@ -136,21 +158,20 @@ export class ProductCreatePageComponent {
   }
 
   create() {
-
     this.loadingIcon = true;
     this.disabledButton = true;
 
     const rawData = this.form.value;
 
-// convierte el array en string
+    // convierte el array en string
     const payload = {
       ...rawData,
-      sizes: (rawData.sizes || []).join(',')  // <-- conversión aquí
+      sizes: (rawData.sizes || []).join(','), // <-- conversión aquí
     };
 
     this.success = false;
     // console.log(this.form.value);
-    
+
     this._product.store(payload).subscribe({
       next: (resp: any) => {
         Swal.fire('Guardado', 'El registro ha sido creado', 'success');
@@ -159,28 +180,28 @@ export class ProductCreatePageComponent {
         this.disabledButton = true;
         this.loadingIcon = false;
         this._router.navigate(['/', 'products', resp.data.id]);
-        
       },
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
+        Swal.fire(
+          'Error',
+          'Ocurrió un problema al crear. Inténtalo nuevamente.',
+          'error'
+        );
         console.error(error);
       },
     });
   }
 
- 
-
   public visible = false;
 
   toggleLiveDemo() {
     this.visible = !this.visible;
-    console.log("toggleLiveDemo");
-    
+    console.log('toggleLiveDemo');
   }
 
   handleLiveDemoChange(event: any) {
     this.visible = event;
-    console.log("handleLiveDemoChange", event);
+    console.log('handleLiveDemoChange', event);
   }
 
   // categorySelected : any = null;
@@ -188,20 +209,12 @@ export class ProductCreatePageComponent {
   has_size: boolean = false;
 
   fnCategorySelected(categorySelected: any) {
-
     if (categorySelected.has_size) {
       this.has_size = true;
-    }else{
-      this.has_size = false;  
+    } else {
+      this.has_size = false;
     }
 
     console.log(this.has_size);
-    
   }
-
-
-
 }
-
-
-

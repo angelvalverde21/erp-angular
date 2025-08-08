@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faLink, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { BrandService } from '../brand.service';
@@ -16,6 +16,9 @@ import { Subscription } from 'rxjs';
 export class BrandIndexPageComponent implements OnDestroy, OnInit {
 
   faPlus = faPlus;
+  faEdit = faEdit;
+  faLink = faLink;
+
   brands: any[] = [];
   loading: boolean = false;
 

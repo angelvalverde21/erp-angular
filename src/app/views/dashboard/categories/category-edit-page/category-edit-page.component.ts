@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import {
@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
-import { faTags, faSave, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faTags, faSave, faArrowLeft, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { CategoryService } from '../category.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
@@ -41,13 +41,15 @@ export class CategoryEditPageComponent implements OnDestroy {
   faTags = faTags;
   faSave = faSave;
   faArrowLeft = faArrowLeft;
+  faTrash = faTrash;
 
   @Input() category: any;
 
   constructor(
     private route: ActivatedRoute,
     private _category: CategoryService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private _router: Router
   ) {
     this.route.params.subscribe((params) => {
       this.category_id = params['category_id'];
@@ -107,6 +109,31 @@ export class CategoryEditPageComponent implements OnDestroy {
         );
         console.error(error);
       },
+    });
+  }
+
+  archivar() {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción archivará la categoria y no podrá ser deshecha.',
+      icon: 'warning',
+      confirmButtonColor: '#d33',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, archivar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._category.destroy(this.category_id).subscribe({
+          next: (resp: any) => {
+            Swal.fire('Archivado', 'La categoria ha sido archivada.', 'success');
+            this._router.navigate(['/', 'categories']);
+          },
+          error: (error: any) => {
+            Swal.fire('Error', 'No se pudo archivar la categoria.', 'error');
+            console.error(error);
+          },
+        });
+      }
     });
   }
 }

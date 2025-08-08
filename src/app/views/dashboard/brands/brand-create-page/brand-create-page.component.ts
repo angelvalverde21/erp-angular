@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { faPlus, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
@@ -11,7 +10,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-brand-create-page',
-  imports: [LoadingComponent, InputGroupComponent, ReactiveFormsModule, ButtonComponent],
+  imports: [InputGroupComponent, ReactiveFormsModule, ButtonComponent],
   templateUrl: './brand-create-page.component.html',
   styleUrl: './brand-create-page.component.scss'
 })

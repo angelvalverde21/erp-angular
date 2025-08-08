@@ -36,8 +36,8 @@ export const routes: Routes = [
         loadChildren: () => import('./views/dashboard/brands/route.brand').then((m) => m.routes)
       },
       {
-        path: 'pages',
-        loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
+        path: 'web/carousels',
+        loadChildren: () => import('./views/dashboard/carousels/routes.carousel').then((m) => m.routes)
       }
     ]
   },

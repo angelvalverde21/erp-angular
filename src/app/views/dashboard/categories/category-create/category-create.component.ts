@@ -38,6 +38,7 @@ export class CategoryCreateComponent {
   loadingSubcategories: boolean = true;
   disabledButton: boolean = true;
   loadingIcon: boolean = false;
+  
   @Output() categoryUpdated = new EventEmitter<boolean>();
   
   editIcon = faPenToSquare;
@@ -66,7 +67,6 @@ export class CategoryCreateComponent {
     this.formInit();
     // this.formLoad();
     this.loadCategories();
-
     this.form.statusChanges.subscribe(status => {
       if (status === 'VALID') {
         this.disabledButton = false;

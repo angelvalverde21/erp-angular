@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../core/environments/environment';
 import { BaseCrudService } from '../base-crud.service';
 
 
@@ -11,13 +10,13 @@ import { BaseCrudService } from '../base-crud.service';
 
 export class CategoryService extends BaseCrudService {
 
-  protected baseUrl = `${environment.apiDashboard}/${environment.storeName}/categories`; 
-
   constructor(http: HttpClient) {
 
-    super(http);
+    super(http, 'categories');
 
   }
+
+  //la variable this.baseUrl esta dentro de BaseCrudService que se llama con super
 
   showProductBySlug(slug: string | null): Observable<any> {
     return this.http.get(`${this.baseUrl}/slug/${slug}`);

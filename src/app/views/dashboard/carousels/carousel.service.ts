@@ -1,19 +1,17 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { Injectable } from '@angular/core';
 import { BaseCrudService } from '../base-crud.service';
-
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
+export class CarouselService extends BaseCrudService {
 
-export class BrandService extends BaseCrudService {
 
   constructor(http: HttpClient) {
 
-    super(http, 'brands');
+    super(http, 'carousels');
 
   }
 
@@ -23,5 +21,5 @@ export class BrandService extends BaseCrudService {
     return this.http.get(`${this.baseUrl}/slug/${slug}`);
   }
 
-}
 
+}

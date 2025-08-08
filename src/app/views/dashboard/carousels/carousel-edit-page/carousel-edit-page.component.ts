@@ -6,7 +6,8 @@ import {
   faPenToSquare,
   faPlus,
   faSave,
-  faTrash
+  faTrash,
+  faLink
 } from '@fortawesome/free-solid-svg-icons';
 import {
   FormBuilder,
@@ -15,33 +16,34 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BrandService } from '../brand.service';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { Subscription } from 'rxjs';
-
+import { CarouselService } from '../carousel.service';
 @Component({
-  selector: 'app-brand-edit-page',
+  selector: 'app-carousel-edit-page',
   imports: [
-    LoadingComponent,
+        LoadingComponent,
     InputGroupComponent,
     ReactiveFormsModule,
     ButtonComponent,
   ],
-  templateUrl: './brand-edit-page.component.html',
-  styleUrl: './brand-edit-page.component.scss',
+  templateUrl: './carousel-edit-page.component.html',
+  styleUrl: './carousel-edit-page.component.scss'
 })
-export class BrandEditPageComponent implements OnDestroy, OnInit{
-  faPenToSquare = faPenToSquare;
+export class CarouselEditPageComponent {
+
+    faPenToSquare = faPenToSquare;
   faPlus = faPlus;
   faSave = faSave;
   faTrash = faTrash;
+  faLink = faLink;
 
   form!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private _route: ActivatedRoute,
-    private _brand: BrandService,
+    private _carousel: CarouselService,
     private _router: Router
   
   ) {}
@@ -50,12 +52,15 @@ export class BrandEditPageComponent implements OnDestroy, OnInit{
   loadingIcon: boolean = false;
   loading: boolean = false;
   success: boolean = false;
-  brand_id: number = 0;
-  brand: any;
+  carousel_id: number = 0;
+  carousel: any;
 
   private formInit(): void {
     this.form = this.fb.group({
-      name: ['name', [Validators.required]],
+      name: ['', [Validators.required]],
+      url: ['', [Validators.required]],
+      date_start: [''],
+      date_end: [''],
     });
   }
 
@@ -82,18 +87,18 @@ export class BrandEditPageComponent implements OnDestroy, OnInit{
     });
 
     this._route.params.subscribe((params) => {
-      this.brand_id = params['brand_id'];
-      console.log(this.brand_id);
+      this.carousel_id = params['carousel_id'];
+      console.log(this.carousel_id);
 
       this.loading = true;
 
-      this.subscriptionComponent = this._brand
-        .get(this.brand_id)
+      this.subscriptionComponent = this._carousel
+        .get(this.carousel_id)
         .subscribe((resp: any) => {
           this.loading = false;
-          this.brand = resp.data;
+          this.carousel = resp.data;
           this.form.patchValue(resp.data);
-          console.log(this.brand);
+          console.log(this.carousel);
         });
     });
   }
@@ -103,7 +108,7 @@ export class BrandEditPageComponent implements OnDestroy, OnInit{
     this.success = false;
     this.disabledButton = true;
     this.loadingIcon = true;
-    this._brand.update(this.brand_id, this.form.value).subscribe({
+    this._carousel.update(this.carousel_id, this.form.value).subscribe({
       next: (resp: any) => {
         Swal.fire('Guardado', 'El registro ha sido actualizado', 'success');
         this.disabledButton = false;
@@ -133,10 +138,10 @@ export class BrandEditPageComponent implements OnDestroy, OnInit{
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this._brand.destroy(this.brand_id).subscribe({
+        this._carousel.destroy(this.carousel_id).subscribe({
           next: (resp: any) => {
             Swal.fire('Archivado', 'La marca ha sido archivada.', 'success');
-            this._router.navigate(['/','brands']);
+            this._router.navigate(['/','carousels']);
             
           },
           error: (error: any) => {
@@ -147,4 +152,5 @@ export class BrandEditPageComponent implements OnDestroy, OnInit{
       }
     });
   }
+  
 }

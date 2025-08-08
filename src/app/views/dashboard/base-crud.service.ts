@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../core/environments/environment';
 
 // import { environment } from '@env/environment';
 
@@ -9,9 +10,11 @@ import { Observable } from 'rxjs';
 })
 export abstract class BaseCrudService {
 
-  protected abstract baseUrl: string;
+  baseUrl: string;
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient, url_name: string) {
+      this.baseUrl = `${environment.apiDashboard}/${environment.storeName}/${url_name}`;
+  }
   // Generic method to get all items
   index(): Observable<any[]> {
     const url = `${this.baseUrl}`;
