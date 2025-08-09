@@ -22,10 +22,8 @@ import { faImage, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
 import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormSearchComponent } from '../../shared/form/form-search/form-search.component';
-import { ProductColorComponent } from './product-color/product-color.component';
-import { UploadDropzoneComponent } from '../../shared/upload-dropzone/upload-dropzone.component';
-import { ColorsComponent } from './colors/colors.component';
 
+import { UploadDropzoneComponent } from '../../shared/upload-dropzone/upload-dropzone.component';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -35,10 +33,9 @@ import { ColorsComponent } from './colors/colors.component';
     ButtonComponent, 
     CommonModule, 
     ReactiveFormsModule,
-    ColorsComponent,
     NgbAccordionModule,
     FontAwesomeModule,
-    ProductColorComponent,
+
     FormSearchComponent,
     UploadDropzoneComponent
     ],
@@ -156,6 +153,8 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
       price: ['', [Validators.required]],
       body: [''],
       tags: [''],
+      sku: [''],
+      barcode: [''],
     });
   }
 

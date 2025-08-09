@@ -1,0 +1,10 @@
+<select id="SubUnits" aria-label="Default select example" cSelect (change)="onUnitChange($event)">
+
+    <option [value]="null">Seleccione Unidades</option>
+
+        @for (unit of units; track unit.id) {
+                    <option [value]="unit.id">{{ unit.name }}</option>
+        }
+
+
+</select>

@@ -43,11 +43,13 @@ import {
   faPlus,
   faArrowLeft,
   faTags,
+  faBarcode
 } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BrandService } from '../../brands/brand.service';
 import { BrandCreateComponent } from '../../brands/brand-create/brand-create.component';
+import  { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component'
 
 @Component({
   selector: 'app-product-create-page',
@@ -69,6 +71,7 @@ import { BrandCreateComponent } from '../../brands/brand-create/brand-create.com
     // OnlyUppercaseDirective,
     NgSelectModule,
     FormsModule,
+    UnitSelectedComponent
   ],
   templateUrl: './product-create-page.component.html',
   styleUrl: './product-create-page.component.scss',
@@ -78,7 +81,8 @@ export class ProductCreatePageComponent implements OnInit, OnDestroy {
   editIcon = faPenToSquare;
   faPlus = faPlus;
   faArrowLeft = faArrowLeft;
-  faTags = faTags;
+  faTags = faTags;        
+  faBarcode = faBarcode;        
 
   modal: any;
 
@@ -176,10 +180,10 @@ export class ProductCreatePageComponent implements OnInit, OnDestroy {
       name: ['', [Validators.required]],
       body: [''],
       tags: [''],
+      sku: [''],
+      barcode: [''],
+      unit_id: [''],
       price: ['', [Validators.required]],
-      brand_id: [null],
-      sizes: [[]],
-      category_id: ['', [Validators.required]],
     });
   }
 

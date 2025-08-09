@@ -15,49 +15,96 @@ export const navItems: INavData[] = [
     title: true,
     name: 'Store (admin)'
   },
-  {
-    name: 'Productos',
-    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/products` : '/products',
-    iconComponent: { name: 'cil-barcode' }
-  },
-  {
-    name: 'Categorias',
-    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/categories` : '/categories',
-    iconComponent: { name: 'cil-list' }
-  },
-  {
-    name: 'Marcas',
-    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/brands` : '/brands',
-    iconComponent: { name: 'cil-inbox' }
-  },
-  // {
-  //   name: 'Settings',
-  //   url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/settings` : '/settings',
-  //   iconComponent: { name: 'cil-settings' }
-  // },
-
     {
-    name: 'Web',
-    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/web` : '/web',
-    iconComponent: { name: 'cil-house' },
-        children: [
-      {
-        name: 'Carousel',
-        url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/web/carousels` : '/web/carousels',
-        icon: 'nav-icon-bullet'
-      },
-      {
-        name: 'Ofertas',
-        url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/web/deals` : '/web/deals',
-        icon: 'nav-icon-bullet'
-      },
-      // {
-      //   name: 'Reporte',
-      //   url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/web/reports` : '/web/reports',
-      //   icon: 'nav-icon-bullet'
-      // }
+    name: 'Inventario',
+    // url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/inventories` : '/inventories',
+    iconComponent: { name: 'cil-industry' },
+    children: [
+        {
+          name: 'Productos',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/products` : '/products',
+          icon: 'nav-icon-bullet'
+        },
+        {
+          name: 'Categorias',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/categories` : '/categories',
+          icon: 'nav-icon-bullet'
+        },
+        {
+          name: 'Almacenes',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/warehouses` : '/warehouses',
+          icon: 'nav-icon-bullet'
+        },
     ]
   },
+  {
+    name: 'Compras',
+    // url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/purchases` : '/purchases',
+    iconComponent: { name: 'cil-cart' },
+        children: [
+        {
+          name: 'Proveedores',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/suppliers` : '/suppliers',
+          icon: 'nav-icon-bullet'
+        },
+        {
+          name: 'Ordenes de Compra',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/purchase-order` : '/purchase-order',
+          icon: 'nav-icon-bullet'
+        },
+        {
+          name: 'Compras',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/purchases` : '/purchases',
+          icon: 'nav-icon-bullet'
+        },
+    ]
+  },
+  {
+    name: 'Ventas',
+    // url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/sales` : '/sales',
+    iconComponent: { name: 'cil-cash' },
+        children: [
+        {
+          name: 'Clientes',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/custumers` : '/custumers',
+          icon: 'nav-icon-bullet'
+        },
+        {
+          name: 'Cotizaciones',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/quotes` : '/quotes',
+          icon: 'nav-icon-bullet'
+        },
+        {
+          name: 'ventas',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/sales` : '/sales',
+          icon: 'nav-icon-bullet'
+        },
+    ]
+  },
+  {
+    name: 'Movimientos',
+    // url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/products` : '/products',
+    iconComponent: { name: 'cil-loop' },
+        children: [
+        {
+          name: 'Entradas y Salidas',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/movements` : '/movements',
+          icon: 'nav-icon-bullet'
+        },
+        {
+          name: 'Transferencias',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/transfers` : '/transfers',
+          icon: 'nav-icon-bullet'
+        }
+    ]
+  },
+
+  {
+    name: 'Reportes',
+    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/brands` : '/brands',
+    iconComponent: { name: 'cil-chart-line' }
+  },
+
   // {
   //   name: 'Warehouses',
   //   url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/dashboard` : '/warehouses',

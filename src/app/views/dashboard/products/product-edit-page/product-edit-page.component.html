@@ -39,6 +39,20 @@
           </app-input-group>
         </div>
 
+        <div class="col-lg-12 col-6">
+          <app-input-group text="Sku" [icon]="faTags">
+            <input formControlName="sku" type="text" class="form-control" placeholder="sku" aria-label="price"
+              aria-describedby="basic-price" />
+          </app-input-group>
+        </div>
+
+          <div class="col-lg-12 col-6">
+          <app-input-group text="Codigo de Barras" [icon]="faTags">
+            <input formControlName="barcode" type="text" class="form-control" placeholder="barcode" aria-label="price"
+              aria-describedby="basic-price" />
+          </app-input-group>
+        </div>
+
         <div class="col-lg-12 col-12 d-flex justify-content-between align-items-center mb-3">
           <span class="badge bg-secondary me-1 ng-star-inserted">{{ product.category?.name || 'Sin Categoria' }}</span>
           <!-- <div style="font-style: italic;">Categoria: {{ product.category?.name || 'Sin Categoria' }}</div> -->
@@ -80,8 +94,7 @@
 
     <div class="card-body">
 
-      <app-colors [colors]="product.colors" [has_size]="product.category.has_size"></app-colors>
-
+  
     </div>
 
   </div>

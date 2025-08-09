@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductColorComponent } from './product-color.component';
+import { UnitEditPageComponent } from './unit-edit-page.component';
 
-describe('ProductColorComponent', () => {
-  let component: ProductColorComponent;
-  let fixture: ComponentFixture<ProductColorComponent>;
+describe('UnitEditPageComponent', () => {
+  let component: UnitEditPageComponent;
+  let fixture: ComponentFixture<UnitEditPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductColorComponent]
+      imports: [UnitEditPageComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ProductColorComponent);
+    fixture = TestBed.createComponent(UnitEditPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
