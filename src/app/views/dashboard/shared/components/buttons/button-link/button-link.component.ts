@@ -16,6 +16,7 @@ export class ButtonLinkComponent implements OnInit {
   @Input() path: any;
   @Input() colortext: string = '';
   @Input() size: string = 'sm';
+  @Input() btn: string = 'btn';
   
 
   // prefix: any[] = [];

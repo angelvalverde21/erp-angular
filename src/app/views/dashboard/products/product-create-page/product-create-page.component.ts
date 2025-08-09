@@ -255,4 +255,15 @@ export class ProductCreatePageComponent implements OnInit, OnDestroy {
   closeModal() {
     this.modal.close();
   }
+
+  reListCategories(category: any) {
+    console.log('categorias re listadas');
+    console.log(category);
+
+    this.categories = [category, ...this.categories]; // nueva referencia
+    console.log(this.categories);
+  }
 }
+
+
+

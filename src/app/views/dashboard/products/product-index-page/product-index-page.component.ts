@@ -48,12 +48,23 @@ export class ProductIndexPageComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     
-    this._product.index().subscribe((resp:any) => {
+    this._product.index().subscribe({
+    
+      next: (resp: any) => {
       console.log(resp);
       this.products = resp.data;
       this.loading = false;
+      },
+    
+      error: (error: any) => {
+        console.error(error);
+        if (error.status === 401) {
+          this._router.navigate(['/login']);
+        }
+      },
+    
     });
-  
+
   }
 
   create(){
