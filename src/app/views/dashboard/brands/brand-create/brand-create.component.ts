@@ -2,15 +2,13 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { faPlus, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
 import {
-  FormBuilder,
-  FormGroup,
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
-import Swal from 'sweetalert2';
 import { BrandService } from '../brand.service';
-import { Router } from '@angular/router';
+import { CreateFormService } from '../../shared/services/crud/create-form.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-brand-create',
@@ -19,76 +17,41 @@ import { Router } from '@angular/router';
   styleUrl: './brand-create.component.scss',
 })
 export class BrandCreateComponent {
+
   faPlus = faPlus;
   faPenToSquare = faPenToSquare;
-
-  loading: boolean = false;
-  loadingIcon: boolean = false;
-  disabledButton: boolean = true;
-
-  @Output() emitBrandCreate = new EventEmitter<any[] | boolean>();
+  @Output() emitBrandCreate = new EventEmitter<any>();
 
   constructor(
-    private fb: FormBuilder,
-    private _brand: BrandService,
-    private _router: Router
+    public formSrv: CreateFormService,
+    private _brand: BrandService
   ) {}
 
-  ngOnInit(): void {
-    this.formInit();
+  formEmitsubscription! : Subscription;
 
-    this.form.statusChanges.subscribe((status) => {
-      if (status === 'VALID') {
-        this.disabledButton = false;
-      } else {
-        this.disabledButton = true;
-      }
-    });
-  }
-
-  form!: FormGroup;
-
-  private formInit(): void {
-    this.form = this.fb.group({
+  ngOnInit() {
+    this.formSrv.initForm({
       name: ['', [Validators.required]],
     });
-  }
 
-  success: boolean = false;
+    //Escuchamos al servicio createFormService para saber cuando se crea un nuevo registro
+    this.formEmitsubscription = this.formSrv.create$.subscribe((data) => {
+      console.log('Nuevo registro creado', data);
+      this.emitBrandCreate.emit(data);
+    });
+  }
 
   create() {
-    this.success = false;
-    this.loadingIcon = true;
-    this.disabledButton = true;
-
-    if (this.form.invalid) {
-      Swal.fire(
-        'Error',
-        'Por favor completa todos los campos requeridos.',
-        'error'
-      );
-      return;
-    } else {
-      this._brand.store(this.form.getRawValue()).subscribe({
-        next: (resp: any) => {
-          Swal.fire('Guardado', 'El registro ha sido creado', 'success');
-          console.log(resp);
-
-          this.success = true;
-          this.loadingIcon = false;
-
-          this.emitBrandCreate.emit(resp.data);
-        },
-
-        error: (error: any) => {
-          Swal.fire(
-            'Error',
-            'Ocurrió un problema al crear. Inténtalo nuevamente.',
-            'error'
-          );
-          console.error(error);
-        },
-      });
-    }
+    this.formSrv.create((data) => this._brand.store(data)); //pasamos la funcion anonima que llama al metodo "store" del servicio de BrandService
   }
+
+  
+  ngOnDestroy(): void {
+  
+    if(this.formEmitsubscription){
+      this.formEmitsubscription.unsubscribe();
+    }
+  
+  }
+
 }

@@ -1,0 +1,9 @@
+{
+  "schematics": {
+    "set": {
+      "description": "Genera un conjunto de componentes Index/Edit/Create para una entidad",
+      "factory": "./set/index#default",
+      "schema": "./set/schema.json"
+    }
+  }
+}

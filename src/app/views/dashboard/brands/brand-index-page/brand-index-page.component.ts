@@ -29,11 +29,14 @@ export class BrandIndexPageComponent implements OnDestroy, OnInit {
   ) {
   
   }
+  
+  subscriptionIndex! : Subscription;
+
   ngOnInit(): void {
 
     this.loading = true;
 
-    this.subscriptionComponent = this._brand.index().subscribe({
+    this.subscriptionIndex = this._brand.index().subscribe({
       next: (resp: any) => {
         this.loading = false;
         console.log(resp);
@@ -47,12 +50,10 @@ export class BrandIndexPageComponent implements OnDestroy, OnInit {
 
   }
 
-  subscriptionComponent! : Subscription;
-  
   ngOnDestroy(): void {
   
-    if(this.subscriptionComponent){
-      this.subscriptionComponent.unsubscribe();
+    if(this.subscriptionIndex){
+      this.subscriptionIndex.unsubscribe();
     }
   
   }

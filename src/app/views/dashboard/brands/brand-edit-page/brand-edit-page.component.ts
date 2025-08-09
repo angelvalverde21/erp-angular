@@ -72,6 +72,7 @@ export class BrandEditPageComponent implements OnDestroy, OnInit{
   }
 
   ngOnInit(): void {
+
     this.formInit();
     // this.formLoad();
 
@@ -98,6 +99,7 @@ export class BrandEditPageComponent implements OnDestroy, OnInit{
           console.log(this.brand);
         });
     });
+    
   }
 
   update() {
