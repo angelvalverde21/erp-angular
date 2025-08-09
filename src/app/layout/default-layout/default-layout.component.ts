@@ -17,6 +17,8 @@ import {
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
 import { navItems } from './_nav';
+import { environment } from '../../core/environments/environment';
+import { UpperCasePipe } from '@angular/common';
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -44,9 +46,12 @@ function isOverflown(element: HTMLElement) {
     NgScrollbar,
     RouterOutlet,
     RouterLink,
-    ShadowOnScrollDirective
+    ShadowOnScrollDirective,
+    UpperCasePipe
   ]
 })
 export class DefaultLayoutComponent {
   public navItems = [...navItems];
+
+  storeName: string = environment.storeName
 }

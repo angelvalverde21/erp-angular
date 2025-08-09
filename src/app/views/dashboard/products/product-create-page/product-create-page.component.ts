@@ -141,8 +141,8 @@ export class ProductCreatePageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.formInit();
     this.formLoad();
-    this.initBrands();
-    this.initCategories();
+    // this.initBrands();
+    // this.initCategories();
 
     this.form.statusChanges.subscribe((status) => {
       console.log(status);

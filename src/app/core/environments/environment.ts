@@ -3,14 +3,14 @@ export const environment = {
     showComponentName : true,
     production: false,
     showNameComponent: true,
-    storeName: 'macrotechsac',
+    storeName: 'sorelle',
     showStoreNameInSlug: false, //true el link seria asi:  api/v1/private/ara/products, false el link seria asi:  api/v1/private/products
 
     urlBase:'http://localhost:4200',
 
-    apiPublic: 'http://laravel.test/api/v1/public',
-    apiPrivate: 'http://laravel.test/api/v1/private',
-    apiDashboard: 'http://laravel.test/api/v1/dashboard',
+    apiPublic: 'http://cms.test/api/v1/public',
+    apiPrivate: 'http://cms.test/api/v1/private',
+    apiDashboard: 'http://cms.test/api/v1/dashboard',
 
 
     izipay_endpoint: 'https://static.micuentaweb.pe/',
