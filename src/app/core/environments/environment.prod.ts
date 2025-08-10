@@ -6,11 +6,12 @@ export const environment = {
     showStoreNameInSlug: false,
     parametroBase: 'store',
     urlBase:'https://macrotechsac.com',
-    apiUrl: 'https://laravel12.3b.pe/api/v1/public',
 
     apiPublic: 'https://laravel12.3b.pe/api/v1/public',
     apiPrivate: 'https://laravel12.3b.pe/api/v1/private',
     apiDashboard: 'https://laravel12.3b.pe/api/v1/dashboard',
+
+    apiUrl: 'http://cms.test/api/v1/dashboard',
 
     izipay_endpoint: 'https://static.micuentaweb.pe/',
     izipay_public_key: '54188994:publickey_gNReMa8TgxyGSWjJ3GUy6xAUTBXVKVMdxIi7sZCzQSX24',
