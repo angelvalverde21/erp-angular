@@ -32,30 +32,25 @@
           <textarea formControlName="body" class="form-control mb-3" placeholder="Descripcion"></textarea>
         </div>
 
-        <div class="col-lg-12 col-12">
+        <!-- <div class="col-lg-12 col-12">
           <app-input-group text="Tags" [icon]="faTags">
             <input formControlName="tags" type="text" class="form-control" placeholder="tags" aria-label="price"
               aria-describedby="basic-price" />
           </app-input-group>
-        </div>
+        </div> -->
 
-        <div class="col-lg-12 col-6">
+        <div class="col-lg-6 col-6">
           <app-input-group text="Sku" [icon]="faTags">
             <input formControlName="sku" type="text" class="form-control" placeholder="sku" aria-label="price"
               aria-describedby="basic-price" />
           </app-input-group>
         </div>
 
-          <div class="col-lg-12 col-6">
-          <app-input-group text="Codigo de Barras" [icon]="faTags">
+          <div class="col-lg-6 col-6">
+          <app-input-group text="Codigo de Barras" [icon]="faBarcode">
             <input formControlName="barcode" type="text" class="form-control" placeholder="barcode" aria-label="price"
               aria-describedby="basic-price" />
           </app-input-group>
-        </div>
-
-        <div class="col-lg-12 col-12 d-flex justify-content-between align-items-center mb-3">
-          <span class="badge bg-secondary me-1 ng-star-inserted">{{ product.category?.name || 'Sin Categoria' }}</span>
-          <!-- <div style="font-style: italic;">Categoria: {{ product.category?.name || 'Sin Categoria' }}</div> -->
         </div>
 
         <app-button color="{{ colorTemplate }}" [icon]="faSave" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
@@ -69,20 +64,6 @@
 
   </div>
 
-  <!-- tallas -->
-  <div class="card mb-3" *ngIf="product.category.has_size">
-
-    <div class="card-header py-3 bg-{{ colorTemplate }}-subtle d-flex justify-content-between align-items-center">
-      <div><fa-icon [icon]="faCircleCheck" class="me-2"></fa-icon>Tallas</div>
-    </div>
-
-    <div class="card-body">
-
-      <span class="badge bg-secondary me-1 ng-star-inserted" *ngFor="let size of product.sizes">{{ size.name }}</span>
-
-    </div>
-
-  </div>
 
   <!-- colores -->
 

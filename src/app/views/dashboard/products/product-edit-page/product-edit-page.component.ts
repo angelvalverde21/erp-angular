@@ -16,7 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 // import { UploadDropzoneComponent } from '@shared/upload-dropzone/upload-dropzone.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPenToSquare, faGear, faSave, faShirt, faTags } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faGear, faSave, faShirt, faTags, faBarcode } from '@fortawesome/free-solid-svg-icons';
 import { faImage, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
 
 import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
@@ -52,6 +52,7 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
   faShirt = faShirt;
   faCircleCheck = faCircleCheck;
   faTags = faTags;
+  faBarcode = faBarcode;  
 
   items = ['First', 'Second', 'Third'];
   
@@ -92,15 +93,6 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
       this.form.patchValue(resp.data);
       this.product = resp.data;
       //  console.log(this.product.category);
-      if (this.product.category.has_size) {
-        this.colorTemplate = "primary";
-      }
-
-      if (this.product.category.has_size) {
-        
-      } else {
-        this.color = this.product.colors[0];
-      }
 
 
       this.loading = false;

@@ -19,26 +19,33 @@ export const routes: Routes = [
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
       },
-            {
-        path: 'products',
+      /* inventario */
+      {
+        path: 'inventories/products',
         loadChildren: () => import('./views/dashboard/products/routes.product').then((m) => m.routes)
       },
       {
         path: 'categories',
         loadChildren: () => import('./views/dashboard/categories/routes.category').then((m) => m.routes)
       },
+      /* compras o purchases */
+      
+      {
+        path: 'suppliers',
+        loadChildren: () => import('./views/dashboard/purchases/suppliers/route.supplier').then((m) => m.routes)
+      },
+
+      {
+        path: 'purchases',
+        loadChildren: () => import('./views/dashboard/purchases/route.purchase').then((m) => m.routes)
+      },
+
+
+      /* ventas o sales */
       {
         path: 'settings',
         loadChildren: () => import('./views/dashboard/settings/route.settings').then((m) => m.routes)
       },
-      {
-        path: 'brands',
-        loadChildren: () => import('./views/dashboard/brands/route.brand').then((m) => m.routes)
-      },
-      {
-        path: 'web/carousels',
-        loadChildren: () => import('./views/dashboard/carousels/routes.carousel').then((m) => m.routes)
-      }
     ]
   },
   {

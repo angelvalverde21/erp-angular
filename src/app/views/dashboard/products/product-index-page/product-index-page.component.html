@@ -1,8 +1,11 @@
 <app-form-search></app-form-search>
 
-<app-loading *ngIf="loading" size="md"></app-loading>
+@if(loading){
+<app-loading size="md"></app-loading>
 
-<c-row ngPreserveWhitespaces *ngIf="!loading">
+}@else{
+
+<c-row ngPreserveWhitespaces>
   <c-col xs="12">
     <div class="card">
 
@@ -30,3 +33,4 @@
     </div>
   </c-col>
 </c-row>
+}

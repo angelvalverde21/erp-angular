@@ -17,22 +17,22 @@ export const navItems: INavData[] = [
   },
     {
     name: 'Inventario',
-    // url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/inventories` : '/inventories',
+    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/inventories` : '/inventories',
     iconComponent: { name: 'cil-industry' },
     children: [
         {
           name: 'Productos',
-          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/products` : '/products',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/inventories/products` : '/inventories/products',
           icon: 'nav-icon-bullet'
         },
         {
           name: 'Categorias',
-          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/categories` : '/categories',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/inventories/categories` : '/inventories/categories',
           icon: 'nav-icon-bullet'
         },
         {
           name: 'Almacenes',
-          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/warehouses` : '/warehouses',
+          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/inventories/warehouses` : '/inventories/warehouses',
           icon: 'nav-icon-bullet'
         },
     ]
