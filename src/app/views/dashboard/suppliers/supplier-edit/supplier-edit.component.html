@@ -1,4 +1,7 @@
-<form [formGroup]="form">
+@if(loading){
+  <app-loading></app-loading>
+}@else{
+  <form [formGroup]="form">
 
   <div class="row mb-3">
     <div class="col-lg-6 col-md-6 col-12">
@@ -51,3 +54,4 @@
   <!-- {{ form.value | json }} -->
 
 </form> 
+}

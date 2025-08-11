@@ -8,7 +8,7 @@ import { BaseCrudService } from '../base-crud.service';
   providedIn: 'root'
 })
 
-export class BatcheService extends BaseCrudService {
+export class BatchService extends BaseCrudService {
 
   constructor(http: HttpClient) {
 

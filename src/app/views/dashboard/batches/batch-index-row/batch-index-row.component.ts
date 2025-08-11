@@ -8,24 +8,24 @@ import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import { environment } from '../../../../core/environments/environment';
 import { Subject, takeUntil } from 'rxjs';
-import { BatcheService } from '../batch.service';
+import { BatchService } from '../batch.service';
 
 @Component({
-  selector: 'app-batche-index-row',
+  selector: 'app-batch-index-row',
   imports: [ButtonLinkComponent, ButtonComponent, FontAwesomeModule, LoadingComponent, RouterModule],
-  templateUrl: './batche-index-row.component.html',
-  styleUrl: './batche-index-row.component.scss'
+  templateUrl: './batch-index-row.component.html',
+  styleUrl: './batch-index-row.component.scss'
 })
-export class BatcheIndexRowComponent {
+export class BatchIndexRowComponent {
 
-  @Input() batche: any;
-  @Output() deleteBatche = new EventEmitter<number>();
+  @Input() batch: any;
+  @Output() deleteBatch = new EventEmitter<number>();
   
   faTrash = faTrash;
   faEdit = faEdit;
   loadingOverlay: boolean = false;
 
-  constructor( private _batche: BatcheService){
+  constructor( private _batch: BatchService){
   
   }
 
@@ -41,7 +41,7 @@ export class BatcheIndexRowComponent {
       environment.imageThumbnailPlaceHolderVertical;
   }
 
-  archivar(batche_id: number) {
+  archivar(batch_id: number) {
 
 
     Swal.fire({
@@ -58,11 +58,11 @@ export class BatcheIndexRowComponent {
 
         this.loadingOverlay = true;
         
-        this._batche.destroy(batche_id).pipe(takeUntil(this.destroy$)).subscribe({
+        this._batch.destroy(batch_id).pipe(takeUntil(this.destroy$)).subscribe({
           next: (resp: any) => {
             this.loadingOverlay = false;
             console.log(resp);
-            this.deleteBatche.emit(batche_id);
+            this.deleteBatch.emit(batch_id);
             Swal.fire('Eliminado!', 'El elemento ha sido eliminado.', 'success');
           },
           error: (err) => {

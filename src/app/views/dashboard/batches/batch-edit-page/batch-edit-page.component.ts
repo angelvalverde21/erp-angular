@@ -1,27 +1,27 @@
 import { Component } from '@angular/core';
-import { BatcheEditComponent } from '../batche-edit/batche-edit.component';
+import { BatchEditComponent } from '../batch-edit/batch-edit.component';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
-  selector: 'app-batche-edit-page',
+  selector: 'app-batch-edit-page',
   imports: [
-    BatcheEditComponent, 
+    BatchEditComponent, 
     FontAwesomeModule
   ],
-  templateUrl: './batche-edit-page.component.html',
-  styleUrl: './batche-edit-page.component.scss'
+  templateUrl: './batch-edit-page.component.html',
+  styleUrl: './batch-edit-page.component.scss'
 })
-export class BatcheEditPageComponent {
+export class BatchEditPageComponent {
 
-  batche_id: number | null = null;
+  batch_id: number | null = null;
   faPenToSquare = faPenToSquare;
   
   constructor(private route: ActivatedRoute) {
     this.route.params.subscribe((params) => {
-      this.batche_id = params['batche_id'];
+      this.batch_id = params['batch_id'];
     });
   }
   
