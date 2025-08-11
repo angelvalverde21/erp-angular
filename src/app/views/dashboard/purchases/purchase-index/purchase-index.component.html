@@ -1,1 +1,25 @@
-<p>purchase-index works!</p>
+@if(!loading){
+
+<ul class="list-group list-group-flush">
+
+    @if(purchases.length > 0){
+        
+        @for (purchase of purchases; track purchase.id) {
+        <li class="list-group-item py-3">
+            <app-purchase-index-row [purchase]="purchase"
+                (deletePurchase)="reListPurchases($event)"></app-purchase-index-row>
+        </li>
+        }
+
+    }@else{
+
+    Aun no hay compras registrados
+
+    }
+
+
+</ul>
+
+}@else{
+<app-loading></app-loading>
+}

@@ -1,1 +1,13 @@
-<p>purchase-index-page works!</p>
+<div class="card">
+
+  <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center pt-3 pb-3">
+    <div class="title">Registro de compras</div>
+    <app-button-link [icon]="faPlus" color="light" [path]="['purchases','create']">Crear</app-button-link>
+  </div>
+
+  <div class="card-body">
+
+    <app-purchase-index></app-purchase-index>
+
+  </div>
+</div>

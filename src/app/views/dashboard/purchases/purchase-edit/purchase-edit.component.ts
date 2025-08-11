@@ -1,11 +1,163 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+import Swal from 'sweetalert2';
+import { PurchaseService } from '../purchase.service';
+import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
+import {
+  faEdit,
+  faTags,
+  faPlus,
+  faIdCard,
+  faAddressCard,
+} from '@fortawesome/free-solid-svg-icons';
+import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component';
+import { UnitService } from '../../units/unit.service';
+import { JsonPipe } from '@angular/common';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { SupplierService } from '../../suppliers/supplier.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-purchase-edit',
-  imports: [],
+  imports: [
+    ReactiveFormsModule,
+    InputGroupComponent,
+    ButtonComponent,
+    UnitSelectedComponent,
+    JsonPipe,
+    LoadingComponent,
+    NgSelectModule
+  ],
   templateUrl: './purchase-edit.component.html',
-  styleUrl: './purchase-edit.component.scss'
+  styleUrl: './purchase-edit.component.scss',
 })
-export class PurchaseEditComponent {
+export class PurchaseEditComponent implements OnInit, OnDestroy{
+  disabledButton: boolean = true;
+  loadingIcon: boolean = false;
+  form!: FormGroup;
+  loading: boolean = true;
+  success: boolean = false;
 
+  faEdit = faEdit;
+  faTags = faTags;
+  faPlus = faPlus;
+  faIdCard = faIdCard;
+  faAddressCard = faAddressCard;
+  units: any[] = [];
+
+  @Input() purchase_id: number = 0;
+
+  purchase: any;
+
+  @Output() emitPurchaseCreate = new EventEmitter<any | boolean>();
+
+  private destroy$ = new Subject<void>();
+
+  constructor(private fb: FormBuilder, private _purchase: PurchaseService, private _supplier: SupplierService) {}
+
+
+  private formInit(): void {
+
+
+
+    this.form = this.fb.group({
+      name: ['', [Validators.required]],
+      quantity: [''],
+      unit_id: [],
+      price: [''],
+      total: [''],
+      observations: [''],
+      supplier_id: [''],
+    });
+  }
+
+  suppliers: any[] = [];
+
+  getSuppliers() {
+    this._supplier
+      .index()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (resp: any) => {
+          console.log(resp);
+          this.suppliers = resp.data;
+          this.loading = false;
+          console.log(resp.data);
+        },
+
+        error: (error: any) => {
+          console.error(error);
+        },
+      });
+  }
+
+  ngOnInit(): void {
+    this.formInit();
+    this.loadPurchase();
+    this.getSuppliers();
+
+    this.form.statusChanges.subscribe((status) => {
+      console.log(status);
+
+      if (status === 'VALID') {
+        this.disabledButton = false;
+      } else {
+        this.disabledButton = true;
+      }
+    });
+
+    //recibir cambios del categoria
+  }
+
+  loadPurchase() {
+    this._purchase.get(this.purchase_id).pipe(takeUntil(this.destroy$)).subscribe((resp: any) => {
+      console.log(resp.data);
+      this.form.patchValue(resp.data);
+      this.purchase = resp.data;
+      //  console.log(this.purchase.category);
+      this.loading = false;
+    });
+  }
+
+  update() {
+    console.log('form enviado');
+    this.success = false;
+    this.disabledButton = true;
+    this.loadingIcon = true;
+    this._purchase.update(this.purchase_id, this.form.value).subscribe({
+      next: (resp: any) => {
+        Swal.fire('Guardado', 'El registro ha sido actualizado', 'success');
+        this.disabledButton = false;
+        this.loadingIcon = false;
+        this.success = true;
+      },
+      error: (error: any) => {
+        Swal.fire(
+          'Error',
+          'Ocurrió un problema al actualizar. Inténtalo nuevamente.',
+          'error'
+        );
+        console.error(error);
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

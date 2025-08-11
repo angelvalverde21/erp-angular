@@ -1,0 +1,15 @@
+<div class="card">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center pt-3 pb-3">
+      <div>Crear Proveedor</div>
+      <app-button-link [icon]="faArrowLeft" color="dark" colortext="text-white "
+        [path]="['suppliers']">Volver</app-button-link>
+    </div>
+
+    <div class="card-body">
+
+        <app-supplier-create (emitSupplierCreate)="receiveSupplierCreate($event)"></app-supplier-create>
+
+    </div>
+
+  </div>

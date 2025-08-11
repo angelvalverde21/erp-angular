@@ -1,0 +1,15 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+    <select id="SubIdentities" class="form-select"  [ngModel]="value"   aria-label="Default select example" (change)="onIdentityChange($event)">
+
+    <option [value]="null">Seleccione</option>
+
+        @for (identity of identities; track identity.id) {
+                    <option [value]="identity.id">{{ identity.name }}</option>
+        }
+
+
+</select>
+
+}

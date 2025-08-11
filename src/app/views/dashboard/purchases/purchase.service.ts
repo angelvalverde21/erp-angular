@@ -12,7 +12,7 @@ export class PurchaseService extends BaseCrudService {
 
   constructor(http: HttpClient) {
 
-    super(http, 'suppliers');
+    super(http, 'purchases');
 
   }
 

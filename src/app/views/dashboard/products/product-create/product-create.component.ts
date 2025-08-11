@@ -120,6 +120,18 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
   brands: any[] = [];
   // selectedItems = [];
 
+  
+  private formInit(): void {
+    this.form = this.fb.group({
+      name: ['', [Validators.required]],
+      // price: ['', [Validators.required]],
+      // unit_id: ['', [Validators.required]],
+      body: [''],
+      sku: [''],
+      barcode: [''],
+    });
+  }
+
   initBrands() {
     this.loadingBrands = true;
     this.subscriptionBrands = this._brand.index().subscribe({
@@ -208,17 +220,6 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   success: boolean = false;
 
-  private formInit(): void {
-    this.form = this.fb.group({
-      name: ['', [Validators.required]],
-      price: ['', [Validators.required]],
-      unit_id: ['', [Validators.required]],
-      body: [''],
-      tags: [''],
-      sku: [''],
-      barcode: [''],
-    });
-  }
 
   private formLoad() {
     // this.form.patchValue(this.shipment);

@@ -21,8 +21,12 @@ export const routes: Routes = [
       },
       /* inventario */
       {
-        path: 'inventories/products',
+        path: 'products',
         loadChildren: () => import('./views/dashboard/products/routes.product').then((m) => m.routes)
+      },
+      {
+        path: 'batches',
+        loadChildren: () => import('./views/dashboard/batches/routes.batche').then((m) => m.routes)
       },
       {
         path: 'categories',
@@ -32,7 +36,7 @@ export const routes: Routes = [
       
       {
         path: 'suppliers',
-        loadChildren: () => import('./views/dashboard/purchases/suppliers/route.supplier').then((m) => m.routes)
+        loadChildren: () => import('./views/dashboard/suppliers/route.supplier').then((m) => m.routes)
       },
 
       {

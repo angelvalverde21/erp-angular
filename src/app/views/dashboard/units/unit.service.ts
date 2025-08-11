@@ -17,6 +17,4 @@ export class UnitService extends BaseCrudService {
 
   //la variable this.baseUrl esta dentro de BaseCrudService que se llama con super
 
-
-
 }

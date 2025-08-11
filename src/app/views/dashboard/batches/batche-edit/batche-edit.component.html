@@ -1,0 +1,18 @@
+<form [formGroup]="form">
+
+  <div class="row mb-3">
+    <div class="col-lg-6 col-md-6 col-12">
+      <app-input-group text="Nombre Proveedor (*)" [icon]="faEdit">
+        <input formControlName="name" type="text" class="form-control" placeholder="Nombre del Proveedor"
+          aria-label="name" aria-describedby="basic-name" />
+      </app-input-group>
+    </div>
+
+  </div>
+
+  <app-button color="dark" [icon]="faPlus" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
+    (action)="update()">Actualizar Informacion</app-button>
+
+  <!-- {{ form.value | json }} -->
+
+</form> 
