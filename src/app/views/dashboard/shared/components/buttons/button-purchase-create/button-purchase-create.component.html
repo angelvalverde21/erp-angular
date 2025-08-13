@@ -1,0 +1,11 @@
+<ng-template #content let-modal>
+  <div class="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
+  <h5 class="modal-title"><fa-icon [icon]="faCashRegister" class="me-2"></fa-icon>Registrar Compra</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body p-4">
+    <app-purchase-create (emitPurchaseCreate)="receivePurchaseCreate($event)" [section]="section" [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id"></app-purchase-create>
+  </div>
+</ng-template>
+
+<app-button color="dark" [icon]="faPlus" (click)="openVerticallyCentered(content)">Registrar Compra</app-button>

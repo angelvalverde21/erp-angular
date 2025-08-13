@@ -46,6 +46,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
   styleUrl: './purchase-edit.component.scss',
 })
 export class PurchaseEditComponent implements OnInit, OnDestroy{
+
+
+
   disabledButton: boolean = true;
   loadingIcon: boolean = false;
   form!: FormGroup;
@@ -63,16 +66,14 @@ export class PurchaseEditComponent implements OnInit, OnDestroy{
 
   purchase: any;
 
-  @Output() emitPurchaseCreate = new EventEmitter<any | boolean>();
+  @Output() emitPurchaseUpdated = new EventEmitter<any | boolean>();
 
   private destroy$ = new Subject<void>();
 
   constructor(private fb: FormBuilder, private _purchase: PurchaseService, private _supplier: SupplierService) {}
 
-
+    
   private formInit(): void {
-
-
 
     this.form = this.fb.group({
       name: ['', [Validators.required]],
@@ -80,9 +81,56 @@ export class PurchaseEditComponent implements OnInit, OnDestroy{
       unit_id: [],
       price: [''],
       total: [''],
+      section_id: [],
       observations: [''],
       supplier_id: [''],
     });
+  }
+
+
+  calculosPricetotal() {
+    
+  const round2 = (num: number) => Math.round((num + Number.EPSILON) * 100) / 100;
+
+  const priceControl = this.form.get('price');
+  const totalControl = this.form.get('total');
+  const quantityControl = this.form.get('quantity');
+
+  priceControl?.valueChanges.subscribe(price => {
+    const quantity = quantityControl?.value || 0;
+    const total = totalControl?.value;
+
+    if (price != null && quantity > 0) {
+      const calcTotal = round2(price * quantity);
+      if (total !== calcTotal) {
+        totalControl?.setValue(calcTotal, { emitEvent: false });
+      }
+    }
+  });
+
+  totalControl?.valueChanges.subscribe(total => {
+    const quantity = quantityControl?.value || 0;
+    const price = priceControl?.value;
+
+    if (total != null && quantity > 0) {
+      const calcPrice = round2(total / quantity);
+      if (price !== calcPrice) {
+        priceControl?.setValue(calcPrice, { emitEvent: false });
+      }
+    }
+  });
+
+  quantityControl?.valueChanges.subscribe(quantity => {
+    const price = priceControl?.value || 0;
+    const total = totalControl?.value || 0;
+
+    if (price > 0) {
+      const calcTotal = round2(price * quantity);
+      if (total !== calcTotal) {
+        totalControl?.setValue(calcTotal, { emitEvent: false });
+      }
+    }
+  });
   }
 
   suppliers: any[] = [];
@@ -107,8 +155,11 @@ export class PurchaseEditComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.formInit();
+    this.calculosPricetotal();
     this.loadPurchase();
     this.getSuppliers();
+
+    // this.form.get('section_id')?.setValue(this.section.id);
 
     this.form.statusChanges.subscribe((status) => {
       console.log(status);
@@ -144,6 +195,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy{
         this.disabledButton = false;
         this.loadingIcon = false;
         this.success = true;
+        this.emitPurchaseUpdated.emit(resp.data);
       },
       error: (error: any) => {
         Swal.fire(
@@ -151,6 +203,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy{
           'Ocurrió un problema al actualizar. Inténtalo nuevamente.',
           'error'
         );
+         this.emitPurchaseUpdated.emit(false);
         console.error(error);
       },
     });

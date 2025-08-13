@@ -9,21 +9,21 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import( './batche-index-page/batche-index-page.component' ).then((m) => m.BatcheIndexPageComponent),
+        loadComponent: () => import( './batch-index-page/batch-index-page.component' ).then((m) => m.BatchIndexPageComponent),
         data: {
           title: 'Todos'
         }
       },
       {
         path: 'create',
-        loadComponent: () => import('./batche-create-page/batche-create-page.component').then(m => m.BatcheCreatePageComponent),
+        loadComponent: () => import('./batch-create-page/batch-create-page.component').then(m => m.BatchCreatePageComponent),
         data: {
           title: 'Crear Produccion'
         }
       },
       {
-        path: ':batche_id',
-        loadComponent: () => import('./batche-edit-page/batche-edit-page.component').then(m => m.BatcheEditPageComponent),
+        path: ':batch_id',
+        loadComponent: () => import('./batch-edit-page/batch-edit-page.component').then(m => m.BatchEditPageComponent),
         data: {
           title: 'Editar'
         }

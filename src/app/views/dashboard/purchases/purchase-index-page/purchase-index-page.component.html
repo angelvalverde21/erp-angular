@@ -7,7 +7,13 @@
 
   <div class="card-body">
 
-    <app-purchase-index></app-purchase-index>
+    @if(!loading){
+      
+    <app-purchase-index [purchases]="purchases"></app-purchase-index>
+
+    }@else{
+    <app-loading></app-loading>
+    }
 
   </div>
 </div>

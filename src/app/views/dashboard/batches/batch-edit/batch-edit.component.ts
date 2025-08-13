@@ -21,12 +21,19 @@ import {
   faPlus,
   faIdCard,
   faAddressCard,
+  faPenToSquare,
+  faRulerCombined,
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
-import { JsonPipe } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { BatchService } from '../batch.service';
 import { IdentitySelectedComponent } from '../../identities/identity-selected/identity-selected.component';
+import { BatchSectionsComponent } from './../batch-sections/batch-sections.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { WidgetsDropdownComponent } from '../../../widgets/widgets-dropdown/widgets-dropdown.component';
+import { SumTotalPipe } from '../../shared/pipes/sum-total.pipe';
 
 @Component({
   selector: 'app-batch-edit',
@@ -37,12 +44,17 @@ import { IdentitySelectedComponent } from '../../identities/identity-selected/id
     IdentitySelectedComponent,
     JsonPipe,
     LoadingComponent,
+    BatchSectionsComponent,
+    FontAwesomeModule,
+    NgbAccordionModule,
+    WidgetsDropdownComponent,
+    SumTotalPipe,
+    CommonModule
   ],
   templateUrl: './batch-edit.component.html',
-  styleUrl: './batch-edit.component.scss'
+  styleUrl: './batch-edit.component.scss',
 })
-export class BatchEditComponent implements OnInit, OnDestroy{
-
+export class BatchEditComponent implements OnInit, OnDestroy {
   disabledButton: boolean = true;
   loadingIcon: boolean = false;
   form!: FormGroup;
@@ -54,6 +66,10 @@ export class BatchEditComponent implements OnInit, OnDestroy{
   faPlus = faPlus;
   faIdCard = faIdCard;
   faAddressCard = faAddressCard;
+  faPenToSquare = faPenToSquare;
+
+  faRulerCombined = faRulerCombined;
+
   units: any[] = [];
 
   @Input() batch_id: number = 0;
@@ -69,6 +85,8 @@ export class BatchEditComponent implements OnInit, OnDestroy{
   private formInit(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
+      quantity_total: [''],
+      quantity_waste: [''],
     });
   }
 
@@ -90,13 +108,19 @@ export class BatchEditComponent implements OnInit, OnDestroy{
   }
 
   loadbatch() {
-    this._batch.get(this.batch_id).pipe(takeUntil(this.destroy$)).subscribe((resp: any) => {
-      console.log(resp.data);
-      this.form.patchValue(resp.data);
-      this.batch = resp.data;
-      //  console.log(this.batch.category);
-      this.loading = false;
-    });
+    this._batch
+      .get(this.batch_id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: any) => {
+        console.log(resp.data);
+        this.form.patchValue(resp.data);
+        this.batch = resp.data;
+        //  console.log(this.batch.category);
+        this.calculoTotal();
+        this.calculoPrendasAprovadas();
+        this.caclculoCostoProduccion();
+        this.loading = false;
+      });
   }
 
   update() {
@@ -127,4 +151,26 @@ export class BatchEditComponent implements OnInit, OnDestroy{
     this.destroy$.complete();
   }
 
+  total: number = 0;
+  costoProduccion: number = 0;
+  prendasAprovadas: number = 0;
+
+  calculoTotal() {
+    this.batch.section.childrens.forEach((children: any) => {
+      children.purchases.forEach((purchase: any) => {
+        const totalNum = Number(purchase.total) || 0; // conversión segura
+        this.total += totalNum;
+      });
+    });
+  }
+
+  calculoPrendasAprovadas(){
+    this.prendasAprovadas = Number(this.form.get('quantity_total')?.value) - Number(this.form.get('quantity_waste')?.value);
+    console.log(this.prendasAprovadas);
+  }
+
+  caclculoCostoProduccion() {
+    const cantidad = Number(this.prendasAprovadas) || 0;
+    this.costoProduccion = cantidad ? +(this.total / cantidad).toFixed(2) : 0;
+  }
 }

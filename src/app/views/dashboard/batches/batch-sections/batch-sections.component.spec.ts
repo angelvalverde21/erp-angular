@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BatcheEditComponent } from './batche-edit.component';
+import { BatchSectionsComponent } from './batch-sections.component';
 
-describe('BatcheEditComponent', () => {
-  let component: BatcheEditComponent;
-  let fixture: ComponentFixture<BatcheEditComponent>;
+describe('BatchSectionsComponent', () => {
+  let component: BatchSectionsComponent;
+  let fixture: ComponentFixture<BatchSectionsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BatcheEditComponent]
+      imports: [BatchSectionsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BatcheEditComponent);
+    fixture = TestBed.createComponent(BatchSectionsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -63,6 +64,9 @@ export class PurchaseCreateComponent {
   units: any[] = [];
 
   @Output() emitPurchaseCreate = new EventEmitter<any | boolean>();
+  @Input() section: any; 
+  @Input() purchaseable_type: string = ""; 
+  @Input() purchaseable_id: number = 0; 
 
   private destroy$ = new Subject<void>();
   modal: any;
@@ -83,8 +87,11 @@ export class PurchaseCreateComponent {
       name: ['', [Validators.required]],
       quantity: [''],
       unit_id: [1],
+      section_id: [],
       price: [''],
       total: [''],
+      purchaseable_type: [this.purchaseable_type],
+      purchaseable_id: [this.purchaseable_id],
       observations: [''],
       supplier_id: [''],
     });
@@ -143,6 +150,8 @@ export class PurchaseCreateComponent {
     // this.initUnits();
     // this.initBrands();
     // this.initsuppliers();
+
+    this.form.get('section_id')?.setValue(this.section.id);
 
     this.form.statusChanges.subscribe((status) => {
       console.log(status);
@@ -229,6 +238,7 @@ export class PurchaseCreateComponent {
   }
 
   supplierReceiveCreate(supplier: any) {
+    
     console.log(supplier);
 
     this.suppliers = [supplier, ...this.suppliers];

@@ -1,0 +1,13 @@
+<app-purchase-index [purchases]="purchases"></app-purchase-index>
+
+<!-- {{ purchases | json }} -->
+
+<hr>
+<div class="d-flex justify-content-start justify-content-lg-end w-100">
+    <app-button-purchase-create (emitPurchaseCreate)="receivePurchaseCreate($event)" [section]="subsection"
+    purchaseable_type="batch" [purchaseable_id]="purchaseable_id"></app-button-purchase-create>
+</div>
+<!-- <button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.toggle('first')">Toggle first</button> -->
+<!-- <button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.toggle('second')">Toggle second</button> -->
+<!-- <button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.expandAll()">Expand all</button> -->
+<!-- <button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.collapseAll()">Collapse all</button> -->

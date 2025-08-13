@@ -5,13 +5,13 @@ export const environment = {
     storeName: 'sorelle',
     showStoreNameInSlug: false,
     parametroBase: 'store',
-    urlBase:'https://macrotechsac.com',
+    urlBase:'https://sorelle.3b.pe/cms',
 
-    apiPublic: 'https://laravel12.3b.pe/api/v1/public',
-    apiPrivate: 'https://laravel12.3b.pe/api/v1/private',
-    apiDashboard: 'https://laravel12.3b.pe/api/v1/dashboard',
+    apiPublic: 'https://sorelle.3b.pe/api/v1/public',
+    apiPrivate: 'https://sorelle.3b.pe/api/v1/private',
+    apiDashboard: 'https://sorelle.3b.pe/api/v1/dashboard',
 
-    apiUrl: 'http://cms.test/api/v1/dashboard',
+    apiUrl: 'https://sorelle.3b.pe/api/v1/dashboard',
 
     izipay_endpoint: 'https://static.micuentaweb.pe/',
     izipay_public_key: '54188994:publickey_gNReMa8TgxyGSWjJ3GUy6xAUTBXVKVMdxIi7sZCzQSX24',

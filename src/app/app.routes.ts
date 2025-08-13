@@ -4,7 +4,7 @@ import { authGuard } from './core/auth/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'products',
+    redirectTo: 'batches',
     pathMatch: 'full',
   },
   {
@@ -26,7 +26,7 @@ export const routes: Routes = [
       },
       {
         path: 'batches',
-        loadChildren: () => import('./views/dashboard/batches/routes.batche').then((m) => m.routes)
+        loadChildren: () => import('./views/dashboard/batches/routes.batch').then((m) => m.routes)
       },
       {
         path: 'categories',
@@ -80,5 +80,5 @@ export const routes: Routes = [
       title: 'Register Page'
     }
   },
-  { path: '**', redirectTo: 'products' }
+  { path: '**', redirectTo: 'batches' }
 ];
