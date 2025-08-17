@@ -5,6 +5,8 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  TemplateRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -22,6 +24,8 @@ import {
   faPlus,
   faIdCard,
   faAddressCard,
+  faImages,
+  faUser
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component';
@@ -30,6 +34,10 @@ import { JsonPipe } from '@angular/common';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { SupplierService } from '../../suppliers/supplier.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SupplierCreateComponent } from '../../suppliers/supplier-create/supplier-create.component';
 
 @Component({
   selector: 'app-purchase-edit',
@@ -40,15 +48,16 @@ import { NgSelectModule } from '@ng-select/ng-select';
     UnitSelectedComponent,
     JsonPipe,
     LoadingComponent,
-    NgSelectModule
+    NgSelectModule,
+    GalleryComponent,
+    FontAwesomeModule,
+    SupplierCreateComponent
   ],
   templateUrl: './purchase-edit.component.html',
   styleUrl: './purchase-edit.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
-export class PurchaseEditComponent implements OnInit, OnDestroy{
-
-
-
+export class PurchaseEditComponent implements OnInit, OnDestroy {
   disabledButton: boolean = true;
   loadingIcon: boolean = false;
   form!: FormGroup;
@@ -59,6 +68,9 @@ export class PurchaseEditComponent implements OnInit, OnDestroy{
   faTags = faTags;
   faPlus = faPlus;
   faIdCard = faIdCard;
+  faImages = faImages;
+  faUser = faUser;
+
   faAddressCard = faAddressCard;
   units: any[] = [];
 
@@ -70,11 +82,18 @@ export class PurchaseEditComponent implements OnInit, OnDestroy{
 
   private destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private _purchase: PurchaseService, private _supplier: SupplierService) {}
+  constructor(
+    private fb: FormBuilder,
+    private _purchase: PurchaseService,
+    private _supplier: SupplierService,
+    config: NgbModalConfig,
+    private modalService: NgbModal
+  ) {
+    config.backdrop = 'static';
+    config.keyboard = false;
+  }
 
-    
   private formInit(): void {
-
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       quantity: [''],
@@ -87,50 +106,49 @@ export class PurchaseEditComponent implements OnInit, OnDestroy{
     });
   }
 
-
   calculosPricetotal() {
-    
-  const round2 = (num: number) => Math.round((num + Number.EPSILON) * 100) / 100;
+    const round2 = (num: number) =>
+      Math.round((num + Number.EPSILON) * 100) / 100;
 
-  const priceControl = this.form.get('price');
-  const totalControl = this.form.get('total');
-  const quantityControl = this.form.get('quantity');
+    const priceControl = this.form.get('price');
+    const totalControl = this.form.get('total');
+    const quantityControl = this.form.get('quantity');
 
-  priceControl?.valueChanges.subscribe(price => {
-    const quantity = quantityControl?.value || 0;
-    const total = totalControl?.value;
+    priceControl?.valueChanges.subscribe((price) => {
+      const quantity = quantityControl?.value || 0;
+      const total = totalControl?.value;
 
-    if (price != null && quantity > 0) {
-      const calcTotal = round2(price * quantity);
-      if (total !== calcTotal) {
-        totalControl?.setValue(calcTotal, { emitEvent: false });
+      if (price != null && quantity > 0) {
+        const calcTotal = round2(price * quantity);
+        if (total !== calcTotal) {
+          totalControl?.setValue(calcTotal, { emitEvent: false });
+        }
       }
-    }
-  });
+    });
 
-  totalControl?.valueChanges.subscribe(total => {
-    const quantity = quantityControl?.value || 0;
-    const price = priceControl?.value;
+    totalControl?.valueChanges.subscribe((total) => {
+      const quantity = quantityControl?.value || 0;
+      const price = priceControl?.value;
 
-    if (total != null && quantity > 0) {
-      const calcPrice = round2(total / quantity);
-      if (price !== calcPrice) {
-        priceControl?.setValue(calcPrice, { emitEvent: false });
+      if (total != null && quantity > 0) {
+        const calcPrice = round2(total / quantity);
+        if (price !== calcPrice) {
+          priceControl?.setValue(calcPrice, { emitEvent: false });
+        }
       }
-    }
-  });
+    });
 
-  quantityControl?.valueChanges.subscribe(quantity => {
-    const price = priceControl?.value || 0;
-    const total = totalControl?.value || 0;
+    quantityControl?.valueChanges.subscribe((quantity) => {
+      const price = priceControl?.value || 0;
+      const total = totalControl?.value || 0;
 
-    if (price > 0) {
-      const calcTotal = round2(price * quantity);
-      if (total !== calcTotal) {
-        totalControl?.setValue(calcTotal, { emitEvent: false });
+      if (price > 0) {
+        const calcTotal = round2(price * quantity);
+        if (total !== calcTotal) {
+          totalControl?.setValue(calcTotal, { emitEvent: false });
+        }
       }
-    }
-  });
+    });
   }
 
   suppliers: any[] = [];
@@ -175,13 +193,16 @@ export class PurchaseEditComponent implements OnInit, OnDestroy{
   }
 
   loadPurchase() {
-    this._purchase.get(this.purchase_id).pipe(takeUntil(this.destroy$)).subscribe((resp: any) => {
-      console.log(resp.data);
-      this.form.patchValue(resp.data);
-      this.purchase = resp.data;
-      //  console.log(this.purchase.category);
-      this.loading = false;
-    });
+    this._purchase
+      .get(this.purchase_id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: any) => {
+        console.log(resp.data);
+        this.form.patchValue(resp.data);
+        this.purchase = resp.data;
+        //  console.log(this.purchase.category);
+        this.loading = false;
+      });
   }
 
   update() {
@@ -203,7 +224,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy{
           'Ocurrió un problema al actualizar. Inténtalo nuevamente.',
           'error'
         );
-         this.emitPurchaseUpdated.emit(false);
+        this.emitPurchaseUpdated.emit(false);
         console.error(error);
       },
     });
@@ -212,5 +233,29 @@ export class PurchaseEditComponent implements OnInit, OnDestroy{
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  modal: any;
+
+  openVerticallyCentered(content: TemplateRef<any>) {
+    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
+  }
+
+  closeModal() {
+    this.modal.close();
+  }
+
+  supplierReceiveCreate(supplier: any) {
+    
+    console.log(supplier);
+
+    this.suppliers = [supplier, ...this.suppliers];
+
+    this.form.get('supplier_id')?.setValue(supplier.id);
+    // this.form.get('supplier_id')?.setValue(supplier.id);
+
+    if (supplier) {
+      this.modal.close();
+    }
   }
 }

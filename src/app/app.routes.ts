@@ -4,14 +4,14 @@ import { authGuard } from './core/auth/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'batches',
+    redirectTo: 'dashboard',
     pathMatch: 'full',
   },
   {
     path: '',
     loadComponent: () => import('./layout').then(m => m.DefaultLayoutComponent),
     data: {
-      title: 'Home'
+      title: 'Dashboard'
     },
     // canActivate: [authGuard],
     children: [

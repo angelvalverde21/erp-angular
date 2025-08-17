@@ -24,6 +24,7 @@ import {
   faPlus,
   faIdCard,
   faAddressCard,
+  faUser
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component';
@@ -33,6 +34,7 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { SupplierCreateComponent } from '../../suppliers/supplier-create/supplier-create.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SupplierService } from '../../suppliers/supplier.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-purchase-create',
@@ -44,6 +46,7 @@ import { SupplierService } from '../../suppliers/supplier.service';
     JsonPipe,
     SupplierCreateComponent,
     NgSelectModule,
+    FontAwesomeModule
   ],
   templateUrl: './purchase-create.component.html',
   styleUrl: './purchase-create.component.scss',
@@ -60,6 +63,7 @@ export class PurchaseCreateComponent {
   faTags = faTags;
   faPlus = faPlus;
   faIdCard = faIdCard;
+  faUser = faUser;
   faAddressCard = faAddressCard;
   units: any[] = [];
 

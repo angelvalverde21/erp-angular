@@ -13,16 +13,23 @@ import {
   DropdownToggleDirective,
   RowComponent,
   TemplateIdDirective,
-  WidgetStatAComponent
+  WidgetStatAComponent,
 } from '@coreui/angular';
+import { Subject, takeUntil } from 'rxjs';
+import { DashboardService } from '../../dashboard/dashboard.service';
+import { LoadingComponent } from '../../dashboard/shared/components/loading/loading.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-widgets-dropdown',
   templateUrl: './widgets-dropdown.component.html',
   styleUrls: ['./widgets-dropdown.component.scss'],
-  imports: [RowComponent, ColComponent, WidgetStatAComponent, TemplateIdDirective, IconDirective, DropdownComponent, ButtonDirective, DropdownToggleDirective, DropdownMenuDirective, DropdownItemDirective, RouterLink, DropdownDividerDirective, ChartjsComponent]
+  imports: [RowComponent, ColComponent, WidgetStatAComponent, TemplateIdDirective, IconDirective, DropdownComponent, ButtonDirective, DropdownToggleDirective, DropdownMenuDirective, DropdownItemDirective, RouterLink, DropdownDividerDirective, ChartjsComponent, LoadingComponent, CommonModule]
 })
 export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
+
+  constructor(private _dashboard: DashboardService) {}
+
   private changeDetectorRef = inject(ChangeDetectorRef);
 
   data: any[] = [];
@@ -123,6 +130,41 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
 
   ngOnInit(): void {
     this.setData();
+    this.loadingDashboard();
+  }
+
+  destroy$ = new Subject<void>();
+  
+  ngOnDestroy(): void {
+  
+    this.destroy$.next();
+    this.destroy$.complete();
+  
+  }
+
+  loading: boolean = false;
+  stats: any;
+
+  loadingDashboard(){
+
+    this.loading = true;
+
+    this._dashboard.getDasboard().pipe(takeUntil(this.destroy$)).subscribe({
+    
+      next: (resp: any) => {
+        this.stats = resp.data;
+        this.loading = false;
+        console.log(resp);
+        
+      },
+    
+      error: (error: any) => {
+        console.error(error);
+        this.loading = false;
+      },
+    
+    });
+
   }
 
   ngAfterContentInit(): void {

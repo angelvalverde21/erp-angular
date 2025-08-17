@@ -88,7 +88,7 @@
     <div class="card text-white bg-secondary mb-3">
       <div class="card-header">Costo</div>
       <div class="card-body">
-        <h4 class="card-title">S/. {{ costoProduccion | currency:'S/. ':'symbol':'1.2-2' }}</h4>
+        <h4 class="card-title">{{ costoProduccion | currency:'S/. ':'symbol':'1.2-2' }}</h4>
         <p class="card-text">x unidad</p>
       </div>
     </div>
@@ -97,7 +97,7 @@
     <div class="card text-white bg-primary mb-3">
       <div class="card-header d-flex justify-content-end">Gasto total</div>
       <div class="card-body">
-        <h4 class="card-title d-flex justify-content-end">S/. {{ total | currency:'S/. ':'symbol':'1.2-2' }}</h4>
+        <h4 class="card-title d-flex justify-content-end">{{ total | currency:'S/. ':'symbol':'1.2-2' }}</h4>
         <p class="card-text d-flex justify-content-end">{{ prendasAprovadas }} unidades</p>
       </div>
     </div>

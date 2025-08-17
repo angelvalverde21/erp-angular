@@ -1,23 +1,27 @@
 import { Component, EventEmitter, Input, Output, TemplateRef,ViewEncapsulation, } from '@angular/core';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { RouterModule } from '@angular/router';
-import { faTrash, faEdit, faCashRegister } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEdit, faCashRegister, faImages, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import { PurchaseService } from '../purchase.service';
 import { environment } from '../../../../core/environments/environment';
 import { Subject, takeUntil } from 'rxjs';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { PurchaseEditComponent } from '../purchase-edit/purchase-edit.component';
+import { CapitalizePipe } from '../../shared/pipes/capitalize.pipe';
+import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-purchase-index-row',
   imports: [
-    ButtonComponent,
     FontAwesomeModule,
     LoadingComponent,
     RouterModule,
-    PurchaseEditComponent
+    PurchaseEditComponent,
+    CapitalizePipe,
+    GalleryComponent,
+    CommonModule
   ],
   templateUrl: './purchase-index-row.component.html',
   styleUrl: './purchase-index-row.component.scss',
@@ -28,7 +32,9 @@ export class PurchaseIndexRowComponent {
   @Output() deletePurchase = new EventEmitter<number>();
 
   faTrash = faTrash;
+  faImages = faImages;
   faEdit = faEdit;
+  faPaperclip = faPaperclip;
   faCashRegister = faCashRegister;
   loadingOverlay: boolean = false;
   modal: any;

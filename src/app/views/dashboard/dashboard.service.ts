@@ -12,14 +12,14 @@ import { environment } from '../../core/environments/environment';
 })
 export class DashboardService {
 
-  baseUrl: string  = environment.apiPublic;
-  newBaseUrl: string  = "";
+  // baseUrl: string  = environment.apiPublic;
+  baseUrl: string  = "";
 
   constructor(
     private http: HttpClient, 
     private router: Router,
   ) {
-    this.newBaseUrl = `${environment.apiDashboard}/${environment.storeName}`;
+    this.baseUrl = `${environment.apiDashboard}/${environment.storeName}`;
   }
   
   isValid(name: string): Observable<boolean> {
@@ -79,12 +79,12 @@ export class DashboardService {
     // Construye la URL con el parámetro 'nombre'
 
     // const url = `${this.url_base}/${store}/verify`; // ya nos e usa verify porque el erp verifica el nombre del store desde el inicio
-    const url = `${this.baseUrl}/${store}`;
+    // const url = `${this.baseUrl}/${store}`;
 
     // const url = `${this.url_base}?store=${store}`;
     // console.log(url);
 
-    return this.http.get(url);
+    return this.http.get(this.baseUrl);
     
   }
 
@@ -96,7 +96,11 @@ export class DashboardService {
 
 
   getGallery(path: string = ""): Observable<any> {
-    return this.http.get(`${this.newBaseUrl}/${path}`);
+    return this.http.get(`${this.baseUrl}/${path}`);
+  }
+
+  getDasboard(path: string = ""): Observable<any> {
+    return this.http.get(`${this.baseUrl}`);
   }
 
 }

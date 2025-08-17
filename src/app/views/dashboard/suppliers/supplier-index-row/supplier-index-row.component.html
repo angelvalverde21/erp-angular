@@ -23,11 +23,11 @@
     <div class="btn-edit text-end d-flex justify-content-between align-items-center">
         <!-- A partir del tamaño "md" (≥768px), el ancho pasa a ser automático, es decir, el botón solo mide lo que necesita. -->
         <app-button-link [icon]="faEdit" color="dark" [path]="['suppliers', supplier.id]">Editar</app-button-link>
-        <button class="btn btn-danger btn-sm text-white d-flex justify-content-between align-items-center ms-2"
+        <!-- <button class="btn btn-danger btn-sm text-white d-flex justify-content-between align-items-center ms-2"
             (click)="archivar(supplier.id)">
             <fa-icon [icon]="faTrash" class="me-2"></fa-icon>
             <span>Eliminar</span>
-        </button>
+        </button> -->
     </div>
 
     @if(loadingOverlay){

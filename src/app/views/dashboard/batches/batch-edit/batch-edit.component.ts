@@ -25,14 +25,12 @@ import {
   faRulerCombined,
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { BatchService } from '../batch.service';
-import { IdentitySelectedComponent } from '../../identities/identity-selected/identity-selected.component';
 import { BatchSectionsComponent } from './../batch-sections/batch-sections.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
-import { WidgetsDropdownComponent } from '../../../widgets/widgets-dropdown/widgets-dropdown.component';
 import { SumTotalPipe } from '../../shared/pipes/sum-total.pipe';
 
 @Component({
@@ -41,13 +39,10 @@ import { SumTotalPipe } from '../../shared/pipes/sum-total.pipe';
     ReactiveFormsModule,
     InputGroupComponent,
     ButtonComponent,
-    IdentitySelectedComponent,
-    JsonPipe,
     LoadingComponent,
     BatchSectionsComponent,
     FontAwesomeModule,
     NgbAccordionModule,
-    WidgetsDropdownComponent,
     SumTotalPipe,
     CommonModule
   ],

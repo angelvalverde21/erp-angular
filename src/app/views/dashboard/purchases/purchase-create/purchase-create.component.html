@@ -11,7 +11,7 @@
 
         <div class="col-lg-6 col-6 col-md-6">
             <app-input-group text="Cantidad (*)">
-                <input formControlName="quantity" type="number" step="1" class="form-control" placeholder="Cantidad"
+                <input formControlName="quantity" type="number" step="0.01" class="form-control" placeholder="Cantidad"
                     aria-label="quantity" aria-describedby="quantity-price" />
             </app-input-group>
         </div>
@@ -41,14 +41,18 @@
 
             <label class="mb-2">Escoger Proveedor</label>
 
-            <div class="proveedor d-flex justify-content-between align-items-center">
+            <div class="proveedor mb-3 d-flex justify-content-between align-items-center">
 
                 <ng-select class="w-100 me-2" formControlName="supplier_id" bindValue="id" [items]="suppliers"
-                    [addTag]="true" bindLabel="name" placeholder="Escoja una marca">
+                    [addTag]="false" bindLabel="name" placeholder="Escoja una marca">
+                    <ng-template ng-label-tmp let-item="item">
+                        <fa-icon [icon]="faUser" class="me-2"></fa-icon>
+                        {{ item.name }}
+                    </ng-template>
                 </ng-select>
 
                 <app-button color="outline-dark" [icon]="faPlus"
-                    (click)="openVerticallyCentered(content)">Crear</app-button>
+                    (click)="openVerticallyCentered(newSupplier)">Crear</app-button>
                 <!-- <button class="btn btn-outline-primary ms-2">Crear</button> -->
 
             </div>
@@ -64,14 +68,14 @@
     </div>
 
     <div class="d-flex justify-content-start justify-content-lg-end w-100">
-            <app-button color="dark" [icon]="faPlus" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
-        (action)="create()">Registrar Compra</app-button>
+        <app-button color="dark" [icon]="faPlus" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
+            (action)="create()">Registrar Compra</app-button>
     </div>
 
 
 </form>
 
-<ng-template #content let-modal>
+<ng-template #newSupplier let-modal>
     <div class="modal-header">
         <h4 class="modal-title">Crear proveedor</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
