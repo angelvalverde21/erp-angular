@@ -1,7 +1,7 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, inject, OnInit, viewChild } from '@angular/core';
 import { getStyle } from '@coreui/utils';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
 import {
   ButtonDirective,
@@ -28,7 +28,7 @@ import { CommonModule } from '@angular/common';
 })
 export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
 
-  constructor(private _dashboard: DashboardService) {}
+  constructor(private _dashboard: DashboardService, private router: Router) {}
 
   private changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -161,6 +161,9 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
       error: (error: any) => {
         console.error(error);
         this.loading = false;
+        if (error.status === 401) {
+          this.router.navigate(['/login']);
+        }
       },
     
     });

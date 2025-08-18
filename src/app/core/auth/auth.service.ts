@@ -14,6 +14,7 @@ export class AuthService {
   baseUrl = environment.apiPublic;
   userToken: string = '';
   roles: any;
+  is_auth = false;
 
   private opciones = {
     headers: new HttpHeaders({
@@ -24,7 +25,10 @@ export class AuthService {
     }),
   };
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(
+    private http: HttpClient, 
+    private router: Router
+  ) {
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationCancel) {
@@ -63,6 +67,7 @@ export class AuthService {
   }
 
   login(user: User) {
+
     console.log(this.baseUrl + '/login');
 
     return this.http
@@ -82,16 +87,24 @@ export class AuthService {
           this.setLogin(obj.access_token, obj.user, obj.store);
           // this.guardarToken(resp.data.access_token);
 
+          this.is_auth = true;
+
           return resp;
         })
       );
   }
 
   setLogin(token: string, user: {}, store: any) {
+
     this.guardarToken(token);
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('store', JSON.stringify(store));
     localStorage.setItem('slug_base', store.slug);
+
+  }
+
+  isAuth(){
+    return this.is_auth;
   }
   // user() {
   //   return this.http.get(this.baseUrl + '/user', this.opciones);
@@ -119,6 +132,7 @@ export class AuthService {
   }
 
   estaAutenticado(): boolean {
+
     this.leerToken();
     return this.userToken.length > 2;
   }

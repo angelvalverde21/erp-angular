@@ -17,6 +17,7 @@ import { environment } from '../environments/environment';
   providedIn: 'root',
 })
 export class authGuard implements CanActivate, CanActivateChild {
+  
   constructor(
     private _auth: AuthService,
     private _router: Router,
@@ -67,7 +68,9 @@ export class authGuard implements CanActivate, CanActivateChild {
             this._router.navigate(['/404']);
             return of(false); // Devuelve `false` en caso de error
           })
+
         );
+
       }),
       catchError(err => {
         console.error('Error al verificar el slug', err);

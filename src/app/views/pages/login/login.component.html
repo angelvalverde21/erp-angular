@@ -24,6 +24,9 @@
                     <input autoComplete="current-password" cFormControl placeholder="Password" type="password"
                       formControlName="password" />
                   </c-input-group>
+                  @if(error){
+                    <div class="alert alert-danger">{{ error.message }}</div> 
+                  }
                   <c-row>
                     <c-col xs="6">
                       <app-button-login [loadingIcon]="loadingIcon" [disabled]="disabledButton" (clickCustom)="iniciarSesion()">Login</app-button-login>

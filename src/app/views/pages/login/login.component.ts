@@ -33,6 +33,7 @@ export class LoginComponent {
   disabledButton: boolean = false;
   message: string = '';
   web: any;
+  error: any;
 
   constructor(
     private _auth: AuthService,
@@ -44,11 +45,11 @@ export class LoginComponent {
 
     console.log("se paso por LoginComponent constructor");
 
-    if (this._auth.estaAutenticado()) {
-      console.log("hola");
+    // if (this._auth.estaAutenticado()) {
+    //   console.log("hola");
       
-      this.router.navigateByUrl('/');
-    }
+    //   this.router.navigateByUrl('/');
+    // }
 
     this.form = this.fb.group({
       email: ['', [Validators.required, this.emailOrNumberValidator]],
@@ -87,11 +88,14 @@ export class LoginComponent {
     this.disabledButton = true;
 
     this._auth.login(this.form.value).subscribe({
+
       next: (resp: any) => {
         console.log(resp);
 
         this.loading = false;
         this.message = resp.message;
+
+        this.error = null;
 
         if (resp.success) {
           // const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -110,16 +114,19 @@ export class LoginComponent {
         
         this.valid = false;
         this.loading = false;
-        this.message = resp.error.message;
+        this.error = resp.error;
         this.buttonLoginActive = true;
         this.loadingIcon = false;
         this.disabledButton = false; //en caso de fallar el login activa nuevamente el boton
         console.log(resp);
+
       },
+
       complete: () => {
         this.loading = false;
         console.log('Request complete');
       },
+
     });
   }
 
