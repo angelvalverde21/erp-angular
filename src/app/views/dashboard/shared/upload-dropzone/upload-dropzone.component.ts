@@ -22,7 +22,7 @@ export class UploadDropzoneComponent {
   name: string = '';
 
   @Output() fileUpload = new EventEmitter<any>();
-  @Output() fileTotalUpload = new EventEmitter<boolean>();
+  @Output() lastFileUpload = new EventEmitter<any>();
   @Output() errorUpload = new EventEmitter<boolean>();
 
   @Input() parallelUploads: number = 4;
@@ -126,9 +126,9 @@ export class UploadDropzoneComponent {
             this.removeFile(file);
           });
 
-          this.on('queuecomplete', function () {
+          this.on('queuecomplete', (resp: any) => {
             // Aquí disparas la alerta
-            self.fileTotalUpload.emit(true);
+            self.lastFileUpload.emit(self.image);
             // alert('¡Todas las fotos han sido subidas exitosamente!');
           });
         },

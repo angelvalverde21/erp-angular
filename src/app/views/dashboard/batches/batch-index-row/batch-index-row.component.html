@@ -6,12 +6,14 @@
     <div class="content-list d-flex flex-row mb-2 mb-md-0 w-100">
         <!-- thumbanil -->
 
+        <img [src]="url_thumbnail_placeholder" width="100px" [lazyImg]="batch.image?.url_thumbnail || null" class="img-preview" alt="Producto">
+
         <!-- Description -->
-        <div class="text d-flex flex-column">
+        <div class="text d-flex flex-column ms-3">
             <h5>{{ batch.name }}</h5>
-            <p class="text-muted mb-2">{{ batch.address }}</p>
+            <p class="text-muted mb-2">S/. {{ batch.purchases_sum_total }}</p>
             <p class="text-muted mb-0">
-                <span class="badge bg-success me-1">{{ batch.phone }}</span>
+                <span class="badge bg-secondary me-1">{{ batch.quantity_total }}</span>
             </p>
         </div>
     </div>
@@ -22,7 +24,7 @@
     <!-- Botón Editar -->
     <div class="btn-edit text-end d-flex justify-content-between align-items-center">
         <!-- A partir del tamaño "md" (≥768px), el ancho pasa a ser automático, es decir, el botón solo mide lo que necesita. -->
-        <app-button-link [icon]="faEdit" color="dark" [path]="['batches', batch.id]">Editar</app-button-link>
+        <app-button-link [icon]="faEdit" color="dark" [path]="['batches', batch.id]">Compras</app-button-link>
         <!-- <button class="btn btn-danger btn-sm text-white d-flex justify-content-between align-items-center ms-2"
             (click)="archivar(batch.id)">
             <fa-icon [icon]="faTrash" class="me-2"></fa-icon>

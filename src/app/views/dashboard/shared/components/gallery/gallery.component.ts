@@ -4,6 +4,8 @@ import {
   OnInit,
   Input,
   ViewEncapsulation,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { UploadDropzoneComponent } from '../../upload-dropzone/upload-dropzone.component';
 import {
@@ -33,6 +35,7 @@ import { ImageComponent } from './image/image.component';
   encapsulation: ViewEncapsulation.None,
 })
 export class GalleryComponent implements OnInit, OnDestroy {
+
   @Input() path: string = 'products/colors/store';
 
   faGear = faGear;
@@ -45,6 +48,9 @@ export class GalleryComponent implements OnInit, OnDestroy {
   @Input() group_id: number = 0; 
   gallerySubscription! : Subscription;
   loading: boolean = false;
+
+  @Output() lastFileUpload = new EventEmitter<any>();
+  
 
   constructor( private _dashboard : DashboardService
   ) {
@@ -73,9 +79,12 @@ export class GalleryComponent implements OnInit, OnDestroy {
   fileUpload(event: any) {
     console.log(event);
     this.images.unshift(event);
-    // this.images.
   }
-
+  
+  finishUpload(event: any){
+    console.log(event);
+    this.lastFileUpload.emit(event);
+  }
   
   reListImages(id: any) {
 

@@ -5,6 +5,8 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  TemplateRef,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   FormBuilder,
@@ -23,15 +25,22 @@ import {
   faAddressCard,
   faPenToSquare,
   faRulerCombined,
+  faSave,
+  faCamera,
+  faImages,
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { CommonModule } from '@angular/common';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { BatchService } from '../batch.service';
 import { BatchSectionsComponent } from './../batch-sections/batch-sections.component';
+import { SumTotalPipe } from '../../shared/pipes/sum-total.pipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
-import { SumTotalPipe } from '../../shared/pipes/sum-total.pipe';
+import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
+
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { LazyImgDirective } from '../../../../core/directives/lazy-img/lazy-img.directive';
 
 @Component({
   selector: 'app-batch-edit',
@@ -41,13 +50,16 @@ import { SumTotalPipe } from '../../shared/pipes/sum-total.pipe';
     ButtonComponent,
     LoadingComponent,
     BatchSectionsComponent,
+    SumTotalPipe,
+    CommonModule,
     FontAwesomeModule,
     NgbAccordionModule,
-    SumTotalPipe,
-    CommonModule
+    GalleryComponent,
+    LazyImgDirective,
   ],
   templateUrl: './batch-edit.component.html',
   styleUrl: './batch-edit.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class BatchEditComponent implements OnInit, OnDestroy {
   disabledButton: boolean = true;
@@ -55,6 +67,7 @@ export class BatchEditComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   loading: boolean = true;
   success: boolean = false;
+  url_thumbnail_placeholder: string = 'https://placehold.co/400x550';
 
   faEdit = faEdit;
   faTags = faTags;
@@ -62,6 +75,9 @@ export class BatchEditComponent implements OnInit, OnDestroy {
   faIdCard = faIdCard;
   faAddressCard = faAddressCard;
   faPenToSquare = faPenToSquare;
+  faSave = faSave;
+  faCamera = faCamera;
+  faImages = faImages;
 
   faRulerCombined = faRulerCombined;
 
@@ -75,7 +91,16 @@ export class BatchEditComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private _batch: BatchService) {}
+  constructor(
+    private fb: FormBuilder,
+    private _batch: BatchService,
+    config: NgbModalConfig,
+    private modalService: NgbModal
+  ) {
+    // customize default values of modals used by this component tree
+    config.backdrop = 'static';
+    config.keyboard = false;
+  }
 
   private formInit(): void {
     this.form = this.fb.group({
@@ -159,13 +184,31 @@ export class BatchEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  calculoPrendasAprovadas(){
-    this.prendasAprovadas = Number(this.form.get('quantity_total')?.value) - Number(this.form.get('quantity_waste')?.value);
+  calculoPrendasAprovadas() {
+    this.prendasAprovadas =
+      Number(this.form.get('quantity_total')?.value) -
+      Number(this.form.get('quantity_waste')?.value);
     console.log(this.prendasAprovadas);
   }
 
   caclculoCostoProduccion() {
     const cantidad = Number(this.prendasAprovadas) || 0;
     this.costoProduccion = cantidad ? +(this.total / cantidad).toFixed(2) : 0;
+  }
+
+  modal: any;
+
+  openVerticallyCentered(content: TemplateRef<any>) {
+    this.modal = this.modalService.open(content, { centered: true });
+  }
+
+  closeModal() {
+    this.modal.close();
+  }
+
+  reReloadImageBatch(event: any) {
+    console.log(event);
+    this.url_thumbnail_placeholder = event.url_thumbnail;
+    
   }
 }

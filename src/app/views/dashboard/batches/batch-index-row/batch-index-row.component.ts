@@ -9,10 +9,11 @@ import Swal from 'sweetalert2';
 import { environment } from '../../../../core/environments/environment';
 import { Subject, takeUntil } from 'rxjs';
 import { BatchService } from '../batch.service';
+import { LazyImgDirective } from '../../../../core/directives/lazy-img/lazy-img.directive';
 
 @Component({
   selector: 'app-batch-index-row',
-  imports: [ButtonLinkComponent, ButtonComponent, FontAwesomeModule, LoadingComponent, RouterModule],
+  imports: [ButtonLinkComponent, ButtonComponent, FontAwesomeModule, LoadingComponent, RouterModule, LazyImgDirective],
   templateUrl: './batch-index-row.component.html',
   styleUrl: './batch-index-row.component.scss'
 })
@@ -24,6 +25,7 @@ export class BatchIndexRowComponent {
   faTrash = faTrash;
   faEdit = faEdit;
   loadingOverlay: boolean = false;
+  url_thumbnail_placeholder: string = 'https://placehold.co/400x550';
 
   constructor( private _batch: BatchService){
   
