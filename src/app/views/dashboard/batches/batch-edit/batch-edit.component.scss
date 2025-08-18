@@ -15,6 +15,7 @@
 .preview{
   position: relative;
   border: 2px dashed #ccc;
+  height: 330px;
 }
 
 .preview .btn{
@@ -23,11 +24,18 @@
   left: 50%;
   padding: 10px 20px;
   transform: translate(-50%, -50%);
-  // border: 2px dashed;
+  border: 0px !important;
+  --cui-btn-border-color: #d;
 }
 
 .img-preview {
   max-height: 100%;
   max-width: 100%;
   object-fit: contain;  /* mantiene la proporción */
+}
+
+@media (max-width: 768px) {
+  .preview {
+    height: 160px;
+  }
 }

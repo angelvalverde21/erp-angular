@@ -9,7 +9,7 @@ export class LazyImgDirective implements OnInit {
   @Input('lazyImg') src!: string;
 
   constructor(private el: ElementRef<HTMLImageElement>,
-              @Inject(PLATFORM_ID) private platformId: Object) {}
+  @Inject(PLATFORM_ID) private platformId: Object) {}
 
 ngOnInit(): void {
   const imgElement = this.el.nativeElement;
