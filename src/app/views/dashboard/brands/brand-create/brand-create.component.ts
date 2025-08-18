@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { faPlus, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
 import {
   Validators,
   ReactiveFormsModule,

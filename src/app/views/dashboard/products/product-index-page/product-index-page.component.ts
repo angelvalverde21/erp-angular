@@ -10,7 +10,7 @@ import { ProductService } from '../product.service';
 // import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
-import { FormSearchComponent } from '../../shared/form/form-search/form-search.component';
+import { FormSearchComponent } from '../../shared/components/form/form-search/form-search.component';
 import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
 import { environment } from '../../../../core/environments/environment';
 import { ProductListTemplateComponent } from '../../shared/templates/product-list-template/product-list-template.component';

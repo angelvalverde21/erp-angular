@@ -14,7 +14,7 @@ import {
   faIdBadge,
 } from '@fortawesome/free-solid-svg-icons';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
-import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { Subscription } from 'rxjs';

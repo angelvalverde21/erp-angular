@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormSearchComponent } from '../../shared/form/form-search/form-search.component';
+import { FormSearchComponent } from '../../shared/components/form/form-search/form-search.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../product.service';
 import { CommonModule } from '@angular/common';

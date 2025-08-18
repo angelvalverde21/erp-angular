@@ -9,7 +9,7 @@ import { CategoryService } from '../category.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
-import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { CommonModule } from '@angular/common';
 import { CategorySelectedComponent } from '../category-selected/category-selected.component';

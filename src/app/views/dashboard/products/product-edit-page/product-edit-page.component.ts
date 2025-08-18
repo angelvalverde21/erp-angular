@@ -19,9 +19,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPenToSquare, faGear, faSave, faShirt, faTags, faBarcode } from '@fortawesome/free-solid-svg-icons';
 import { faImage, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
 
-import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormSearchComponent } from '../../shared/form/form-search/form-search.component';
+import { FormSearchComponent } from '../../shared/components/form/form-search/form-search.component';
 
 import { UploadDropzoneComponent } from '../../shared/upload-dropzone/upload-dropzone.component';
 

@@ -22,12 +22,20 @@ export const routes: Routes = [
         }
       },
       {
-        path: ':supplier_id',
+        path: 'search/:search',
+        loadComponent: () => import('../suppliers/supplier-search-page/supplier-search-page.component').then(m => m.SupplierSearchPageComponent),
+        data: {
+          title: 'Editar'
+        }
+      },
+      {
+        path: ':supplier_id', //Este debe estar al ultimo del objeto
         loadComponent: () => import('../suppliers/supplier-edit-page/supplier-edit-page.component').then(m => m.SupplierEditPageComponent),
         data: {
           title: 'Editar'
         }
       }
+
     ]
   },
 ];

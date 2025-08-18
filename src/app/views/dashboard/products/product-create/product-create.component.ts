@@ -20,7 +20,7 @@ import {
 } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
-import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { ProductService } from '../product.service';

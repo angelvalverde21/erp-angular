@@ -16,9 +16,14 @@
 
                 <!-- icono de busqueda que esta activo solo cuando hay texto -->
                 <!-- <i *ngIf="!iconLoading" class="fa-solid fa-magnifying-glass"></i> -->
-                <fa-icon *ngIf="!iconLoading" [icon]="faMagnifyingGlass"></fa-icon>
+                @if(iconLoading){
+                    <app-loading size="sm" *ngIf="iconLoading"></app-loading>
+                }@else{
+                    <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+                }
+                
                 <!-- icono loading que solo se muestra cuando hay mas de 4 caracteres o se pulso enter -->
-                <app-loading size="sm" *ngIf="iconLoading"></app-loading>
+                
 
             </button>
         </div>

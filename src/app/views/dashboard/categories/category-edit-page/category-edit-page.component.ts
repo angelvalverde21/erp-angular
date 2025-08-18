@@ -13,7 +13,7 @@ import { faTags, faSave, faArrowLeft, faTrash } from '@fortawesome/free-solid-sv
 import { CategoryService } from '../category.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
-import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
 import Swal from 'sweetalert2';
 import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
 import { GalleryComponent } from '../../shared/components/gallery/gallery.component';

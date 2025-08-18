@@ -22,7 +22,7 @@ import {
   faPhone
 } from '@fortawesome/free-solid-svg-icons';
 import { faImage, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
-import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
 import Swal from 'sweetalert2';
 import { SettingService } from '../setting.service';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';

@@ -1,5 +1,4 @@
-@if(!loading){
-    <ul class="list-group list-group-flush">
+<ul class="list-group list-group-flush">
 
     @if(suppliers.length > 0){
     @for (supplier of suppliers; track supplier.id) {
@@ -17,7 +16,3 @@
 
 
 </ul>
-}@else{
-    <app-loading></app-loading>
-}
-
