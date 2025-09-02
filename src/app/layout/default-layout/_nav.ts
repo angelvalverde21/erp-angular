@@ -2,10 +2,11 @@
 import { INavData } from '@coreui/angular';
 import { environment } from '../../core/environments/environment';
 
+
 export const navItems: INavData[] = [
   {
     name: 'Dashboard',
-    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/dashboard` : '/dashboard',
+    url: '/dashboard',
     iconComponent: { name: 'cil-speedometer' },
     badge: {
       color: 'info',
@@ -18,28 +19,27 @@ export const navItems: INavData[] = [
   },
 
   {
-    name: 'Producciones',
-    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/batches` : '/batches',
-    iconComponent: { name: 'cil-cut' }
+    name: 'Inventario',
+    url: 'inventories',
+    iconComponent: { name: 'cil-industry' },
+    children: [
+        {
+          name: 'Productos',
+          url: 'inventories/products',
+          icon: 'nav-icon-bullet'
+        },
+        {
+          name: 'Categorias',
+          url: 'inventories/categories',
+          icon: 'nav-icon-bullet'
+        },
+        {
+          name: 'Almacenes',
+          url: 'inventories/warehouses',
+          icon: 'nav-icon-bullet'
+        },
+    ]
   },
-  {
-    name: 'Proveedores',
-          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/suppliers` : '/suppliers',
-    iconComponent: { name: 'cil-user' }
-  },
-  {
-    name: 'Compras',
-          url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/purchases` : '/purchases',
-    iconComponent: { name: 'cil-cart' }
-  },
-
-  {
-    name: 'Reportes',
-    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/dashboard` : '/dashboard',
-    iconComponent: { name: 'cil-chart-line' }
-  },
-
-
 
   {
     title: true,
@@ -48,7 +48,7 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Ayuda',
-    url: (environment.showStoreNameInSlug) ? `/${environment.storeName}/ayuda` : 'https://3b.pe',
+    url: 'https://3b.pe',
     iconComponent: { name: 'cil-description' },
     attributes: { target: '_blank' }
   }

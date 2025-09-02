@@ -1,0 +1,21 @@
+<!-- <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault-{{color.id}}"
+        formControlName="status">
+    <label class="form-check-label" for="flexSwitchCheckDefault-{{color.id}}">Status</label>
+</div> -->
+
+<div class="form-check form-switch mb-3">
+    <input
+      type="checkbox"
+      class="form-check-input"
+      [id]="id"
+      [checked]="value"
+      (change)="onInputChange($event)"
+      [disabled]="isDisabled"
+    />
+    <label class="form-check-label ms-2" [for]="id">{{ value ? textActive : textDesactive }}</label>
+</div>
+
+<!-- ojo el formControlName se coloca en el componente donde se llama a este componente -->
+<!-- ejemplo -->
+<!-- <appp-button-switch.component formControlName="variable"></appp-button-switch.component> -->

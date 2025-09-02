@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from '../../core/environments/environment';
+import { StoreService } from '../../core/services/store.service';
 
 // import { environment } from '@env/environment';
 
@@ -18,8 +19,9 @@ export class DashboardService {
   constructor(
     private http: HttpClient, 
     private router: Router,
+    private _store: StoreService
   ) {
-    this.baseUrl = `${environment.apiDashboard}/${environment.storeName}`;
+    this.baseUrl = `${environment.apiDashboard}/${this._store.name()}`;
   }
   
   isValid(name: string): Observable<boolean> {
@@ -82,16 +84,11 @@ export class DashboardService {
     // const url = `${this.baseUrl}/${store}`;
 
     // const url = `${this.url_base}?store=${store}`;
-    // console.log(url);
+    const urlPublic = `${environment.apiPublic}/${environment.storeName}`;
+    console.log(urlPublic);
 
-    return this.http.get(this.baseUrl);
+    return this.http.get(urlPublic);
     
-  }
-
-  warehouses(){
-    
-    const store =  JSON.parse(localStorage.getItem('store')!);
-    return store.warehouses;
   }
 
 

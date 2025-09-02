@@ -39,6 +39,7 @@ export class ProductIndexPageComponent implements OnInit, OnDestroy{
 
   loading: boolean = true;
   products: any[] = [];
+  base_path: string[] = [];
   thumbnail_temp: string = environment.imageThumbnailPlaceHolderVertical;
 
   faPlus = faPlus;
@@ -46,7 +47,12 @@ export class ProductIndexPageComponent implements OnInit, OnDestroy{
   constructor(private _product: ProductService, private _router: Router){
   }
 
+  path(path: string[] = []){
+    return this._product.base_path(path);
+  }
+
   ngOnInit(): void {
+
     
     this._product.index().subscribe({
     

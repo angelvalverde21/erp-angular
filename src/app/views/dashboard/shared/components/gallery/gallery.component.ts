@@ -63,7 +63,6 @@ export class GalleryComponent implements OnInit, OnDestroy {
       this.images = resp.data;
       this.loading = false;
       console.log(resp);
-      
     });
   }
 
@@ -72,6 +71,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
       this.gallerySubscription.unsubscribe(); 
     }
   }
+  
   closeModal() {
 
   }

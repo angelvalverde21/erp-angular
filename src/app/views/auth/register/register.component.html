@@ -1,0 +1,91 @@
+<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center ">
+
+
+  <div class="container">
+
+    <form [formGroup]="form" class="d-flex justify-content-center align-items-center">
+
+      <div class="card card-register p-4">
+
+        <div class="card-body">
+
+          <h1>Registrate</h1>
+
+          <form [formGroup]="form">
+
+            <div class="row">
+
+              <p class="text-body-secondary">Crea una nueva tienda</p>
+            
+              <div class="col-lg-12 col-12">
+                <app-input-group [icon]="faHome" [mb]="0">
+                  <input formControlName="store" type="text" class="form-control"
+                    [ngClass]="store?.invalid && store?.touched ? 'is-invalid' : ''"
+                    placeholder="(*) Nombre de tu tienda" aria-label="store" aria-describedby="basic-store" />
+                </app-input-group>
+                <h1 class="fs-6 mb-3 url-preview text-muted">
+                  https://3b.pe/<strong>{{ store?.value }}</strong>
+                </h1>
+              </div>
+
+              <div class="col-lg-12 col-12">
+                <app-input-group [icon]="faUser">
+                  <input formControlName="name" type="text" class="form-control"
+                    [ngClass]="name?.invalid && name?.touched ? 'is-invalid' : ''" placeholder="(*) Nombre completo"
+                    aria-label="name" aria-describedby="basic-name" />
+                </app-input-group>
+              </div>
+
+              <div class="col-6 col-lg-6">
+                <app-input-group [icon]="faPhone">
+                  <input formControlName="phone" type="number" step="1" class="form-control"
+                    [ngClass]="phone?.invalid && phone?.touched ? 'is-invalid' : ''" placeholder="(*) Telefono"
+                    aria-label="name" aria-describedby="basic-name" />
+                </app-input-group>
+              </div>
+
+              <div class="col-6 col-lg-6">
+                <app-input-group [icon]="faEnvelope">
+                  <input formControlName="email" type="email" class="form-control"
+                    [ngClass]="email?.invalid && email?.touched ? 'is-invalid' : ''" placeholder="(*) Email"
+                    aria-label="name" aria-describedby="basic-name" />
+                </app-input-group>
+              </div>
+
+              <div class="col-lg-12 col-12">
+                <app-input-group [icon]="faLock">
+                  <input formControlName="password" type="password" class="form-control"
+                    [ngClass]="password?.invalid && password?.touched ? 'is-invalid' : ''" placeholder="(*) Contrasena"
+                    aria-label="name" aria-describedby="basic-name" />
+                </app-input-group>
+              </div>
+
+              @if(error){
+              <div class="col-12">
+                <div class="alert alert-danger">{{ error | json }}</div>
+              </div>
+              }
+
+              <div class="col-12">
+                <div class="controls mt-4">
+                  <app-button [icon]="faLock" (action)="register()" color="primary" [loadingIcon]="loadingIcon"
+                    [disabled]="disabledButton">Registrar tienda</app-button>
+
+                  <!-- <app-button-link [icon]="faUser" size="" color="secondary" [path]="['login']">Ir
+                    Login</app-button-link> -->
+                </div>
+              </div>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+
+
+</div>

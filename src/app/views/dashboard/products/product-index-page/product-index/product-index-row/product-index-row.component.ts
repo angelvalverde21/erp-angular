@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -16,16 +16,20 @@ import { RouterModule } from '@angular/router';
   templateUrl: './product-index-row.component.html',
   styleUrl: './product-index-row.component.scss',
 })
-export class ProductIndexRowComponent implements OnDestroy {
+export class ProductIndexRowComponent implements OnDestroy, OnInit {
   @Input() product: any;
   @Output() deleteProduct = new EventEmitter<number>();
   
   faTrash = faTrash;
   faEdit = faEdit;
   loadingOverlay: boolean = false;
+  base_path: string[] = [];
 
-  constructor( private _product: ProductService){
-  
+  constructor( private _product: ProductService ){
+
+  }
+  ngOnInit(): void {
+    this.base_path = this._product.base_path([this.product.id]); //trae la url base de la seccion
   }
 
   subscription! : Subscription;

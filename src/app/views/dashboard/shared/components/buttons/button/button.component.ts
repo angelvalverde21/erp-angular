@@ -12,7 +12,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 export class ButtonComponent {
 
   @Input() color: string = "dark"; 
+  @Input() type: string = "button"; 
   @Input() colortext: string = ""; 
+  @Input() size: string = ""; 
   @Input() icon: any; 
   @Input() disabled: boolean = false;
   @Input() loadingIcon: boolean = false;

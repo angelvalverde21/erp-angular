@@ -161,6 +161,7 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
       error: (error: any) => {
         console.error(error);
         this.loading = false;
+        this.stats = [];
         if (error.status === 401) {
           this.router.navigate(['/login']);
         }

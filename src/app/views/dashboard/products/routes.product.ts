@@ -2,26 +2,26 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'products',
     data: {
       title: 'Productos',
+      name: 'inventories.product',
     },
     children: [
       {
         path: '',
-        loadComponent: () =>
-            import(
-              './product-index-page/product-index-page.component'
-            ).then((m) => m.ProductIndexPageComponent),
+        loadComponent: () => import( './product-index-page/product-index-page.component' ).then((m) => m.ProductIndexPageComponent),
         data: {
-          title: 'Todos'
+          title: 'Todos',
+          name: 'inventories.product.index', // 👈 nombre único
         }
       },
       {
         path: 'create',
         loadComponent: () => import('./product-create-page/product-create-page.component').then(m => m.ProductCreatePageComponent),
         data: {
-          title: 'Crear'
+          title: 'Crear',
+          name: 'inventories.product.create',
         }
       },
 
@@ -29,7 +29,8 @@ export const routes: Routes = [
         path: 'search/:search',
         loadComponent: () => import('./product-search-page/product-search-page.component').then(m => m.ProductSearchPageComponent),
         data: {
-          title: 'Buscar'
+          title: 'Buscar',
+          name: 'inventories.product.search',
         }
       },
 
@@ -37,7 +38,8 @@ export const routes: Routes = [
         path: ':product_id',
         loadComponent: () => import('./product-edit-page/product-edit-page.component').then(m => m.ProductEditPageComponent),
         data: {
-          title: 'Editar'
+          title: 'Editar',
+          name: 'inventories.product.edit',
         }
       }
     ]

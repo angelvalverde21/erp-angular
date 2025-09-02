@@ -7,6 +7,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../core/environments/environment';
+import { StoreService } from '../../../../core/services/store.service';
 
 @Component({
   selector: 'app-upload-dropzone',
@@ -41,7 +42,8 @@ export class UploadDropzoneComponent {
   // };
 
   constructor(
-    private _auth: AuthService // private upperFirstPipe: UpperFirstPipe
+    private _auth: AuthService, // private upperFirstPipe: UpperFirstPipe
+    private _store: StoreService
   ) {
     this.name = this.toPascalCase(this.title);
   }
@@ -67,7 +69,7 @@ export class UploadDropzoneComponent {
       Math.random() * 1000
     )}`;
     this.url =
-      environment.apiDashboard + '/' + environment.storeName + `/` + this.path; // Actualiza esto con la URL de tu servidor
+      environment.apiDashboard + '/' + this._store.name() + `/` + this.path; // Actualiza esto con la URL de tu servidor
     console.log(this.url);
   }
 
@@ -155,9 +157,9 @@ export class UploadDropzoneComponent {
 
   ngOnInit(): void {
 
-    environment.storeName = this._store.leerSlugBase()!;
+    this._store.name() = this._store.leerSlugBase()!;
     const self = this; // Guardamos una referencia al componente
-    this.url =  environment.apiUrl + '/procesos/options/' + environment.storeName + '/upload', // Actualiza esto con la URL de tu servidor
+    this.url =  environment.apiUrl + '/procesos/options/' + this._store.name() + '/upload', // Actualiza esto con la URL de tu servidor
       
     Dropzone.autoDiscover = false; // Desactivar la auto-detección de Dropzone
 

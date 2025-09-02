@@ -1,0 +1,16 @@
+/* Estilos personalizados para agrandar el switch */
+.form-check-input {
+  width: 3rem; /* Ajusta el ancho del switch */
+  height: 1.25rem; /* Ajusta la altura del switch */
+}
+
+.form-check-input:checked {
+  background-color: #007bff; /* Color del switch cuando está activo */
+  border-color: #007bff; /* Color del borde cuando está activo */
+}
+
+.form-check-input::before {
+  width: 1.5rem; /* Ajusta el tamaño del círculo del switch */
+  height: 1.5rem; /* Ajusta el tamaño del círculo del switch */
+  margin-top: -0.5rem; /* Alinea verticalmente el círculo */
+}

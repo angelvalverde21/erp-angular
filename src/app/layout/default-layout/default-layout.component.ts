@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
@@ -12,13 +12,15 @@ import {
   SidebarHeaderComponent,
   SidebarNavComponent,
   SidebarToggleDirective,
-  SidebarTogglerDirective
+  SidebarTogglerDirective,
 } from '@coreui/angular';
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
 import { navItems } from './_nav';
 import { environment } from '../../core/environments/environment';
 import { UpperCasePipe } from '@angular/common';
+import { StoreService } from '../../core/services/store.service';
+import { INavData } from '@coreui/angular';
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -47,11 +49,41 @@ function isOverflown(element: HTMLElement) {
     RouterOutlet,
     RouterLink,
     ShadowOnScrollDirective,
-    UpperCasePipe
-  ]
+    UpperCasePipe,
+  ],
 })
-export class DefaultLayoutComponent {
-  public navItems = [...navItems];
 
-  storeName: string = environment.storeName
+export class DefaultLayoutComponent implements OnInit {
+
+  storeName: string = ''; // ya no string | null
+  public navItems: INavData[] = [];
+
+  constructor(private _store: StoreService) {
+    this.storeName = this._store.name()!; // el servicio ya tiene el nombre
+  }
+
+  ngOnInit(): void {
+    this.navItems = this.setBasePath(navItems);
+  }
+
+  private setBasePath(items: INavData[]): INavData[] {
+    return items.map((item) => {
+      const newItem: INavData = { ...item };
+
+      // Si la URL es string y no es externa (http/https)
+      if (typeof newItem.url === 'string' && !newItem.url.startsWith('http')) {
+        // Evita duplicar storeName si ya lo tiene
+        if (!newItem.url.startsWith(`/${this.storeName}`)) {
+          newItem.url = `/${this.storeName}${newItem.url.startsWith('/') ? '' : '/'}${newItem.url}`;
+        }
+      }
+
+      // Procesar hijos de forma recursiva
+      if (newItem.children) {
+        newItem.children = this.setBasePath(newItem.children);
+      }
+
+      return newItem;
+    });
+  }
 }

@@ -4,7 +4,7 @@ import { NavigationCancel, Router } from '@angular/router';
 import { map } from 'rxjs';
 // import { LogService } from './log.service';
 
-import { User } from '../interfaces/user.interface';
+import { User } from '../../interfaces/user.interface';
 import { environment } from '../environments/environment';
 
 @Injectable({

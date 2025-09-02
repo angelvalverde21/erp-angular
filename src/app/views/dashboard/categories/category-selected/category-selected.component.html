@@ -1,20 +1,20 @@
-<select id="SubCategories" aria-label="Default select example" cSelect (change)="onCategoryChange($event)">
-    <option [value]="null">Seleccione Subcategoria</option>
+<select [(ngModel)]="value" id="SubCategories" class="me-2 form-select" aria-label="Default select example"
+    (change)="onCategoryChange($event)">
 
-    <ng-container *ngFor="let category of categories">
+    <option [value]="null">Seleccione</option>
 
-        <option [value]="category.id">{{ category.name }}</option>
+    @for (category of categories; track category.id) {
+    <option [value]="category.id">{{ category.name }}</option>
 
-        <!-- Opciones para las subcategorías -->
-        <ng-container *ngFor="let child of category.children">
+    <!-- Opciones para las subcategorías -->
 
+        @for (child of category.children; track child.id) {
             <option [value]="child.id">-- {{ child.name }}</option>
             <!-- Opciones para subcategorías de subcategorías -->
-            <ng-container *ngFor="let grandChild of child.children">
+            @for (grandChild of child.children; track grandChild.id) {
                 <option [value]="grandChild.id">---- {{ grandChild.name }}</option>
-            </ng-container>
-        </ng-container>
+            }
 
-    </ng-container>
-
+        }
+    }
 </select>

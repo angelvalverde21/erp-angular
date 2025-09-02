@@ -1,12 +1,17 @@
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FormSelectDirective } from '@coreui/angular';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Category } from '../../../../interfaces/category.interface';
 
 @Component({
   selector: 'app-category-selected',
-  imports: [ReactiveFormsModule, FormSelectDirective, CommonModule],
+  imports: [FormsModule],
   templateUrl: './category-selected.component.html',
   styleUrl: './category-selected.component.scss',
   providers: [
@@ -18,27 +23,28 @@ import { CommonModule } from '@angular/common';
   ],
 })
 export class CategorySelectedComponent implements OnInit, ControlValueAccessor {
-  constructor() {}
 
-  @Input() categories: any[] = [];
+  @Input() categories: Category[] = [];
   loading: boolean = true;
   category_id: number | null = null;
-  @Output() emitCategorySelected = new EventEmitter<[]>();
-  
+  @Output() emitCategorySelected = new EventEmitter<Category>();
+
   ngOnInit(): void {
     // Initialization logic here
     //cargar categorias
-
   }
 
-  value: any = '';
+  value: string = '';
 
-  private onChangeFn: (value: any) => void = () => {};
-  private onTouchedFn: () => void = () => {};
+  private onChangeFn: (value: any) => void = () => { };
+  private onTouchedFn: () => void = () => { };
 
   // Se llama cuando el valor externo cambia (ej. setValue)
   writeValue(value: any): void {
-    this.value = value;
+    
+    this.value = value != null ? value : null;
+    console.log(value);
+
   }
 
   // Se registra una función para llamar cuando cambia el valor desde el componente
@@ -71,12 +77,11 @@ export class CategorySelectedComponent implements OnInit, ControlValueAccessor {
       // console.log(item);
 
       // console.log(item.id);
-      
-      
+
       if (item.id == id) {
         return item;
       }
-  
+
       if (item.children) {
         const found = this.findCategoryById(item.children, id);
         if (found) {
@@ -84,18 +89,19 @@ export class CategorySelectedComponent implements OnInit, ControlValueAccessor {
         }
       }
     }
-  
+
     return undefined;
   }
 
   onCategoryChange(event: any) {
-    console.log(event.target.value); // Imprime el valor seleccionado en la consola
-    // console.log(event.target); // Imprime el valor seleccionado en la consola
-    // console.log(this.findCategoryById(this.categories, event.target.value));
+    const id = event.target.value;
+    this.value = id;
 
-    this.emitCategorySelected.emit(this.findCategoryById(this.categories, event.target.value)); // Emitir el evento con la categoría seleccionada
-    
-    this.category_id = event.target.value; // Obtiene el valor seleccionado
-    this.onChange(this.category_id); // Llama a la función de cambio con el nuevo valor
+    const category = this.findCategoryById(this.categories, id);
+    this.emitCategorySelected.emit(category);
+
+    this.onChangeFn(id);
+    this.onTouchedFn();
   }
+
 }

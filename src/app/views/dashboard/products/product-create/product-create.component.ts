@@ -27,8 +27,6 @@ import { ProductService } from '../product.service';
 import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
 import { CategoryService } from '../../categories/category.service';
 
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-
 import {
   ButtonCloseDirective,
   ModalBodyComponent,
@@ -51,8 +49,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { BrandService } from '../../brands/brand.service';
 import { BrandCreateComponent } from '../../brands/brand-create/brand-create.component';
-import  { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component'
+import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component'
 import { UnitService } from '../../units/unit.service';
+import { ProductFormComponent } from '../product-form/product-form.component';
 
 @Component({
   selector: 'app-product-create',
@@ -74,7 +73,8 @@ import { UnitService } from '../../units/unit.service';
     // OnlyUppercaseDirective,
     NgSelectModule,
     FormsModule,
-    UnitSelectedComponent
+    UnitSelectedComponent,
+    ProductFormComponent
   ],
   templateUrl: './product-create.component.html',
   styleUrl: './product-create.component.scss',
@@ -84,27 +84,19 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
   editIcon = faPenToSquare;
   faPlus = faPlus;
   faArrowLeft = faArrowLeft;
-  faTags = faTags;        
-  faBarcode = faBarcode;        
-
-  modal: any;
+  faTags = faTags;
+  faBarcode = faBarcode;
 
   private destroy$ = new Subject<void>();
 
-  @Output() emitProductCreate = new EventEmitter< [] | boolean >();
+  @Output() emitProductCreate = new EventEmitter<[] | boolean>();
 
   constructor(
     private fb: FormBuilder,
     private _product: ProductService,
     private _category: CategoryService,
-    private _brand: BrandService,
-    configModal: NgbModalConfig,
-    private modalService: NgbModal,
     private _unit: UnitService
-
   ) {
-    configModal.backdrop = 'static';
-    configModal.keyboard = false;
   }
 
   categories: any[] = [];
@@ -113,85 +105,39 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
   loadingIcon: boolean = false;
   nameControl = new FormControl('');
   loadingBrands: boolean = false;
-  subscriptionBrands!: Subscription;
+
 
   items = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'ESTANDAR'];
 
   brands: any[] = [];
   // selectedItems = [];
 
-  
+
   private formInit(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
-      // price: ['', [Validators.required]],
+      price: ['', [Validators.required]],
       // unit_id: ['', [Validators.required]],
-      body: [''],
-      sku: [''],
-      barcode: [''],
-    });
-  }
-
-  initBrands() {
-    this.loadingBrands = true;
-    this.subscriptionBrands = this._brand.index().subscribe({
-      next: (resp: any) => {
-        this.brands = resp.data;
-        console.log(this.brands);
-
-        this.loadingBrands = false;
-      },
-      error: (error: any) => {
-        console.error(error);
-        this.loadingBrands = false;
-      },
+      category_id: ['null', [Validators.required]],
+      body: ['']
     });
   }
 
   loadingUnits: boolean = false;
   units: any[] = [];
 
-  initUnits() {
-
-    this.loadingUnits = true;
-    this._unit.index().pipe(takeUntil(this.destroy$)).subscribe({
-      next: (resp: any) => {
-        this.units = resp.data;
-        console.log(this.units);
-
-        this.loadingUnits = false;
-      },
-      error: (error: any) => {
-        console.error(error);
-        this.loadingUnits = false;
-      },
-    });
-  }
-
-  relistBrands(brand: any) {
-    console.log('marcas re listadas');
-    console.log(brand);
-
-    this.brands = [brand, ...this.brands]; // nueva referencia
-    console.log(this.brands);
-  }
-
   ngOnDestroy(): void {
-    if (this.subscriptionBrands) {
-      this.subscriptionBrands.unsubscribe();
-    }
 
     this.destroy$.next();
     this.destroy$.complete();
-    
+
   }
 
   ngOnInit(): void {
     this.formInit();
-    this.formLoad();
-    this.initUnits();
+    this.initCategories();
+    // this.initUnits();
     // this.initBrands();
-    // this.initCategories();
 
     this.form.statusChanges.subscribe((status) => {
       console.log(status);
@@ -206,24 +152,11 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
     //recibir cambios del categoria
   }
 
-  initCategories() {
-    this._category.index().subscribe({
-      next: (resp: any) => {
-        this.categories = resp.data;
-        this.loadingSubcategories = false;
-      },
-    });
-  }
-
   @Input() user_id: number | null = null;
   form!: FormGroup;
   loading: boolean = false;
   success: boolean = false;
 
-
-  private formLoad() {
-    // this.form.patchValue(this.shipment);
-  }
 
   create() {
     this.loadingIcon = true;
@@ -240,7 +173,8 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
     this.success = false;
     // console.log(this.form.value);
 
-    this._product.store(payload).subscribe({
+    this._product.store(payload).pipe(takeUntil(this.destroy$)).subscribe({
+
       next: (resp: any) => {
         Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         this.success = true;
@@ -250,18 +184,17 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
         this.emitProductCreate.emit(resp.data);
 
       },
+
       error: (error: any) => {
-        Swal.fire(
-          'Error',
-          'Ocurrió un problema al crear. Inténtalo nuevamente.',
-          'error'
-        );
+        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         this.disabledButton = true;
         this.loadingIcon = false;
         this.emitProductCreate.emit(false);
         console.error(error);
       },
     });
+
+
   }
 
   public visible = false;
@@ -290,21 +223,33 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
     console.log(this.has_size);
   }
 
-  openVerticallyCentered(content: TemplateRef<any>) {
-    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
+  loadingCategories: boolean = false;
+
+  initCategories() {
+
+    this.loadingCategories = true;
+
+    this._category.index().pipe(takeUntil(this.destroy$)).subscribe({
+
+      next: (resp: any) => {
+        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+        console.log(resp);
+        this.categories = resp.data;
+        this.loading = false;
+        this.loadingCategories = false;
+      },
+
+      error: (error: any) => {
+        // Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
+        console.error(error);
+        this.loadingCategories = false;
+      },
+
+    });
+
   }
 
-  closeModal() {
-    this.modal.close();
-  }
 
-  reListCategories(category: any) {
-    console.log('categorias re listadas');
-    console.log(category);
-
-    this.categories = [category, ...this.categories]; // nueva referencia
-    console.log(this.categories);
-  }
 }
 
 

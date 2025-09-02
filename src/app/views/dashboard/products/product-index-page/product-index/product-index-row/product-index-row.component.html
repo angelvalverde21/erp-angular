@@ -5,10 +5,10 @@
         <div class="content-list d-flex flex-row mb-2 mb-md-0 w-100">
             <!-- thumbanil -->
             <div class="image me-2 text-center" style="width: 150px;">
-                <a [routerLink]="['/','products', product.id]" class="img-link">
+                <app-button-link color="" [path]="this.base_path">
                 <img [src]="product.last_color?.image?.url_thumbnail" (error)="onImageError($event)" height="100"
                     alt="">
-                </a>
+                </app-button-link>
 
             </div>
 
@@ -27,7 +27,7 @@
     <!-- Botón Editar -->
     <div class="btn-edit text-end d-flex justify-content-between align-items-center">
         <!-- A partir del tamaño "md" (≥768px), el ancho pasa a ser automático, es decir, el botón solo mide lo que necesita. -->
-        <app-button-link [icon]="faEdit" color="dark" [path]="['products', product.id]">Editar</app-button-link>
+        <app-button-link [icon]="faEdit" color="dark" [path]="this.base_path">Editar</app-button-link>
         <button class="btn btn-danger btn-sm text-white d-flex justify-content-between align-items-center ms-2"
             (click)="archivar(product.id)">
             <fa-icon [icon]="faTrash" class="me-2"></fa-icon>

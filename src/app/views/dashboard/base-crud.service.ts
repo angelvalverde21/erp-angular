@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../core/environments/environment';
+import { StoreService } from '../../core/services/store.service';
 
 // import { environment } from '@env/environment';
 
@@ -12,9 +13,13 @@ export abstract class BaseCrudService {
 
   baseUrl: string;
 
+  private _store = inject(StoreService);
+
   constructor(protected http: HttpClient, url_name: string) {
-      this.baseUrl = `${environment.apiDashboard}/${environment.storeName}/${url_name}`;
+
+      this.baseUrl = `${environment.apiDashboard}/${this._store.name()}/${url_name}`;
   }
+
   // Generic method to get all items
   index(): Observable<any[]> {
     const url = `${this.baseUrl}`;
@@ -55,4 +60,5 @@ export abstract class BaseCrudService {
     console.log(url);
     return this.http.get<any[]>(`${url}`);
   }
+  
 }

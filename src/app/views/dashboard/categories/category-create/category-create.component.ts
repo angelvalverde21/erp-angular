@@ -10,7 +10,8 @@ import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { ButtonSwitchComponent } from '../../shared/components/buttons/button-switch/button-switch.component';
+import { ButtonComponent} from '../../shared/components/buttons/button/button.component';
 import { CommonModule } from '@angular/common';
 import { CategorySelectedComponent } from '../category-selected/category-selected.component';
 import { faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -23,13 +24,12 @@ import { faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
     InputGroupComponent,
     ButtonComponent, 
     CommonModule, 
-    CategorySelectedComponent
+    CategorySelectedComponent,
+    ButtonSwitchComponent
   ],
   templateUrl: './category-create.component.html',
   styleUrl: './category-create.component.scss'
 })
-
-
 
 export class CategoryCreateComponent {
 
@@ -52,16 +52,14 @@ export class CategoryCreateComponent {
   
   }
 
-  
   private formInit(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
-      has_size: ['', [Validators.required]],
-      has_color: [true],
-      category_id: [null] //No es obligatorio porque sino no se podria crear las categorias padre
+      is_size: [false, [Validators.required]],
+      is_color: [false, [Validators.required]],
+      parent_id: [null, [Validators.required]] //No es obligatorio porque sino no se podria crear las categorias padre
     });
   }
-
 
   ngOnInit(): void {
     this.formInit();
@@ -74,6 +72,18 @@ export class CategoryCreateComponent {
         this.disabledButton = true;
       }
     });
+
+    this.form.get('is_color')?.valueChanges.subscribe((value: boolean) => {
+
+      console.log(value);
+      
+
+      if (value) {
+        
+      }else{
+        this.form.get('is_size')?.setValue(false);
+      }
+    });
   }
 
   form!: FormGroup;
@@ -84,18 +94,16 @@ export class CategoryCreateComponent {
   loadCategories() {
 
     this.loadingSubcategories = true;
-
     this._category.index().subscribe((resp: any) => {
 
       console.log(resp);
-
       if (resp.status == 200) {
         this.categories = resp.data;
       } else {
         this.categories = [];
       }
-
       this.loadingSubcategories = false;
+
     });
 
   }
