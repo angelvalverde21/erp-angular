@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
-import { faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faPlus, faPalette, faCircleDot } from '@fortawesome/free-solid-svg-icons';
 import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CategorySelectedComponent } from '../../categories/category-selected/category-selected.component';
@@ -18,6 +18,7 @@ import { Category } from '../../../../interfaces/category.interface';
 import { CategoryCreateComponent } from '../../categories/category-create/category-create.component';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { JsonPipe } from '@angular/common';
+import { QuillModule } from 'ngx-quill';
 
 @Component({
   selector: 'app-product-form',
@@ -27,7 +28,8 @@ import { JsonPipe } from '@angular/common';
     CategorySelectedComponent,
     CategoryCreateComponent,
     ButtonComponent,
-    JsonPipe
+    JsonPipe,
+    QuillModule
   ],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss',
@@ -35,8 +37,18 @@ import { JsonPipe } from '@angular/common';
 })
 export class ProductFormComponent{
 
+  modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],         
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link', 'image']
+    ]
+  };
+
   faEdit = faEdit;
+  faPalette = faPalette;
   faPlus = faPlus;
+  faCircleDot = faCircleDot;
 
   @Input() form!: FormGroup;
   @Input() categories: Category[] = [];
@@ -48,6 +60,10 @@ export class ProductFormComponent{
     // customize default values of modals used by this component tree
     config.backdrop = 'static';
     config.keyboard = false;
+  }
+
+  cambio(event: any) {
+    console.log('Contenido cambiado:', event.html);
   }
   
   openVerticallyCentered(content: TemplateRef<any>) {

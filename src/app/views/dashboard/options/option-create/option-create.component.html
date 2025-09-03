@@ -1,0 +1,31 @@
+<form [formGroup]="form">
+
+    <div class="d-flex align-items-center mb-3" style="width: 400px;">
+
+        <select class="form-select me-2" formControlName="name" aria-label="Default select example">
+
+            <!-- <option selected>Agregue Opciones</option> -->
+            <option value="talla">Talla</option>
+            <option value="color">Color</option>
+            <option value="material">Material</option>
+            <option value="marca">Marca</option>
+            <option value="modelo">Modelo</option>
+
+        </select>
+
+        <app-input-group [mb]="0" class="w-100 me-2">
+            <input formControlName="value" type="text" UpperCase class="form-control" placeholder="value" aria-label="name"
+                aria-describedby="basic-name" />
+        </app-input-group>
+
+        <app-button color="danger" colortext="white">X</app-button>
+
+    </div>
+
+    <div class="control mb-3">
+        <app-button color="info" (action)="create()" colortext="white">Agregar</app-button>
+    </div>
+
+    {{ form.value | json }}
+    
+</form>

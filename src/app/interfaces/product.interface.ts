@@ -14,4 +14,5 @@ export interface Product {
   updated_at?: string | null; // timestamp
   category: Category;
   sizes: Size[];
+  options: Size[];
 }

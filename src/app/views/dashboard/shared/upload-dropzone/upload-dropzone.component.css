@@ -1,6 +1,6 @@
 .dropzone {
-    /* border: 2px dashed #CFC7F3; */
-    /* background: #F3F4F6; */
+    border: 0.5px dashed #00A1FF !important;
+    background: #E5F5FF;
     background-size: contain;      /* Ajusta la imagen para cubrir todo el área */
     background-repeat: no-repeat; /* Evita que la imagen se repita */
     background-position: center;  /* Centra la imagen en el contenedor */

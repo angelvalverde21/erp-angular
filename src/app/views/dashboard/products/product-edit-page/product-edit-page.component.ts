@@ -19,6 +19,9 @@ import { SizeIndexComponent } from '../../sizes/size-index/size-index.component'
 import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
 import { Size } from '../../../../interfaces/size.interface';
 
+import { OptionIndexComponent } from '../../options/option-index/option-index.component';
+import { OptionCreateComponent } from '../../options/option-create/option-create.component';
+
 @Component({
   selector: 'app-product-edit-page',
   imports: [
@@ -28,7 +31,9 @@ import { Size } from '../../../../interfaces/size.interface';
     FontAwesomeModule,
     SizeCreateComponent,
     SizeIndexComponent,
-    GalleryComponent
+    GalleryComponent,
+    OptionIndexComponent,
+    OptionCreateComponent
   ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss'
@@ -81,6 +86,9 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
 
   }
 
+  receiveOptionCreate(){
+    
+  }
 
   categorySelected(category: Category){
     this.product.category = category;
