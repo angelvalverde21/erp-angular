@@ -19,8 +19,8 @@ import { SizeIndexComponent } from '../../sizes/size-index/size-index.component'
 import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
 import { Size } from '../../../../interfaces/size.interface';
 
-import { OptionIndexComponent } from '../../options/option-index/option-index.component';
-import { OptionCreateComponent } from '../../options/option-create/option-create.component';
+import { AttributeCreateComponent } from '../../attributes/attribute-create/attribute-create.component';
+import { AttributeIndexComponent } from '../../attributes/attribute-index/attribute-index.component';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -32,8 +32,8 @@ import { OptionCreateComponent } from '../../options/option-create/option-create
     SizeCreateComponent,
     SizeIndexComponent,
     GalleryComponent,
-    OptionIndexComponent,
-    OptionCreateComponent
+    AttributeIndexComponent,
+    AttributeCreateComponent
   ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss'
@@ -86,7 +86,7 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
 
   }
 
-  receiveOptionCreate(){
+  receiveAttributeCreate(){
     
   }
 

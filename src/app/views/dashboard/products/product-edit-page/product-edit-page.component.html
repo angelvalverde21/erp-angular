@@ -23,15 +23,14 @@
 
   <div class="card-body">
 
-    <h5 class="card-title mb-3"> Variantes</h5>
+    <h5 class="card-title mb-3"> Atributos</h5>
 
-      <div class="variantes mx-auto" style="width: 400px;">
+      <div class="attributes mx-auto" style="width: 600px;">
 
-        <app-option-index [options]="product.options"></app-option-index>
+        <app-attribute-index [attributes]="product.attributes"></app-attribute-index>
 
-        <app-option-create [product_id]="product.id" (emitOptionCreate)="receiveOptionCreate()"></app-option-create>
-
-
+        <app-attribute-create [product_id]="product.id" (emitAttributeCreate)="receiveAttributeCreate()"></app-attribute-create>
+        
       </div>
 
 

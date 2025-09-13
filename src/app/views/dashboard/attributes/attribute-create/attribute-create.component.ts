@@ -6,7 +6,7 @@ import { JsonPipe } from '@angular/common';
 import { UpperCaseDirective } from '../../../../core/directives/only-uppercase.directive';
 
 @Component({
-  selector: 'app-option-create',
+  selector: 'app-attribute-create',
   imports: [
     InputGroupComponent,
     ButtonComponent,
@@ -14,13 +14,14 @@ import { UpperCaseDirective } from '../../../../core/directives/only-uppercase.d
     JsonPipe,
     UpperCaseDirective
   ],
-  templateUrl: './option-create.component.html',
-  styleUrl: './option-create.component.scss'
+  templateUrl: './attribute-create.component.html',
+  styleUrl: './attribute-create.component.scss'
 })
-export class OptionCreateComponent {
+export class AttributeCreateComponent {
 
   @Input() product_id: number = 0;
   @Input() options: any[] = [];
+  
   form!: FormGroup;
 
   constructor(private fb: FormBuilder) {
@@ -39,7 +40,7 @@ export class OptionCreateComponent {
     });
   }
 
-  create(){
+  create() {
 
   }
 
