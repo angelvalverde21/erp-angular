@@ -4,11 +4,9 @@
 
         <select class="form-select me-2" formControlName="name" aria-label="Default select example">
 
-            <option value="color">Color</option>
-            <option value="size">Size</option>
-            <option value="brand">Marca</option>
-            <option value="modelo">Modelo</option>
-            <option value="material">Material</option>
+            @for (attribute of attributes; track attribute.id) {
+                <option [value]="attribute.id">{{ attribute.name }}</option>
+            }
 
         </select>
 

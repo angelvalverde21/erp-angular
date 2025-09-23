@@ -57,7 +57,7 @@ export class CategoryCreateComponent {
       name: ['', [Validators.required]],
       is_size: [false, [Validators.required]],
       is_color: [false, [Validators.required]],
-      parent_id: [null, [Validators.required]] //No es obligatorio porque sino no se podria crear las categorias padre
+      parent_id: [null] //No es obligatorio porque sino no se podria crear las categorias padre
     });
   }
 

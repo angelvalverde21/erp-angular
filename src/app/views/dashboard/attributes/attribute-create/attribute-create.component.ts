@@ -21,6 +21,7 @@ export class AttributeCreateComponent {
 
   @Input() product_id: number = 0;
   @Input() options: any[] = [];
+  @Input() attributes: any[] = [];
   
   form!: FormGroup;
 
@@ -35,7 +36,7 @@ export class AttributeCreateComponent {
 
   private formInit(): void {
     this.form = this.fb.group({
-      name: ['color'],
+      name: [1],
       value: [''],
     });
   }

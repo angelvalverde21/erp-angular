@@ -5,6 +5,9 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 import { StoreService } from '../../../../core/services/store.service';
 import { ProductService } from '../product.service';
+import { Product } from '../../../../interfaces/product.interface'
+
+
 
 @Component({
   selector: 'app-product-create-page',
@@ -20,16 +23,24 @@ export class ProductCreatePageComponent{
     
     }
 
-    path(path: string[] = []){
-      return this._product.base_path(path);
-    }
+    backPath = this._product.base_path()
+    // path(path: string[] = []){
+    //   return this._product.base_path(path);
+    // }
 
 
-    receiveProductCreate(product: any){
+    receiveProductCreate(product: Product){
 
+      console.log(product);
+      
       if(product){
 
-        this._router.navigate(this._product.base_path(product.id));
+        const slug = this._product.base_path([`${product.id}`]);
+
+        console.log(slug);
+        
+
+        this._router.navigate(this._store.getLink(slug));
       }
 
     }

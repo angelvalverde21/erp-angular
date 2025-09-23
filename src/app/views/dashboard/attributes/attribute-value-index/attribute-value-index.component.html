@@ -1,0 +1,29 @@
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center">Propiedad</th>
+                <th scope="col" class="text-center">Valor</th>
+                <th scope="col" class="text-center" style="width: 50px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (attribute of attributes; track attribute.id) {
+
+                @for (value of attribute.values; track value.id) {
+                <tr>
+                    <td scope="row" class="text-center">{{ attribute.name }}</td>
+                    <td class="text-center">{{ value.value }}</td>
+                    <td class="text-center">
+                        <app-button [icon]="faTrash" color="danger" colortext="white"></app-button>
+                    </td>
+                </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+
+{{ attributes | json }}

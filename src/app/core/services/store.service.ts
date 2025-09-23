@@ -52,7 +52,7 @@ export class StoreService {
     if (environment.storeName) {
       return environment.storeName;
     } else {
-      return localStorage.getItem('slug_base');
+      return localStorage.getItem('slug_base')!;
     }
   }
 

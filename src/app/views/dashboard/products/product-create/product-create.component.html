@@ -1,11 +1,11 @@
-@if(loadingCategories){
+@if(loadingCategories || brandsLoading){
 <app-loading></app-loading>
 }@else{
 
 <form [formGroup]="form" (ngSubmit)="create()">
 
 
-  <app-product-form [form]="form" [categories]="categories"></app-product-form>
+  <app-product-form [form]="form" [categories]="categories" [brands]="brands"></app-product-form>
 
   <app-button color="dark" [icon]="faPlus" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
     (action)="create()">Crear Producto</app-button>

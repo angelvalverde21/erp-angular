@@ -1,0 +1,11 @@
+<ng-select class="w-100 me-2" [(ngModel)]="value" bindValue="id" [clearable]="true" [items]="brands" [addTag]="false"
+    bindLabel="name" placeholder="Escoja una marca" (change)="onBrandChange($event)">
+    <ng-template ng-notfound-tmp>
+        No hay marcas disponibles
+    </ng-template>
+    <ng-template ng-label-tmp let-item="item">
+        {{ item.name }}
+    </ng-template>
+</ng-select>
+
+<!-- {{ value }} -->

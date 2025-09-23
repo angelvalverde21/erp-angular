@@ -19,8 +19,9 @@ import { SizeIndexComponent } from '../../sizes/size-index/size-index.component'
 import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
 import { Size } from '../../../../interfaces/size.interface';
 
-import { AttributeCreateComponent } from '../../attributes/attribute-create/attribute-create.component';
 import { AttributeIndexComponent } from '../../attributes/attribute-index/attribute-index.component';
+import { AttributeValueCreateComponent } from '../../attributes/attribute-value-create/attribute-value-create.component';
+import { ColorIndexComponent } from '../../colors/color-index/color-index.component';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -29,11 +30,13 @@ import { AttributeIndexComponent } from '../../attributes/attribute-index/attrib
     FormSearchComponent,
     ProductEditComponent,
     FontAwesomeModule,
-    SizeCreateComponent,
-    SizeIndexComponent,
     GalleryComponent,
     AttributeIndexComponent,
-    AttributeCreateComponent
+    AttributeValueCreateComponent,
+    SizeCreateComponent,
+    SizeIndexComponent,
+    ColorIndexComponent,
+
   ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss'
@@ -67,6 +70,8 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    // this.brandsInit();
+
     this._product.get(this.product_id!).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: Resp) => {
@@ -86,13 +91,13 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
 
   }
 
-  receiveAttributeCreate(){
-    
+  receiveAttributeCreate() {
+
   }
 
-  categorySelected(category: Category){
+  categorySelected(category: Category) {
     this.product.category = category;
-    
+
   }
   // colorCreate(color: any) {
   //   console.log('Color upload event:', color);
@@ -110,7 +115,7 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
   sizes: Size[] = [];
 
   receiveSizeCreate(size: Size) {
-  
+
     console.log(size);
     this.sizes = [...this.sizes, size];
 

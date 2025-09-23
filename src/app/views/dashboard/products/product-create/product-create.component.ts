@@ -20,22 +20,11 @@ import {
 } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
-import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { ProductService } from '../product.service';
-import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
 import { CategoryService } from '../../categories/category.service';
 
-import {
-  ButtonCloseDirective,
-  ModalBodyComponent,
-  ModalComponent,
-  ModalHeaderComponent,
-  ModalTitleDirective,
-} from '@coreui/angular';
-import { CategorySelectedComponent } from '../../categories/category-selected/category-selected.component';
-import { CategoryCreateComponent } from '../../categories/category-create/category-create.component';
 // import { OnlyUppercaseDirective } from '../../../directives/only-uppercase.directive';
 import { NgSelectModule } from '@ng-select/ng-select';
 import {
@@ -45,35 +34,22 @@ import {
   faTags,
   faBarcode
 } from '@fortawesome/free-solid-svg-icons';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { BrandService } from '../../brands/brand.service';
-import { BrandCreateComponent } from '../../brands/brand-create/brand-create.component';
-import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component'
 import { UnitService } from '../../units/unit.service';
 import { ProductFormComponent } from '../product-form/product-form.component';
+import { Product } from '../../../../interfaces/product.interface';
 
 @Component({
   selector: 'app-product-create',
   imports: [
-    InputGroupComponent,
     CommonModule,
     ReactiveFormsModule,
     LoadingComponent,
     ButtonComponent,
-    ButtonLinkComponent,
-    CategorySelectedComponent,
-    ButtonCloseDirective,
-    ModalBodyComponent,
-    ModalComponent,
-    ModalHeaderComponent,
-    ModalTitleDirective,
-    CategoryCreateComponent,
-    BrandCreateComponent,
     // OnlyUppercaseDirective,
     NgSelectModule,
     FormsModule,
-    UnitSelectedComponent,
     ProductFormComponent
   ],
   templateUrl: './product-create.component.html',
@@ -89,13 +65,14 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  @Output() emitProductCreate = new EventEmitter<[] | boolean>();
+  @Output() emitProductCreate = new EventEmitter<Product>();
+  @Output() emitProductError = new EventEmitter<boolean>();
 
   constructor(
     private fb: FormBuilder,
     private _product: ProductService,
     private _category: CategoryService,
-    private _unit: UnitService
+    private _brand: BrandService
   ) {
   }
 
@@ -117,10 +94,41 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       price: ['', [Validators.required]],
+      brand_id: ['', [Validators.required]],
+      model: ['', [Validators.required]],
       // unit_id: ['', [Validators.required]],
       category_id: ['null', [Validators.required]],
       body: ['']
     });
+  }
+
+  brandsLoading: boolean = false;
+
+  brandsInit() {
+
+    if (this._brand.getAllLocal() != undefined) {
+      this.brands = this._brand.getAllLocal();
+      this.brandsLoading = false;
+      console.log(this.brands);
+      
+    } else {
+      this._brand.index().pipe(takeUntil(this.destroy$)).subscribe({
+
+        next: (resp: any) => {
+          console.log(resp);
+          this.brands = resp.data;
+          this.brandsLoading = false;
+          this._brand.setAllLocal(resp.data);
+          console.log("brands obtenidas");
+        },
+
+        error: (error: any) => {
+          Swal.fire('Error', 'Ocurrió un problema al cargar las marcas. Inténtalo nuevamente.', 'error');
+          console.error(error);
+        },
+
+      });
+    }
   }
 
   loadingUnits: boolean = false;
@@ -135,7 +143,8 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.formInit();
-    this.initCategories();
+    this.brandsInit()
+    this.categoriesInit();
     // this.initUnits();
     // this.initBrands();
 
@@ -189,7 +198,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
         Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         this.disabledButton = true;
         this.loadingIcon = false;
-        this.emitProductCreate.emit(false);
+        this.emitProductError.emit(false);
         console.error(error);
       },
     });
@@ -225,7 +234,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
 
   loadingCategories: boolean = false;
 
-  initCategories() {
+  categoriesInit() {
 
     this.loadingCategories = true;
 

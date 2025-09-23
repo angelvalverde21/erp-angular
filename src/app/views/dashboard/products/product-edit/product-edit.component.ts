@@ -11,6 +11,8 @@ import { CategoryService } from '../../categories/category.service';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
+import { Brand } from '../../../../interfaces/brand.interface';
+import { BrandService } from '../../brands/brand.service';
 
 @Component({
   selector: 'app-product-edit',
@@ -25,14 +27,15 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   @Input() product!: Product;
 
   @Output() emitCategorySelected = new EventEmitter<Category>();
-  
+
   faSave = faSave;
 
-  constructor(private fb: FormBuilder, private _product: ProductService, private _category: CategoryService) {
+  constructor(private fb: FormBuilder, private _product: ProductService, private _category: CategoryService, private _brand: BrandService) {
 
   }
 
   ngOnInit(): void {
+    this.brandsInit();
     this.formInit();
     this.initCategories();
     this.form.patchValue(this.product);
@@ -41,9 +44,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   private formInit(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
-      color: ['', [Validators.required]],
+      // color: ['', [Validators.required]],
       material: ['', [Validators.required]],
       price: ['', [Validators.required]],
+      brand_id: ['', [Validators.required]],
+      model: ['', [Validators.required]],
       body: [''],
       tags: [''],
       category_id: ['null'],
@@ -90,6 +95,37 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   loading: boolean = false;
 
   categories: Category[] = [];
+  brands: Brand[] = [];
+
+
+  brandsLoading: boolean = false;
+
+  brandsInit() {
+
+    if (this._brand.getAllLocal() != undefined) {
+      this.brands = this._brand.getAllLocal();
+      this.brandsLoading = false;
+      console.log(this.brands);
+    } else {
+      this._brand.index().pipe(takeUntil(this.destroy$)).subscribe({
+
+        next: (resp: any) => {
+          console.log(resp);
+          this.brands = resp.data;
+          this.brandsLoading = false;
+          this._brand.setAllLocal(resp.data);
+          console.log("brands obtenidas");
+        },
+
+        error: (error: any) => {
+          Swal.fire('Error', 'Ocurrió un problema al cargar las marcas. Inténtalo nuevamente.', 'error');
+          console.error(error);
+        },
+
+      });
+    }
+  }
+
 
   initCategories() {
 
@@ -115,7 +151,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
   }
 
-  categorySelected(category: Category){
+  categorySelected(category: Category) {
     this.emitCategorySelected.emit(category)
   }
 

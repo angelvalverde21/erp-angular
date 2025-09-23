@@ -4,7 +4,7 @@
     <app-loading></app-loading>
     }@else{
 
-    <app-product-form [form]="form" [categories]="categories" (emitCategorySelected)="categorySelected($event)"></app-product-form>
+    <app-product-form [form]="form" [categories]="categories" [brands]="brands" (emitCategorySelected)="categorySelected($event)"></app-product-form>
     
     <app-button color="dark" [icon]="faSave" [disabled]="disabledButton" [loadingIcon]="loadingIcon" type="submit">Guardar
         Cambios</app-button>

@@ -17,50 +17,56 @@
 
 </div>
 
+<div class="card mb-3">
+
+  <div class="card-body">
+
+    <h5 class="card-title mb-3">Variantes</h5>
+
+    @if(product.colors.length > 0){
+      
+      <app-color-index [colors]="product.colors"></app-color-index>
+    }
+
+  </div>
+
+</div>
+
 <!-- Opciones -->
 
-<div class="card mb-3">
+    <div class="card mb-3">
 
-  <div class="card-body">
+      <div class="card-body">
 
-    <h5 class="card-title mb-3"> Atributos</h5>
+        <h5 class="card-title mb-3">Gallery</h5>
 
-      <div class="attributes mx-auto" style="width: 600px;">
+        <app-gallery [path]="`products/${product.id}/images`"></app-gallery>
 
-        <app-attribute-index [attributes]="product.attributes"></app-attribute-index>
-
-        <app-attribute-create [product_id]="product.id" (emitAttributeCreate)="receiveAttributeCreate()"></app-attribute-create>
-        
       </div>
 
+    </div>
 
-  </div>
+    <div class="card mb-3">
 
-</div>
+      <div class="card-body">
 
-<!-- <div class="card mb-3">
+        <h5 class="card-title mb-3"> Tallas</h5>
 
-  <div class="card-body">
+        <div class="attributes mx-auto">
 
-    <h5 class="card-title mb-3"> Variantes</h5>
+          <app-size-index [sizes]="sizes"></app-size-index>
+          <app-size-create [product_id]="product.id" (emitSizeCreate)="receiveSizeCreate($event)"></app-size-create>
 
-    <app-size-index [sizes]="sizes"></app-size-index>
-    <app-size-create [product_id]="product.id" (emitSizeCreate)="receiveSizeCreate($event)"></app-size-create>
+        </div>
 
-  </div>
 
-</div> -->
+      </div>
 
-<div class="card mb-3">
+    </div>
 
-  <div class="card-body">
 
-    <h5 class="card-title mb-3">Gallery</h5>
 
-    <app-gallery [path]="`products/${product.id}/images`"></app-gallery>
 
-  </div>
 
-</div>
 
 }

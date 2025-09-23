@@ -15,22 +15,31 @@
 
   <div class="col-lg-12 col-12 mb-3">
     <label class="mb-2">Descripcion</label>
-    <quill-editor class="w-100" formControlName="body" [modules]="modules" theme="snow" [style.height.px]="100"></quill-editor>
-  </div>
-
-  <!-- <div class="col-lg-6 col-md-6 col-sm-12">
-    <app-input-group text="Color (*)" [icon]="faPalette">
-      <input formControlName="color" type="text" class="form-control" placeholder="Color" aria-label="name"
-        aria-describedby="basic-name" />
-    </app-input-group>
+    <quill-editor class="w-100" formControlName="body" [modules]="modules" theme="snow"
+      [style.height.px]="100"></quill-editor>
   </div>
 
   <div class="col-lg-6 col-md-6 col-sm-12">
-    <app-input-group text="Material (*)" [icon]="faCircleDot">
-      <input formControlName="material" type="text" class="form-control" placeholder="Material" aria-label="name"
+
+    <!-- <label class="mb-2">Marca</label> -->
+    <!-- <app-brand-input formControlName="brand_name"></app-brand-input> -->
+     <label class="mb-2">Marca</label>
+    <div class="controsl d-flex justify-content-between align-items-center">
+
+      <app-brand-selected [brands]="brands" formControlName="brand_id" class="w-100 me-2"
+        (emitBrandSelected)="brandSelected($event)"></app-brand-selected>
+      <app-button [icon]="faPlus" color="outline-dark" (click)="openVerticallyCentered(contentBrand)">Crear</app-button>
+
+    </div>
+
+  </div>
+
+  <div class="col-lg-6 col-md-6 col-sm-12">
+    <app-input-group text="Modelo (*)" [icon]="faCircleDot">
+      <input formControlName="model" type="text" class="form-control" placeholder="Modelo" aria-label="name"
         aria-describedby="basic-name" />
     </app-input-group>
-  </div> -->
+  </div>
 
   <div class="col-lg-12 col-12 mb-3">
     <label class="mb-2">Categorias</label>
@@ -55,6 +64,18 @@
   </div>
   <div class="modal-body">
     <app-category-create (emitCategoryCreate)="reListCategories($event)"></app-category-create>
+  </div>
+
+</ng-template>
+
+<ng-template #contentBrand let-modal>
+
+  <div class="modal-header">
+    <h4 class="modal-title">Crear Marca</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <app-brand-create (emitBrandCreate)="reListBrands($event)"></app-brand-create>
   </div>
 
 </ng-template>

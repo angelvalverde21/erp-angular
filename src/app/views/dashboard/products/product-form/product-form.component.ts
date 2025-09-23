@@ -19,6 +19,11 @@ import { CategoryCreateComponent } from '../../categories/category-create/catego
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { JsonPipe } from '@angular/common';
 import { QuillModule } from 'ngx-quill';
+import { BrandSelectedComponent } from '../../brands/brand-selected/brand-selected.component';
+import { BrandCreateComponent } from '../../brands/brand-create/brand-create.component';
+import { Brand } from '../../../../interfaces/brand.interface';
+import { BrandInputComponent } from '../../brands/brand-input/brand-input.component';
+import { BrandService } from '../../brands/brand.service';
 
 @Component({
   selector: 'app-product-form',
@@ -29,7 +34,10 @@ import { QuillModule } from 'ngx-quill';
     CategoryCreateComponent,
     ButtonComponent,
     JsonPipe,
-    QuillModule
+    QuillModule,
+    BrandSelectedComponent,
+    BrandCreateComponent,
+    BrandInputComponent
   ],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss',
@@ -52,11 +60,13 @@ export class ProductFormComponent{
 
   @Input() form!: FormGroup;
   @Input() categories: Category[] = [];
+  @Input() brands: Brand[] = [];
   @Output() emitCategorySelected = new EventEmitter<Category>();
+  @Output() emitBrandSelected = new EventEmitter<Brand>();
   
 
   modal: any;
-  constructor(config: NgbModalConfig, private modalService: NgbModal) {
+  constructor(config: NgbModalConfig, private modalService: NgbModal, private _brand: BrandService) {
     // customize default values of modals used by this component tree
     config.backdrop = 'static';
     config.keyboard = false;
@@ -91,8 +101,32 @@ export class ProductFormComponent{
 
   }
 
+  reListBrands(brand: any) {
+
+    console.log('marcas re listadas');
+    console.log(brand);
+
+    this.brands = [brand, ...this.brands]; // nueva referencia
+    console.log(this.brands);
+
+    console.log(brand.id);
+
+    this.form.get('brand_id')?.setValue(brand.id);
+
+    this._brand.addLocal(brand);
+
+    this.closeModal();
+
+  }
+
   categorySelected(category: Category){
     this.emitCategorySelected.emit(category);
+  }
+
+  brandSelected(brand: Brand){
+    // this.emitBrandSelected.emit(brand);
+    console.log(brand);
+    
   }
 
 }

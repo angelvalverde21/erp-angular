@@ -1,5 +1,6 @@
 import { Attribute } from "./attribute.interface";
 import { Category } from "./category.interface";
+import { Color } from "./color.interface";
 import { Size } from "./size.interface";
 
 export interface Product {
@@ -16,4 +17,5 @@ export interface Product {
   category: Category;
   sizes: Size[];
   attributes: Attribute[];
+  colors: Color[];
 }

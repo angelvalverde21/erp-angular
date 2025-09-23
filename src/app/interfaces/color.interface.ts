@@ -1,14 +1,7 @@
 export interface Color {
     id?: number, //
-    price?: [],
-    name?:string,
-    sku?: {
-      quantity?: number,
-    } //
-    image?: {
-        url_thumbnail: string;
-        // Puedes agregar más propiedades según sea necesario
-      }, //
+    name: string,
+    product_id: number
   }
 
 

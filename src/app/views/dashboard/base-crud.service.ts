@@ -13,7 +13,7 @@ export abstract class BaseCrudService {
 
   baseUrl: string;
 
-  private _store = inject(StoreService);
+  protected _store = inject(StoreService);
 
   constructor(protected http: HttpClient, url_name: string) {
 

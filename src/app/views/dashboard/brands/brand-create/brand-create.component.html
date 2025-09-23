@@ -2,20 +2,18 @@
 
     <div class="row mb-3">
         <div class="col-lg-12">
-            <app-input-group [icon]="faPenToSquare" text="Nombre de la Marca">
+            <app-input-group [icon]="faPenToSquare">
                 <input formControlName="name" type="text" class="form-control" placeholder="Marca" aria-label="name"
                     aria-describedby="basic-tiktok" />
             </app-input-group>
         </div>
 
-        <div class="col-lg-12 col-12">
-            <hr>
-            <app-button (action)="create()" color="primary" [icon]="faPlus" [disabled]="formSrv.disabledButton"
-                [loadingIcon]="formSrv.loadingIcon">Crear Marca</app-button>
-        </div>
-
     </div>
 
+    <div class="controls my-3">
+        <app-button (action)="create()" color="primary" [icon]="faPlus" [disabled]="formSrv.disabledButton"
+            [loadingIcon]="formSrv.loadingIcon">Crear Marca</app-button>
+    </div>
     <!-- {{ form.getRawValue() | json }} -->
 
 </form>

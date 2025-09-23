@@ -47,12 +47,19 @@ export class ProductIndexPageComponent implements OnInit, OnDestroy{
   constructor(private _product: ProductService, private _router: Router){
   }
 
-  path(path: string[] = []){
-    return this._product.base_path(path);
-  }
+  createPath = this._product.base_path(['create']);
+  
+  // path(path: string[] = []){
+  //   const slug = this._product.base_path(path);
+  //   console.log(slug);
+    
+  //   return slug;
+  // }
 
   ngOnInit(): void {
 
+    console.log(this.createPath);
+    
     
     this._product.index().subscribe({
     
