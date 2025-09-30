@@ -4,16 +4,17 @@ import { Subject } from 'rxjs';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JsonPipe, UpperCasePipe } from '@angular/common';
+import { JsonPipe } from '@angular/common';
 
 
 import { Size } from '../../../../interfaces/size.interface';
 import Swal from 'sweetalert2';
+import { UpperCaseDirective } from '../../../../core/directives/only-uppercase.directive';
 
 
 @Component({
   selector: 'app-size-create',
-  imports: [ButtonComponent, ReactiveFormsModule, JsonPipe, UpperCasePipe],
+  imports: [ButtonComponent, ReactiveFormsModule, JsonPipe, UpperCaseDirective],
   templateUrl: './size-create.component.html',
   styleUrl: './size-create.component.scss'
 })

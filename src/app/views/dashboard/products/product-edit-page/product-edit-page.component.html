@@ -23,6 +23,8 @@
 
     <h5 class="card-title mb-3">Variantes</h5>
 
+    <app-button [icon]="faPlus">Agregar Variante</app-button>
+
     @if(product.colors.length > 0){
       
       <app-color-index [colors]="product.colors"></app-color-index>
@@ -54,7 +56,9 @@
 
         <div class="attributes mx-auto">
 
-          <app-size-index [sizes]="sizes"></app-size-index>
+          @if(sizes.length > 0){
+            <app-size-index [sizes]="sizes"></app-size-index>
+          }
           <app-size-create [product_id]="product.id" (emitSizeCreate)="receiveSizeCreate($event)"></app-size-create>
 
         </div>
@@ -63,10 +67,5 @@
       </div>
 
     </div>
-
-
-
-
-
 
 }

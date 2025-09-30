@@ -7,7 +7,7 @@ import { ProductService } from '../product.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 // import { UploadDropzoneComponent } from '@shared/upload-dropzone/upload-dropzone.component';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FormSearchComponent } from '../../shared/components/form/form-search/form-search.component';
 import { ProductEditComponent } from '../product-edit/product-edit.component';
 import { Product } from '../../../../interfaces/product.interface';
@@ -22,6 +22,7 @@ import { Size } from '../../../../interfaces/size.interface';
 import { AttributeIndexComponent } from '../../attributes/attribute-index/attribute-index.component';
 import { AttributeValueCreateComponent } from '../../attributes/attribute-value-create/attribute-value-create.component';
 import { ColorIndexComponent } from '../../colors/color-index/color-index.component';
+import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -36,6 +37,7 @@ import { ColorIndexComponent } from '../../colors/color-index/color-index.compon
     SizeCreateComponent,
     SizeIndexComponent,
     ColorIndexComponent,
+    ButtonComponent
 
   ],
   templateUrl: './product-edit-page.component.html',
@@ -46,7 +48,8 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
 
   product_id: number = 0;
   product!: Product;
-
+  
+  faPlus = faPlus;
   faPenToSquare = faPenToSquare;
 
   constructor(private _product: ProductService, private route: ActivatedRoute) {

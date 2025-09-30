@@ -18,28 +18,22 @@ import { Product } from '../../../../interfaces/product.interface'
 export class ProductCreatePageComponent{
 
     faArrowLeft = faArrowLeft;
-
+    backPath: string[] = [];
     constructor(private _router: Router, private _store: StoreService, private _product: ProductService){
-    
+      this.backPath = this._product.base_path()
     }
 
-    backPath = this._product.base_path()
     // path(path: string[] = []){
     //   return this._product.base_path(path);
     // }
-
 
     receiveProductCreate(product: Product){
 
       console.log(product);
       
       if(product){
-
         const slug = this._product.base_path([`${product.id}`]);
-
         console.log(slug);
-        
-
         this._router.navigate(this._store.getLink(slug));
       }
 
