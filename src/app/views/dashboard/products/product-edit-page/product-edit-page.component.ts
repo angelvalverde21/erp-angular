@@ -19,8 +19,6 @@ import { SizeIndexComponent } from '../../sizes/size-index/size-index.component'
 import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
 import { Size } from '../../../../interfaces/size.interface';
 
-import { AttributeIndexComponent } from '../../attributes/attribute-index/attribute-index.component';
-import { AttributeValueCreateComponent } from '../../attributes/attribute-value-create/attribute-value-create.component';
 import { ColorIndexComponent } from '../../colors/color-index/color-index.component';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 
@@ -32,8 +30,6 @@ import { ButtonComponent } from '../../shared/components/buttons/button/button.c
     ProductEditComponent,
     FontAwesomeModule,
     GalleryComponent,
-    AttributeIndexComponent,
-    AttributeValueCreateComponent,
     SizeCreateComponent,
     SizeIndexComponent,
     ColorIndexComponent,
