@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RowComponent,ColComponent} from '@coreui/angular';
-import { CommonModule } from '@angular/common';
+import { RowComponent, ColComponent } from '@coreui/angular';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { ProductService } from '../product.service';
@@ -30,12 +30,13 @@ import { ProductIndexComponent } from './product-index/product-index.component';
     ButtonLinkComponent,
     ProductListTemplateComponent,
     FontAwesomeModule,
-    ProductIndexComponent
-],
+    ProductIndexComponent,
+    JsonPipe
+  ],
   templateUrl: './product-index-page.component.html',
   styleUrl: './product-index-page.component.scss'
 })
-export class ProductIndexPageComponent implements OnInit, OnDestroy{
+export class ProductIndexPageComponent implements OnInit, OnDestroy {
 
   loading: boolean = true;
   products: any[] = [];
@@ -43,52 +44,65 @@ export class ProductIndexPageComponent implements OnInit, OnDestroy{
   thumbnail_temp: string = environment.imageThumbnailPlaceHolderVertical;
 
   faPlus = faPlus;
-  
-  constructor(private _product: ProductService, private _router: Router){
+  createPath: any;
+
+  constructor(private _product: ProductService, private _router: Router) {
+    this.createPath = this._product.base_path(['create']);
   }
 
-  createPath = this._product.base_path(['create']);
-  
+
   // path(path: string[] = []){
   //   const slug = this._product.base_path(path);
   //   console.log(slug);
-    
+
   //   return slug;
   // }
 
   ngOnInit(): void {
 
     console.log(this.createPath);
-    
-    
+
+    // res.data.products.edges.map((edge: any) => edge.node);
+
     this._product.index().subscribe({
-    
+
       next: (resp: any) => {
-      console.log(resp);
-      this.products = resp.data;
-      this.loading = false;
+        console.log(resp);
+
+        // this.products = resp.data.products.edges.map((edge: any) => {
+        //   const product = edge.node;
+        //   // Limpieza de variants: edges -> node
+        //   product.variants = product.variants.edges.map((vEdge: any) => vEdge.node);
+        //   return product;
+        // });
+
+        this.products = resp.products;
+
+        console.log(this.products);
+
+        this.loading = false;
       },
-    
+
       error: (error: any) => {
         console.error(error);
         if (error.status === 401) {
           this._router.navigate(['/login']);
         }
       },
-    
+
     });
 
   }
 
-  create(){
-    
+  create() {
+
   }
-  
+
   ngOnDestroy(): void {
 
   }
 
-  redirectToCreate(){
+  redirectToCreate() {
     console.log('redirectToCreate');
     this._router.navigate(['/create']);
   }

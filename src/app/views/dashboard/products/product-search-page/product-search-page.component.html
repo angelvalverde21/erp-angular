@@ -1,9 +1,7 @@
-<app-form-search></app-form-search>
+<app-form-search [path]="['erp','inventories','products']"></app-form-search>
 
-
-<app-product-list-template *ngIf="!loading" [products]="products"></app-product-list-template>
-<!-- <app-template-table-product *ngIf="!loading" [products]="products"></app-template-table-product> -->
-
-<app-loading *ngIf="loading"></app-loading>
-
-<!-- <app-card-place-holder ngPreserveWhitespaces></app-card-place-holder> -->
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+    <app-product-index [products]="products"></app-product-index>
+}

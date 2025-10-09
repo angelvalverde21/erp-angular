@@ -16,6 +16,8 @@ import { IconSetService } from '@coreui/icons-angular';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
+
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes,
@@ -39,6 +41,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(SidebarModule, DropdownModule),
     IconSetService,
     provideAnimationsAsync(),
+    
   ]
 };
 

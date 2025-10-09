@@ -4,10 +4,12 @@ import { ButtonLinkComponent } from '../../../shared/components/buttons/button-l
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
+import { TableVariantComponent } from './table-variant/table-variant.component';
+import { BadgeComponent } from '../../../shared/components/badge/badge.component';
 
 @Component({
   selector: 'app-product-index',
-  imports: [ProductIndexRowComponent, ButtonLinkComponent, FontAwesomeModule, ButtonComponent],
+  imports: [BadgeComponent, ButtonLinkComponent, FontAwesomeModule, TableVariantComponent],
   templateUrl: './product-index.component.html',
   styleUrl: './product-index.component.scss',
 })

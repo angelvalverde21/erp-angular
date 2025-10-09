@@ -1,32 +1,18 @@
-<app-form-search></app-form-search>
+<app-form-search [path]="['erp','inventories','products']"></app-form-search>
 
 @if(loading){
 <app-loading size="md"></app-loading>
 
 }@else{
 
-<div class="card">
+@if(products.length > 0){
 
-  <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center pt-3 pb-3">
-    <div class="title">Productos</div>
-    <app-button-link [icon]="faPlus" color="light" [path]="createPath">Crear</app-button-link>
-  </div>
+<app-product-index [products]="products"></app-product-index>
 
-  <div class="card-body">
-
-    <!-- <app-template-table-product [products]="products"></app-template-table-product> -->
-    <!-- <app-product-list-template [products]="products"></app-product-list-template> -->
-
-    @if(products.length > 0){
-
-    <app-product-index [products]="products"></app-product-index>
-    }@else{
-    <div class="alert alert-warning mt-3" role="alert">
-      Aun no se han creado los productos, use el boton de arriba "crear"
-    </div>
-    }
-
-
-  </div>
+}@else{
+<div class="alert alert-warning mt-3" role="alert">
+  Aun no se han creado los productos, use el boton de arriba "crear"
 </div>
+}
+
 }

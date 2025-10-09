@@ -98,7 +98,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   brands: Brand[] = [];
 
 
-  brandsLoading: boolean = false;
+  brandsLoading: boolean = false; 
 
   brandsInit() {
 
@@ -125,7 +125,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       });
     }
   }
-
 
   initCategories() {
 

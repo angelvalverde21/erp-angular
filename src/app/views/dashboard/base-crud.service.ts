@@ -17,7 +17,8 @@ export abstract class BaseCrudService {
 
   constructor(protected http: HttpClient, url_name: string) {
 
-      this.baseUrl = `${environment.apiDashboard}/${this._store.name()}/${url_name}`;
+      this.baseUrl = `${environment.apiShopify}/${url_name}`;
+      
   }
 
   // Generic method to get all items

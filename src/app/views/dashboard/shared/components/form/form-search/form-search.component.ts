@@ -30,7 +30,7 @@ export class FormSearchComponent implements OnInit {
   // search: string = '';
   store: any;
   warehouses: any;
-  @Input() path: string = '';
+  @Input() path: any;
   search: string = '';
   hasAuthSearch: boolean = false;
   btnActive: boolean = true;
@@ -102,8 +102,12 @@ export class FormSearchComponent implements OnInit {
   redirect(event: any){
 
     console.log(event.target.value);
+
+    const path = [...this.path, 'search', this.search];
+    console.log(path);
+    
   
-    this.router.navigate([this.path, 'search', this.search]);
+    this.router.navigate(path);
 
   }
 }

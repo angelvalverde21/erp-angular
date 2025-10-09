@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { CommonService } from '../../shared/services/common.service';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ProductListTemplateComponent } from '../../shared/templates/product-list-template/product-list-template.component';
+import { ProductIndexComponent } from '../product-index-page/product-index/product-index.component';
 
 // import { CardPlaceHolderComponent } from 'src/app/erp/shared/cards/card-place-holder/card-place-holder.component';
 
@@ -15,7 +16,7 @@ import { ProductListTemplateComponent } from '../../shared/templates/product-lis
     FormSearchComponent, 
     LoadingComponent,
     CommonModule,
-    ProductListTemplateComponent
+    ProductIndexComponent
     // CardPlaceHolderComponent
   ],
   templateUrl: './product-search-page.component.html',
@@ -49,7 +50,9 @@ export class ProductSearchPageComponent {
       
       this._product.search(this.search).subscribe((resp:any) => {
         this.loading = false;
-        this.products = resp.data;
+        this.products = resp.products;
+        console.log(resp);
+        
       });
       
     });

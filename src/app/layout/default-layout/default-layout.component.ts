@@ -63,10 +63,12 @@ export class DefaultLayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.navItems = this.setBasePath(navItems);
+    this.navItems = navItems;
+    // this.navItems = this.setBasePath(navItems);
   }
 
   private setBasePath(items: INavData[]): INavData[] {
+    
     return items.map((item) => {
       const newItem: INavData = { ...item };
 

@@ -51,7 +51,7 @@ export const routes: Routes = [
   },
 
   {
-    path: ':store',
+    path: 'erp',
     loadComponent: () =>
       import('./layout').then((m) => m.DefaultLayoutComponent),
     data: {
@@ -71,6 +71,27 @@ export const routes: Routes = [
         path: 'inventories',
         loadChildren: () =>
           import('./views/dashboard/products/routes.product').then(
+            (m) => m.routes
+          ),
+      },
+      {
+        path: 'orders',
+        loadChildren: () =>
+          import('./views/dashboard/orders/routes.order').then(
+            (m) => m.routes
+          ),
+      },
+      {
+        path: 'mercadopago',
+        loadChildren: () =>
+          import('./views/dashboard/mercadopago/routes.mercadopago').then(
+            (m) => m.routes
+          ),
+      },
+      {
+        path: 'reports',
+        loadChildren: () =>
+          import('./views/dashboard/reports/routes.report').then(
             (m) => m.routes
           ),
       },
