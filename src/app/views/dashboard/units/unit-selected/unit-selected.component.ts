@@ -9,7 +9,7 @@ import {
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { UnitService } from '../unit.service';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-unit-selected',

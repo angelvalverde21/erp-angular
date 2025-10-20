@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
+import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { CarouselCreateComponent } from '../../carousels/carousel-create/carousel-create.component';
 @Component({

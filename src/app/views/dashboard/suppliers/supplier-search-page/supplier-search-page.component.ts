@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
+import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FormSearchComponent } from '../../shared/components/form/form-search/form-search.component';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { FormSearchComponent } from '../../../shared/components/form/form-search/form-search.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { SupplierIndexComponent } from '../supplier-index/supplier-index.component';
 import { Subject, takeUntil } from 'rxjs';
 import { SupplierService } from '../supplier.service';

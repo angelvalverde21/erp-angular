@@ -1,5 +1,5 @@
 import { Component, Input} from '@angular/core';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { PurchaseIndexRowComponent } from '../purchase-index-row/purchase-index-row.component';
 
 @Component({

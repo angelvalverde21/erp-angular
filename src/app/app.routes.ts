@@ -40,7 +40,7 @@ export const routes: Routes = [
     },
   },
   {
-    path: ':store/login',
+    path: 'login',
     loadComponent: () =>
       import('./views/auth/login/login.component').then(
         (m) => m.LoginComponent
@@ -70,14 +70,14 @@ export const routes: Routes = [
       {
         path: 'inventories',
         loadChildren: () =>
-          import('./views/dashboard/products/routes.product').then(
+          import('./views/shopify/products/routes.product').then(
             (m) => m.routes
           ),
       },
       {
         path: 'orders',
         loadChildren: () =>
-          import('./views/dashboard/orders/routes.order').then(
+          import('./views/shopify/orders/routes.order').then(
             (m) => m.routes
           ),
       },
@@ -91,7 +91,7 @@ export const routes: Routes = [
       {
         path: 'reports',
         loadChildren: () =>
-          import('./views/dashboard/reports/routes.report').then(
+          import('./views/shopify/reports/routes.report').then(
             (m) => m.routes
           ),
       },

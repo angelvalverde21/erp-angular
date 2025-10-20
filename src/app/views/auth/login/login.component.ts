@@ -24,7 +24,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { User } from '../../../interfaces/user.interface';
-import { ButtonLoginComponent } from '../../dashboard/shared/components/buttons/button-login/button-login.component';
+import { ButtonLoginComponent } from '../../shared/components/buttons/button-login/button-login.component';
 import { AuthService } from '../auth.service';
 import { StoreService } from '../../../core/services/store.service';
 
@@ -125,6 +125,7 @@ export class LoginComponent {
   }
 
   login() {
+
     console.log('iniciar sesion');
 
     this.loadingIcon = true;
@@ -141,7 +142,10 @@ export class LoginComponent {
 
         if (resp.success) {
           console.log('respuesta login correcto');
-          this.router.navigate(this._store.getLink(['dashboard']));
+          const link = this._store.getLink(['erp']);
+          console.log(link);
+          
+          this.router.navigate(link);
         }
       },
 

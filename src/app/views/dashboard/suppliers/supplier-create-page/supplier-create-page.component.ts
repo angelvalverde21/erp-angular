@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SupplierCreateComponent } from '../supplier-create/supplier-create.component';
-import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
+import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 @Component({

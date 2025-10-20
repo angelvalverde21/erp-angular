@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import {
   FormBuilder,
   FormControl,
@@ -22,10 +22,10 @@ import {
   faPhone
 } from '@fortawesome/free-solid-svg-icons';
 import { faImage, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
-import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import Swal from 'sweetalert2';
 import { SettingService } from '../setting.service';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { CommonModule } from '@angular/common';
 import { WarehouseIndexComponent } from '../../warehouses/warehouse-index/warehouse-index.component';
 // fin de fuentes

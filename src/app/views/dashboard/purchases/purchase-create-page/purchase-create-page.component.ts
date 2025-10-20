@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { PurchaseCreateComponent } from '../purchase-create/purchase-create.component';
-import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
+import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
 import { Router } from '@angular/router';
 
 @Component({

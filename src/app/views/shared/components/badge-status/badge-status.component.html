@@ -1,0 +1,17 @@
+@switch (status) {
+  @case ('ACTIVE') {
+    <span class="badge bg-success">
+        {{ status }}
+    </span>
+  }
+  @case ('DRAFT') {
+    <span class="badge bg-primary">
+        BORRADOR
+    </span>
+  }
+  @default {
+    <span class="badge bg-secondary">
+        {{ status }}
+    </span>
+  }
+}

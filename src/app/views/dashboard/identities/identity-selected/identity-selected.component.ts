@@ -2,7 +2,7 @@ import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@ang
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FormSelectDirective } from '@coreui/angular';
 import { Subject, takeUntil } from 'rxjs';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { IdentityService } from '../identity.service';
 @Component({
   selector: 'app-identity-selected',

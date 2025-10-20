@@ -11,12 +11,12 @@ import { WarehouseService } from '../warehouse.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus, faWarehouse } from '@fortawesome/free-solid-svg-icons';
 
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { CommonModule, JsonPipe } from '@angular/common';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { WarehouseCreateComponent } from '../warehouse-create/warehouse-create.component';
-import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
+import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
 
 @Component({
   selector: 'app-warehouse-index',

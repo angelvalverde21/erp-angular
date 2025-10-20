@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { RouterModule } from '@angular/router';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';

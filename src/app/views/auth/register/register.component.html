@@ -16,7 +16,7 @@
             <div class="row">
 
               <p class="text-body-secondary">Crea una nueva tienda</p>
-            
+
               <div class="col-lg-12 col-12">
                 <app-input-group [icon]="faHome" [mb]="0">
                   <input formControlName="store" type="text" class="form-control"
@@ -67,12 +67,14 @@
               }
 
               <div class="col-12">
-                <div class="controls mt-4">
+                <div class="controls mt-4 d-flex justify-content-between align-items-center">
+
+                  <app-button-link [icon]="faUser" size="" color="secondary" [path]="['login']">Ir
+                    Login</app-button-link>
+
                   <app-button [icon]="faLock" (action)="register()" color="primary" [loadingIcon]="loadingIcon"
                     [disabled]="disabledButton">Registrar tienda</app-button>
 
-                  <!-- <app-button-link [icon]="faUser" size="" color="secondary" [path]="['login']">Ir
-                    Login</app-button-link> -->
                 </div>
               </div>
 

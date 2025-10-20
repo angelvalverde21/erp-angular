@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { JsonPipe } from '@angular/common';
 import { MercadoPagoService } from '../mercadopago.service';
 import { Subject, takeUntil } from 'rxjs';

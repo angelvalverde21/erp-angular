@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { UpperCaseDirective } from '../../../../core/directives/only-uppercase.directive';

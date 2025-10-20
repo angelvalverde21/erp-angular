@@ -8,9 +8,9 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SupplierService } from '../supplier.service';
-import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import { faEdit,faTags, faPlus, faIdCard, faAddressCard } from '@fortawesome/free-solid-svg-icons';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { IdentitySelectedComponent } from '../../identities/identity-selected/identity-selected.component';
 
 

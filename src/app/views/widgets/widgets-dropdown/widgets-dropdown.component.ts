@@ -17,7 +17,7 @@ import {
 } from '@coreui/angular';
 import { Subject, takeUntil } from 'rxjs';
 import { DashboardService } from '../../dashboard/dashboard.service';
-import { LoadingComponent } from '../../dashboard/shared/components/loading/loading.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { CommonModule } from '@angular/common';
 
 @Component({

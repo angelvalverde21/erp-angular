@@ -14,8 +14,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import { CarouselService } from '../carousel.service';
-import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { InputGroupComponent } from '../../../shared/form/input-group/input-group.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 
 @Component({
   selector: 'app-carousel-create',

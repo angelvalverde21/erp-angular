@@ -42,13 +42,15 @@ export class AuthService {
 
   isLogin(user: User) {
 
-    console.log(this.baseUrl + '/login');
+    const path = this.baseUrl + '/' + this._store.name() + '/login'
+    
 
-    const path = this._store.name()
+    console.log(path);
+
 
     return this.http
       .post(
-        this.baseUrl + '/' + path + '/login',
+        path,
         user,
         this.opciones
       )

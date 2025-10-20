@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
-import { InputGroupComponent } from '../../shared/form/input-group/input-group.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { InputGroupComponent } from '../../../shared/form/input-group/input-group.component';
 import Swal from 'sweetalert2';
 import {
   faPenToSquare,
@@ -16,10 +16,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { Subscription } from 'rxjs';
 import { CarouselService } from '../carousel.service';
-import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
+import { GalleryComponent } from '../../../shared/components/gallery/gallery.component';
 @Component({
   selector: 'app-carousel-edit-page',
   imports: [

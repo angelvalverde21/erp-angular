@@ -1,13 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subject, takeUntil } from 'rxjs';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { PurchaseService } from '../purchase.service';
 import { PurchaseIndexRowComponent } from '../purchase-index-row/purchase-index-row.component';
 import { environment } from '../../../../core/environments/environment';
-import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
+import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
 import { PurchaseIndexComponent } from '../purchase-index/purchase-index.component';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 

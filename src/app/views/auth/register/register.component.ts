@@ -13,13 +13,13 @@ import {
   faPhone,
   faEnvelope,
 } from '@fortawesome/free-solid-svg-icons';
-import { InputGroupComponent } from '../../dashboard/shared/components/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
 import { JsonPipe, NgClass } from '@angular/common';
-import { ButtonComponent } from '../../dashboard/shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../auth.service';
 import Swal from 'sweetalert2';
-import { ButtonLinkComponent } from '../../dashboard/shared/components/buttons/button-link/button-link.component';
+import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
 import { Router } from '@angular/router';
 import { StoreService } from '../../../core/services/store.service';
 

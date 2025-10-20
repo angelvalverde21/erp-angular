@@ -3,11 +3,11 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { environment } from '../../../../core/environments/environment';
 import { SupplierService } from '../supplier.service';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
-import { FormSearchComponent } from '../../shared/components/form/form-search/form-search.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { FormSearchComponent } from '../../../shared/components/form/form-search/form-search.component';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SupplierIndexComponent } from '../supplier-index/supplier-index.component';
-import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
+import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
 
 @Component({
   selector: 'app-supplier-index-page',

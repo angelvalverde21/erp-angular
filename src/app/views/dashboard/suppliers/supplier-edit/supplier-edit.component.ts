@@ -14,7 +14,7 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import {
   faEdit,
   faTags,
@@ -22,9 +22,9 @@ import {
   faIdCard,
   faAddressCard,
 } from '@fortawesome/free-solid-svg-icons';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { JsonPipe } from '@angular/common';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { SupplierService } from '../supplier.service';
 import { IdentitySelectedComponent } from '../../identities/identity-selected/identity-selected.component';
 

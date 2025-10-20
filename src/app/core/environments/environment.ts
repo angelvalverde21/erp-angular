@@ -3,7 +3,7 @@ export const environment = {
     showComponentName : true,
     production: false,
     showNameComponent: true,
-    storeName: "", // o colocar el nombre del store por ejemplo "luvadi"
+    storeName: "sorelle", // o colocar el nombre del store por ejemplo "luvadi"
     showStoreNameInSlug: false, //true el link seria asi:  api/v1/private/ara/products, false el link seria asi:  api/v1/private/products
 
     urlBase:'http://localhost:4200',

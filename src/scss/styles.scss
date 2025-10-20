@@ -27,3 +27,15 @@
 // @import 'bootstrap/scss/bootstrap';
 
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --cui-font-sans-serif: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --bs-body-font-family: var(--cui-font-sans-serif);
+}
+
+body {
+  font-family: var(--cui-font-sans-serif) !important;
+  font-weight: 200 !important; /* 🔹 más delgado */
+  font-size: 0.85rem
+}

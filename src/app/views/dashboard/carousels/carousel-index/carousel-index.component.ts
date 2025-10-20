@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CarouselService } from '../carousel.service';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
-import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
 import { faEdit, faLink, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 

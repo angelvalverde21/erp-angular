@@ -17,7 +17,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { PurchaseService } from '../purchase.service';
-import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import {
   faEdit,
   faTags,
@@ -27,14 +27,14 @@ import {
   faImages,
   faUser
 } from '@fortawesome/free-solid-svg-icons';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component';
 import { UnitService } from '../../units/unit.service';
 import { JsonPipe } from '@angular/common';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { SupplierService } from '../../suppliers/supplier.service';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { GalleryComponent } from '../../shared/components/gallery/gallery.component';
+import { GalleryComponent } from '../../../shared/components/gallery/gallery.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SupplierCreateComponent } from '../../suppliers/supplier-create/supplier-create.component';

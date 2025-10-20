@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CarouselIndexComponent } from '../carousel-index/carousel-index.component';
-import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
+import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({

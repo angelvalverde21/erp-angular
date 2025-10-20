@@ -17,7 +17,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { PurchaseService } from '../purchase.service';
-import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
+import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import {
   faEdit,
   faTags,
@@ -26,7 +26,7 @@ import {
   faAddressCard,
   faUser
 } from '@fortawesome/free-solid-svg-icons';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component';
 import { UnitService } from '../../units/unit.service';
 import { JsonPipe } from '@angular/common';
