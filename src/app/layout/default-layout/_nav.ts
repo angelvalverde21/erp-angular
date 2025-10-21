@@ -15,7 +15,7 @@ export const navItems: INavData[] = [
   },
   {
     title: true,
-    name: 'Store (admin)'
+    name: 'Erp'
   },
 
   {
@@ -63,13 +63,29 @@ export const navItems: INavData[] = [
     ]
   },
   {
-    name: 'Mercado Pago',
-    url: 'mercadopago',
-    iconComponent: { name: 'cil-money' },
+    title: true,
+    name: 'Shopify'
+  },
+  {
+    name: 'Inventario',
+    url: 'inventories',
+    iconComponent: { name: 'cil-industry' },
     children: [
       {
-        name: 'Generar Link',
-        url: 'mercadopago/generate-link',
+        name: 'Productos',
+        url: 'inventories/products',
+        icon: 'nav-icon-bullet'
+      },
+    ]
+  },
+  {
+    name: 'Ventas',
+    url: 'orders',
+    iconComponent: { name: 'cil-cash' },
+    children: [
+      {
+        name: 'Pedidos',
+        url: 'orders',
         icon: 'nav-icon-bullet'
       },
     ]
@@ -77,7 +93,7 @@ export const navItems: INavData[] = [
   {
     name: 'Reportes',
     url: 'reports',
-    iconComponent: { name: 'cil-money' },
+    iconComponent: { name: 'cil-chart-line' },
     children: [
       {
         name: 'Ultimos 7 Dias',
@@ -87,6 +103,22 @@ export const navItems: INavData[] = [
       {
         name: 'Top 10 +Ventas',
         url: 'reports/top',
+        icon: 'nav-icon-bullet'
+      },
+    ]
+  },
+  {
+    title: true,
+    name: 'Pasarellas'
+  },
+  {
+    name: 'Mercado Pago',
+    url: 'mercadopago',
+    iconComponent: { name: 'cil-money' },
+    children: [
+      {
+        name: 'Generar Link',
+        url: 'mercadopago/generate-link',
         icon: 'nav-icon-bullet'
       },
     ]
