@@ -10,6 +10,10 @@
     "paths": {
       "@docs-components/*": [
         "./src/components/*"
+      ],
+      "@shared/*": [
+        "./src/app/views/shared/*",
+         "src/app/views/shared/*.ts"
       ]
     }
   },

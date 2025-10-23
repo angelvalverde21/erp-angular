@@ -66,26 +66,5 @@ export class DefaultLayoutComponent implements OnInit {
     this.navItems = navItems;
     // this.navItems = this.setBasePath(navItems);
   }
-
-  private setBasePath(items: INavData[]): INavData[] {
-    
-    return items.map((item) => {
-      const newItem: INavData = { ...item };
-
-      // Si la URL es string y no es externa (http/https)
-      if (typeof newItem.url === 'string' && !newItem.url.startsWith('http')) {
-        // Evita duplicar storeName si ya lo tiene
-        if (!newItem.url.startsWith(`/${this.storeName}`)) {
-          newItem.url = `/${this.storeName}${newItem.url.startsWith('/') ? '' : '/'}${newItem.url}`;
-        }
-      }
-
-      // Procesar hijos de forma recursiva
-      if (newItem.children) {
-        newItem.children = this.setBasePath(newItem.children);
-      }
-
-      return newItem;
-    });
-  }
+  
 }

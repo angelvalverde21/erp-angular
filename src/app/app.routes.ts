@@ -39,65 +39,51 @@ export const routes: Routes = [
       title: 'Register Page',
     },
   },
-  {
-    path: 'login',
-    loadComponent: () =>
-      import('./views/auth/login/login.component').then(
-        (m) => m.LoginComponent
-      ),
-    data: {
-      title: 'Login Page',
-    },
-  },
 
   {
-    path: 'erp',
-    loadComponent: () =>
-      import('./layout').then((m) => m.DefaultLayoutComponent),
-    data: {
-      title: 'Dashboard',
-    },
-
-    canActivate: [authGuard],
-
+    path: ':store',
     children: [
+      // rutas PUBLIC
       {
-        path: 'dashboard',
-        loadChildren: () =>
-          import('./views/dashboard/routes').then((m) => m.routes),
-      },
-      /* inventario */
-      {
-        path: 'inventories',
-        loadChildren: () =>
-          import('./views/shopify/products/routes.product').then(
-            (m) => m.routes
+        path: '',
+        loadComponent: () =>
+          import('./layout/public-layout/public-layout.component').then(
+            (m) => m.PublicLayoutComponent
           ),
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('./views/public/routes.public').then((m) => m.routes),
+          }
+        ]
       },
+  
+      // rutas PRIVADAS
       {
-        path: 'orders',
-        loadChildren: () =>
-          import('./views/shopify/orders/routes.order').then(
-            (m) => m.routes
+        path: '',
+        loadComponent: () =>
+          import('./layout/default-layout/default-layout.component').then(
+            (m) => m.DefaultLayoutComponent
           ),
-      },
-      {
-        path: 'mercadopago',
-        loadChildren: () =>
-          import('./views/dashboard/mercadopago/routes.mercadopago').then(
-            (m) => m.routes
-          ),
-      },
-      {
-        path: 'reports',
-        loadChildren: () =>
-          import('./views/shopify/reports/routes.report').then(
-            (m) => m.routes
-          ),
-      },
-    ],
-
+        children: [
+          {
+            path: 'login',
+            loadComponent: () =>
+              import('./views/auth/login/login.component').then(
+                (m) => m.LoginComponent
+              ),
+          },
+          {
+            path: 'dashboard',
+            loadChildren: () =>
+              import('./views/dashboard/routes').then((m) => m.routes),
+            // canActivate: [authGuard],
+          }
+        ]
+      }
+    ]
   },
-
+  
   { path: '**', redirectTo: '404' },
 ];

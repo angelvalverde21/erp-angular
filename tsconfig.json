@@ -25,7 +25,10 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@shared/*": ["src/app/views/shared/*", "src/app/views/shared/*.ts"] //ojo: en tsconfig.json normalmente se omite el prefijo ./ para paths, mejor usar src/... directo
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

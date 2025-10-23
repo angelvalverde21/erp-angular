@@ -17,7 +17,50 @@ export const navItems: INavData[] = [
     title: true,
     name: 'Erp'
   },
-
+  {
+    name: 'Orders',
+    url: 'orders',
+    iconComponent: { name: 'cil-cash' },
+    children: [
+      {
+        name: 'Orders',
+        url: 'orders',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Clientes',
+        url: 'orders/create',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Cotizaciones',
+        url: 'orders/quotes',
+        icon: 'nav-icon-bullet'
+      }
+    ]
+  },
+  {
+    name: 'Productos',
+    url: 'products',
+    iconComponent: { name: 'cil-industry' },
+    children: [
+      {
+        name: 'Productos',
+        url: 'dashboard/products',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Categorias',
+        url: 'dashboard/products/categories',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'inventario',
+        url: 'dashboard/products/inventories',
+        icon: 'nav-icon-bullet'
+      },
+    ]
+  },
   {
     name: 'Inventario',
     url: 'inventories',
@@ -40,28 +83,7 @@ export const navItems: INavData[] = [
       },
     ]
   },
-  {
-    name: 'Ventas',
-    url: 'orders',
-    iconComponent: { name: 'cil-cash' },
-    children: [
-      {
-        name: 'Pedidos',
-        url: 'orders',
-        icon: 'nav-icon-bullet'
-      },
-      {
-        name: 'Clientes',
-        url: 'orders/create',
-        icon: 'nav-icon-bullet'
-      },
-      {
-        name: 'Cotizaciones',
-        url: 'orders/quotes',
-        icon: 'nav-icon-bullet'
-      }
-    ]
-  },
+
   {
     title: true,
     name: 'Shopify'

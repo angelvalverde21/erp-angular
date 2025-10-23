@@ -8,12 +8,13 @@ export const routes: Routes = [
       title: $localize`Dashboard`
     }
   },
+
   {
     path: 'products',
-    loadComponent: () => import('./dashboard.component').then(m => m.DashboardComponent),
-    data: {
-      title: `Products`
-    }
-  }
+    loadChildren: () =>
+      import('../../views/dashboard/products/routes.product').then(
+        (m) => m.routes
+      ),
+  },
 ];
 

@@ -1,0 +1,30 @@
+<div class="card">
+
+    <div class="card-header py-3">
+
+        <div class="controls d-flex justify-content-between align-items-between">
+            <div class="left d-flex">
+                <button class="btn btn-secondary btn-sm me-1">Todos</button>
+                <button class="btn btn-light btn-sm me-1">Activos</button>
+                <button class="btn btn-light btn-sm me-1">Borrador</button>
+                <button class="btn btn-light btn-sm me-1">Archivados</button>
+            </div>
+            <div class="right d-flex justify-content-between align-items-between">
+                <app-button [icon]="faMagnifyingGlass" color="outline-secondary" class="me-1">Buscar</app-button>
+                <app-button [icon]="faFilter" color="outline-secondary" separation="0"></app-button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <app-product-index></app-product-index>
+
+      
+
+    </div>
+
+</div>
+
+

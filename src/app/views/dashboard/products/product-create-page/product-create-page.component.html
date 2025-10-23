@@ -1,0 +1,18 @@
+
+<div class="card">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center pt-3 pb-3">
+      <div>Crear Producto</div>
+      <app-button-back></app-button-back>
+    </div>
+
+    <div class="card-body">
+
+        <app-product-create (emitProductCreate)="receiveProductCreate($event)"></app-product-create>
+
+    </div>
+
+  </div>
+
+
+

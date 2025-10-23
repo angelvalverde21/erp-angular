@@ -1,13 +1,13 @@
 <div class="d-grid d-md-block">
-  <button type="{{ type }}"
-    class="text-{{ colortext }} d-flex justify-content-center align-items-center px-4 btn btn-{{ color }} btn-{{ size }}"
+  <button type="button"
+    class="text-{{ colortext }} d-flex justify-content-center align-items-center btn btn-{{ color }} btn-{{ size }}"
     (click)="clickButton()" [disabled]="disabled">
 
     @if (icon != null) {
-      @if (loadingIcon) {
-      <app-loading size="sm" class="me-2"></app-loading>
+      @if (spinner) {
+      <app-loading size="sm" class="me-{{ separation }}"></app-loading>
       } @else {
-      <fa-icon [icon]="icon" class="me-2"></fa-icon>
+      <fa-icon [icon]="icon" class="me-{{ separation }}"></fa-icon>
       }
     }
 
