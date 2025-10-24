@@ -7,7 +7,7 @@
 
   <app-product-form [form]="form" [categories]="categories" [brands]="brands"></app-product-form>
 
-  <app-button color="dark" [icon]="faPlus" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
+  <app-button color="dark" [icon]="faPlus" [disabled]="disabledButton" [spinner]="loadingIcon"
     (action)="create()">Crear Producto</app-button>
 
   <!-- {{ form.value | json }} -->

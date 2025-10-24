@@ -21,7 +21,6 @@ export class ButtonLinkComponent implements OnInit {
   @Input() btn: string = 'btn';
   @Input() routeTransform: boolean = true;
   
-
   // prefix: any[] = [];
   link: any[] = [];
 
@@ -34,7 +33,7 @@ export class ButtonLinkComponent implements OnInit {
     
     // const prefix = environment.showStoreNameInSlug ? [environment.storeName] : ['/'];
     // this.link = [...prefix, ...(Array.isArray(this.path) ? this.path : [this.path])];
-    this.link = this._store.getLink(this.path, this.routeTransform);
+    // this.link = this._store.getLink(this.path, this.routeTransform);
   
   }
 

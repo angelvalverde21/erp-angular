@@ -79,6 +79,12 @@ export const routes: Routes = [
             loadChildren: () =>
               import('./views/dashboard/routes').then((m) => m.routes),
             // canActivate: [authGuard],
+          },
+                    {
+          path: 'shopify',
+            loadChildren: () =>
+              import('./views/shopify/shopify.routes').then((m) => m.routes),
+            // canActivate: [authGuard],
           }
         ]
       }

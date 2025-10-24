@@ -102,12 +102,12 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Ventas',
-    url: 'orders',
+    url: 'shopify',
     iconComponent: { name: 'cil-cash' },
     children: [
       {
         name: 'Pedidos',
-        url: 'orders',
+        url: 'shopify/orders',
         icon: 'nav-icon-bullet'
       },
     ]
