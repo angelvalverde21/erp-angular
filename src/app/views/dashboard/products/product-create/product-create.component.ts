@@ -202,7 +202,6 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
       },
     });
 
-
   }
 
   public visible = false;

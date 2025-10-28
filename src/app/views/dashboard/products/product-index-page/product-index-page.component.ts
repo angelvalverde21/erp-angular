@@ -4,11 +4,12 @@ import { ButtonComponent } from "@shared/components/buttons/button/button.compon
 import { faMagnifyingGlass, faFilter, faTag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonLinkComponent } from 'src/app/views/shared/components/buttons/button-link/button-link.component';
+import { HeadPageComponent } from "src/app/views/shared/components/head-page/head-page.component";
 
 
 @Component({
   selector: 'app-product-index-page',
-  imports: [ProductIndexComponent, ButtonComponent, FontAwesomeModule, ButtonLinkComponent],
+  imports: [ProductIndexComponent, ButtonComponent, FontAwesomeModule, ButtonLinkComponent, HeadPageComponent],
   templateUrl: './product-index-page.component.html',
   styleUrl: './product-index-page.component.scss'
 })

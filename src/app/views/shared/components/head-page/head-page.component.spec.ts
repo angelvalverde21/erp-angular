@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AccordionBaseComponent } from './accordion-base.component';
+import { HeadPageComponent } from './head-page.component';
 
-describe('AccordionBaseComponent', () => {
-  let component: AccordionBaseComponent;
-  let fixture: ComponentFixture<AccordionBaseComponent>;
+describe('HeadPageComponent', () => {
+  let component: HeadPageComponent;
+  let fixture: ComponentFixture<HeadPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AccordionBaseComponent]
+      imports: [HeadPageComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AccordionBaseComponent);
+    fixture = TestBed.createComponent(HeadPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

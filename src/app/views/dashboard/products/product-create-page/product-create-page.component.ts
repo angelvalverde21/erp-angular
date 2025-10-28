@@ -5,10 +5,11 @@ import { Router } from '@angular/router';
 import { StoreService } from '../../../../core/services/store.service';
 import { ProductService } from '../product.service';
 import { Product } from '../../../../interfaces/product.interface'
+import { HeadPageComponent } from "src/app/views/shared/components/head-page/head-page.component";
 
 @Component({
   selector: 'app-product-create-page',
-  imports: [ProductCreateComponent, ButtonBackComponent],
+  imports: [ProductCreateComponent, ButtonBackComponent, HeadPageComponent],
   templateUrl: './product-create-page.component.html',
   styleUrl: './product-create-page.component.scss'
 })
