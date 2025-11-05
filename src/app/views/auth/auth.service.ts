@@ -2,10 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NavigationCancel, Router } from '@angular/router';
 import { catchError, map, Observable, of } from 'rxjs';
-import { environment } from '../../core/environments/environment';
 import { User } from '../../interfaces/user.interface';
 import { Store } from '../../interfaces/store.interface';
-import { StoreService } from '../../core/services/store.service';
+import { environment } from '../../environments/environment';
+import { BaseService } from '../base.service';
 // import { LogService } from './log.service';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class AuthService {
     }),
   };
 
-  constructor(private http: HttpClient, private router: Router, private _store: StoreService) {}
+  constructor(private http: HttpClient, private router: Router, private _base: BaseService) {}
 
 
   /*************** fin de verificaciones  *******************/
@@ -42,9 +42,8 @@ export class AuthService {
 
   isLogin(user: User) {
 
-    const path = this.baseUrl + '/' + this._store.name() + '/login'
+    const path = this.baseUrl + '/' + this._base.store + '/login'
     
-
     console.log(path);
 
 

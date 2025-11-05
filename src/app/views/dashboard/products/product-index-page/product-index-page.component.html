@@ -1,7 +1,9 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
 <app-head-page title="Productos">
     <app-button-link [path]="['./create']">Agregar Producto</app-button-link>
 </app-head-page>
-
 
 <div class="card">
 
@@ -22,12 +24,18 @@
 
     </div>
 
-    <div class="card-body">
+    <div class="card-body p-0">
 
-        <app-product-index></app-product-index>
+        <app-product-index [products]="products"></app-product-index>
 
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total de productos: 2</small>
     </div>
 
 </div>
 
 
+
+}

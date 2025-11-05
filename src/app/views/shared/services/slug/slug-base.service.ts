@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { environment } from '../../../../core/environments/environment';
+import { environment } from '../../../../environments/environment';
 
 
 

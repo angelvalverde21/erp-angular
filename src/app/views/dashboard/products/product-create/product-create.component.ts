@@ -38,6 +38,11 @@ import { Subject, takeUntil } from 'rxjs';
 import { BrandService } from '../../brands/brand.service';
 import { ProductFormComponent } from '../product-form/product-form.component';
 import { Product } from '../../../../interfaces/product.interface';
+import { StoreService } from '../../../stores/store.service';
+import { BaseService } from '../../../base.service';
+import { Category } from '../../../../interfaces/category.interface';
+import { Brand } from '../../../../interfaces/brand.interface';
+
 
 @Component({
   selector: 'app-product-create',
@@ -66,16 +71,20 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
 
   @Output() emitProductCreate = new EventEmitter<Product>();
   @Output() emitProductError = new EventEmitter<boolean>();
+  @Input() categories: Category[] = []; 
+  @Input() brands: Brand[] = []; 
 
   constructor(
     private fb: FormBuilder,
     private _product: ProductService,
-    private _category: CategoryService,
-    private _brand: BrandService
+    private _store: StoreService,
+    private _base: BaseService
   ) {
+
+
   }
 
-  categories: any[] = [];
+
   loadingSubcategories: boolean = true;
   disabledButton: boolean = true;
   loadingIcon: boolean = false;
@@ -83,10 +92,29 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
   loadingBrands: boolean = false;
 
 
-  items = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'ESTANDAR'];
-
-  brands: any[] = [];
   // selectedItems = [];
+
+  ngOnInit(): void {
+    this.formInit();
+    // this.brandsInit()
+    // this.categoriesInit();
+    // this.initUnits();
+    // this.initBrands();
+
+
+    this.form.statusChanges.subscribe((status) => {
+      console.log(status);
+
+      if (status === 'VALID') {
+        this.disabledButton = false;
+      } else {
+        this.disabledButton = true;
+      }
+
+    });
+
+    //recibir cambios del categoria
+  }
 
 
   private formInit(): void {
@@ -101,38 +129,6 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
     });
   }
 
-  brandsLoading: boolean = false;
-
-  brandsInit() {
-
-    if (this._brand.getAllLocal() != undefined) {
-      this.brands = this._brand.getAllLocal();
-      this.brandsLoading = false;
-      console.log(this.brands);
-      
-    } else {
-      this._brand.index().pipe(takeUntil(this.destroy$)).subscribe({
-
-        next: (resp: any) => {
-          console.log(resp);
-          this.brands = resp.data;
-          this.brandsLoading = false;
-          this._brand.setAllLocal(resp.data);
-          console.log("brands obtenidas");
-        },
-
-        error: (error: any) => {
-          Swal.fire('Error', 'Ocurrió un problema al cargar las marcas. Inténtalo nuevamente.', 'error');
-          console.error(error);
-        },
-
-      });
-    }
-  }
-
-  loadingUnits: boolean = false;
-  units: any[] = [];
-
   ngOnDestroy(): void {
 
     this.destroy$.next();
@@ -140,25 +136,6 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnInit(): void {
-    this.formInit();
-    this.brandsInit()
-    this.categoriesInit();
-    // this.initUnits();
-    // this.initBrands();
-
-    this.form.statusChanges.subscribe((status) => {
-      console.log(status);
-
-      if (status === 'VALID') {
-        this.disabledButton = false;
-      } else {
-        this.disabledButton = true;
-      }
-    });
-
-    //recibir cambios del categoria
-  }
 
   @Input() user_id: number | null = null;
   form!: FormGroup;
@@ -231,30 +208,6 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
   }
 
   loadingCategories: boolean = false;
-
-  categoriesInit() {
-
-    this.loadingCategories = true;
-
-    this._category.index().pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
-        console.log(resp);
-        this.categories = resp.data;
-        this.loading = false;
-        this.loadingCategories = false;
-      },
-
-      error: (error: any) => {
-        // Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
-        console.error(error);
-        this.loadingCategories = false;
-      },
-
-    });
-
-  }
 
 
 }

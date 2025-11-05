@@ -2,7 +2,6 @@ import { JsonPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { StoreService } from '../../../../../core/services/store.service'
 // import { environment } from '../../../../../../core/environments/environment';
 
 @Component({
@@ -24,7 +23,7 @@ export class ButtonLinkComponent implements OnInit {
   // prefix: any[] = [];
   link: any[] = [];
 
-  constructor(private _store: StoreService){
+  constructor(){
   
   }
 

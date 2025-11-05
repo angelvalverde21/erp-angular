@@ -7,9 +7,9 @@ import {
 } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
-import { environment } from '../../core/environments/environment';
+import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
-import { StoreService } from '../../core/services/store.service';
+import { BaseService } from '../base.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class authGuard implements CanActivate, CanActivateChild {
   constructor(
     private _auth: AuthService,
     private _router: Router,
-    private _store: StoreService
+    private _base: BaseService
   ) {
     console.log("se pasa por el guard");
   }
@@ -32,7 +32,7 @@ export class authGuard implements CanActivate, CanActivateChild {
     console.log('Empieza el canActivate');
     // Verifica si el slug es válido
     // Primero verifica si el slugBase es válido
-    return this._store.slugIsValid$(this._store.name()!).pipe(
+    return this._base.slugIsValid$(this._base.store!).pipe(
 
       switchMap((resp_isValid:boolean) => {
         
@@ -57,10 +57,10 @@ export class authGuard implements CanActivate, CanActivateChild {
             } else {
 
               console.log('no esta autenticado desde el guard');
-              // console.log(this._store.getLink(['login']));
+              // console.log(this._base.getLink(['login']));
               
               // Redirige al usuario si no está autenticado
-              this._router.navigate(this._store.getLink(['login']));
+              this._router.navigate(['login']);
 
               return false;
 

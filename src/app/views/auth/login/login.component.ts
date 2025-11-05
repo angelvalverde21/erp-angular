@@ -26,7 +26,6 @@ import {
 import { User } from '../../../interfaces/user.interface';
 import { ButtonLoginComponent } from '../../shared/components/buttons/button-login/button-login.component';
 import { AuthService } from '../auth.service';
-import { StoreService } from '../../../core/services/store.service';
 
 @Component({
   selector: 'app-login',
@@ -54,6 +53,7 @@ import { StoreService } from '../../../core/services/store.service';
   ],
 })
 export class LoginComponent {
+
   user!: User;
   form!: FormGroup;
   valid: boolean = true;
@@ -69,13 +69,9 @@ export class LoginComponent {
     private _auth: AuthService,
     public fb: FormBuilder,
     private router: Router,
-    private _store: StoreService
+
   ) {
     /** inicio **/
-
-    this._store.getStore().subscribe((store) => {
-      console.log(store);
-    });
     
 
     console.log('se paso por LoginComponent constructor');
@@ -133,6 +129,7 @@ export class LoginComponent {
     this.disabledButton = true;
 
     this._auth.isLogin(this.form.value).subscribe({
+
       next: (resp: any) => {
         console.log(resp);
 
@@ -142,7 +139,8 @@ export class LoginComponent {
 
         if (resp.success) {
           console.log('respuesta login correcto');
-          const link = this._store.getLink(['erp']);
+          
+          const link = ['erp'];
           console.log(link);
           
           this.router.navigate(link);
@@ -165,6 +163,7 @@ export class LoginComponent {
         this.loading = false;
         console.log('Request complete');
       },
+
     });
   }
 

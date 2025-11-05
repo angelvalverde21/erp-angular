@@ -1,64 +1,71 @@
-<app-form-search></app-form-search>
+<!-- <app-form-search></app-form-search> -->
 
 <!-- ProductEdit -->
-@if(loading){
+@if(setupLoading){
 <app-loading></app-loading>
 }@else{
 
-<div class="card mb-3">
+@if(loadingProduct){
+<app-loading></app-loading>
+}@else{
 
-  <div class="card-header py-3 bg-info text-white">
-    <fa-icon [icon]="faPenToSquare" class="me-2"></fa-icon> Edicion Producto
-  </div>
+<div class="row">
+  <div class="col-lg-8">
+    <app-head-page title="{{ product.name }}">
+      <app-button-back></app-button-back>
+    </app-head-page>
 
-  <div class="card-body">
-    <app-product-edit [product]="product" (emitCategorySelected)="categorySelected($event)"></app-product-edit>
-  </div>
-
-</div>
-
-<div class="card mb-3">
-
-  <div class="card-body">
-
-    <h5 class="card-title mb-3">Variantes</h5>
-
-    <app-button [icon]="faPlus">Agregar Variante</app-button>
-
-    @if(product.colors.length > 0){
-      
-      <app-color-index [colors]="product.colors"></app-color-index>
-    }
-
-  </div>
-
-</div>
-
-<!-- Opciones -->
 
     <div class="card mb-3">
 
+      <!-- {{ product | json }} -->
+
       <div class="card-body">
-
-        <h5 class="card-title mb-3">Gallery</h5>
-
-        <app-gallery [path]="`products/${product.id}/images`"></app-gallery>
-
+        <app-product-edit [product]="product" [categories]="categories" [brands]="brands"
+          (emitCategorySelected)="categorySelected($event)"></app-product-edit>
       </div>
 
     </div>
 
+    @if(product.category.is_color){
+
     <div class="card mb-3">
 
       <div class="card-body">
 
-        <h5 class="card-title mb-3"> Tallas</h5>
+        <h5 class="card-title mb-3"><fa-icon [icon]="faPalette" class="me-2"></fa-icon>Colores</h5>
+
+        <!-- <app-button [icon]="faPlus" color="secondary">Agregar Color</app-button> -->
+
+        @if(product.colors.length > 0){
+
+        <app-color-index [colors]="product.colors"></app-color-index>
+
+        }
+
+        <app-color-create [product_id]="product.id" (emitColorCreate)="receiveColorCreate($event)"></app-color-create>
+
+      </div>
+
+    </div>
+    }
+
+    @if(product.category.is_size){
+
+    <div class="card mb-3">
+
+      <div class="card-body">
+
+        <h5 class="card-title mb-3"><fa-icon [icon]="faRulerCombined" class="me-2"></fa-icon>Tallas</h5>
 
         <div class="attributes mx-auto">
 
           @if(sizes.length > 0){
-            <app-size-index [sizes]="sizes"></app-size-index>
+
+          <app-size-index [sizes]="sizes"></app-size-index>
+
           }
+
           <app-size-create [product_id]="product.id" (emitSizeCreate)="receiveSizeCreate($event)"></app-size-create>
 
         </div>
@@ -67,5 +74,19 @@
       </div>
 
     </div>
+    }
+  </div>
+  <div class="col-lg-4">
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title mb-3"><fa-icon [icon]="faRulerCombined" class="me-2"></fa-icon>Inventario</h5>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+}
 
 }

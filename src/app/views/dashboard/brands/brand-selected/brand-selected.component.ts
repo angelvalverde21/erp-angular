@@ -43,7 +43,7 @@ export class BrandSelectedComponent implements OnInit, ControlValueAccessor {
 
   // Se llama cuando el valor externo cambia (ej. setValue)
   writeValue(value: any): void {
-    
+
     this.value = value != null ? value : null;
     console.log(value);
 
@@ -98,16 +98,18 @@ export class BrandSelectedComponent implements OnInit, ControlValueAccessor {
   onBrandChange(event: any) {
 
     console.log(event);
-    
 
-    const id = event.id;
-    this.value = id;
+    if (event != null) {
+      const id = event.id;
+      this.value = id;
 
-    const brand = this.findBrandById(this.brands, id);
-    this.emitBrandSelected.emit(brand);
+      const brand = this.findBrandById(this.brands, id);
+      this.emitBrandSelected.emit(brand);
 
-    this.onChangeFn(id);
-    this.onTouchedFn();
+      this.onChangeFn(id);
+      this.onTouchedFn();
+    }
+
   }
 
 }

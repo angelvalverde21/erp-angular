@@ -58,7 +58,14 @@ export const routes: Routes = [
           }
         ]
       },
-  
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./views/auth/login/login.component').then(
+            (m) => m.LoginComponent
+          ),
+      },
+
       // rutas PRIVADAS
       {
         path: '',
@@ -68,28 +75,15 @@ export const routes: Routes = [
           ),
         children: [
           {
-            path: 'login',
-            loadComponent: () =>
-              import('./views/auth/login/login.component').then(
-                (m) => m.LoginComponent
-              ),
-          },
-          {
             path: 'dashboard',
             loadChildren: () =>
               import('./views/dashboard/routes').then((m) => m.routes),
             // canActivate: [authGuard],
           },
-                    {
-          path: 'shopify',
-            loadChildren: () =>
-              import('./views/shopify/shopify.routes').then((m) => m.routes),
-            // canActivate: [authGuard],
-          }
         ]
       }
     ]
   },
-  
+
   { path: '**', redirectTo: '404' },
 ];

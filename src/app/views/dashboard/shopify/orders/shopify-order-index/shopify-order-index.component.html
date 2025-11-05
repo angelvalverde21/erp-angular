@@ -1,0 +1,38 @@
+<div class="table-responsive">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th scope="col">Usuario</th>
+                <th class="text-center" scope="col">Progreso</th>
+                <th scope="col">Items</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (order of orders; track order.id ?? $index) {
+            @for (lineItem of order.lineItems; let i = $index; track lineItem.id ?? $index) {
+            <tr>
+                @if (i === 0) {
+                <!-- Solo en la primera fila del pedido -->
+                <th class="text-center" attr.rowspan="{{ order.lineItems.length }}">
+                    {{ order.name }}
+                </th>
+                <td class="ps-2" attr.rowspan="{{ order.lineItems.length }}">
+                    {{ order.customer?.firstName | uppercase }}
+                    {{ order.customer?.lastName | uppercase }}
+                </td>
+                <td class="text-center" attr.rowspan="{{ order.lineItems.length }}">
+                    <span class="badge bg-secondary">
+                        PAGADO
+                    </span>
+                </td>
+                }
+                <!-- Celda del producto -->
+                <td>{{ lineItem.name }}</td>
+            </tr>
+            }
+            }
+        </tbody>
+
+    </table>
+</div>

@@ -17,4 +17,12 @@ export const routes: Routes = [
       name: 'dashboard.product.create', // 👈 nombre único
     }
   },
+  {
+    path: ':product_id',
+    loadComponent: () => import( './product-edit-page/product-edit-page.component' ).then((m) => m.ProductEditPageComponent),
+    data: {
+      title: 'Editar',
+      name: 'dashboard.product.edit', // 👈 nombre único
+    }
+  },
 ];

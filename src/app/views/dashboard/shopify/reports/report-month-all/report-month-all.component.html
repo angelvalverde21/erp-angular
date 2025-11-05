@@ -1,0 +1,79 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+
+<!-- <div class="container-fluid mb-3">
+
+</div> -->
+
+<h5 class="mb-3"><i class="bi bi-box"></i> Reporte Total</h5>
+
+<div class="card mb-3">
+
+    <div class="card-header py-3">
+        <div class="controls d-flex justify-content-between align-items-between">
+            <div class="left d-flex">
+                <button class="btn btn-secondary btn-sm me-1">Todos</button>
+            </div>
+            <div class="right d-flex justify-content-between align-items-between">
+                <app-button [icon]="faMagnifyingGlass" color="outline-secondary" class="me-1">Buscar</app-button>
+                <app-button [icon]="faFilter" color="outline-secondary" separation="0"></app-button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="report?.years" ngbAccordion [closeOthers]="true">
+    @for (year of report.years | keyvalue; track year.key) {
+    <div ngbAccordionItem>
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>
+                <span class="fw-bold">
+                    {{ year.key }} — Total: {{ year.value.total | currency:'PEN':'symbol':'1.2-2':'es-PE' }}
+                </span>
+            </button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+                <ng-template>
+                    <ul class="list-group">
+                        @for (month of year.value.months | keyvalue; track month.key) {
+                        <li class="list-group-item py-3 d-flex justify-content-between align-items-center">
+                            <span>
+                                {{ getMonthName(month.key) }}
+                            </span>
+                            <span>
+                                {{ month.value | currency:'PEN':'symbol':'1.2-2':'es-PE' }}
+                            </span>
+                        </li>
+                        }
+                    </ul>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<div *ngIf="!report?.years" class="text-center text-muted mt-3">
+    No hay datos de ventas.
+</div>
+}
+
+<div class="row g-3 mb-3">
+    <!-- Pedidos -->
+    <div class="col-md-3">
+        <div class="stats-card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="stat-sub">Total</span>
+                <i class="bi bi-cart icon"></i>
+            </div>
+            <div class="d-flex align-items-end">
+                <span class="stat-value me-2">{{ report.total_sales | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</span>
+                <span class="stat-change">↗ 83%</span>
+            </div>
+        </div>
+    </div>
+
+</div>

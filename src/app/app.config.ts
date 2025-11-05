@@ -30,7 +30,6 @@ export const appConfig: ApplicationConfig = {
       }),
       withEnabledBlockingInitialNavigation(),
       withViewTransitions(),
-      withHashLocation()
     ),
     {
       provide: HTTP_INTERCEPTORS,

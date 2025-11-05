@@ -1,0 +1,31 @@
+<!-- <div ngbAccordion [closeOthers]="true">
+	
+	@for (color of colors; track color) {
+		<div ngbAccordionItem>
+			<h2 ngbAccordionHeader>
+				<button ngbAccordionButton>{{ color }}</button>
+			</h2>
+			<div ngbAccordionCollapse>
+				<div ngbAccordionBody>
+					<app-color-row [color]="color"></app-color-row>
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+<app-button>Agregar Variante</app-button> -->
+
+<ul cdkDropList class="list-group ps-3 list-group-flush" (cdkDropListDropped)="reOrderColors($event)">
+
+	@for (color of colors; track color.id) {
+
+	<li class="list-group-item" cdkDrag>
+		<app-color-row [color]="color" (emitColorId)="reListColors($event)">
+		</app-color-row>
+	</li>
+
+	}
+
+
+</ul>

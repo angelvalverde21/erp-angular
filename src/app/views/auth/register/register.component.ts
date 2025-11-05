@@ -21,7 +21,7 @@ import { AuthService } from '../auth.service';
 import Swal from 'sweetalert2';
 import { ButtonLinkComponent } from '../../shared/components/buttons/button-link/button-link.component';
 import { Router } from '@angular/router';
-import { StoreService } from '../../../core/services/store.service';
+
 
 @Component({
   selector: 'app-register',
@@ -50,7 +50,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   error: any;
 
-  constructor(private fb: FormBuilder, private _auth: AuthService, private _router: Router, private _store: StoreService) {}
+  constructor(private fb: FormBuilder, private _auth: AuthService, private _router: Router) {}
 
   ngOnInit(): void {
     this.formInit();
@@ -125,7 +125,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
             showConfirmButton: true,
           });
 
-          this._router.navigate(this._store.getLink(['dashboard']))
+          this._router.navigate(['dashboard'])
         },
 
         error: (error: any) => {

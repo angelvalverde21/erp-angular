@@ -1,4 +1,7 @@
-<app-head-page title="Productos">
+@if(setupLoading){
+  <app-loading></app-loading>
+}@else{
+  <app-head-page title="Agregar Producto">
   <app-button-back></app-button-back>
 </app-head-page>
 
@@ -7,11 +10,10 @@
 
     <div class="card-body">
 
-        <app-product-create (emitProductCreate)="receiveProductCreate($event)"></app-product-create>
+        <app-product-create (emitProductCreate)="receiveProductCreate($event)" [categories]="categories" [brands]="brands"></app-product-create>
 
     </div>
 
-  </div>
+</div>
 
-
-
+}

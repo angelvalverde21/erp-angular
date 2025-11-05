@@ -1,7 +1,4 @@
-
 import { INavData } from '@coreui/angular';
-import { environment } from '../../core/environments/environment';
-
 
 export const navItems: INavData[] = [
   {
@@ -51,12 +48,12 @@ export const navItems: INavData[] = [
       },
       {
         name: 'Categorias',
-        url: 'dashboard/products/categories',
+        url: 'dashboard/categories',
         icon: 'nav-icon-bullet'
       },
       {
         name: 'inventario',
-        url: 'dashboard/products/inventories',
+        url: 'dashboard/inventories',
         icon: 'nav-icon-bullet'
       },
     ]
@@ -109,22 +106,27 @@ export const navItems: INavData[] = [
         name: 'Pedidos',
         url: 'shopify/orders',
         icon: 'nav-icon-bullet'
-      },
+      }
     ]
   },
   {
     name: 'Reportes',
-    url: 'reports',
+    url: 'shopify/reports',
     iconComponent: { name: 'cil-chart-line' },
     children: [
       {
         name: 'Ultimos 7 Dias',
-        url: 'reports/daily/7',
+        url: 'dashboard/shopify/reports/daily/7',
         icon: 'nav-icon-bullet'
       },
       {
         name: 'Top 10 +Ventas',
-        url: 'reports/top',
+        url: 'dashboard/shopify/reports/top',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Totales',
+        url: 'dashboard/shopify/reports/all',
         icon: 'nav-icon-bullet'
       },
     ]
@@ -140,8 +142,13 @@ export const navItems: INavData[] = [
     children: [
       {
         name: 'Generar Link',
-        url: 'mercadopago/generate-link',
+        url: 'dashboard/mercadopago/generate-link',
         icon: 'nav-icon-bullet'
+      },
+            {
+      name: 'Config',
+        url: 'dashboard/mercadopago/token',
+        iconComponent: { name: 'cil-cog' },
       },
     ]
   },

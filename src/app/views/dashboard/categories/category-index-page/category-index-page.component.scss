@@ -1,0 +1,46 @@
+.accordion-categories .accordion-button {
+  background-color: transparent;
+  font-weight: 500;
+  color: #111;
+  border: none;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Ocultar borde predeterminado de Bootstrap */
+.accordion-categories .accordion-button:focus {
+  box-shadow: none;
+}
+
+/* Chevron por defecto: apunta a la derecha */
+.accordion-categories .accordion-button::after {
+  content: "";
+  flex-shrink: 0;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-right: 2px solid #555;
+  border-bottom: 2px solid #555;
+  transform: rotate(-45deg); /* Chevron → derecha */
+  transition: transform 0.25s ease;
+}
+
+/* Cuando el ítem se expande: apunta a la izquierda */
+.accordion-categories .accordion-button:not(.collapsed)::after {
+  transform: rotate(45deg); /* Chevron ← izquierda */
+}
+
+/* Quita fondo al expandir */
+.accordion-categories .accordion-button:not(.collapsed) {
+  background-color: transparent;
+  color: #111;
+}
+
+/* Opcional: separación y estilo del cuerpo */
+.accordion-categories .accordion-body {
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+  color: #555;
+  border-left: 2px solid #eee;
+}

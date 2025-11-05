@@ -1,0 +1,18 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Galeria</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-gallery [path]="path"></app-gallery>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+
+
+<button class="btn btn-outline-secondary btn-sm" type="button" (click)="openVerticallyCentered(content)">
+    <fa-icon [icon]="faCamera" class="me-1"></fa-icon>
+    <span>Galeria</span>
+</button>

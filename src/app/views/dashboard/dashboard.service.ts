@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, Observable, of } from 'rxjs';
-import { environment } from '../../core/environments/environment';
-import { StoreService } from '../../core/services/store.service';
+import { environment } from '../../environments/environment';
+import { StoreService } from '../stores/store.service';
+import { BaseService } from '../base.service';
 
 // import { environment } from '@env/environment';
 
@@ -19,9 +20,9 @@ export class DashboardService {
   constructor(
     private http: HttpClient, 
     private router: Router,
-    private _store: StoreService
+    private _base: BaseService
   ) {
-    this.baseUrl = `${environment.apiDashboard}/${this._store.name()}`;
+    this.baseUrl = `${environment.apiDashboard}/${this._base.store}`;
   }
   
   isValid(name: string): Observable<boolean> {
@@ -93,7 +94,10 @@ export class DashboardService {
 
 
   getGallery(path: string = ""): Observable<any> {
-    return this.http.get(`${this.baseUrl}/${path}`);
+    const url = `${this.baseUrl}/${path}`;
+    console.log(url);
+    
+    return this.http.get(url);
   }
 
   getDasboard(path: string = ""): Observable<any> {

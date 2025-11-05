@@ -5,7 +5,8 @@ import { map } from 'rxjs';
 // import { LogService } from './log.service';
 
 import { User } from '../../interfaces/user.interface';
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root',

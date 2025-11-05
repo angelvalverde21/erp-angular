@@ -1,6 +1,6 @@
+import { Color } from "../views/dashboard/colors/color.interface";
 import { Attribute } from "./attribute.interface";
 import { Category } from "./category.interface";
-import { Color } from "./color.interface";
 import { Size } from "./size.interface";
 
 export interface Product {

@@ -12,8 +12,7 @@ import { catchError, delay, filter, map, switchMap, tap } from 'rxjs/operators';
 import { ColorModeService } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
-import { StoreService } from './core/services/store.service';
-import { of } from 'rxjs';
+import { BaseService } from './views/base.service';
 
 @Component({
   selector: 'app-root',
@@ -31,19 +30,39 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private storeService: StoreService
+    private _base: BaseService
   ) {
     this.#titleService.setTitle(this.title);
     // iconSet singleton
     this.#iconSetService.icons = { ...iconSubset };
     this.#colorModeService.localStorageItemName.set('theme-default');
     this.#colorModeService.eventName.set('ColorSchemeChange');
+
+    console.log('lo primero que se lee x');
+    // Escuchar cambios en la URL para capturar el parámetro :store
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd)) // ✅ solo al final de la navegación
+      .subscribe(() => {
+        const firstChild = this.route.firstChild;
+        const store = firstChild?.snapshot.params['store'];
+
+        if (store && store !== this.storeName) {
+          this.storeName = store;
+          this._base.setStore(store);
+          console.log('Tienda actual:', this.storeName);
+          localStorage.setItem('store', this.storeName);
+        }
+      });
+
   }
+
+
+  storeName: string = "";
 
   ngOnInit(): void {
 
-
     console.log('lo primero que se lee');
+
 
     //Setea el nombre de la tienda
 

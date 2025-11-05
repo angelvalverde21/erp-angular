@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { Brand } from 'src/app/interfaces/brand.interface';
-import { BaseCrudService } from '../../base-crud.service';
-
+// import { BaseCrudDashboardService } from '../base-crud-dashboard.service';
+import { Brand } from '../../../interfaces/brand.interface';
+import { BaseService } from '../../base.service'
+import { BaseCrudDashboardService } from '../base-crud-dashboard.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class BrandService extends BaseCrudService {
+export class BrandService extends BaseCrudDashboardService {
 
   constructor(http: HttpClient) {
 

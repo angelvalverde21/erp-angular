@@ -33,11 +33,11 @@
 
                 <div class="controls d-flex justify-content-between align-items-center">
 
-                    <app-button color="dark" [icon]="faSave" [disabled]="disabledButton" [loadingIcon]="loadingIcon"
+                    <app-button color="dark" [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon"
                         (action)="update()">Actualizar</app-button>
 
                     <app-button color="danger" colortext="white" [icon]="faTrash" [disabled]="disabledButton"
-                        [loadingIcon]="loadingIcon" (action)="archivar()">Borrar</app-button>
+                        [spinner]="loadingIcon" (action)="archivar()">Borrar</app-button>
 
                 </div>
 

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
-import { IconDirective } from '@coreui/icons-angular';
 import {
   ContainerComponent,
   ShadowOnScrollDirective,
@@ -17,10 +16,9 @@ import {
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
 import { navItems } from './_nav';
-import { environment } from '../../core/environments/environment';
 import { UpperCasePipe } from '@angular/common';
-import { StoreService } from '../../core/services/store.service';
 import { INavData } from '@coreui/angular';
+import { BaseService } from '../../views/base.service';
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -44,7 +42,6 @@ function isOverflown(element: HTMLElement) {
     ContainerComponent,
     DefaultFooterComponent,
     DefaultHeaderComponent,
-    IconDirective,
     NgScrollbar,
     RouterOutlet,
     RouterLink,
@@ -55,16 +52,23 @@ function isOverflown(element: HTMLElement) {
 
 export class DefaultLayoutComponent implements OnInit {
 
-  storeName: string = ''; // ya no string | null
   public navItems: INavData[] = [];
 
-  constructor(private _store: StoreService) {
-    this.storeName = this._store.name()!; // el servicio ya tiene el nombre
+  storeName: string = ""
+
+  constructor(private _base: BaseService) {
+
+    this.storeName = this._base.store!;
+
+    console.log(this.storeName);
+    
   }
+
+
 
   ngOnInit(): void {
     this.navItems = navItems;
     // this.navItems = this.setBasePath(navItems);
   }
-  
+
 }
