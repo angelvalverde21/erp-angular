@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, computed, inject, input, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 
 import {
   AvatarComponent,
@@ -23,14 +23,33 @@ import {
 } from '@coreui/angular';
 
 import { IconDirective } from '@coreui/icons-angular';
-import { AuthService } from '../../../core/auth/auth.service';
+import { AuthService } from 'src/app/views/auth/auth.service';
+import { BaseService } from 'src/app/views/base.service';
+
 
 @Component({
-    selector: 'app-default-header',
-    templateUrl: './default-header.component.html',
-  imports: [RouterModule, ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NavItemComponent, NavLinkDirective, NgTemplateOutlet, BreadcrumbRouterComponent, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective]
+  selector: 'app-default-header',
+  templateUrl: './default-header.component.html',
+  imports: [
+    RouterModule,
+    ContainerComponent,
+    HeaderTogglerDirective,
+    SidebarToggleDirective,
+    IconDirective,
+    HeaderNavComponent,
+    NavLinkDirective,
+    NgTemplateOutlet,
+    BreadcrumbRouterComponent,
+    DropdownComponent,
+    DropdownToggleDirective,
+    AvatarComponent,
+    DropdownMenuDirective,
+    DropdownHeaderDirective,
+    DropdownItemDirective,
+    DropdownDividerDirective
+  ]
 })
-export class DefaultHeaderComponent extends HeaderComponent {
+export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
 
   readonly #colorModeService = inject(ColorModeService);
   readonly colorMode = this.#colorModeService.colorMode;
@@ -46,16 +65,30 @@ export class DefaultHeaderComponent extends HeaderComponent {
     return this.colorModes.find(mode => mode.name === currentMode)?.icon ?? 'cilSun';
   });
 
-  constructor(private _auth: AuthService) {
+  store: string = "";
+
+  constructor(private _auth: AuthService, private router: Router, private _base: BaseService) {
     super();
+    this.store = this._base.storeName!;
+  }
+
+  ngOnInit(): void {
+
   }
 
   sidebarId = input('sidebar1');
 
-  logout(){
+  logout() {
 
     this._auth.logout();
+
+  }
+
+  redirect(path: string[]) {
+    console.log('redirect');
+    console.log(path);
     
+    this.router.navigate(path);
   }
 
 }

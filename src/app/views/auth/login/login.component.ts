@@ -140,7 +140,7 @@ export class LoginComponent {
         if (resp.success) {
           console.log('respuesta login correcto');
           
-          const link = ['erp'];
+          const link = ['sorelle','dashboard'];
           console.log(link);
           
           this.router.navigate(link);
@@ -148,6 +148,7 @@ export class LoginComponent {
       },
 
       error: (resp: any) => {
+        
         console.log('error en iniciar sesion');
 
         this.valid = false;

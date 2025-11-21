@@ -1,13 +1,13 @@
 export const environment = {
 
-    showComponentName : true,
+    showComponentName: true,
     production: false,
     showNameComponent: true,
     storeName: "sorelle", // o colocar el nombre del store por ejemplo "luvadi"
     showStoreNameInSlug: true, //true el link seria asi:  api/v1/private/ara/products, false el link seria asi:  api/v1/private/products
 
-    urlBase:'http://localhost:4200',
-    
+    urlBase: 'http://localhost:4200',
+
     apiStore: 'http://erp.test/api/v1/stores',
 
     apiPublic: 'http://erp.test/api/v1/public',
@@ -21,5 +21,9 @@ export const environment = {
     imageMediumPlaceHolder: 'https://placehold.co/400x400',
     imageThumbnailPlaceHolder: 'https://placehold.co/200x200',
     imageThumbnailPlaceHolderVertical: 'https://placehold.co/300x400',
-    
+
 };
+
+export const API = {
+    public: 'http://erp.test/api/v1/public',
+}

@@ -1,0 +1,10 @@
+<app-employee-form [form]="form" [roles]="roles"></app-employee-form>
+<!-- {{ form.value | json }} -->
+
+<div class="row mb-3">
+    <div class="col">
+
+        <app-button [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon" (action)="update()">Crear
+            Empleado</app-button>
+    </div>
+</div>

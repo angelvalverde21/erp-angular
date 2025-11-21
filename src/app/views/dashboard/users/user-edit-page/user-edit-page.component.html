@@ -1,0 +1,16 @@
+
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+        <div class="card mb-3">
+
+        <div class="card-header bg-secondary text-white">
+            Mi perfil
+        </div>
+
+        <div class="card-body">
+            <app-user-edit [user]="user"></app-user-edit>
+        </div>
+    </div>
+}

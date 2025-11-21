@@ -1,26 +1,30 @@
 export const environment = {
 
     production: true,
-    showNameComponent: false,
-    storeName: 'sorelle',
-    showStoreNameInSlug: false,
-    parametroBase: 'store',
-    urlBase:'https://sorelle.3b.pe/',
+    showComponentName: true,
+    showNameComponent: true,
+    storeName: "sorelle", // o colocar el nombre del store por ejemplo "luvadi"
+    showStoreNameInSlug: true, //true el link seria asi:  api/v1/private/ara/products, false el link seria asi:  api/v1/private/products
 
-    apiPublic: 'https://sorelle.3b.pe/erp_public/api/v1/public',
-    apiPrivate: 'https://sorelle.3b.pe/erp_public/api/v1/private',
-    apiDashboard: 'https://sorelle.3b.pe/erp_public/api/v1/dashboard',
+    urlBase: 'https://3b.pe/laravel',
 
-    apiShopify: 'https://sorelle.3b.pe/erp_public/api/v1/shopify',
-    apiMercadopago: 'https://sorelle.3b.pe/erp_public/api/v1/mercadopago',
-    apiUrl: 'https://sorelle.3b.pe/erp_public/api/v1/dashboard',
-    
+    apiStore: 'https://3b.pe/laravel/api/v1/stores',
 
-    izipay_endpoint: 'https://static.micuentaweb.pe/',
-    izipay_public_key: '54188994:publickey_gNReMa8TgxyGSWjJ3GUy6xAUTBXVKVMdxIi7sZCzQSX24',
+    apiPublic: 'https://3b.pe/laravel/api/v1/public',
+    apiPrivate: 'https://3b.pe/laravel/api/v1/private',
+    apiDashboard: 'https://3b.pe/laravel/api/v1/dashboard',
+    apiShopify: 'https://3b.pe/laravel/api/v1/shopify',
+    apiMercadopago: 'https://3b.pe/laravel/api/v1/mercadopago',
+    apiUrl: 'https://3b.pe/laravel/api/v1/dashboard',
+
 
     imageMediumPlaceHolder: 'https://placehold.co/400x400',
     imageThumbnailPlaceHolder: 'https://placehold.co/200x200',
-    imageThumbnailPlaceHolderVertical: 'https://placehold.co/200x400',
+    imageThumbnailPlaceHolderVertical: 'https://placehold.co/300x400',
+
 
 };
+
+export const API = {
+    public: 'https://3b.pe/laravel/api/v1/public',
+}

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import Dropzone from 'dropzone';
-import { AuthService } from '../../../core/auth/auth.service';
 
 // import { AuthService } from '@core/auth/auth.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -8,6 +7,7 @@ import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { BaseService } from '../../base.service';
+import { AuthService } from '../../auth/auth.service';
 
 
 @Component({

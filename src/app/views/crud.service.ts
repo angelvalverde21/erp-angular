@@ -11,7 +11,7 @@ export abstract class CrudService {
   }
 
   // Generic method to get all items
-  index(): Observable<any[]> {
+  index(status:string = ""): Observable<any[]> {
     const url = `${this.baseUrl}`;
     console.log(url);
     return this.http.get<any[]>(`${url}`);

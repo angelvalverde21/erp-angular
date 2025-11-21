@@ -9,7 +9,7 @@ export const routes: Routes = [
         }
     },
     {
-        path: 'tracking',
+        path: 'tracking/:order_id',
         loadComponent: () => import('./tracking/tracking.component').then(m => m.TrackingComponent),
         data: {
           title: `tracking`

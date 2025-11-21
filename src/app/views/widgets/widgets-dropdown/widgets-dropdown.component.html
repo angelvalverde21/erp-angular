@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+    <app-pago-link class="w-100"></app-pago-link>
+  </div>
+
+  <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+
+    <button type="button" [routerLink]="['shopify', 'orders']" class="btn p-0 border-0 bg-transparent text-start"
+      style="text-decoration: none; width: 100%;">
+      <div class="card text-bg-success mb-3 text-white">
+
+        <div class="card-header py-3">
+          <span class="me-2"><fa-icon [icon]="faChartSimple"></fa-icon></span>Pedidos
+        </div>
+
+        <div class="card-body">
+          <p>
+            <span class="me-2">Ir a pedidos</span>
+            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
+          </p>
+        </div>
+
+      </div>
+    </button>
+
+  </div>
+
+  <!-- <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+    <button type="button" class="btn p-0 border-0 bg-transparent text-start"
+      style="text-decoration: none; width: 100%;">
+      <div class="card text-bg-warning mb-3 text-white">
+        <div class="card-header py-3">
+          <span class="me-2"><fa-icon [icon]="faChartColumn"></fa-icon></span>Reportes
+        </div>
+
+        <div class="card-body">
+          <p>
+            <span class="me-2">Ir a reportes</span>
+            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
+          </p>
+        </div>
+      </div>
+    </button>
+  </div> -->
+
+</div>

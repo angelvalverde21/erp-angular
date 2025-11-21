@@ -5,7 +5,7 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./dashboard.component').then(m => m.DashboardComponent),
     data: {
-      title: `Products`
+      title: `Dashboard`
     }
   },
 
@@ -34,6 +34,19 @@ export const routes: Routes = [
     path: 'mercadopago',
     loadChildren: () =>
       import('../../views/dashboard/mercadopago/routes.mercadopago').then((m) => m.routes),
+    // canActivate: [authGuard],
+  },
+  {
+    path: 'users',
+    loadChildren: () =>
+      import('../../views/dashboard/users/routes.user').then((m) => m.routes),
+    // canActivate: [authGuard],
+  },
+  {
+    path: 'employees',
+
+    loadChildren: () =>
+      import('../../views/dashboard/employees/routes.employee').then((m) => m.routes),
     // canActivate: [authGuard],
   }
 ];

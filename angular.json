@@ -36,9 +36,12 @@
               "node_modules/dropzone/dist/dropzone.css",
               "node_modules/ngx-lightbox/lightbox.css",
               "node_modules/quill/dist/quill.snow.css",
-              "node_modules/quill/dist/quill.bubble.css"
+              "node_modules/quill/dist/quill.bubble.css",
+              "node_modules/@fancyapps/ui/dist/fancybox/fancybox.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/@fancyapps/ui/dist/fancybox/fancybox.umd.js"
+            ],
             "allowedCommonJsDependencies": [],
             "stylePreprocessorOptions": {
               "sass": {
@@ -50,8 +53,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "./src/app/core/environments/environment.ts",
-                  "with": "./src/app/core/environments/environment.prod.ts"
+                  "replace": "./src/app/environments/environment.ts",
+                  "with": "./src/app/environments/environment.prod.ts"
                 }
               ],
               "budgets": [

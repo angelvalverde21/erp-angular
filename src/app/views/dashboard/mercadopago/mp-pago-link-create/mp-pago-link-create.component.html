@@ -1,0 +1,32 @@
+<!-- <div class="controls d-flex align-items-center gap-2 mb-3" [formGroup]="form"> -->
+<!-- Formulario: ocupa todo menos el espacio del botón -->
+
+
+<!-- Botón: ocupa solo el espacio necesario -->
+
+<!-- </div> -->
+
+<div class="row" [formGroup]="form">
+    <div class="col-lg-9 col-12">
+        <app-input-group (keydown.enter)="createLink()" icontext="S/. " text="">
+            <input formControlName="amount" type="number" step="0.01" class="form-control" placeholder="0.00"
+                aria-label="price" aria-describedby="basic-price" />
+
+        </app-input-group>
+    </div>
+    <div class="col-lg-3 col-12">
+        <button class="btn btn-dark w-100 mb-3" (click)="createLink()" [disabled]="!form.valid">Generar Link</button>
+    </div>
+</div>
+
+
+@if(loading){
+<app-loading></app-loading>
+}@else{
+@if(showFormCopy){
+<textarea name="" id="" class="form-control" rows="2" [(ngModel)]="link"></textarea>
+}
+}
+
+
+<!-- {{ form.valid }} -->

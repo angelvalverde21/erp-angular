@@ -1,38 +1,223 @@
-<div class="table-responsive">
-    <table class="table table-hover mb-0">
-        <thead>
-            <tr>
-                <th class="text-center">#</th>
-                <th scope="col">Usuario</th>
-                <th class="text-center" scope="col">Progreso</th>
-                <th scope="col">Items</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (order of orders; track order.id ?? $index) {
-            @for (lineItem of order.lineItems; let i = $index; track lineItem.id ?? $index) {
-            <tr>
-                @if (i === 0) {
-                <!-- Solo en la primera fila del pedido -->
-                <th class="text-center" attr.rowspan="{{ order.lineItems.length }}">
-                    {{ order.name }}
-                </th>
-                <td class="ps-2" attr.rowspan="{{ order.lineItems.length }}">
-                    {{ order.customer?.firstName | uppercase }}
-                    {{ order.customer?.lastName | uppercase }}
-                </td>
-                <td class="text-center" attr.rowspan="{{ order.lineItems.length }}">
-                    <span class="badge bg-secondary">
-                        PAGADO
-                    </span>
-                </td>
-                }
-                <!-- Celda del producto -->
-                <td>{{ lineItem.name }}</td>
-            </tr>
-            }
-            }
-        </tbody>
+<!-- {{ transactions |json }} -->
+<div class="card">
 
-    </table>
+    <div class="card-header bg-secondary text-white">
+        Movimientos
+    </div>
+
+</div>
+
+<div ngbAccordion [closeOthers]="true" class="transactions mb-3">
+    @for (order of orders; track order.id ?? $index) {
+    <div ngbAccordionItem>
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>
+                <div class="table-buttom d-flex justify-content-between align-items-center w-100">
+
+                    <div class="name">{{ order.name }}</div>
+                    <div class="date">{{ order.createdAt | dateShopify }}</div>
+                    <div class="first_name">
+                        <p class="my-1">
+                            {{ order.customer?.firstName | uppercase }} {{ order.customer?.lastName | uppercase }}
+                        </p>
+                        <p class="my-0">
+                            @if(order.shippingAddress != null){
+                            <span class="fw-bold">{{ order.shippingAddress.address2 | uppercase }}</span>
+                            }
+                        </p>
+                    </div>
+
+                    <div class="fullfilmentstatus">
+                        @switch (order.displayFulfillmentStatus) {
+
+
+                        @case ('UNFULFILLED') {
+                        <span class="badge bg-warning">No Preparado</span>
+                        }
+
+                        @case ('FULFILLED') {
+                        <span class="badge bg-secondary">Preparado</span>
+                        }
+
+                        @case ('PARTIALLY_FULFILLED') {
+                        <span class="badge bg-text-info">Parcialmente preparado</span>
+                        }
+
+                        @default {
+                        }
+
+                        }
+                    </div>
+
+                    <div class="origen"><app-icon-origen [origen]="order.sourceName"></app-icon-origen></div>
+                    <!-- <div>{{ order.financial_status}}</div> -->
+                    <div>
+                        @switch (order.displayFinancialStatus) {
+                        @case ('PAID') {
+                        <span class="badge bg-success">Pagado</span>
+                        }
+
+                        @case ('PENDING') {
+                        <span class="badge bg-warning">Pendiente</span>
+                        }
+
+                        @case ('EXPIRED') {
+                        <span class="badge bg-danger">Rechazado</span>
+                        }
+                        @case ('VOIDED') {
+                        <span class="badge bg-secondary">Anulado</span>
+                        }
+                        @case ('REFUNDED') {
+                        <span class="badge bg-danger">Reembolsado</span>
+                        }
+
+                        @default {
+                        <!-- {{ order.status }} -->
+                        }
+
+                        }
+                    </div>
+                    <div class="items">Articulos ({{ order.lineItems.length }})</div>
+                    <!-- <div>
+                        <span style="font-size: 1.25rem;" class="text-primary"><fa-icon
+                                [icon]="faTruck"></fa-icon></span>
+                    </div> -->
+                </div>
+            </button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody class="color-body">
+                <ng-template>
+
+                    <div class="item">
+
+                        <div class="controls d-flex justify-content-between align-items-center mb-3">
+                            <app-button-pdf [order_id]="removeHash(order.name)"><fa-icon [icon]="faPrint"
+                                    class="me-2"></fa-icon>Etiqueta de envio</app-button-pdf>
+                            <a [href]="getURlShopify(order.id)" target="_blank" rel="noopener noreferrer" class="btn btn-dark btn-sm"><fa-icon
+                                    [icon]="faEdit" class="me-2"></fa-icon>Editar</a>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card w-100 mb-3 test">
+                                    <div class="card-body d-flex align-items-center">
+                                        <ul class="list-group list-group-flush transparent-list w-100">
+                                            @if (order?.shippingAddress; as address) {
+                                            <li class="list-group-item">
+                                                <h6>ENVIAR A</h6>
+                                            </li>
+
+                                            @if (address.firstName || address.lastName) {
+                                            <li class="list-group-item my-0 py-1">
+                                                {{ address.firstName | uppercase }} {{ address.lastName | uppercase }}
+                                            </li>
+                                            }
+
+                                            @if (address.company) {
+                                            <li class="list-group-item my-0 py-1">{{ address.company }}</li>
+                                            }
+
+                                            @if (address.phone) {
+                                            <li class="list-group-item my-0 py-1">{{ address.phone }}</li>
+                                            }
+
+                                            @if (address.address1) {
+                                            <li class="list-group-item my-0 py-1">{{ address.address1 }}</li>
+                                            }
+
+                                            @if (address.address2) {
+                                            <li class="list-group-item"><strong>{{ address.address2 | uppercase
+                                                    }}</strong>
+                                            </li>
+                                            }
+                                            } @else {
+                                            <li class="list-group-item text-muted">Sin dirección de envío</li>
+                                            }
+                                        </ul>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-6 d-none">
+                                <div class="card w-100 mb-3">
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush transparent-list">
+                                            @if (order?.customer; as customer) {
+                                                <li class="list-group-item">
+                                                    <h6>PEDIDO POR</h6>
+                                                </li>
+
+                                                @if (customer.firstName || customer.lastName) {
+                                                <li class="list-group-item my-0 py-1">
+                                                    {{ customer.firstName | uppercase }} {{ customer.lastName | uppercase }}
+                                                </li>
+                                                }
+
+                                                @if (customer.email) {
+                                                <li class="list-group-item my-0 py-1">{{ customer.email }}</li>
+                                                }
+
+                                                @if (customer.address2) {
+                                                <li class="list-group-item"><strong>{{ customer.address2 | uppercase
+                                                        }}</strong>
+                                                </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <div class="col-lg-6 col-12">
+
+                                <div class="card mb-3 test">
+
+                                    <div class="card-body d-flex align-items-center">
+
+                                        <ul class="list-group list-group-flush transparent-list w-100">
+
+                                            @for (item of order.lineItems; let i = $index; track item.id ?? $index) {
+                                            <li class="list-group-item d-flex justify-content-start">
+                                                <div>
+                                                    <a data-fancybox="gallery"
+                                                        [attr.data-caption]="`${item.variant.product.title} - ${item.variant.title}`"
+                                                        [href]="getResizedImage(item.variant.product.featuredImage.url, 800, 800)">
+                                                        <img [src]="getResizedImage(item.variant.product.featuredImage.url, 200, 200)"
+                                                            class="me-2" height="75px" alt="">
+                                                    </a>
+
+                                                </div>
+                                                <div>
+                                                    <p>{{ item.variant.product.title }}</p>
+                                                    <p class="fw-bold">{{ item.variant.title }}</p>
+                                                </div>
+                                            </li>
+                                            }
+
+                                        </ul>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- <app-button>Marcar como preparado</app-button> -->
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    }
 </div>

@@ -32,6 +32,7 @@ export class AppComponent implements OnInit {
     private route: ActivatedRoute,
     private _base: BaseService
   ) {
+
     this.#titleService.setTitle(this.title);
     // iconSet singleton
     this.#iconSetService.icons = { ...iconSubset };
@@ -50,12 +51,9 @@ export class AppComponent implements OnInit {
           this.storeName = store;
           this._base.setStore(store);
           console.log('Tienda actual:', this.storeName);
-          localStorage.setItem('store', this.storeName);
         }
       });
-
   }
-
 
   storeName: string = "";
 

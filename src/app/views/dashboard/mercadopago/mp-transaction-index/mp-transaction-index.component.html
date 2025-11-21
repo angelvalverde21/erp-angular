@@ -1,0 +1,64 @@
+<div ngbAccordion [closeOthers]="true" class="transactions mb-3">
+    @for (transaction of transactions; track transaction.id) {
+    <div ngbAccordionItem>
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>
+                <div class="table-buttom d-flex justify-content-between align-items-center w-100">
+                    <div class="authorization-code">{{ transaction.authorization_code}}</div>
+                    <div class="payment-method">{{ transaction.payment_method.id | slice:0:10}}</div>
+                    <div class="last-four-digits">***{{ transaction.card.last_four_digits}}</div>
+                    <div class="last-four-digits">{{ transaction.transaction_amount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</div>
+                    <div class="status">
+                        @switch (transaction.status) {
+                        @case ('approved') {
+                        <span class="badge bg-success">Aprobado</span>
+                        }
+
+                        @case ('pending') {
+                        <span class="badge bg-warning">Pendiente</span>
+                        }
+
+                        @case ('rejected') {
+                        <span class="badge bg-danger">Rechazado</span>
+                        }
+
+                        @default {
+                        {{ transaction.status }}
+                        }
+
+                        }
+                    </div>
+                    <div class="description">{{ transaction.description | slice:0:20}}</div>
+                    <!-- <td>{{ transaction.transaction_amount }}</td> -->
+                    <div>
+
+                    </div>
+                    <div class="date">{{ transaction.date_created | date:'dd-MM-yyyy HH:mm:ss' }}</div>
+                    <div class="date">{{ transaction.metadata?.shopify_data?.id  | slice:0:10 }}***</div>
+                </div>
+            </button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+                <ng-template>
+                    <ul class="list-group list-group-flush">
+
+                        <li class="list-group-item">{{ transaction.metadata?.shopify_data?.id }}</li>
+                        <li class="list-group-item">{{ transaction.card?.cardholder?.name | uppercase }}</li>
+                        <li class="list-group-item">{{ transaction.card?.cardholder?.identification?.number }}
+                        </li>
+                        <li class="list-group-item">{{
+                            transaction.additional_info.shipments?.receiver_address?.street_name }}</li>
+                        <li class="list-group-item">{{
+                            transaction.additional_info.shipments?.receiver_address?.apartment }}</li>
+                        <li class="list-group-item">{{
+                            transaction.additional_info.shipments?.receiver_address?.city_name }}</li>
+                        <li class="list-group-item">{{
+                            transaction.additional_info.shipments?.receiver_address?.state_name }}</li>
+                    </ul>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    }
+</div>

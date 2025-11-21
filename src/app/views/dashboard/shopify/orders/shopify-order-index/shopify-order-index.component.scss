@@ -1,0 +1,67 @@
+.bg-table-secondary{
+    background-color: #ececec;
+}
+.name{
+    width: 75px;
+    text-align: center;
+}
+
+.origen{
+    width: 30px;
+    text-align: center;
+}
+
+.date{
+    width: 175px;
+    text-align: center;
+}
+.first_name{
+    width: 300px;
+}
+
+.items{
+    width: 125px;
+    text-align: center;  
+}
+
+.fullfilmentstatus{
+    width: 125px;
+    text-align: center;  
+}
+
+/***** fin de data *****/
+
+.accordion-button::after {
+  transform: rotate(270deg); /* 👉 apunta a la derecha (cerrado) */
+  transition: transform 0.25s ease;
+}
+
+.accordion-button:not(.collapsed)::after {
+  transform: rotate(360deg); /* 🔽 apunta hacia abajo (abierto) */
+}
+
+.color-body{
+      background-color: #f6f6f6;
+}
+// .accordion-button:focus {
+// }
+
+.accordion-button{
+    color: #676767
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #e7e7e7;
+  color: #000
+}
+
+.accordion-button:focus{
+    box-shadow: none;
+    border-bottom: 0px solid #dfdfdf;
+}
+/*****
+*/
+
+.test{
+    height: 100%;
+}
