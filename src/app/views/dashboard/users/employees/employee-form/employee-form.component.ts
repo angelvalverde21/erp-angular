@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
-import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
+import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
+import { InputGroupComponent } from '../../../../shared/components/form/input-group/input-group.component';
 import {
   faPenToSquare,
   faGear,

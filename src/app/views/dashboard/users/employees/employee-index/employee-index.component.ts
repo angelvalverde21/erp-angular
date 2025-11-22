@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { DateShopifyPipe } from '../../../shared/pipes/date-shopify.pipe';
+import { DateShopifyPipe } from '../../../../shared/pipes/date-shopify.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JsonPipe } from '@angular/common';
 

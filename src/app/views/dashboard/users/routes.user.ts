@@ -25,6 +25,14 @@ export const routes: Routes = [
       name: 'dashboard.user.edit', // 👈 nombre único
     }
   },
+
+  //Ojo este va aqui porque si va mas abajo se va a confundir con el :user_id
+  {
+    path: 'employees',
+
+    loadChildren: () =>
+      import('../../../views/dashboard/employees/routes.employee').then((m) => m.routes),
+  },
   {
     path: ':user_id',
     loadComponent: () => import('./user-edit-page/user-edit-page.component').then((m) => m.UserEditPageComponent),
@@ -32,5 +40,6 @@ export const routes: Routes = [
       title: 'Editar',
       name: 'dashboard.user.edit', // 👈 nombre único
     }
-  },
+  }
+
 ];

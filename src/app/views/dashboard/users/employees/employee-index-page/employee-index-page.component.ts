@@ -3,10 +3,10 @@ import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { EmployeeService } from '../employee.service';
 import { EmployeeIndexComponent } from '../employee-index/employee-index.component';
-import { ButtonComponent } from "../../../shared/components/buttons/button/button.component";
-import { ButtonLinkComponent } from "../../../shared/components/buttons/button-link/button-link.component";
-import { LoadingComponent } from '../../../shared/components/loading/loading.component';
-import { HeadPageComponent } from "../../../shared/components/head-page/head-page.component";
+import { ButtonComponent } from "../../../../shared/components/buttons/button/button.component";
+import { ButtonLinkComponent } from "../../../../shared/components/buttons/button-link/button-link.component";
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
+import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
 import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
 
 @Component({

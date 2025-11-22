@@ -36,12 +36,12 @@ export const navErp: INavData[] = [
         ]
     },
     {
-        name: 'Colaboradores',
-        url: 'dashboard/employees',
+        name: 'Usuarios',
+        url: 'dashboard/users',
         iconComponent: { name: 'cil-industry' },
         children: [
-            { name: 'Colaboradores', url: 'dashboard/employees', icon: 'nav-icon-bullet' },
-            { name: 'Crear', url: 'dashboard/employees/create', icon: 'nav-icon-bullet' },
+            { name: 'Clientes', url: 'dashboard/users/custumers', icon: 'nav-icon-bullet' },
+            { name: 'Colaboradores', url: 'dashboard/users/employees', icon: 'nav-icon-bullet' },
         ]
     }
 ];

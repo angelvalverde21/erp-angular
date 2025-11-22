@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
-import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { EmployeeService } from '../employee.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';

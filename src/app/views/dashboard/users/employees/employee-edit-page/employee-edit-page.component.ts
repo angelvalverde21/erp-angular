@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { EmployeeEditComponent } from '../employee-edit/employee-edit.component';
-import { ButtonBackComponent } from '../../../shared/components/buttons/button-back/button-back.component';
-import { HeadPageComponent } from "../../../shared/components/head-page/head-page.component";
+import { ButtonBackComponent } from '../../../../shared/components/buttons/button-back/button-back.component';
+import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
 import { Subject, takeUntil } from 'rxjs';
 import { EmployeeService } from '../employee.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-import { RoleService } from '../../roles/role.service';
+import { RoleService } from '../../../roles/role.service';
 @Component({
   selector: 'app-employee-edit-page',
   imports: [
@@ -82,6 +82,8 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
       },
 
     });
+
+
   }
 
   destroy$ = new Subject<void>();

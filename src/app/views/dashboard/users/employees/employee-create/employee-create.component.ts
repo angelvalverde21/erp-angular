@@ -7,7 +7,7 @@ import { EmployeeService } from '../employee.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
-import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 
 @Component({

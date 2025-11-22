@@ -41,13 +41,6 @@ export const routes: Routes = [
     loadChildren: () =>
       import('../../views/dashboard/users/routes.user').then((m) => m.routes),
     // canActivate: [authGuard],
-  },
-  {
-    path: 'employees',
-
-    loadChildren: () =>
-      import('../../views/dashboard/employees/routes.employee').then((m) => m.routes),
-    // canActivate: [authGuard],
   }
 ];
 

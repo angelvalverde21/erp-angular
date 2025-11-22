@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EmployeeCreateComponent } from '../employee-create/employee-create.component';
-import { ButtonBackComponent } from '../../../shared/components/buttons/button-back/button-back.component';
-import { HeadPageComponent } from "../../../shared/components/head-page/head-page.component";
+import { ButtonBackComponent } from '../../../../shared/components/buttons/button-back/button-back.component';
+import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { RoleService } from '../../roles/role.service';
-import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { RoleService } from '../../../roles/role.service';
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
