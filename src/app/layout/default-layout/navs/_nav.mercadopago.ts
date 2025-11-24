@@ -8,7 +8,7 @@ export const navMercadoPago: CustomNavData[] = [
     iconComponent: { name: 'cil-money' },
     children: [
       { name: 'Generar Link', url: 'dashboard/mercadopago/generate-link', iconComponent: { name: 'cil-link' } },
-      { name: 'Movimientos', url: 'dashboard/mercadopago/transactions', iconComponent: { name: 'cil-link' } },
+      { name: 'Movimientos', url: 'dashboard/mercadopago/transactions', iconComponent: { name: 'cil-stream' } },
       { name: 'Config', url: 'dashboard/mercadopago/token', iconComponent: { name: 'cil-cog' } }
     ],
     roles: ['despacho']

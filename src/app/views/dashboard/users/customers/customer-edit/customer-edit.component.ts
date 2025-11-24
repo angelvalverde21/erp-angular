@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EmployeeFormComponent } from '../employee-form/employee-form.component';
+﻿import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { CustomerFormComponent } from '../customer-form/customer-form.component';
 import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
-import { EmployeeService } from '../employee.service';
+import { Customerservice } from '../Customer.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -9,44 +9,34 @@ import { faSave } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
-  selector: 'app-employee-edit',
+  selector: 'app-customer-edit',
   imports: [
-    EmployeeFormComponent,
+    CustomerFormComponent,
     ButtonComponent
   ],
-  templateUrl: './employee-edit.component.html',
-  styleUrl: './employee-edit.component.scss'
+  templateUrl: './customer-edit.component.html',
+  styleUrl: './customer-edit.component.scss'
 })
-export class EmployeeEditComponent implements OnDestroy, OnInit {
+export class CustomerEditComponent implements OnDestroy, OnInit{
 
   disabledButton: boolean = false;
   loadingIcon: boolean = false;
   form!: FormGroup;
-  @Input() user!: any;
+  @Input() customer!: any;
 
-  @Input() roles: any;
+  @Input() roles: any; 
   faSave = faSave;
 
   constructor(
-    private _employee: EmployeeService,
+    private _customer: Customerservice,
     private fb: FormBuilder,
   ) {
 
   }
   ngOnInit(): void {
     this.formInit();
-    // this.form.patchValue(this.employee);
-
-    this.form.patchValue({
-      name: this.user.name,
-      email: this.user.email,
-      phone: this.user.phone,
-      document_number: this.user.document_number,
-      roles: this.user.roles,               // ya es array ['produccion','compras']
-      salary: this.user.employee?.salary    // 👈 aquí anidas el salario
-    });
-
-
+    this.form.patchValue(this.customer);
+    
   }
 
   update() {
@@ -54,7 +44,7 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
     this.disabledButton = true;
     this.loadingIcon = true;
 
-    this._employee.update(this.user.id!, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
+    this._customer.update(this.customer.id!, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         Swal.fire('Guardado', 'El registro ha sido actualizado', 'success');
@@ -64,7 +54,7 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
       },
 
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al actualizar. Inténtalo nuevamente.', 'error');
+        Swal.fire('Error', 'OcurriÃ³ un problema al actualizar. IntÃ©ntalo nuevamente.', 'error');
         console.error(error);
       },
 
@@ -73,12 +63,12 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
   }
 
   destroy$ = new Subject<void>();
-
+  
   ngOnDestroy(): void {
-
+  
     this.destroy$.next();
     this.destroy$.complete();
-
+  
   }
 
   private formInit(): void {
@@ -88,8 +78,9 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
       phone: ['', [Validators.required]],
       document_number: ['', [Validators.required]],
       roles: ['', [Validators.required]],
-      salary: ['', [Validators.required]],
     });
   }
 
 }
+
+

@@ -1,6 +1,6 @@
-import { INavData } from '@coreui/angular';
+import { CustomNavData } from '../../../interfaces/nav.interface';
 
-export const navErp: INavData[] = [
+export const navErp: CustomNavData[] = [
     {
         title: true,
         name: 'Erp'
@@ -25,23 +25,58 @@ export const navErp: INavData[] = [
     //         { name: 'Inventario', url: 'dashboard/inventories', icon: 'nav-icon-bullet' }
     //     ]
     // }
+    // {
+    //     name: 'Produccion',
+    //     url: 'dashboard/productions',
+    //     iconComponent: { name: 'cil-industry' },
+    //     children: [
+    //         { name: 'Ordenes de Produccion', url: 'dashboard/productions/orders', icon: 'nav-icon-bullet' },
+    //         { name: 'Ordenes de compra', url: 'dashboard/productions/purchase/orders', icon: 'nav-icon-bullet' },
+    //         { name: 'Proveedores', url: 'dashboard/productions/suppliers', icon: 'nav-icon-bullet' },
+    //     ]
+    // },
     {
-        name: 'Produccion',
-        url: 'dashboard/production',
+        name: 'Manufactura',
+        url: 'dashboard/manufacturing',
         iconComponent: { name: 'cil-industry' },
         children: [
-            { name: 'Recepcion', url: 'dashboard/production/receptions', icon: 'nav-icon-bullet' },
-            { name: 'Compras', url: 'dashboard/production/compras', icon: 'nav-icon-bullet' },
-            { name: 'Proveedores', url: 'dashboard/production/proveedores', icon: 'nav-icon-bullet' }
+            { name: 'Ordenes de Produccion', url: 'dashboard/productions/orders', icon: 'nav-icon-bullet' },
+        ]
+    },
+    {
+        name: 'Compras',
+        url: 'dashboard/purchases',
+        iconComponent: { name: 'cil-notes' },
+        children: [
+            { name: 'Ordenes de compra', url: 'dashboard/purchases/orders', icon: 'nav-icon-bullet' },
+        ]
+    },
+    {
+        name: 'Movimientos',
+        url: 'dashboard/movements',
+        iconComponent: { name: 'cil-swap-horizontal' },
+        children: [
+            {
+                name: 'Entradas y Salidas',
+                url: 'dashboard/users/movements',
+                icon: 'nav-icon-bullet'
+            },
+            {
+                name: 'Transferencias',
+                url: 'dashboard/users/transfers',
+                icon: 'nav-icon-bullet'
+            }
         ]
     },
     {
         name: 'Usuarios',
         url: 'dashboard/users',
-        iconComponent: { name: 'cil-industry' },
+        iconComponent: { name: 'cil-user' },
         children: [
-            { name: 'Clientes', url: 'dashboard/users/custumers', icon: 'nav-icon-bullet' },
+            { name: 'Clientes', url: 'dashboard/users/customers', icon: 'nav-icon-bullet' },
             { name: 'Colaboradores', url: 'dashboard/users/employees', icon: 'nav-icon-bullet' },
+            { name: 'Proveedores', url: 'dashboard/users/suppliers', icon: 'nav-icon-bullet' },
         ]
     }
 ];
+

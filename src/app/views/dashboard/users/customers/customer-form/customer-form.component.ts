@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+﻿import { Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { InputGroupComponent } from '../../../../shared/components/form/input-group/input-group.component';
@@ -19,7 +19,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-employee-form',
+  selector: 'app-customer-form',
   imports: [
     ReactiveFormsModule,
     ButtonComponent,
@@ -28,10 +28,10 @@ import { JsonPipe } from '@angular/common';
     NgSelectModule,
     JsonPipe
   ],
-  templateUrl: './employee-form.component.html',
-  styleUrl: './employee-form.component.scss'
+  templateUrl: './customer-form.component.html',
+  styleUrl: './customer-form.component.scss'
 })
-export class EmployeeFormComponent {
+export class CustomerFormComponent {
 
   @Input() form!: FormGroup;
 
@@ -47,5 +47,8 @@ export class EmployeeFormComponent {
   faEnvelope = faEnvelope;
   faPhone = faPhone;
   faMoneyBill = faMoneyBill;
-  
+
+
 }
+
+

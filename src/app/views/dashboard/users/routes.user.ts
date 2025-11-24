@@ -31,7 +31,13 @@ export const routes: Routes = [
     path: 'employees',
 
     loadChildren: () =>
-      import('../../../views/dashboard/employees/routes.employee').then((m) => m.routes),
+      import('../../../views/dashboard/users/employees/routes.employee').then((m) => m.routes),
+  },
+  {
+    path: 'customers',
+
+    loadChildren: () =>
+      import('../../../views/dashboard/users/customers/routes.customer').then((m) => m.routes),
   },
   {
     path: ':user_id',

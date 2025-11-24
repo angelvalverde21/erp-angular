@@ -1,0 +1,36 @@
+﻿<div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+            <tr>
+                <th class="text-center">#</th>
+                <th>Nombre</th>
+                <th>DNI</th>
+                <th>Creado</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (user of customers; track user.id) {
+
+                <!-- {{ Customer | json }} -->
+
+            <tr (click)="getCustomerId(user.id)">
+                <td class="text-center">{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <!-- <td>{{ user.category.name }}</td> -->
+                <td>{{ user.document_number }}</td>
+                <td>{{ user.created_at | dateShopify }}</td>
+                <td class="text-center">
+                    <div class="controls d-flex justify-content-center align-items-center">
+                        <!-- <app-button [icon]="faPen" separation="0" color="dark" class="me-2"></app-button> -->
+                        <!-- <app-button [icon]="faTrash" separation="0" color="outline-dark"></app-button> -->
+                    </div>
+                </td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+

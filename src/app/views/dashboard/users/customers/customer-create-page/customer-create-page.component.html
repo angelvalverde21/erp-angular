@@ -1,0 +1,23 @@
+﻿@if(loading){
+<app-loading></app-loading>
+}@else{
+<app-head-page title="Agregar Cliente">
+    <app-button-back></app-button-back>
+</app-head-page>
+
+
+<div class="card">
+
+    <div class="card-body">
+
+        <app-customer-create [roles]="roles" (emitCustomerCreate)="receiveCustomerCreate($event)"></app-customer-create>
+
+    </div>
+    <!-- 
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total de productos: 2</small>
+    </div> -->
+
+</div>
+}
+

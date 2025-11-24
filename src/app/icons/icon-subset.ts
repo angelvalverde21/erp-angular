@@ -104,7 +104,10 @@ import {
   cilCut,
   cilMoney,
   cilCog,
-  cilLink
+  cilLink,
+  cilStream,
+  cilSwapHorizontal
+
 } from '@coreui/icons';
 
 import { signet } from './signet';
@@ -218,7 +221,9 @@ export const iconSubset = {
   cilCut,
   cilMoney,
   cilCog,
-  cilLink
+  cilLink,
+  cilStream,
+  cilSwapHorizontal
 };
 
 export enum IconSubset {

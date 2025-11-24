@@ -1,0 +1,21 @@
+﻿@if(loading || roles_loading){
+<app-loading></app-loading>
+}@else{
+
+<app-head-page title="Editar Cliente">
+    <app-button-back></app-button-back>
+</app-head-page>
+
+
+<div class="card mb-3">
+
+    <!-- {{ Customer | json }} -->
+
+    <div class="card-body">
+        <app-customer-edit [customer]="customer" [roles]="roles"></app-customer-edit>
+    </div>
+
+</div>
+
+}
+
