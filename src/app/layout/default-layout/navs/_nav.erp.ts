@@ -36,7 +36,7 @@ export const navErp: CustomNavData[] = [
     //     ]
     // },
     {
-        name: 'Manufactura',
+        name: 'Produccion',
         url: 'dashboard/manufacturing',
         iconComponent: { name: 'cil-industry' },
         children: [

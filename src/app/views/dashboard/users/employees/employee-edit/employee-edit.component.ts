@@ -6,13 +6,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
+import { UserControlsUpdateComponent } from '../../shared/user-controls-update/user-controls-update.component';
 
 
 @Component({
   selector: 'app-employee-edit',
   imports: [
     EmployeeFormComponent,
-    ButtonComponent
+    ButtonComponent,
+    UserControlsUpdateComponent
   ],
   templateUrl: './employee-edit.component.html',
   styleUrl: './employee-edit.component.scss'
@@ -41,33 +43,10 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
       name: this.user.name,
       email: this.user.email,
       phone: this.user.phone,
+      status: this.user.status,
       document_number: this.user.document_number,
       roles: this.user.roles,               // ya es array ['produccion','compras']
       salary: this.user.employee?.salary    // 👈 aquí anidas el salario
-    });
-
-
-  }
-
-  update() {
-
-    this.disabledButton = true;
-    this.loadingIcon = true;
-
-    this._employee.update(this.user.id!, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        Swal.fire('Guardado', 'El registro ha sido actualizado', 'success');
-        this.disabledButton = false;
-        this.loadingIcon = false;
-        // this.success = true;
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al actualizar. Inténtalo nuevamente.', 'error');
-        console.error(error);
-      },
-
     });
 
   }
@@ -87,6 +66,7 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
       email: ['', [Validators.required]],
       phone: ['', [Validators.required]],
       document_number: ['', [Validators.required]],
+      status: ['', [Validators.required]],
       roles: ['', [Validators.required]],
       salary: ['', [Validators.required]],
     });

@@ -1,13 +1,14 @@
 ﻿import { Component, Input } from '@angular/core';
 import { DateShopifyPipe } from '../../../../shared/pipes/date-shopify.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
-import { JsonPipe } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-customer-index',
   imports: [
     DateShopifyPipe,
     JsonPipe,
+    CommonModule
 
   ],
   templateUrl: './customer-index.component.html',

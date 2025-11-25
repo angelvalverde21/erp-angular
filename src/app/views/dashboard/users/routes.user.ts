@@ -40,6 +40,12 @@ export const routes: Routes = [
       import('../../../views/dashboard/users/customers/routes.customer').then((m) => m.routes),
   },
   {
+    path: 'suppliers',
+
+    loadChildren: () =>
+      import('../../../views/dashboard/users/suppliers/routes.supplier').then((m) => m.routes),
+  },
+  {
     path: ':user_id',
     loadComponent: () => import('./user-edit-page/user-edit-page.component').then((m) => m.UserEditPageComponent),
     data: {

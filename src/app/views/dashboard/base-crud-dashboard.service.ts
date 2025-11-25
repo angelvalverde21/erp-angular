@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 export abstract class BaseCrudDashboardService {
 
   private _base = inject(BaseService);
-  baseUrl : string;
+  baseUrl: string;
 
   constructor(protected http: HttpClient, public section: string) {
 
@@ -19,6 +19,13 @@ export abstract class BaseCrudDashboardService {
 
   // Generic method to get all items
   index(): Observable<any[]> {
+    const url = `${this.baseUrl}`;
+    console.log(url);
+    return this.http.get<any[]>(`${url}`);
+  }
+
+    // Generic method to get all items
+  blocked(): Observable<any[]> {
     const url = `${this.baseUrl}`;
     console.log(url);
     return this.http.get<any[]>(`${url}`);
@@ -53,9 +60,17 @@ export abstract class BaseCrudDashboardService {
   }
 
   search(search: string = ''): Observable<any[]> {
-    const url = `${this.baseUrl}/search/${search}`;
+
+    // Si viene vacío, NO agregamos barra al final
+    const clean = search.trim();
+
+    const url = clean === ''
+      ? `${this.baseUrl}/search`          // ← sin barra final
+      : `${this.baseUrl}/search/${clean}` // ← con término
+
     console.log(url);
-    return this.http.get<any[]>(`${url}`);
+
+    return this.http.get<any[]>(url);
   }
-  
+
 }

@@ -5,6 +5,7 @@
                 <th class="text-center">#</th>
                 <th>Nombre</th>
                 <th>DNI</th>
+                <th>Status</th>
                 <th>Creado</th>
                 <th class="text-center">Acciones</th>
             </tr>
@@ -20,6 +21,13 @@
                 <td>{{ user.name }}</td>
                 <!-- <td>{{ user.category.name }}</td> -->
                 <td>{{ user.document_number }}</td>
+                <td>
+                    @if(user.status){
+                        <span class="badge text-bg-secondary text-white">Activo</span>
+                    }@else{
+                        <span class="badge text-bg-danger text-white">Bloqueado</span>
+                    }
+                </td>
                 <td>{{ user.created_at | dateShopify }}</td>
                 <td class="text-center">
                     <div class="controls d-flex justify-content-center align-items-center">

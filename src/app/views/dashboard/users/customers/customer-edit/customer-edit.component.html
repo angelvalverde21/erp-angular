@@ -1,11 +1,6 @@
 ﻿<app-customer-form [form]="form" [roles]="roles"></app-customer-form>
 <!-- {{ form.value | json }} -->
 
-<div class="row mb-3">
-    <div class="col">
+<app-user-controls-update type="customer" [formValue]="form.value" [user_id]="customer.id"></app-user-controls-update>
 
-        <app-button [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon" (action)="update()">Crear
-            Cliente</app-button>
-    </div>
-</div>
 

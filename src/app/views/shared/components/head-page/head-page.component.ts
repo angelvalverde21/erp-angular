@@ -10,8 +10,9 @@ import { faTag } from '@fortawesome/free-solid-svg-icons';
 })
 export class HeadPageComponent {
 
-  faTag = faTag;
+  // faTag = faTag;
 
   @Input() title: string = ""; 
+  @Input() icon = faTag;
 
 }

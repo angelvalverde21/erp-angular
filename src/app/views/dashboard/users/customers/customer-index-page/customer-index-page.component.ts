@@ -7,7 +7,8 @@ import { ButtonComponent } from "../../../../shared/components/buttons/button/bu
 import { ButtonLinkComponent } from "../../../../shared/components/buttons/button-link/button-link.component";
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
-import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faFilter, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { UserHeadTableComponent } from '../../../shared/user-head-table/user-head-table.component';
 
 @Component({
   selector: 'app-customer-index-page',
@@ -16,32 +17,33 @@ import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
     ButtonComponent,
     ButtonLinkComponent,
     LoadingComponent,
-    HeadPageComponent
+    HeadPageComponent,
+    UserHeadTableComponent
   ],
   templateUrl: './customer-index-page.component.html',
   styleUrl: './customer-index-page.component.scss'
 })
 export class CustomerIndexPageComponent implements OnInit, OnDestroy {
 
-  faMagnifyingGlass = faMagnifyingGlass;
-  faFilter = faFilter;
-  
-  constructor(private _Customer: Customerservice) {
-
-  }
-
-  ngOnInit(): void {
-    this.CustomersInit();
-  }
-
   customers: any[] = [];
   loading: boolean = false;
 
-  CustomersInit() {
+  destroy$ = new Subject<void>();
+  faUsers = faUsers;
+
+  constructor(private _customer: Customerservice) {
+
+  }
+
+  ngOnInit() {
+    this.customersInit();
+  }
+
+  customersInit() {
 
     this.loading = true;
 
-    this._Customer.index().pipe(takeUntil(this.destroy$)).subscribe({
+    this._customer.index().pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
@@ -59,7 +61,6 @@ export class CustomerIndexPageComponent implements OnInit, OnDestroy {
 
   }
 
-  destroy$ = new Subject<void>();
 
   ngOnDestroy(): void {
 
@@ -68,6 +69,7 @@ export class CustomerIndexPageComponent implements OnInit, OnDestroy {
 
   }
 
+  receiveSearchResult($event: any) {
+    this.customers = $event;
+  }
 }
-
-

@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { RoleService } from '../../../roles/role.service';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-customer-create-page',
@@ -23,6 +24,7 @@ export class CustomerCreatePageComponent implements OnInit, OnDestroy{
 
   roles: any[] = [];
   loading: boolean = false;
+  faUserPlus = faUserPlus;
 
   constructor(
       private _role: RoleService,

@@ -1,10 +1,6 @@
 <app-employee-form [form]="form" [roles]="roles"></app-employee-form>
 <!-- {{ form.value | json }} -->
 
-<div class="row mb-3">
-    <div class="col">
+<app-user-controls-update type="employee" [formValue]="form.value" [user_id]="user.id"></app-user-controls-update>
 
-        <app-button [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon" (action)="update()">Crear
-            Empleado</app-button>
-    </div>
-</div>
+

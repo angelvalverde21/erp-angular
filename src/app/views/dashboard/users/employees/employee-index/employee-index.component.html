@@ -6,6 +6,7 @@
                 <th>Nombre</th>
                 <th>DNI</th>
                 <th>Sueldo</th>
+                <th>Status</th>
                 <th>Ingreso</th>
                 <th class="text-center">Acciones</th>
             </tr>
@@ -14,7 +15,7 @@
 
             @for (user of employees; track user.id) {
 
-                <!-- {{ employee | json }} -->
+            <!-- {{ employee | json }} -->
 
             <tr (click)="getEmployeeId(user.id)">
                 <td class="text-center">{{ user.id }}</td>
@@ -22,6 +23,13 @@
                 <!-- <td>{{ user.category.name }}</td> -->
                 <td>{{ user.document_number }}</td>
                 <td>{{ user.employee.salary }}</td>
+                <td>
+                    @if(user.status){
+                    <span class="badge text-bg-secondary text-white">Activo</span>
+                    }@else{
+                    <span class="badge text-bg-danger text-white">Bloqueado</span>
+                    }
+                </td>
                 <td>{{ user.employee.date_entry | dateShopify }}</td>
                 <td class="text-center">
                     <div class="controls d-flex justify-content-center align-items-center">

@@ -8,6 +8,7 @@ import { ButtonLinkComponent } from "../../../../shared/components/buttons/butto
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
 import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { UserHeadTableComponent } from '../../../shared/user-head-table/user-head-table.component';
 
 @Component({
   selector: 'app-employee-index-page',
@@ -16,7 +17,8 @@ import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
     ButtonComponent,
     ButtonLinkComponent,
     LoadingComponent,
-    HeadPageComponent
+    HeadPageComponent,
+    UserHeadTableComponent
   ],
   templateUrl: './employee-index-page.component.html',
   styleUrl: './employee-index-page.component.scss'
@@ -66,6 +68,10 @@ export class EmployeeIndexPageComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
 
+  }
+
+    receiveSearchResult($event: any) {
+    this.employees = $event;
   }
 
 }

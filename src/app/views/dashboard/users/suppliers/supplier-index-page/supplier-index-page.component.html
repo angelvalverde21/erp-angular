@@ -1,0 +1,34 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<app-head-page title="Proveedores">
+    <app-button-link [path]="['./create']">Agregar Proveedor</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3">
+
+        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)" type="supplier"></app-user-head-table>
+
+    </div>
+
+    <div class="card-body p-0">
+
+        @if(suppliers.length > 0){
+        <app-supplier-index [suppliers]="suppliers"></app-supplier-index>
+        }@else{
+        <p class="p-4">No se cuenta con registro de Proveedores</p>
+        }
+
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ suppliers.length }}</small>
+    </div>
+
+</div>
+
+
+
+}
