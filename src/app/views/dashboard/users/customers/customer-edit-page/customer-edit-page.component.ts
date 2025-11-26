@@ -4,7 +4,7 @@ import { CustomerEditComponent } from '../customer-edit/customer-edit.component'
 import { ButtonBackComponent } from '../../../../shared/components/buttons/button-back/button-back.component';
 import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
 import { Subject, takeUntil } from 'rxjs';
-import { Customerservice } from '../Customer.service';
+import { CustomerService } from '../customer.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { RoleService } from '../../../roles/role.service';
@@ -33,7 +33,7 @@ export class CustomerEditPageComponent implements OnInit, OnDestroy {
   customer: any;
 
   constructor(
-    private _Customer: Customerservice,
+    private _Customer: CustomerService,
     private route: ActivatedRoute,
       private _role: RoleService,
   ) {

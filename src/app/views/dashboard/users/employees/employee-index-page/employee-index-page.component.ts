@@ -8,7 +8,7 @@ import { ButtonLinkComponent } from "../../../../shared/components/buttons/butto
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
 import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
-import { UserHeadTableComponent } from '../../../shared/user-head-table/user-head-table.component';
+import { UserHeadTableComponent } from '../../shared/user-head-table/user-head-table.component';
 
 @Component({
   selector: 'app-employee-index-page',

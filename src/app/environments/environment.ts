@@ -13,7 +13,7 @@ export const environment = {
     apiPublic: 'http://erp.test/api/v1/public',
     apiPrivate: 'http://erp.test/api/v1/private',
     apiDashboard: 'http://erp.test/api/v1/dashboard',
-    apiShopify: 'http://erp.test/api/v1/shopify',
+    apiShopify: 'http://erp.test/api/v1/dashboard/shopify',
     apiMercadopago: 'http://erp.test/api/v1/mercadopago',
     apiUrl: 'http://erp.test/api/v1/dashboard',
 

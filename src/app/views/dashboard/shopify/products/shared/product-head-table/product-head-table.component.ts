@@ -1,50 +1,34 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { Customerservice } from '../../users/customers/Customer.service';
 import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
-import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
-import { SupplierService } from '../../users/suppliers/supplier.service';
-import { EmployeeService } from '../../users/employees/employee.service';
-import { ShopifyProductService } from '../../shopify/products/shopify.product.service';
+import { ButtonComponent } from '../../../../../shared/components/buttons/button/button.component';
+import { ShopifyProductService } from '../../shopify.product.service';
 
 @Component({
-  selector: 'app-user-head-table',
+  selector: 'app-product-head-table',
   imports: [
     ButtonComponent
   ],
-  templateUrl: './user-head-table.component.html',
-  styleUrl: './user-head-table.component.scss'
+  templateUrl: './product-head-table.component.html',
+  styleUrl: './product-head-table.component.scss'
 })
-export class UserHeadTableComponent implements OnInit, OnDestroy {
+export class ProductHeadTableComponent implements OnInit, OnDestroy {
 
   showSearch: boolean = false;
   faMagnifyingGlass = faMagnifyingGlass;
   faFilter = faFilter;
 
-  @Input() type: 'customer' | 'supplier' | 'employee' | 'shopify_product' = 'customer';
   @Output() emitSearchResult = new EventEmitter<any>();
 
   private searchSubject = new Subject<string>();
 
   constructor(
-    private _customer: Customerservice,
-    private _supplier: SupplierService,
-    private _employee: EmployeeService,
     private _shopify_product: ShopifyProductService
   ) { }
 
   ngOnInit() {
     this.searchWithDebounce(500);
-  }
-
-  private getService() {
-    switch (this.type) {
-      case 'supplier': return this._supplier;
-      case 'employee': return this._employee;
-      case 'shopify_product': return this._employee;
-      default: return this._customer;
-    }
   }
 
 
@@ -58,9 +42,7 @@ export class UserHeadTableComponent implements OnInit, OnDestroy {
       )
       .subscribe(term => {
 
-        const service = this.getService();
-
-        service.search(term).subscribe({
+        this._shopify_product.search(term).subscribe({
 
           next: (resp: any) => this.emitSearchResult.emit(resp.data),
           error: () =>

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 //
 
 import { JsonPipe } from '@angular/common';
-import { Customerservice } from '../Customer.service';
+import { CustomerService } from '../customer.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { CustomerFormComponent } from '../customer-form/customer-form.component';
@@ -25,7 +25,7 @@ export class CustomerCreateComponent {
 
   constructor(
     private fb: FormBuilder,
-    private _customer: Customerservice
+    private _customer: CustomerService
   ) {}
 
   @Output() emitCustomerCreate = new EventEmitter<any>();

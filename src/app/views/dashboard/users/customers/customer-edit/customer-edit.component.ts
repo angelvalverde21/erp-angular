@@ -1,7 +1,7 @@
 ﻿import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CustomerFormComponent } from '../customer-form/customer-form.component';
 import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
-import { Customerservice } from '../Customer.service';
+import { CustomerService } from '../customer.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -30,7 +30,7 @@ export class CustomerEditComponent implements OnDestroy, OnInit {
   faSave = faSave;
 
   constructor(
-    private _customer: Customerservice,
+    private _customer: CustomerService,
     private fb: FormBuilder,
   ) {
 

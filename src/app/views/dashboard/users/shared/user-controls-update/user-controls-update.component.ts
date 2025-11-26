@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { faSave, faBan } from '@fortawesome/free-solid-svg-icons';
-import { Customerservice } from '../../customers/Customer.service';
+import { CustomerService } from '../../customers/customer.service';
 import { SupplierService } from '../../suppliers/supplier.service';
 import { EmployeeService } from '../../employees/employee.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -32,7 +32,7 @@ export class UserControlsUpdateComponent {
   destroy$ = new Subject<void>();
 
   constructor(
-    private _customer: Customerservice,
+    private _customer: CustomerService,
     private _supplier: SupplierService,
     private _employee: EmployeeService
   ) { }

@@ -8,7 +8,7 @@ import { BaseCrudDashboardService } from '../../base-crud-dashboard.service';
   providedIn: 'root',
 })
 
-export class Customerservice extends BaseCrudDashboardService {
+export class CustomerService extends BaseCrudDashboardService {
 
   constructor(http: HttpClient) {
 

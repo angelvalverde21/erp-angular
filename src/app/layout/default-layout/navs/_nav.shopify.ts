@@ -9,7 +9,7 @@ export const navShopify: CustomNavData[] = [
   },
   {
     name: 'Ventas',
-    url: 'dashboard/shopify',
+    url: 'dashboard/shopify/orders',
     iconComponent: { name: 'cil-cash' },
     children: [
       { name: 'Pedidos', url: 'dashboard/shopify/orders', icon: 'nav-icon-bullet' }
@@ -18,7 +18,7 @@ export const navShopify: CustomNavData[] = [
   },
   {
     name: 'Productos',
-    url: 'dashboard/shopify',
+    url: 'dashboard/shopify/products',
     iconComponent: { name: 'cil-cash' },
     children: [
       { name: 'Productos', url: 'dashboard/shopify/products', icon: 'nav-icon-bullet' }

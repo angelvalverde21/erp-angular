@@ -13,7 +13,7 @@ export const environment = {
     apiPublic: 'https://3b.pe/laravel/api/v1/public',
     apiPrivate: 'https://3b.pe/laravel/api/v1/private',
     apiDashboard: 'https://3b.pe/laravel/api/v1/dashboard',
-    apiShopify: 'https://3b.pe/laravel/api/v1/shopify',
+    apiShopify: 'https://3b.pe/laravel/api/v1/dashboard/shopify',
     apiMercadopago: 'https://3b.pe/laravel/api/v1/mercadopago',
     apiUrl: 'https://3b.pe/laravel/api/v1/dashboard',
 
