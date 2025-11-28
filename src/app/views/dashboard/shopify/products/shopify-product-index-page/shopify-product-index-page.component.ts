@@ -38,7 +38,7 @@ export class ShopifyProductIndexPageComponent implements OnInit, OnDestroy{
     
       next: (resp: any) => {
         console.log(resp);
-        this.products = resp.data.items;
+        this.products = resp.data;
         this.loading = false;
       },
     
@@ -48,6 +48,7 @@ export class ShopifyProductIndexPageComponent implements OnInit, OnDestroy{
       },
     
     });
+
   }
 
   ngOnDestroy(): void {

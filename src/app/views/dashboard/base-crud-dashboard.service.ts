@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { effect, inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
-import { environment } from '../../environments/environment';
+import { API, environment } from '../../environments/environment';
 
 
 export abstract class BaseCrudDashboardService {
@@ -12,7 +12,7 @@ export abstract class BaseCrudDashboardService {
 
   constructor(protected http: HttpClient, public section: string) {
 
-    this.baseUrl = `${environment.apiDashboard}/${this._base.store}/${this.section}`
+    this.baseUrl = `${API.private}/${this._base.store}/dashboard/${this.section}`
 
   }
 

@@ -62,10 +62,22 @@ export class ReportMonthAllComponent {
 
     this.loading = true;
 
+    Swal.fire({
+      title: 'Espere...',
+      html: 'Generando su reporte',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    })
+
+
     this._report.monthAll().pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+
+        Swal.close();
         console.log(resp);
         this.report = resp;
         this.loading = false;
@@ -80,13 +92,13 @@ export class ReportMonthAllComponent {
   }
 
   getMonthName(monthNumber: string): string {
-  const monthNames = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
-  const index = parseInt(monthNumber, 10) - 1;
-  return monthNames[index] ?? 'Desconocido';
-}
+    const monthNames = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    const index = parseInt(monthNumber, 10) - 1;
+    return monthNames[index] ?? 'Desconocido';
+  }
 
   destroy$ = new Subject<void>();
 

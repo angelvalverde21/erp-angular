@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
-import { ReportService } from '../report.service';
+import { ReportService } from '../../report.service';
 import Swal from 'sweetalert2';
 import { Subject, takeUntil } from 'rxjs';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
-import Chart from 'chart.js/auto'; // ✅ Esto es lo importante
+import Chart from 'chart.js/auto'; //
 import type { ChartConfiguration, ChartData, ChartType, Plugin } from 'chart.js';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
+import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
 import { ActivatedRoute } from '@angular/router';
+import { BarService } from '../bar.service';
 
 const dataLabelPlugin: Plugin<'bar'> = {
   id: 'dataLabelPlugin',
@@ -31,12 +32,15 @@ const dataLabelPlugin: Plugin<'bar'> = {
 };
 
 @Component({
-  selector: 'app-report-daily-page',
-  imports: [ChartjsComponent, LoadingComponent],
-  templateUrl: './report-daily-page.component.html',
-  styleUrl: './report-daily-page.component.scss'
+  selector: 'app-bar-daily-page',
+  imports: [
+    ChartjsComponent,
+    LoadingComponent
+  ],
+  templateUrl: './bar-daily-page.component.html',
+  styleUrl: './bar-daily-page.component.scss'
 })
-export class ReportDailyPageComponent implements OnInit, OnDestroy {
+export class BarDailyPageComponent implements OnInit, OnDestroy {
 
   @ViewChild('chartCanvas') chartCanvas!: ElementRef;
   chart!: Chart<'bar'>;
@@ -46,16 +50,22 @@ export class ReportDailyPageComponent implements OnInit, OnDestroy {
 
   days: number = 7;
 
-  constructor(private _report: ReportService, private route: ActivatedRoute) {
+  constructor(
+    private _report: ReportService,
+    private _bar: BarService,
+    private route: ActivatedRoute
+  ) {
     Chart.register(dataLabelPlugin);
   }
 
   ngOnInit(): void {
-    
+
     this.route.params.subscribe(params => {
-      this.days = params['days'];
-      console.log(this.days);
-      
+
+      // this.days = params['days'];
+      // console.log(this.days);
+      this.days = params['days'] ? params['days'] : this.days;
+
       this.reportInit();
     });
 
@@ -78,6 +88,7 @@ export class ReportDailyPageComponent implements OnInit, OnDestroy {
   }
 
   private createChart(): void {
+
     const labels = this.chartData.map((r) => this.formatDate(r.date));
     const values = this.chartData.map((r) => r.order_count);
 
@@ -143,7 +154,8 @@ export class ReportDailyPageComponent implements OnInit, OnDestroy {
           y: {
             title: { display: true, text: 'Pedidos' },
             beginAtZero: true,
-            ticks: { precision: 0 }
+            ticks: { precision: 0 },
+            suggestedMax: maxValue + 2
           }
         }
       },
@@ -167,7 +179,17 @@ export class ReportDailyPageComponent implements OnInit, OnDestroy {
 
     this.loading = true;
 
-    this._report.daily(this.days).pipe(takeUntil(this.destroy$)).subscribe({
+    Swal.fire({
+      title: 'Espere...',
+      html: 'Generando su reporte',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    })
+
+
+    this._bar.daily(this.days).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
@@ -176,6 +198,7 @@ export class ReportDailyPageComponent implements OnInit, OnDestroy {
 
         this.loading = false;
 
+        Swal.close();
 
       },
 
@@ -195,7 +218,5 @@ export class ReportDailyPageComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
 
   }
-
-
 
 }

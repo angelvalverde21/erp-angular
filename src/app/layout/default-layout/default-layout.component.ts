@@ -77,8 +77,6 @@ export class DefaultLayoutComponent implements OnInit {
     this.navItems = navItems.filter((navItem: any) => {
       // Si item no tiene roles definidos, osea no hay restriccion se muestra de frente
 
-
-
       if (!navItem.roles) return true;
 
       // En caso haya restriccion, Si alguno de los roles del user coincide -> mostrar

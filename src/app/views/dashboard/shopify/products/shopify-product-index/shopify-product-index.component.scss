@@ -3,3 +3,57 @@ tr:hover {
   cursor: pointer;
 }
 
+.accordion-button::after {
+  transform: rotate(270deg); /* 👉 apunta a la derecha (cerrado) */
+  transition: transform 0.25s ease;
+}
+
+.accordion-button:not(.collapsed)::after {
+  transform: rotate(360deg); /* 🔽 apunta hacia abajo (abierto) */
+}
+
+.color-body {
+  background-color: #f6f6f6;
+}
+// .accordion-button:focus {
+// }
+
+.accordion-button {
+  color: #676767;
+  font-weight: 100;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #e7e7e7;
+  color: #000;
+  font-weight: 500;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  border-bottom: 0px solid #dfdfdf;
+}
+
+/******* edit la tabla ******/
+
+.product_name {
+  width: 210px;
+}
+
+.product_price_normal {
+  width: 100px;
+  text-align: center;
+}
+.product_price_edit {
+  width: 150px;
+  text-align: center;
+}
+.product_status {
+  width: 100px;
+  text-align: center;
+}
+
+.product_date{
+  width: 150px;
+  text-align: center;
+}

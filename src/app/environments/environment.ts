@@ -26,4 +26,5 @@ export const environment = {
 
 export const API = {
     public: 'http://erp.test/api/v1/public',
+    private: 'http://erp.test/api/v1',
 }

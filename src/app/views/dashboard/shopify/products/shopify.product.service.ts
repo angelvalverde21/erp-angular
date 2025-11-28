@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
-import { CrudService } from '../../../crud.service';
-import { BaseService } from '../../../base.service';
-
-import { Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { BaseCrudDashboardService } from '../../base-crud-dashboard.service';
 
 @Injectable({
   providedIn: 'root',
 })
 
-export class ShopifyProductService extends CrudService {
+export class ShopifyProductService extends BaseCrudDashboardService {
 
-  constructor(http: HttpClient, private _base: BaseService) {
-    const url = `${environment.apiShopify}/${_base.store}/products`;
-    super(http, url);
+  constructor(http: HttpClient) {
+
+    super(http, 'shopify/products');
   }
 
+  syncProducts() {
+    return this.http.get(`${this.baseUrl}/sync`);
+  }
 
 }
 

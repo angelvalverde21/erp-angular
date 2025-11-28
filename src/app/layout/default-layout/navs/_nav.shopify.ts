@@ -5,7 +5,6 @@ export const navShopify: CustomNavData[] = [
   {
     title: true,
     name: 'Shopify',
-    roles: ['ceo']
   },
   {
     name: 'Ventas',
@@ -14,7 +13,7 @@ export const navShopify: CustomNavData[] = [
     children: [
       { name: 'Pedidos', url: 'dashboard/shopify/orders', icon: 'nav-icon-bullet' }
     ],
-    roles: ['ventas', 'despacho']
+    // roles: ['ventas', 'despacho']
   },
   {
     name: 'Productos',
@@ -23,16 +22,17 @@ export const navShopify: CustomNavData[] = [
     children: [
       { name: 'Productos', url: 'dashboard/shopify/products', icon: 'nav-icon-bullet' }
     ],
-    roles: ['ventas', 'despacho']
+    // roles: ['ventas', 'despacho']
   },
   {
     name: 'Reportes',
-    url: 'shopify/reports',
+    url: 'dashboard/shopify/reports',
     iconComponent: { name: 'cil-chart-line' },
     children: [
-      { name: 'Últimos 7 Días', url: 'dashboard/shopify/reports/daily/7', icon: 'nav-icon-bullet' },
-      { name: 'Top 10 +Ventas', url: 'dashboard/shopify/reports/top', icon: 'nav-icon-bullet' },
-      { name: 'Totales', url: 'dashboard/shopify/reports/all', icon: 'nav-icon-bullet' }
-    ]
+      { name: 'Últimos 7 Días', url: 'dashboard/shopify/reports/bars/daily', icon: 'nav-icon-bullet' },
+      { name: 'Top 10', url: 'dashboard/shopify/reports/top', icon: 'nav-icon-bullet' },
+      { name: 'Ventas Totales', url: 'dashboard/shopify/reports/all', icon: 'nav-icon-bullet' }
+    ],
+    roles: ['ceo']
   }
 ];

@@ -36,7 +36,9 @@ export class ShopifyOrderIndexComponent implements OnInit {
   ordersPending: any[] = [];
 
 
-  constructor(private elRef: ElementRef) {
+  constructor(
+    private elRef: ElementRef
+  ) {
 
   }
   

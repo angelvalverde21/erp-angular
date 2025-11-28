@@ -3,7 +3,7 @@ import { CustomNavData } from '../../../interfaces/nav.interface';
 export const navErp: CustomNavData[] = [
     {
         title: true,
-        name: 'Erp'
+        name: 'Erp',
     },
     // {
     //     name: 'Orders',
@@ -41,7 +41,8 @@ export const navErp: CustomNavData[] = [
         iconComponent: { name: 'cil-industry' },
         children: [
             { name: 'Ordenes de Produccion', url: 'dashboard/productions/orders', icon: 'nav-icon-bullet' },
-        ]
+        ],
+        roles: ['ceo','master']
     },
     {
         name: 'Compras',
@@ -49,7 +50,8 @@ export const navErp: CustomNavData[] = [
         iconComponent: { name: 'cil-notes' },
         children: [
             { name: 'Ordenes de compra', url: 'dashboard/purchases/orders', icon: 'nav-icon-bullet' },
-        ]
+        ],
+        roles: ['ceo','master']
     },
     {
         name: 'Movimientos',
@@ -66,7 +68,8 @@ export const navErp: CustomNavData[] = [
                 url: 'dashboard/users/transfers',
                 icon: 'nav-icon-bullet'
             }
-        ]
+        ],
+        roles: ['ceo','master']
     },
     {
         name: 'Usuarios',
@@ -76,7 +79,8 @@ export const navErp: CustomNavData[] = [
             { name: 'Clientes', url: 'dashboard/users/customers', icon: 'nav-icon-bullet' },
             { name: 'Colaboradores', url: 'dashboard/users/employees', icon: 'nav-icon-bullet' },
             { name: 'Proveedores', url: 'dashboard/users/suppliers', icon: 'nav-icon-bullet' },
-        ]
+        ],
+        roles: ['ceo','master']
     }
 ];
 

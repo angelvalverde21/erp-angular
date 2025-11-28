@@ -2,12 +2,11 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'daily/:days',
-    loadComponent: () => import('./report-daily-page/report-daily-page.component').then((m) => m.ReportDailyPageComponent),
-    data: {
-      title: 'Todos',
-      name: 'report.daily', // 👈 nombre único
-    }
+    path: 'bars',
+    loadChildren: () =>
+      import('./bars/routes.bar').then(
+        (m) => m.routes
+      ),
   },
   {
     path: 'top',

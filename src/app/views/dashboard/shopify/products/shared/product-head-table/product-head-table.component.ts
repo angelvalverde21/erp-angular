@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faFilter, faRotate } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import { ButtonComponent } from '../../../../../shared/components/buttons/button/button.component';
 import { ShopifyProductService } from '../../shopify.product.service';
@@ -18,6 +18,9 @@ export class ProductHeadTableComponent implements OnInit, OnDestroy {
   showSearch: boolean = false;
   faMagnifyingGlass = faMagnifyingGlass;
   faFilter = faFilter;
+  faRotate = faRotate;
+
+  destroy$ = new Subject<void>();
 
   @Output() emitSearchResult = new EventEmitter<any>();
 
@@ -70,12 +73,37 @@ export class ProductHeadTableComponent implements OnInit, OnDestroy {
     this.searchSubject.next(term);
   }
 
-  destroy$ = new Subject<void>();
 
   ngOnDestroy(): void {
 
     this.destroy$.next();
     this.destroy$.complete();
+
+  }
+
+  sync() {
+
+    Swal.fire({
+      title: 'Espere...',
+      html: 'Sincronizando productos de shopify...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    })
+
+
+    this._shopify_product.syncProducts().subscribe({
+      next: (resp: any) => {
+        console.log(resp);
+        
+        Swal.fire('Éxito', 'Productos sincronizados correctamente.', 'success');
+        Swal.close();
+      },
+      error: () => {
+        Swal.fire('Error', 'Hubo un problema al sincronizar los productos.', 'error');
+      }
+    });
 
   }
 

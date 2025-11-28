@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReportDailyPageComponent } from './report-daily-page.component';
+import { BarDailyPageComponent } from './bar-daily-page.component';
 
-describe('ReportDailyPageComponent', () => {
-  let component: ReportDailyPageComponent;
-  let fixture: ComponentFixture<ReportDailyPageComponent>;
+describe('BarDailyPageComponent', () => {
+  let component: BarDailyPageComponent;
+  let fixture: ComponentFixture<BarDailyPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReportDailyPageComponent]
+      imports: [BarDailyPageComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ReportDailyPageComponent);
+    fixture = TestBed.createComponent(BarDailyPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

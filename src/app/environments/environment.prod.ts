@@ -27,4 +27,5 @@ export const environment = {
 
 export const API = {
     public: 'https://3b.pe/laravel/api/v1/public',
+    private: 'https://3b.pe/laravel/api/v1',
 }

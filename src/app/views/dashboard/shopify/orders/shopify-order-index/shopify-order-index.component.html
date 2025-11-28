@@ -11,7 +11,7 @@
     @for (order of orders; track order.id ?? $index) {
     <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
-            <button ngbAccordionButton>
+            <button ngbAccordionButton class="py-2">
                 <div class="table-buttom d-flex justify-content-between align-items-center w-100">
 
                     <div class="name">{{ order.name }}</div>
@@ -20,11 +20,11 @@
                         <p class="my-1">
                             {{ order.customer?.firstName | uppercase }} {{ order.customer?.lastName | uppercase }}
                         </p>
-                        <p class="my-0">
+                        <!-- <p class="my-0">
                             @if(order.shippingAddress != null){
                             <span class="fw-bold">{{ order.shippingAddress.address2 | uppercase }}</span>
                             }
-                        </p>
+                        </p> -->
                     </div>
 
                     <div class="fullfilmentstatus">
@@ -215,6 +215,7 @@
                         </div>
 
                     </div>
+                    
                 </ng-template>
             </div>
         </div>

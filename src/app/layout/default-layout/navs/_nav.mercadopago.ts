@@ -11,7 +11,7 @@ export const navMercadoPago: CustomNavData[] = [
       { name: 'Movimientos', url: 'dashboard/mercadopago/transactions', iconComponent: { name: 'cil-stream' } },
       { name: 'Config', url: 'dashboard/mercadopago/token', iconComponent: { name: 'cil-cog' } }
     ],
-    roles: ['despacho']
+    // roles: ['despacho']
   }
 
 ];

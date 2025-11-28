@@ -1,46 +1,106 @@
-<div class="table-responsive">
-    <table class="table table-hover mb-0 align-middle">
-        <thead class="table-light">
-            <tr>
-                <!-- <th class="text-center">#</th> -->
-                <th>Nombre</th>
-                <th>Status</th>
-                <th>Status</th>
-                <th>Status</th>
-                <th>Creado</th>
-                <th class="text-center">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
+<!-- {{ transactions |json }} -->
+<div class="card">
 
-            @for (product of products; track product.id) {
+    <div class="card-header bg-secondary text-white">
+        Product
+    </div>
 
-                <!-- {{ product | json }} -->
-
-            <tr (click)="getProductId(product.id)">
-                <!-- <td class="text-center">{{ product.id }}</td> -->
-                <td>{{ product.title }}</td>
-                <!-- <td>{{ product.category.name }}</td> -->
-                <td>{{ product.category.name }}</td>
-                <td>{{ product.variants[0].price }}</td>
-                <td>
-                    @if(product.status){
-                        <span class="badge text-bg-secondary text-white">Activo</span>
-                    }@else{
-                        <span class="badge text-bg-danger text-white">Bloqueado</span>
-                    }
-                </td>
-                <td>{{ product.createdAt | dateShopify }}</td>
-                <td class="text-center">
-                    <div class="controls d-flex justify-content-center align-items-center">
-                        <!-- <app-button [icon]="faPen" separation="0" color="dark" class="me-2"></app-button> -->
-                        <!-- <app-button [icon]="faTrash" separation="0" color="outline-dark"></app-button> -->
-                    </div>
-                </td>
-            </tr>
-            }
-
-        </tbody>
-    </table>
 </div>
 
+<div ngbAccordion [closeOthers]="true" class="transactions mb-3">
+    @for (product of products; track product.id) {
+    <div ngbAccordionItem>
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton class="py-2">
+                <div class="table-buttom d-flex justify-content-between align-items-center w-100">
+
+                    <div class="product_name">{{ product.title }}</div>
+                    <div class="product_price">{{ product.variants[0].price_normal }}</div>
+
+                    <div class="product_price_edit">
+
+                    </div>
+                    <div class="product_status">
+                        <span class="badge text-bg-secondary text-white">{{ product.status }}</span>
+                    </div>
+
+                    <div class="product_date">{{ product.created_at | dateShopify}}</div>
+
+                </div>
+            </button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody class="color-body">
+                <ng-template>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Talla</th>
+                                    <th scope="col">Precio 1</th>
+                                    <th scope="col">Precio 2</th>
+                                    <th scope="col">Precio 3</th>
+                                    <th scope="col">Precio 4</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">x</th>
+                                    <td>
+                                        <app-input-group>
+                                            <input formControlName="pricename" type="text" class="form-control"
+                                                placeholder="0.00" aria-label="pricename"
+                                                aria-describedby="basic-pricename" />
+                                        </app-input-group>
+                                    </td>
+                                    <td>
+                                        <app-input-group>
+                                            <input formControlName="pricename" type="text" class="form-control"
+                                                placeholder="0.00" aria-label="pricename"
+                                                aria-describedby="basic-pricename" />
+                                        </app-input-group>
+                                    </td>
+                                    <td>
+                                        <app-input-group>
+                                            <input formControlName="pricename" type="text" class="form-control"
+                                                placeholder="0.00" aria-label="pricename"
+                                                aria-describedby="basic-pricename" />
+                                        </app-input-group>
+                                    </td>
+                                    <td>
+                                        <app-input-group>
+                                            <input formControlName="pricename" type="text" class="form-control"
+                                                placeholder="0.00" aria-label="pricename"
+                                                aria-describedby="basic-pricename" />
+                                        </app-input-group>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- {{ product.variants | json }} -->
+                    <!-- <ul class="list-group list-group-flush">
+
+                        @for (variant of product.variants; track variant.id) {
+                        <li class="list-group-item">
+                            <span style="width: 50px;" class="d-inline">{{ variant.title }} </span>
+                            <span> {{ variant.price_normal }} </span>
+                            <span>
+                                <app-input-group>
+                                    <input formControlName="pricename" type="text" class="form-control"
+                                        placeholder="0.00" aria-label="pricename" aria-describedby="basic-pricename" />
+                                </app-input-group>
+                            </span>
+                        </li>
+                        }
+
+                    </ul> -->
+
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    }
+</div>
