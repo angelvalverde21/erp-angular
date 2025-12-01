@@ -7,19 +7,25 @@
 
 </div>
 
-<div ngbAccordion [closeOthers]="true" class="transactions mb-3">
-    @for (product of products; track product.id) {
-    <div ngbAccordionItem>
+<div ngbAccordion [closeOthers]="true" class="transactions mb-3" (show)="onAccordionShown($event)"
+    (hidden)="onAccordionHidden($event)">
+
+    @for (product of products; track $index) {
+
+    <div ngbAccordionItem #item="ngbAccordionItem">
+
         <h2 ngbAccordionHeader>
-            <button ngbAccordionButton class="py-2">
+
+            <button ngbAccordionButton class="py-2" (click)="productSelectedId(product.id)">
+
                 <div class="table-buttom d-flex justify-content-between align-items-center w-100">
 
                     <div class="product_name">{{ product.title }}</div>
-                    <div class="product_price">{{ product.variants[0].price_normal }}</div>
 
-                    <div class="product_price_edit">
+                    <app-product-price-main-edit [variant]="product?.variants[0]"
+                        [current_product_id]="current_product_id"
+                        [product_id]="product.id"></app-product-price-main-edit>
 
-                    </div>
                     <div class="product_status">
                         <span class="badge text-bg-secondary text-white">{{ product.status }}</span>
                     </div>
@@ -27,78 +33,41 @@
                     <div class="product_date">{{ product.created_at | dateShopify}}</div>
 
                 </div>
+
             </button>
+
         </h2>
+
         <div ngbAccordionCollapse>
+
             <div ngbAccordionBody class="color-body">
-                <ng-template>
 
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Talla</th>
-                                    <th scope="col">Precio 1</th>
-                                    <th scope="col">Precio 2</th>
-                                    <th scope="col">Precio 3</th>
-                                    <th scope="col">Precio 4</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">x</th>
-                                    <td>
-                                        <app-input-group>
-                                            <input formControlName="pricename" type="text" class="form-control"
-                                                placeholder="0.00" aria-label="pricename"
-                                                aria-describedby="basic-pricename" />
-                                        </app-input-group>
-                                    </td>
-                                    <td>
-                                        <app-input-group>
-                                            <input formControlName="pricename" type="text" class="form-control"
-                                                placeholder="0.00" aria-label="pricename"
-                                                aria-describedby="basic-pricename" />
-                                        </app-input-group>
-                                    </td>
-                                    <td>
-                                        <app-input-group>
-                                            <input formControlName="pricename" type="text" class="form-control"
-                                                placeholder="0.00" aria-label="pricename"
-                                                aria-describedby="basic-pricename" />
-                                        </app-input-group>
-                                    </td>
-                                    <td>
-                                        <app-input-group>
-                                            <input formControlName="pricename" type="text" class="form-control"
-                                                placeholder="0.00" aria-label="pricename"
-                                                aria-describedby="basic-pricename" />
-                                        </app-input-group>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="table-buttom d-flex justify-content-between align-items-center w-100">
+                    
+                    @for (variant of product.variants; track variant.id) {
 
-                    <!-- {{ product.variants | json }} -->
-                    <!-- <ul class="list-group list-group-flush">
+                        {{ variant | json }}
 
-                        @for (variant of product.variants; track variant.id) {
-                        <li class="list-group-item">
-                            <span style="width: 50px;" class="d-inline">{{ variant.title }} </span>
-                            <span> {{ variant.price_normal }} </span>
-                            <span>
-                                <app-input-group>
-                                    <input formControlName="pricename" type="text" class="form-control"
-                                        placeholder="0.00" aria-label="pricename" aria-describedby="basic-pricename" />
-                                </app-input-group>
-                            </span>
-                        </li>
-                        }
+                    <!-- <div class="table-buttom d-flex justify-content-between align-items-center w-100">
 
-                    </ul> -->
+                        <div class="product_name text-end">{{ variant?.title }}</div>
 
-                </ng-template>
+                        <app-product-price-main-edit [variant]="variant"
+                            [current_product_id]="current_product_id"
+                            [product_id]="product.id"></app-product-price-main-edit>
+
+                        <div class="product_status">
+                            <span class="badge text-bg-secondary text-white">{{ product.status }}</span>
+                        </div>
+
+                        <div class="product_date">{{ product.created_at | dateShopify}}</div>
+
+                    </div> -->
+
+                    }
+
+                </div>
+
             </div>
         </div>
     </div>

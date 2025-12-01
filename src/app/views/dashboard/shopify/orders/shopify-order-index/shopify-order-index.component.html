@@ -1,16 +1,10 @@
 <!-- {{ transactions |json }} -->
-<div class="card">
-
-    <div class="card-header bg-secondary text-white">
-        Movimientos
-    </div>
-
-</div>
-
 <div ngbAccordion [closeOthers]="true" class="transactions mb-3">
     @for (order of orders; track order.id ?? $index) {
+        
     <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
+
             <button ngbAccordionButton class="py-2">
                 <div class="table-buttom d-flex justify-content-between align-items-center w-100">
 
@@ -40,7 +34,7 @@
                         }
 
                         @case ('PARTIALLY_FULFILLED') {
-                        <span class="badge bg-text-info">Parcialmente preparado</span>
+                        <span class="badge bg-info">Parcialmente preparado</span>
                         }
 
                         @default {

@@ -40,6 +40,11 @@ tr:hover {
   width: 210px;
 }
 
+.product_price {
+  width: 75px;
+  text-align: center;
+}
+
 .product_price_normal {
   width: 100px;
   text-align: center;
@@ -53,7 +58,42 @@ tr:hover {
   text-align: center;
 }
 
-.product_date{
+.product_date {
   width: 150px;
   text-align: center;
 }
+
+/*****/
+
+.table tr {
+  vertical-align: middle;
+}
+
+
+/*** caja de edicion ****/
+
+.product_price{
+  position: relative;
+}
+
+.value_edit{
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.table-buttom{
+  height: 50px;
+}
+.table-buttom>div{
+  height: 30px;
+}
+
+.product_price{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* limpiar spinner de input number */
+

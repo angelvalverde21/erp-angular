@@ -14,7 +14,7 @@ import { Router, RouterModule } from '@angular/router';
 import { BaseService } from 'src/app/views/base.service';
 
 @Component({
-  selector: 'app-shopify-order-index-page',
+  selector: 'app-shopify-order-index-pending',
   imports: [
     ShopifyOrderIndexComponent, 
     LoadingComponent, 
@@ -23,17 +23,17 @@ import { BaseService } from 'src/app/views/base.service';
     ButtonComponent, 
     ShopifyCardOrderIndexComponent
   ],
-  templateUrl: './shopify-order-index-page.component.html',
-  styleUrl: './shopify-order-index-page.component.scss'
+  templateUrl: './shopify-order-index-pending.component.html',
+  styleUrl: './shopify-order-index-pending.component.scss'
 })
-export class ShopifyOrderIndexPageComponent implements OnInit, OnDestroy{
+export class ShopifyOrderIndexPendingComponent implements OnInit, OnDestroy{
 
   faMagnifyingGlass = faMagnifyingGlass;
   faFilter = faFilter;
   store: string = "";
 
   constructor(private _order: ShopifyOrderService, private _base: BaseService){
-    this.store = this._base.storeName!;
+      this.store = this._base.storeName!;
   }
 
   loading: boolean = false;
@@ -43,12 +43,13 @@ export class ShopifyOrderIndexPageComponent implements OnInit, OnDestroy{
 
     this.loading = true;
 
-    this._order.index().pipe(takeUntil(this.destroy$)).subscribe({
+    this._order.pending().pipe(takeUntil(this.destroy$)).subscribe({
     
       next: (resp: any) => {
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         console.log(resp);
-        this.orders = resp.orders;
+        this.orders = resp.items;
+        console.log(this.orders);
         this.loading = false;
       },
     
@@ -74,7 +75,5 @@ export class ShopifyOrderIndexPageComponent implements OnInit, OnDestroy{
     this.cargarOders();
     
   }
-
-
 
 }

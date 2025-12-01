@@ -8,6 +8,13 @@ export const routes: Routes = [
       title: 'pedidos',
       name: 'shopify.order.index', // 👈 nombre único
     },
-    
+  },
+  {
+    path: 'pending',
+    loadComponent: () => import('./shopify-order-index-pending/shopify-order-index-pending.component').then((m) => m.ShopifyOrderIndexPendingComponent),
+    data: {
+      title: 'Pedidos Pendientes',
+      name: 'shopify.order.index', // 👈 nombre único
+    },
   },
 ];
