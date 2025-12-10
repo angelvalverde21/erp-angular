@@ -15,7 +15,7 @@ import { BaseService } from 'src/app/views/base.service';
 import { ShopifyOrderHeaderNavigationComponent } from '../shared/shopify-order-header-navigation/shopify-order-header-navigation.component';
 
 @Component({
-  selector: 'app-shopify-order-index-page',
+  selector: 'app-shopify-order-pending-page',
   imports: [
     ShopifyOrderIndexComponent, 
     LoadingComponent, 
@@ -25,17 +25,17 @@ import { ShopifyOrderHeaderNavigationComponent } from '../shared/shopify-order-h
     ShopifyCardOrderIndexComponent,
     ShopifyOrderHeaderNavigationComponent
   ],
-  templateUrl: './shopify-order-index-page.component.html',
-  styleUrl: './shopify-order-index-page.component.scss'
+  templateUrl: './shopify-order-pending-page.component.html',
+  styleUrl: './shopify-order-pending-page.component.scss'
 })
-export class ShopifyOrderIndexPageComponent implements OnInit, OnDestroy{
+export class ShopifyOrderPendingPageComponent implements OnInit, OnDestroy{
 
   faMagnifyingGlass = faMagnifyingGlass;
   faFilter = faFilter;
   store: string = "";
 
   constructor(private _order: ShopifyOrderService, private _base: BaseService){
-    this.store = this._base.storeName!;
+      this.store = this._base.storeName!;
   }
 
   loading: boolean = false;
@@ -45,12 +45,13 @@ export class ShopifyOrderIndexPageComponent implements OnInit, OnDestroy{
 
     this.loading = true;
 
-    this._order.index().pipe(takeUntil(this.destroy$)).subscribe({
+    this._order.pending().pipe(takeUntil(this.destroy$)).subscribe({
     
       next: (resp: any) => {
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         console.log(resp);
-        this.orders = resp.orders;
+        this.orders = resp.items;
+        console.log(this.orders);
         this.loading = false;
       },
     
@@ -76,7 +77,5 @@ export class ShopifyOrderIndexPageComponent implements OnInit, OnDestroy{
     this.cargarOders();
     
   }
-
-
 
 }

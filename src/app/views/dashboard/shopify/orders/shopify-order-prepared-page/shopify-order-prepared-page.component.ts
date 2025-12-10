@@ -7,33 +7,29 @@ import { JsonPipe } from '@angular/common';
 
 import { ShopifyOrderIndexComponent } from '../shopify-order-index/shopify-order-index.component';
 import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
-import { ShopifyCardOrderIndexComponent } from "../../shared/shopify-card-order-index/shopify-card-order-index.component";
-import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { Router, RouterModule } from '@angular/router';
-import { BaseService } from 'src/app/views/base.service';
+import { ShopifyOrderHeaderNavigationComponent } from '../shared/shopify-order-header-navigation/shopify-order-header-navigation.component';
 
 @Component({
-  selector: 'app-shopify-order-index-pending',
+  selector: 'app-shopify-order-prepared-page',
   imports: [
     ShopifyOrderIndexComponent, 
     LoadingComponent, 
     JsonPipe, 
     RouterModule,
-    ButtonComponent, 
-    ShopifyCardOrderIndexComponent
+    ShopifyOrderHeaderNavigationComponent
   ],
-  templateUrl: './shopify-order-index-pending.component.html',
-  styleUrl: './shopify-order-index-pending.component.scss'
+  templateUrl: './shopify-order-prepared-page.component.html',
+  styleUrl: './shopify-order-prepared-page.component.scss'
 })
-export class ShopifyOrderIndexPendingComponent implements OnInit, OnDestroy{
+export class ShopifyOrderPreparedPageComponent implements OnInit, OnDestroy{
 
   faMagnifyingGlass = faMagnifyingGlass;
   faFilter = faFilter;
   store: string = "";
 
-  constructor(private _order: ShopifyOrderService, private _base: BaseService){
-      this.store = this._base.storeName!;
+  constructor(private _order: ShopifyOrderService){
   }
 
   loading: boolean = false;
@@ -43,7 +39,7 @@ export class ShopifyOrderIndexPendingComponent implements OnInit, OnDestroy{
 
     this.loading = true;
 
-    this._order.pending().pipe(takeUntil(this.destroy$)).subscribe({
+    this._order.prepared().pipe(takeUntil(this.destroy$)).subscribe({
     
       next: (resp: any) => {
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');

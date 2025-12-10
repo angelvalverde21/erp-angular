@@ -1,7 +1,7 @@
 <!-- {{ transactions |json }} -->
 <div ngbAccordion [closeOthers]="true" class="transactions mb-3">
     @for (order of orders; track order.id ?? $index) {
-        
+
     <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
 
@@ -88,8 +88,8 @@
                         <div class="controls d-flex justify-content-between align-items-center mb-3">
                             <app-button-pdf [order_id]="removeHash(order.name)"><fa-icon [icon]="faPrint"
                                     class="me-2"></fa-icon>Etiqueta de envio</app-button-pdf>
-                            <a [href]="getURlShopify(order.id)" target="_blank" rel="noopener noreferrer" class="btn btn-dark btn-sm"><fa-icon
-                                    [icon]="faEdit" class="me-2"></fa-icon>Editar</a>
+                            <a [href]="getURlShopify(order.id)" target="_blank" rel="noopener noreferrer"
+                                class="btn btn-dark btn-sm"><fa-icon [icon]="faEdit" class="me-2"></fa-icon>Editar</a>
                         </div>
 
                         <div class="row">
@@ -140,25 +140,25 @@
                                     <div class="card-body">
                                         <ul class="list-group list-group-flush transparent-list">
                                             @if (order?.customer; as customer) {
-                                                <li class="list-group-item">
-                                                    <h6>PEDIDO POR</h6>
-                                                </li>
+                                            <li class="list-group-item">
+                                                <h6>PEDIDO POR</h6>
+                                            </li>
 
-                                                @if (customer.firstName || customer.lastName) {
-                                                <li class="list-group-item my-0 py-1">
-                                                    {{ customer.firstName | uppercase }} {{ customer.lastName | uppercase }}
-                                                </li>
-                                                }
+                                            @if (customer.firstName || customer.lastName) {
+                                            <li class="list-group-item my-0 py-1">
+                                                {{ customer.firstName | uppercase }} {{ customer.lastName | uppercase }}
+                                            </li>
+                                            }
 
-                                                @if (customer.email) {
-                                                <li class="list-group-item my-0 py-1">{{ customer.email }}</li>
-                                                }
+                                            @if (customer.email) {
+                                            <li class="list-group-item my-0 py-1">{{ customer.email }}</li>
+                                            }
 
-                                                @if (customer.address2) {
-                                                <li class="list-group-item"><strong>{{ customer.address2 | uppercase
-                                                        }}</strong>
-                                                </li>
-                                                }
+                                            @if (customer.address2) {
+                                            <li class="list-group-item"><strong>{{ customer.address2 | uppercase
+                                                    }}</strong>
+                                            </li>
+                                            }
                                             }
                                         </ul>
                                     </div>
@@ -180,19 +180,25 @@
 
                                             @for (item of order.lineItems; let i = $index; track item.id ?? $index) {
                                             <li class="list-group-item d-flex justify-content-start">
+
+                                                @if(item.variant != null){
                                                 <div>
                                                     <a data-fancybox="gallery"
-                                                        [attr.data-caption]="`${item.variant.product.title} - ${item.variant.title}`"
-                                                        [href]="getResizedImage(item.variant.product.featuredImage.url, 800, 800)">
-                                                        <img [src]="getResizedImage(item.variant.product.featuredImage.url, 200, 200)"
+                                                        [attr.data-caption]="`${item.variant?.product.title} - ${item.variant?.title}`"
+                                                        [href]="getResizedImage(item.variant?.product.featuredImage.url, 800, 800)">
+                                                        <img [src]="getResizedImage(item.variant?.product.featuredImage.url, 200, 200)"
                                                             class="me-2" height="75px" alt="">
                                                     </a>
 
                                                 </div>
                                                 <div>
-                                                    <p>{{ item.variant.product.title }}</p>
-                                                    <p class="fw-bold">{{ item.variant.title }}</p>
+                                                    <p>{{ item.variant?.product.title }}</p>
+                                                    <p class="fw-bold">{{ item.variant?.title }}</p>
                                                 </div>
+                                                }@else{
+                                                    <div>{{ item.name }}</div>
+                                                }
+
                                             </li>
                                             }
 
@@ -209,10 +215,19 @@
                         </div>
 
                     </div>
-                    
+
                 </ng-template>
             </div>
         </div>
     </div>
     }
+</div>
+
+<div class="pagination d-flex justify-content-center align-items-center">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Atras</a></li>
+            <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+        </ul>
+    </nav>
 </div>

@@ -1,0 +1,60 @@
+/* ----- TABLA GENERAL ----- */
+.accordion-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* FILA PRINCIPAL */
+.acc-summary {
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.acc-summary:hover {
+  background: #eceff1;
+}
+
+/* FILA DETALLE */
+.acc-detail td {
+  padding: 0;
+  border-top: none;
+}
+
+/* CONTENIDO DEL PANEL */
+.acc-body {
+  padding: 16px;
+  background: white;
+  border-left: 1px solid #e3e6e8;
+  border-right: 1px solid #e3e6e8;
+  border-bottom: 1px solid #e3e6e8;
+  animation: accOpen 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ANIMACIÓN DE APERTURA */
+@keyframes accOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ----- CHEVRON ----- */
+.chevron {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid #555;
+  border-bottom: 2px solid #555;
+  transform: rotate(45deg);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.chevron.open {
+  transform: rotate(135deg);
+}
+

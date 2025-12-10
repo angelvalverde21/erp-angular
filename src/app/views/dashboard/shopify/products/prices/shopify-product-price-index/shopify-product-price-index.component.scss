@@ -37,7 +37,7 @@ tr:hover {
 /******* edit la tabla ******/
 
 .product_name {
-  width: 200px;
+  width: 210px;
 }
 
 .product_price {
@@ -92,10 +92,17 @@ tr:hover {
 }
 
 .table-buttom{
-  height: 75px;
+  height: 70px;
 }
-.table-buttom>div{
-  height: 30px;
+// .table-buttom>div{
+//   height: 25px;
+// }
+
+.table-head{
+  height: 50px;
+}
+.table-head>div{
+  height: 25px;
 }
 
 .product_price{
@@ -113,3 +120,9 @@ tr:hover {
 .price{
     width: 100px;
 }
+
+.price .btn-dark{
+  width: 50px;
+}
+
+/******************/

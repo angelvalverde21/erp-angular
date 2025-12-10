@@ -1,0 +1,18 @@
+<div class="controls d-flex justify-content-between align-items-between">
+    <div class="left d-flex">
+        <button class="btn btn-light btn-sm me-1" [routerLink]="['/', store, 'dashboard', 'shopify','orders']"
+            routerLinkActive="router-link-active" [routerLinkActiveOptions]="{ exact: true }">Todos</button>
+        <!-- <button class="btn btn-light btn-sm me-1">Pagados</button> -->
+        <button class="btn btn-light btn-sm me-1"
+            [routerLink]="['/', store, 'dashboard', 'shopify','orders', 'pending']"
+            routerLinkActive="router-link-active" [routerLinkActiveOptions]="{ exact: true }">No preparados</button>
+        <button class="btn btn-light btn-sm me-1"
+            [routerLink]="['/', store, 'dashboard', 'shopify','orders', 'prepared']"
+            routerLinkActive="router-link-active" [routerLinkActiveOptions]="{ exact: true }">Preparados</button>
+
+    </div>
+    <div class="right d-flex justify-content-between align-items-between">
+        <!-- <app-button [icon]="faMagnifyingGlass" color="outline-secondary" class="me-1">Buscar</app-button> -->
+        <!-- <app-button [icon]="faFilter" color="outline-secondary" separation="0"></app-button> -->
+    </div>
+</div>

@@ -36,3 +36,16 @@
 .transparent-list .list-group-item {
   background-color: transparent !important;
 }
+
+.sticky-head{
+  position: sticky;
+  top: 113px;   /* se fija 80px debajo del borde superior */
+  z-index: 10;
+}
+
+.sticky-bottom {
+  position: sticky;
+  bottom: 0;   /* se pega al fondo de la ventana */
+  z-index: 999;
+  background: white;   /* opcional */
+}

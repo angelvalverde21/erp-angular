@@ -1,0 +1,25 @@
+<form [formGroup]="form">
+    <div class="prices d-flex justify-content-between align-items-center">
+
+        @for (price of prices; let i = $index; track i) {
+
+        <div class="price mx-2">
+
+            @if (!is_collapsed) {
+            <span class="value_edit px-3">
+                <input type="number" step="0.01" class="form-control mb-0 px-2 py-1" [formControlName]="price_keys[i]"
+                    (click)="$event.stopPropagation()">
+            </span>
+
+            } @else {
+            <span class="value px-3">{{ price ?? '0.00' }}</span>
+            }
+
+        </div>
+        }
+
+    </div>
+
+                <!-- {{ form.value | json }} -->
+
+</form>

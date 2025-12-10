@@ -33,5 +33,13 @@ export class ShopifyOrderService extends BaseCrudDashboardService {
     return this.http.get<any[]>(`${this.baseUrl}/pending`);
   }
 
+  // Generic method to get all items
+  prepared(status: string = ""): Observable<any[]> {
+
+    console.log(`${this.baseUrl}/prepared`);
+    
+    return this.http.get<any[]>(`${this.baseUrl}/prepared`);
+  }
+
 }
 

@@ -1,21 +1,20 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DateShopifyPipe } from '../../../../shared/pipes/date-shopify.pipe';
-import { InputGroupComponent } from '../../../../shared/components/form/input-group/input-group.component'
+import { DateShopifyPipe } from '../../../../../shared/pipes/date-shopify.pipe';
+import { InputGroupComponent } from '../../../../../shared/components/form/input-group/input-group.component'
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule, JsonPipe } from '@angular/common';
-import { EditPriceCascadeComponent } from '../shared/edit-price-cascade/edit-price-cascade.component';
-import { EditPriceComponent } from '../shared/edit-price/edit-price.component'
+import { EditPriceCascadeComponent } from '../../shared/edit-price-cascade/edit-price-cascade.component';
+import { EditPriceComponent } from '../../shared/edit-price/edit-price.component'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import { faShopify } from '@fortawesome/free-brands-svg-icons';
-import { ShopifyProductService } from '../shopify.product.service';
+import { ShopifyProductService } from '../../shopify.product.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { ShopifyImageThumbnailPipe } from '../../../../shared/pipes/shopify/shopify-image-thumbnail.pipe';
 
 @Component({
-  selector: 'app-shopify-product-index',
+  selector: 'app-shopify-product-price-index',
   imports: [
     DateShopifyPipe,
     InputGroupComponent,
@@ -25,13 +24,11 @@ import { ShopifyImageThumbnailPipe } from '../../../../shared/pipes/shopify/shop
     EditPriceCascadeComponent,
     EditPriceComponent,
     FontAwesomeModule,
-    ShopifyImageThumbnailPipe
   ],
-  templateUrl: './shopify-product-index.component.html',
-  styleUrl: './shopify-product-index.component.scss'
+  templateUrl: './shopify-product-price-index.component.html',
+  styleUrl: './shopify-product-price-index.component.scss'
 })
-export class ShopifyProductIndexComponent{
-
+export class ShopifyProductPriceIndexComponent {
 
   faSync = faSync;
   faShopify = faShopify;
@@ -98,6 +95,11 @@ export class ShopifyProductIndexComponent{
   item: any;
 
   new_variant: any;
+
+  priceName(value: any) {
+    const split = value.split("_");
+    return split[1];
+  }
 
   receivePrices(setPrice: any, product: any) {
 
@@ -175,6 +177,37 @@ export class ShopifyProductIndexComponent{
 
     this.destroy$.next();
     this.destroy$.complete();
+
+  }
+
+  syncPrice() {
+    const price = {
+      "product_id": "gid://shopify/Product/9066191323360",
+      "variants": [
+        {
+          "variant_id": "gid://shopify/ProductVariant/48124316057824",
+          "price": "129.90",
+          "compareAtPrice": "159.90"
+        }
+      ]
+    }
+
+    console.log(price);
+
+    this._productShopify.syncPrice(price).pipe(takeUntil(this.destroy$)).subscribe({
+
+      next: (resp: any) => {
+        Swal.fire('Guardado', 'Sincronizacion correcta', 'success');
+        console.log(resp);
+        // this.loading = false;
+      },
+
+      error: (error: any) => {
+        Swal.fire('Error', 'Ocurrió al sincronizar el precio. Inténtalo nuevamente.', 'error');
+        console.error(error);
+      },
+
+    });
 
   }
 

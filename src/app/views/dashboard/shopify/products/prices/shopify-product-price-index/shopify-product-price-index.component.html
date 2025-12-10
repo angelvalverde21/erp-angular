@@ -1,0 +1,134 @@
+<div class="content">
+    <div
+        class="table-head d-flex justify-content-between align-items-center w-100 bg-secondary text-white px-3 sticky-head">
+
+        <div class="product_name text-end">Titulo</div>
+
+        @for (price_key of price_keys; track $index) {
+        <div class="price text-center d-flex flex-column">
+            <span>
+                {{ priceName(price_key) }}
+            </span>
+        </div>
+        }
+
+        <div class="product_status">
+            Status
+        </div>
+
+        <div class="product_date text-center">Publicado</div>
+
+        <div class="compensador">
+            x
+        </div>
+
+    </div>
+
+
+    <!-- {{ transactions |json }} -->
+    <div ngbAccordion [closeOthers]="true" class="transactions mb-3" (show)="onAccordionShown($event)"
+        (hidden)="onAccordionHidden($event)">
+
+        @for (product of products; track product.id ) {
+
+        <div ngbAccordionItem #item="ngbAccordionItem">
+
+            <h2 ngbAccordionHeader>
+
+                <button ngbAccordionButton class="py-2" (click)="productSelected(product)">
+                    <div class="table-buttom d-flex justify-content-between align-items-center w-100">
+
+                        <div class="product_name text-end">{{ product.title }}</div>
+
+                        <app-edit-price-cascade class="variants" [variant]="product?.variants[0]"
+                            [count_variants]="product?.variants?.length"
+                            (emitVariantPrice)="receivePrices($event, product)" [is_collapsed]="item.collapsed"
+                            [price_keys]="price_keys" />
+
+                        <div class="product_status">
+                            <span class="badge text-bg-secondary text-white">{{ product.status }}</span>
+                        </div>
+
+                        <div class="product_date text-center">{{ product.created_at_shopify | date:'dd-MM-yyyy'}}</div>
+                    </div>
+                </button>
+
+            </h2>
+
+            <div ngbAccordionCollapse>
+
+                <div ngbAccordionBody class="color-body">
+
+                    <ng-template>
+
+                        @if(!item.collapsed){
+
+                        <!-- {{ variants | json }} -->
+
+                        <!-- <hr> -->
+
+                        @for (variant of variants; track $index) {
+
+                        <!-- {{variant | json }} -->
+
+                        <div class="content-prices d-flex">
+
+                            <div class="table-buttom d-flex justify-content-between align-items-center w-100">
+
+                                <div class="product_name text-end">{{ variant.title }}</div>
+                                <app-edit-price class="variants" [variant]="variant"
+                                    (emitVariantPrice)="receivePrice($event)"
+                                    [price_keys]="price_keys"></app-edit-price>
+                                <div class="product_status text-center">
+
+                                    <!-- <button type="button" class="btn btn-dark">
+                                    <fa-icon [icon]="faSync"></fa-icon>
+                                </button> -->
+                                </div>
+                                <div class="product_date">
+                                    <!-- <button type="button" class="btn btn-dark">
+                                    <fa-icon [icon]="faSync"></fa-icon>
+                                </button> -->
+                                </div>
+                            </div>
+                            <div class="compensador">
+                                x
+                            </div>
+                        </div>
+
+                        }
+
+                        }
+
+                    </ng-template>
+
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="table-buttom d-flex justify-content-between align-items-center w-100 bg-secondary text-white px-3 sticky-bottom">
+
+        <div class="product_name text-end">Sincronizar con <fa-icon [icon]="faShopify" class="ms-2"></fa-icon></div>
+
+        @for (price_key of price_keys; track $index) {
+        <div class="price text-center d-flex flex-column">
+            <button class="btn btn-dark mx-auto" (click)="syncPrice()"><fa-icon [icon]="faSync"></fa-icon></button>
+        </div>
+        }
+
+        <div class="product_status">
+            
+        </div>
+
+        <div class="product_date text-center"></div>
+
+        <div class="compensador">
+            
+        </div>
+
+    </div>
+
+
+</div>

@@ -1,39 +1,33 @@
 <!-- {{ transactions |json }} -->
-<div class="card">
-
-    <div class="card-header bg-secondary text-white">
-        Product
-    </div>
-
-</div>
-
 <div ngbAccordion [closeOthers]="true" class="transactions mb-3" (show)="onAccordionShown($event)"
     (hidden)="onAccordionHidden($event)">
 
-    @for (product of products; track $index) {
+    @for (product of products; track product.id ) {
 
     <div ngbAccordionItem #item="ngbAccordionItem">
 
         <h2 ngbAccordionHeader>
 
-            <button ngbAccordionButton class="py-2" (click)="productSelectedId(product.id)">
-
+            <button ngbAccordionButton class="py-2" (click)="productSelected(product)">
                 <div class="table-buttom d-flex justify-content-between align-items-center w-100">
 
                     <div class="product_name">{{ product.title }}</div>
 
-                    <app-product-price-main-edit [variant]="product?.variants[0]"
-                        [current_product_id]="current_product_id"
-                        [product_id]="product.id"></app-product-price-main-edit>
+                    <div class="product_image">
+                        <img src="{{ product.image | shopifyImageThumbnail }}" height="45px" alt="">
+                    </div>
+
+                    <div class="price">
+                        {{ product.variants[0].price_normal}}
+                    </div>
 
                     <div class="product_status">
                         <span class="badge text-bg-secondary text-white">{{ product.status }}</span>
                     </div>
 
-                    <div class="product_date">{{ product.created_at | dateShopify}}</div>
-
+                    <div class="product_date text-center">{{ product.updated_at_shopify | date:'dd-MM-yyyy'}}</div>
+                    <div class="product_date text-center">{{ product.created_at_shopify | date:'dd-MM-yyyy'}}</div>
                 </div>
-
             </button>
 
         </h2>
@@ -42,31 +36,11 @@
 
             <div ngbAccordionBody class="color-body">
 
-                <div class="table-buttom d-flex justify-content-between align-items-center w-100">
-                    
-                    @for (variant of product.variants; track variant.id) {
+                <ng-template>
 
-                        {{ variant | json }}
+                    pronto...
 
-                    <!-- <div class="table-buttom d-flex justify-content-between align-items-center w-100">
-
-                        <div class="product_name text-end">{{ variant?.title }}</div>
-
-                        <app-product-price-main-edit [variant]="variant"
-                            [current_product_id]="current_product_id"
-                            [product_id]="product.id"></app-product-price-main-edit>
-
-                        <div class="product_status">
-                            <span class="badge text-bg-secondary text-white">{{ product.status }}</span>
-                        </div>
-
-                        <div class="product_date">{{ product.created_at | dateShopify}}</div>
-
-                    </div> -->
-
-                    }
-
-                </div>
+                </ng-template>
 
             </div>
         </div>

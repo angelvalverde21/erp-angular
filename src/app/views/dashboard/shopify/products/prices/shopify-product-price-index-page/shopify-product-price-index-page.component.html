@@ -7,14 +7,16 @@
 
 <div class="card mb-3">
 
-    <div class="card-header py-3 head-sticky bg-light">
+    <div class="card-header py-3">
+
         <app-product-head-table (emitSearchResult)="receiveSearchResult($event)"></app-product-head-table>
+
     </div>
 
     <div class="card-body p-0">
 
         @if(products != undefined && products.length > 0){
-            <app-shopify-product-index [products]="products"></app-shopify-product-index>
+            <app-shopify-product-price-index [products]="products"></app-shopify-product-price-index>
         }@else{
             <p class="p-4">No se cuenta con registro de productos   </p>
         }

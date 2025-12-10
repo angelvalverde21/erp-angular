@@ -1,22 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ShopifyProductService } from '../shopify.product.service';
+import { ShopifyProductService } from '../../shopify.product.service';
 import Swal from 'sweetalert2';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
-import { ShopifyProductIndexComponent } from '../shopify-product-index/shopify-product-index.component';
-import { ProductHeadTableComponent } from '../shared/product-head-table/product-head-table.component';
+import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
+import { ShopifyProductIndexComponent } from '../../shopify-product-index/shopify-product-index.component';
+import { ProductHeadTableComponent } from '../../shared/product-head-table/product-head-table.component';
+import { ShopifyProductPriceIndexComponent } from '../shopify-product-price-index/shopify-product-price-index.component';
 
 @Component({
-  selector: 'app-shopify-product-index-page',
+  selector: 'app-shopify-product-price-index-page',
   imports: [
     LoadingComponent,
     ShopifyProductIndexComponent,
     ProductHeadTableComponent,
+    ShopifyProductPriceIndexComponent
   ],
-  templateUrl: './shopify-product-index-page.component.html',
-  styleUrl: './shopify-product-index-page.component.scss'
+  templateUrl: './shopify-product-price-index-page.component.html',
+  styleUrl: './shopify-product-price-index-page.component.scss'
 })
-export class ShopifyProductIndexPageComponent {
+export class ShopifyProductPriceIndexPageComponent {
   
   destroy$ = new Subject<void>();
   products: any[] = [];

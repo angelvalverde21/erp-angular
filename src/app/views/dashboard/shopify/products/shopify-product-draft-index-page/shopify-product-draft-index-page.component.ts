@@ -7,16 +7,16 @@ import { ShopifyProductIndexComponent } from '../shopify-product-index/shopify-p
 import { ProductHeadTableComponent } from '../shared/product-head-table/product-head-table.component';
 
 @Component({
-  selector: 'app-shopify-product-index-page',
+  selector: 'app-shopify-product-draft-index-page',
   imports: [
     LoadingComponent,
     ShopifyProductIndexComponent,
     ProductHeadTableComponent,
   ],
-  templateUrl: './shopify-product-index-page.component.html',
-  styleUrl: './shopify-product-index-page.component.scss'
+ templateUrl: './shopify-product-draft-index-page.component.html',
+  styleUrl: './shopify-product-draft-index-page.component.scss'
 })
-export class ShopifyProductIndexPageComponent {
+export class ShopifyProductDraftIndexPageComponent {
   
   destroy$ = new Subject<void>();
   products: any[] = [];
