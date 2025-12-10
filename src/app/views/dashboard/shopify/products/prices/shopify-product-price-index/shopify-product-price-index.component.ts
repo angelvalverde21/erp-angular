@@ -85,7 +85,8 @@ export class ShopifyProductPriceIndexComponent {
   }
 
   price_keys = [
-    'price_normal',
+    'price_etiqueta',
+    'price_oferta',
     'price_feria',
     'price_wholesaler',
     'price_live',
@@ -180,7 +181,11 @@ export class ShopifyProductPriceIndexComponent {
 
   }
 
-  syncPrice() {
+  syncPrice(price_key: any) {
+
+    console.log(price_key);
+    
+
     const price = {
       "product_id": "gid://shopify/Product/9066191323360",
       "variants": [
@@ -193,8 +198,29 @@ export class ShopifyProductPriceIndexComponent {
     }
 
     console.log(price);
-
+ 
     this._productShopify.syncPrice(price).pipe(takeUntil(this.destroy$)).subscribe({
+
+      next: (resp: any) => {
+        Swal.fire('Guardado', 'Sincronizacion correcta', 'success');
+        console.log(resp);
+        // this.loading = false;
+      },
+
+      error: (error: any) => {
+        Swal.fire('Error', 'Ocurrió al sincronizar el precio. Inténtalo nuevamente.', 'error');
+        console.error(error);
+      },
+
+    });
+
+  }
+
+  syncPrices(price_key: any) {
+
+    console.log(price_key);
+ 
+    this._productShopify.syncPrices(price_key).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         Swal.fire('Guardado', 'Sincronizacion correcta', 'success');

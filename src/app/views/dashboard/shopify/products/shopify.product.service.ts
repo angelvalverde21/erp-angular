@@ -66,6 +66,15 @@ export class ShopifyProductService extends BaseCrudDashboardService {
 
   }
 
+  syncPrices(type: string): Observable<any> {
+
+    console.log(type);
+    const url = `${this.baseUrl}/sync/prices`;
+    console.log(url);
+    return this.http.put(`${url}`, {type});
+
+  }
+
 
 }
 

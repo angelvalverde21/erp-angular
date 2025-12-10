@@ -23,6 +23,9 @@ export class ProductHeadTableComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
 
   @Output() emitSearchResult = new EventEmitter<any>();
+  @Output() emitStatusProductsSync = new EventEmitter<boolean>();
+
+
 
   private searchSubject = new Subject<string>();
 
@@ -96,6 +99,8 @@ export class ProductHeadTableComponent implements OnInit, OnDestroy {
     this._shopify_product.syncProducts().subscribe({
       next: (resp: any) => {
         console.log(resp);
+
+        this.emitStatusProductsSync.emit(true);
         
         Swal.fire('Éxito', 'Productos sincronizados correctamente.', 'success');
         Swal.close();

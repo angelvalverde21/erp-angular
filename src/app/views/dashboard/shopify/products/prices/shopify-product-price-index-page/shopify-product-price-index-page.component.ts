@@ -56,6 +56,11 @@ export class ShopifyProductPriceIndexPageComponent {
 
   }
 
+
+  reListProduct(){
+    this.productInit();
+  }
+
   ngOnDestroy(): void {
   
     this.destroy$.next();

@@ -6,7 +6,7 @@
 
         @if (!is_collapsed && count_variants > 1) {
         <span class="value_edit px-3">
-            <input type="number" placeholder="0.00" step="0.01" class="form-control mb-0 px-2 py-1" (click)="$event.stopPropagation()" (keyup)="setPrice($event, i)">
+            <input type="number" placeholder="0.00" step="0.01" class="form-control mb-0 px-2 py-1" (click)="$event.stopPropagation()" (input)="setPrice($event, i)">
         </span>
 
         } @else {

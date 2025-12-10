@@ -45,7 +45,7 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
 
   ngOnInit(): void {
     // this.setData();
-    this.loadingDashboard();
+    // this.loadingDashboard();
   }
 
   destroy$ = new Subject<void>();

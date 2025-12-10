@@ -92,7 +92,7 @@
                                 </div>
                             </div>
                             <div class="compensador">
-                                x
+                                .
                             </div>
                         </div>
 
@@ -114,7 +114,7 @@
 
         @for (price_key of price_keys; track $index) {
         <div class="price text-center d-flex flex-column">
-            <button class="btn btn-dark mx-auto" (click)="syncPrice()"><fa-icon [icon]="faSync"></fa-icon></button>
+            <button class="btn btn-dark mx-auto" (click)="syncPrices(price_key)"><fa-icon [icon]="faSync"></fa-icon></button>
         </div>
         }
 
