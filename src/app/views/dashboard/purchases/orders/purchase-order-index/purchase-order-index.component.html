@@ -1,0 +1,46 @@
+@if(purchase_orders.length > 0){
+
+<div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+            <tr>
+                <th class="text-center">#</th>
+                <th>Nombre</th>
+                <th>Fabricante</th>
+                <th>Observaciones</th>
+                <th>Responsable</th>
+                <th>Creado</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (purchase_order of purchase_orders; track purchase_order.id) {
+
+            <tr (click)="getPurchaseOrderId(purchase_order.id)">
+                <td class="text-center">{{ purchase_order.id }}</td>
+                <td>{{ purchase_order.name }}</td>
+                <td>{{ purchase_order.supplier.name }}</td>
+                <td style="vertical-align: middle;">
+                    <ngb-progressbar class="text-white" type="success" [value]="50" [striped]="true">25%</ngb-progressbar>
+                </td>
+                <td>
+                   {{ purchase_order.user.name }}
+                </td>
+                <td>{{ purchase_order.created_at | dateShopify }}</td>
+                <td class="text-center">
+                    <div class="controls d-flex justify-content-center align-items-center">
+                    </div>
+                </td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+}@else{
+
+Aun no hay compras registrados
+
+}

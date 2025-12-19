@@ -32,12 +32,12 @@ import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.c
 import { UnitService } from '../../units/unit.service';
 import { JsonPipe } from '@angular/common';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
-import { SupplierService } from '../../suppliers/supplier.service';
+import { SupplierService } from '../../users/suppliers/supplier.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { GalleryComponent } from '../../../shared/components/gallery/gallery.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { SupplierCreateComponent } from '../../suppliers/supplier-create/supplier-create.component';
+import { SupplierCreateComponent } from '../../users/suppliers/supplier-create/supplier-create.component';
 
 @Component({
   selector: 'app-purchase-edit',

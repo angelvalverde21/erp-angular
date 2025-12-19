@@ -4,8 +4,6 @@ import { HttpClient } from '@angular/common/http';
 
 // import { BaseCrudService } from '../base-crud.service';
 import { Observable } from 'rxjs';
-import { BaseService } from '../../base.service';
-import { environment } from '../../../environments/environment';
 import { BaseCrudDashboardService } from '../base-crud-dashboard.service';
 
 @Injectable({

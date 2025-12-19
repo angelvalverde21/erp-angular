@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ShopifyOrderService } from '../shopify.order.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -7,76 +7,100 @@ import { JsonPipe } from '@angular/common';
 
 import { ShopifyOrderIndexComponent } from '../shopify-order-index/shopify-order-index.component';
 import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
-import { ShopifyCardOrderIndexComponent } from "../../shared/shopify-card-order-index/shopify-card-order-index.component";
-import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { Router, RouterModule } from '@angular/router';
-import { BaseService } from 'src/app/views/base.service';
 import { ShopifyOrderHeaderNavigationComponent } from '../shared/shopify-order-header-navigation/shopify-order-header-navigation.component';
+import { BaseService } from '../../../../base.service';
 
 @Component({
   selector: 'app-shopify-order-index-page',
   imports: [
-    ShopifyOrderIndexComponent, 
-    LoadingComponent, 
-    JsonPipe, 
+    ShopifyOrderIndexComponent,
+    LoadingComponent,
+    JsonPipe,
     RouterModule,
-    ButtonComponent, 
-    ShopifyCardOrderIndexComponent,
     ShopifyOrderHeaderNavigationComponent
   ],
   templateUrl: './shopify-order-index-page.component.html',
   styleUrl: './shopify-order-index-page.component.scss'
 })
-export class ShopifyOrderIndexPageComponent implements OnInit, OnDestroy{
+export class ShopifyOrderIndexPageComponent implements OnInit, OnDestroy {
+
+  destroy$ = new Subject<void>();
 
   faMagnifyingGlass = faMagnifyingGlass;
   faFilter = faFilter;
   store: string = "";
+  cursor: string = "";
+  hasNextPage: boolean = false;
+  loadingSecondary: boolean = false;
 
-  constructor(private _order: ShopifyOrderService, private _base: BaseService){
+  constructor(private _order: ShopifyOrderService, private _base: BaseService) {
     this.store = this._base.storeName!;
   }
 
   loading: boolean = false;
   orders: any[] = [];
 
-  cargarOders(){
+  cargarOrders(cursor: string = ""): void {
 
-    this.loading = true;
+    // si es carga inicial
+    const isInitialLoad = cursor === "";
+    if (isInitialLoad) {
+      this.loading = true;
+    } else {
+      this.loadingSecondary = true;
+    }
 
-    this._order.index().pipe(takeUntil(this.destroy$)).subscribe({
-    
-      next: (resp: any) => {
-        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
-        console.log(resp);
-        this.orders = resp.orders;
-        this.loading = false;
-      },
-    
-      error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
-        console.error(error);
-      },
-    
-    });
+    this._order.indexShopify(cursor)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+
+        next: (resp: any) => {
+          console.log(resp);
+
+          this.orders = [...this.orders, ...resp.orders];
+          this.cursor = resp.pageInfo.endCursor;
+          this.hasNextPage = resp.pageInfo.hasNextPage;
+
+          if (isInitialLoad) this.loading = false;
+          else this.loadingSecondary = false;
+        },
+
+        error: (error: any) => {
+          Swal.fire('Error', 'Ocurrió un problema al cargar las órdenes.', 'error');
+          console.error(error);
+
+          if (isInitialLoad) this.loading = false;
+          else this.loadingSecondary = false;
+        },
+
+      });
+
   }
 
-  destroy$ = new Subject<void>();
-  
+  next() {
+    if (!this.cursor || this.loading || this.loadingSecondary || !this.hasNextPage) return;
+
+    this.cargarOrders(this.cursor);
+  }
+
   ngOnDestroy(): void {
-  
+
     this.destroy$.next();
     this.destroy$.complete();
-  
+
   }
 
   ngOnInit(): void {
 
-    this.cargarOders();
-    
+    this.cargarOrders();
+
   }
 
-
+  searchResult(event:any) {
+    console.log(event);
+    
+  }
 
 }

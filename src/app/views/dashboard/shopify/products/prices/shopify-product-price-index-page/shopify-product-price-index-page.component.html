@@ -9,7 +9,7 @@
 
     <div class="card-header py-3">
 
-        <app-product-head-table (emitSearchResult)="receiveSearchResult($event)" (emitStatusProductsSync)="reListProduct()"></app-product-head-table>
+        <app-product-head-table [status]="status" (emitSearchResult)="receiveSearchResult($event)" (emitStatusProductsSync)="reListProduct()"></app-product-head-table>
 
     </div>
 
@@ -29,7 +29,7 @@
 
 </div>
 
-
+<app-paginator [links]="links"/>
 
 }
 

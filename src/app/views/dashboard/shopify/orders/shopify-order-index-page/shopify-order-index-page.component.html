@@ -11,22 +11,23 @@
 <div class="card mb-3">
 
     <div class="card-header py-3">
-        <app-shopify-order-header-navigation></app-shopify-order-header-navigation>
+        <app-shopify-order-header-navigation (emitSearchResult)="searchResult($event)"></app-shopify-order-header-navigation>
     </div>
 
     <div class="card-body p-0">
 
-        <app-shopify-order-index [orders]="orders"></app-shopify-order-index>
+        <app-shopify-order-index [orders]="orders" (loadMore)="next()"></app-shopify-order-index>
 
+        @if(loadingSecondary){
+            <div class="py-4 text-center">
+                <span class="mb-3">Cargando ordenes...</span>
+                <app-loading></app-loading>
+            </div>
+        }
         <!-- {{ orders | json }} -->
-
-    </div>
-    
-    <div class="card-footer" style="border-top: 0;">
 
     </div>
 
 </div>
 
 }
-

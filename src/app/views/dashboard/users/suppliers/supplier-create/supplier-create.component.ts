@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { SupplierFormComponent } from '../supplier-form/supplier-form.component';
 import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
+import { phoneValidator } from '../../../../shared/validators/phone.validator';
 
 @Component({
   selector: 'app-supplier-create',
@@ -43,6 +44,12 @@ export class SupplierCreateComponent {
 
   create(){
 
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+
     this.loadingIcon = true;
     this.disabledButton = true;
 
@@ -56,7 +63,7 @@ export class SupplierCreateComponent {
         this.disabledButton = false;
       },
       error: (error: any) => {
-        Swal.fire('Error','OcurriA3 un problema al crear. Intentalo nuevamente.','error');
+        Swal.fire('Error','Ocurrio un problema al crear. Intentalo nuevamente.','error');
         console.error(error);
         this.loadingIcon = false;
         this.disabledButton = false;
@@ -74,10 +81,11 @@ export class SupplierCreateComponent {
   private formInit(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
-      email: ['', [Validators.required]],
-      phone: ['', [Validators.required]],
-      document_number: ['', [Validators.required]],
-      roles: ['', [Validators.required]],
+      phone: ['', phoneValidator],
+      email: [''],
+      document_number: [''],
+      roles: [''],
     });
   }
+  
 }

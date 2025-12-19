@@ -5,13 +5,13 @@ import { RouterModule } from '@angular/router';
 import { faTrash, faEdit, faCashRegister, faImages, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import { PurchaseService } from '../purchase.service';
-import { environment } from '../../../../core/environments/environment';
 import { Subject, takeUntil } from 'rxjs';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { PurchaseEditComponent } from '../purchase-edit/purchase-edit.component';
 import { CapitalizePipe } from '../../../shared/pipes/capitalize.pipe';
 import { GalleryComponent } from '../../../shared/components/gallery/gallery.component';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-purchase-index-row',
   imports: [

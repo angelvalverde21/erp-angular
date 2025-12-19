@@ -31,6 +31,7 @@ export const navShopify: CustomNavData[] = [
     iconComponent: { name: 'cil-chart-line' },
     children: [
       { name: 'Últimos 7 Días', url: 'dashboard/shopify/reports/bars/daily', icon: 'nav-icon-bullet' },
+      { name: 'Mensual', url: 'dashboard/shopify/reports/bars/months', icon: 'nav-icon-bullet' },
       { name: 'Top 10', url: 'dashboard/shopify/reports/top', icon: 'nav-icon-bullet' },
       { name: 'Ventas Totales', url: 'dashboard/shopify/reports/all', icon: 'nav-icon-bullet' }
     ],

@@ -109,8 +109,10 @@ export class DefaultLayoutComponent implements OnInit {
     //   });
     // }
 
+    
     this.storeName = this._base.storeName!;
     this.navItems = this.addToStore([...this.navItems], this.storeName);
+    console.log(this.storeName);
 
     // this.navItems = this.setBasePath(navItems);
   }

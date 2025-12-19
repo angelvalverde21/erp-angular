@@ -9,6 +9,14 @@
                 <div class="table-buttom d-flex justify-content-between align-items-center w-100">
 
                     <div class="name">{{ order.name }}</div>
+                    <div class="name">
+                        @if(order.note != null){
+                        <fa-icon [icon]="faCommentDots"></fa-icon>
+                        }
+                    </div>
+                    <!-- <div class="number-of-orders">
+                        <small>{{ order.customer?.numberOfOrders }}</small>
+                    </div> -->
                     <div class="date">{{ order.createdAt | dateShopify }}</div>
                     <div class="first_name">
                         <p class="my-1">
@@ -83,6 +91,8 @@
             <div ngbAccordionBody class="color-body">
                 <ng-template>
 
+
+
                     <div class="item">
 
                         <div class="controls d-flex justify-content-between align-items-center mb-3">
@@ -91,6 +101,13 @@
                             <a [href]="getURlShopify(order.id)" target="_blank" rel="noopener noreferrer"
                                 class="btn btn-dark btn-sm"><fa-icon [icon]="faEdit" class="me-2"></fa-icon>Editar</a>
                         </div>
+
+                        @if(order.note != null){
+                        <div class="alert alert-warning">
+                            {{ order.note }}
+                        </div>
+
+                        }
 
                         <div class="row">
                             <div class="col-lg-6">
@@ -196,7 +213,7 @@
                                                     <p class="fw-bold">{{ item.variant?.title }}</p>
                                                 </div>
                                                 }@else{
-                                                    <div>{{ item.name }}</div>
+                                                <div>{{ item.name }}</div>
                                                 }
 
                                             </li>
@@ -221,13 +238,7 @@
         </div>
     </div>
     }
-</div>
 
-<div class="pagination d-flex justify-content-center align-items-center">
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Atras</a></li>
-            <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
-        </ul>
-    </nav>
+    <div #bottom></div>
+
 </div>

@@ -80,7 +80,7 @@
             (click)="openVerticallyCentered(content)">Adjuntos ({{ purchase.images_count }}) </app-button>
 
         <app-button color="success" colortext="white" [icon]="faPlus" [disabled]="disabledButton"
-            [loadingIcon]="loadingIcon" (action)="update()">Actualizar Compra</app-button>
+            [spinner]="loadingIcon" (action)="update()">Actualizar Compra</app-button>
 
     </div>
 

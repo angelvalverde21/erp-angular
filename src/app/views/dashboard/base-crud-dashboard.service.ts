@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { effect, inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
@@ -12,19 +12,40 @@ export abstract class BaseCrudDashboardService {
 
   constructor(protected http: HttpClient, public section: string) {
 
+    
     this.baseUrl = `${API.private}/${this._base.store}/dashboard/${this.section}`
+    console.log(this.baseUrl);
 
   }
 
 
   // Generic method to get all items
-  index(): Observable<any[]> {
-    const url = `${this.baseUrl}`;
-    console.log(url);
-    return this.http.get<any[]>(`${url}`);
+  // index(): Observable<any[]> {
+  //   const url = `${this.baseUrl}`;
+  //   console.log(url);
+  //   return this.http.get<any[]>(`${url}`);
+  // }
+
+  index(page: number = 1, status?: string): Observable<any[]> {
+    console.log(this.baseUrl);
+    
+    return this.http.get<any[]>(this.baseUrl, {
+      params: {
+        page: page > 0 ? page : 1,
+        ...(status && { status })
+      }
+    });
   }
 
-    // Generic method to get all items
+  indexShopify(cursor?: string) {
+    return this.http.get<any[]>(this.baseUrl, {
+      params: {
+        ...(cursor && { cursor })
+      }
+    });
+  }
+
+  // Generic method to get all items
   blocked(): Observable<any[]> {
     const url = `${this.baseUrl}`;
     console.log(url);
@@ -41,6 +62,7 @@ export abstract class BaseCrudDashboardService {
   // Generic method to create a new item
   store(data: any): Observable<any> {
     const url = `${this.baseUrl}`;
+    console.log("imprimiendo url de store");
     console.log(url);
     return this.http.post(`${url}`, data);
   }

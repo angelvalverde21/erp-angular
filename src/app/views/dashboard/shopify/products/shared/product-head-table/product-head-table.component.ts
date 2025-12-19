@@ -4,11 +4,14 @@ import { faMagnifyingGlass, faFilter, faRotate } from '@fortawesome/free-solid-s
 import Swal from 'sweetalert2';
 import { ButtonComponent } from '../../../../../shared/components/buttons/button/button.component';
 import { ShopifyProductService } from '../../shopify.product.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-head-table',
   imports: [
-    ButtonComponent
+    ButtonComponent,
+    CommonModule
   ],
   templateUrl: './product-head-table.component.html',
   styleUrl: './product-head-table.component.scss'
@@ -24,19 +27,22 @@ export class ProductHeadTableComponent implements OnInit, OnDestroy {
 
   @Output() emitSearchResult = new EventEmitter<any>();
   @Output() emitStatusProductsSync = new EventEmitter<boolean>();
+  @Input() status: string = ''; //Solo el componente padre debe recibir los gets y repartircelos a sus hijos
 
 
 
   private searchSubject = new Subject<string>();
 
   constructor(
-    private _shopify_product: ShopifyProductService
+    private _shopify_product: ShopifyProductService,
+    private route: ActivatedRoute,
+    private router: Router,
+
   ) { }
 
   ngOnInit() {
     this.searchWithDebounce(500);
   }
-
 
   searchWithDebounce(time: number) {
 
@@ -57,6 +63,20 @@ export class ProductHeadTableComponent implements OnInit, OnDestroy {
         });
 
       });
+  }
+
+  goToStatus(status: string) {
+    this.router.navigate(
+      [], // misma ruta
+      {
+        relativeTo: this.route,
+        queryParams: {
+          status: status || null,
+          page: 1 // ✅ recomendado: resetear página
+        },
+        queryParamsHandling: 'merge'
+      }
+    );
   }
 
   fnShowSearch() { //funcion que activa o desactiva el input de busqueda
@@ -101,7 +121,7 @@ export class ProductHeadTableComponent implements OnInit, OnDestroy {
         console.log(resp);
 
         this.emitStatusProductsSync.emit(true);
-        
+
         Swal.fire('Éxito', 'Productos sincronizados correctamente.', 'success');
         Swal.close();
       },

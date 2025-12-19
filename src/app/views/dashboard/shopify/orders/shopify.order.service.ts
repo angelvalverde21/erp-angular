@@ -14,7 +14,7 @@ export class ShopifyOrderService extends BaseCrudDashboardService {
     super(http, 'shopify/orders');
   }
 
-  downloadVoucher(order_id: number){
+  downloadVoucher(order_id: number) {
 
     const url = `${this.baseUrl}/${order_id}/pdf/voucher`;
     // console.log(url);
@@ -25,21 +25,23 @@ export class ShopifyOrderService extends BaseCrudDashboardService {
     });
   }
 
-  // Generic method to get all items
-  pending(status: string = ""): Observable<any[]> {
 
-    console.log(`${this.baseUrl}/pending`);
-    
-    return this.http.get<any[]>(`${this.baseUrl}/pending`);
+  pending(cursor?: string) {
+    return this.http.get<any[]>(`${this.baseUrl}/pending`, {
+      params: {
+        ...(cursor && { cursor })
+      }
+    });
   }
 
-  // Generic method to get all items
-  prepared(status: string = ""): Observable<any[]> {
-
-    console.log(`${this.baseUrl}/prepared`);
-    
-    return this.http.get<any[]>(`${this.baseUrl}/prepared`);
+  prepared(cursor?: string) {
+    return this.http.get<any[]>(`${this.baseUrl}/prepared`, {
+      params: {
+        ...(cursor && { cursor })
+      }
+    });
   }
+
 
 }
 

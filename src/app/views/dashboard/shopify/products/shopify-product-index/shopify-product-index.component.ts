@@ -87,13 +87,14 @@ export class ShopifyProductIndexComponent{
 
   }
 
-  price_keys = [
-    'price_normal',
-    'price_feria',
-    'price_wholesaler',
-    'price_live',
-    'price_blackfriday'
-  ];
+  // price_keys = [
+  //   'price_normal',
+  //   'price_oferta',
+  //   'price_feria',
+  //   'price_wholesaler',
+  //   'price_live',
+  //   'price_blackfriday'
+  // ];
 
   item: any;
 

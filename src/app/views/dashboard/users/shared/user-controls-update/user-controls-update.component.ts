@@ -47,7 +47,7 @@ export class UserControlsUpdateComponent {
 
   get status() {
 
-    return Number(this.formValue.status) === 1 ? 'secondary' : 'danger';
+    return Number(this.formValue.status) === 1 ? 'danger' : 'secondary';
   }
 
   get status_text() {

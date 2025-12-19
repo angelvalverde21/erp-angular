@@ -34,7 +34,7 @@
                                 <a data-fancybox="gallery"
                                     [attr.data-caption]="`${product.title} (${product.variant}) - ${product.quantity} unidades vendidas`"
                                     [href]="product.image | shopifyImageLarge">
-                                    <img [src]="product.image | shopifyImageThumbnail" loading="lazy">
+                                    <img [src]="product.image | shopifyImageThumbnail" loading="lazy" height="100px">
                                 </a>
 
 

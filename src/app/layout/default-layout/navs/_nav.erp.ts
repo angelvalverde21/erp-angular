@@ -16,11 +16,11 @@ export const navErp: CustomNavData[] = [
     //     ]
     // },
     // {
-    //     name: 'Productos',
+    //     name: 'Products',
     //     url: 'dashboard/products',
     //     iconComponent: { name: 'cil-industry' },
     //     children: [
-    //         { name: 'Productos', url: 'dashboard/products', icon: 'nav-icon-bullet' },
+    //         { name: 'Products', url: 'dashboard/products', icon: 'nav-icon-bullet' },
     //         { name: 'Categorias', url: 'dashboard/categories', icon: 'nav-icon-bullet' },
     //         { name: 'Inventario', url: 'dashboard/inventories', icon: 'nav-icon-bullet' }
     //     ]
@@ -37,30 +37,41 @@ export const navErp: CustomNavData[] = [
     // },
     {
         name: 'Produccion',
-        url: 'dashboard/manufacturing',
+        url: 'dashboard/manufactures',
         iconComponent: { name: 'cil-industry' },
         children: [
-            { name: 'Ordenes de Produccion', url: 'dashboard/productions/orders', icon: 'nav-icon-bullet' },
+            { name: 'Ordenes de Produccion', url: 'dashboard/manufactures', icon: 'nav-icon-bullet' },
         ],
-        roles: ['ceo','master']
+        roles: ['ceo', 'master']
     },
     {
         name: 'Compras',
         url: 'dashboard/purchases',
         iconComponent: { name: 'cil-notes' },
         children: [
-            { name: 'Ordenes de compra', url: 'dashboard/purchases/orders', icon: 'nav-icon-bullet' },
+            {
+                name: 'Ordenes de compra', url: 'dashboard/purchases/orders', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+            {
+                name: 'Compras', url: 'dashboard/purchases', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
         ],
-        roles: ['ceo','master']
+        roles: ['ceo', 'master']
     },
     {
         name: 'Movimientos',
-        url: 'dashboard/movements',
+        url: 'dashboard/transactions',
         iconComponent: { name: 'cil-swap-horizontal' },
         children: [
             {
                 name: 'Entradas y Salidas',
-                url: 'dashboard/users/movements',
+                url: 'dashboard/users/transactions',
                 icon: 'nav-icon-bullet'
             },
             {
@@ -69,7 +80,27 @@ export const navErp: CustomNavData[] = [
                 icon: 'nav-icon-bullet'
             }
         ],
-        roles: ['ceo','master']
+        roles: ['ceo', 'master']
+    },
+    {
+        name: 'Productos',
+        url: 'dashboard/products',
+        iconComponent: { name: 'cil-barcode' },
+        children: [
+            {
+                name: 'productos', url: 'dashboard/products', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+            {
+                name: 'Inventario', url: 'dashboard/products/inventory', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+        ],
+        roles: ['ceo', 'master']
     },
     {
         name: 'Usuarios',
@@ -80,7 +111,7 @@ export const navErp: CustomNavData[] = [
             { name: 'Colaboradores', url: 'dashboard/users/employees', icon: 'nav-icon-bullet' },
             { name: 'Proveedores', url: 'dashboard/users/suppliers', icon: 'nav-icon-bullet' },
         ],
-        roles: ['ceo','master']
+        roles: ['ceo', 'master']
     }
 ];
 

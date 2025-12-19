@@ -8,15 +8,16 @@
 <div class="card mb-3">
 
     <div class="card-header py-3 head-sticky bg-light">
-        <app-product-head-table (emitSearchResult)="receiveSearchResult($event)" (emitStatusProductsSync)="reListProduct()"></app-product-head-table>
+        <app-product-head-table  [status]="status" (emitSearchResult)="receiveSearchResult($event)"
+            (emitStatusProductsSync)="reListProduct()"></app-product-head-table>
     </div>
 
     <div class="card-body p-0">
 
         @if(products != undefined && products.length > 0){
-            <app-shopify-product-index [products]="products"></app-shopify-product-index>
+        <app-shopify-product-index [products]="products"></app-shopify-product-index>
         }@else{
-            <p class="p-4">No se cuenta con registro de productos   </p>
+        <p class="p-4">No se cuenta con registro de productos </p>
         }
 
     </div>
@@ -27,7 +28,7 @@
 
 </div>
 
+<app-paginator [links]="links"/>
 
 
 }
-

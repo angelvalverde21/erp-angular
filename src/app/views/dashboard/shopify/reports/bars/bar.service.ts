@@ -21,6 +21,12 @@ export class BarService  extends BaseCrudDashboardService{
     console.log(url);
     return this.http.get<any[]>(`${url}`);
   }
+  // Generic method to get all items
+  months(months: number = 12): Observable<any[]> {
+    const url = `${this.baseUrl}/months/${months}`;
+    console.log(url);
+    return this.http.get<any[]>(`${url}`);
+  }
 
   // Generic method to get all items
   topProducts(count: number = 10): Observable<any[]> {

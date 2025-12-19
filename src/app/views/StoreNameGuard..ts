@@ -13,7 +13,6 @@ export class StoreNameGuard implements CanActivate {
 
   constructor(
     private _base: BaseService,
-    private router: Router,
     private http: HttpClient
   ) { }
 
@@ -22,7 +21,10 @@ export class StoreNameGuard implements CanActivate {
     const store =
       route.paramMap.get('store') ??
       route.parent?.paramMap.get('store');
+    // route.parent?.parent?.paramMap.get('store');
 
+
+    console.log(route);
     console.log(store);
 
     //========= VERIFICADOR LOCAL ===============
@@ -32,7 +34,10 @@ export class StoreNameGuard implements CanActivate {
       return of(true);
     }
 
-   //========= VERIFICADOR EN RED ===============
+    //========= VERIFICADOR EN RED ===============
+
+    console.log("empezando verificacion en red");
+
 
     return this.http.get<Resp>(`${API.public}/${store}`).pipe(
 
@@ -68,9 +73,8 @@ export class StoreNameGuard implements CanActivate {
 
     //Validaciones minimas antes de seguir
 
-    if (storeName === "" || storeName == "" || storeName === null || storeName == null) {
-      console.log("error: validacion 1");
-      return false
+    if (!storeName) {
+      return false;
     }
 
     //Esperamos mas de 3 letras
@@ -92,7 +96,7 @@ export class StoreNameGuard implements CanActivate {
 
     const storeNameLocal = localStorage.getItem('store_name');
 
-    if (storeNameLocal === null || storeNameLocal === "undefined" || storeNameLocal === undefined || storeNameLocal !== storeName) {
+   if (!storeNameLocal) {
       return false;
     }
 

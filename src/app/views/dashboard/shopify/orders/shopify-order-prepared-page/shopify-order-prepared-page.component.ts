@@ -28,6 +28,9 @@ export class ShopifyOrderPreparedPageComponent implements OnInit, OnDestroy{
   faMagnifyingGlass = faMagnifyingGlass;
   faFilter = faFilter;
   store: string = "";
+  cursor: string = "";
+  hasNextPage: boolean = false;
+  loadingSecondary: boolean = false;
 
   constructor(private _order: ShopifyOrderService){
   }
@@ -35,26 +38,47 @@ export class ShopifyOrderPreparedPageComponent implements OnInit, OnDestroy{
   loading: boolean = false;
   orders: any[] = [];
 
-  cargarOders(){
+  cargarOrders(cursor: string = ""): void {
 
-    this.loading = true;
+    // si es carga inicial
+    const isInitialLoad = cursor === "";
+    if (isInitialLoad) {
+      this.loading = true;
+    } else {
+      this.loadingSecondary = true;
+    }
 
-    this._order.prepared().pipe(takeUntil(this.destroy$)).subscribe({
-    
-      next: (resp: any) => {
-        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
-        console.log(resp);
-        this.orders = resp.items;
-        console.log(this.orders);
-        this.loading = false;
-      },
-    
-      error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
-        console.error(error);
-      },
-    
-    });
+    this._order.prepared(cursor)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+
+        next: (resp: any) => {
+          console.log(resp);
+
+          this.orders = [...this.orders, ...resp.orders];
+          this.cursor = resp.pageInfo.endCursor;
+          this.hasNextPage = resp.pageInfo.hasNextPage;
+
+          if (isInitialLoad) this.loading = false;
+          else this.loadingSecondary = false;
+        },
+
+        error: (error: any) => {
+          Swal.fire('Error', 'Ocurrió un problema al cargar las órdenes.', 'error');
+          console.error(error);
+
+          if (isInitialLoad) this.loading = false;
+          else this.loadingSecondary = false;
+        },
+
+      });
+
+  }
+
+  next() {
+    if (!this.cursor || this.loading || this.loadingSecondary || !this.hasNextPage) return;
+
+    this.cargarOrders(this.cursor);
   }
 
   destroy$ = new Subject<void>();
@@ -68,7 +92,7 @@ export class ShopifyOrderPreparedPageComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
 
-    this.cargarOders();
+    this.cargarOrders();
     
   }
 

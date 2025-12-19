@@ -16,7 +16,6 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { PurchaseService } from '../purchase.service';
 import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import {
   faEdit,
@@ -29,12 +28,14 @@ import {
 import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component';
 import { UnitService } from '../../units/unit.service';
-import { JsonPipe } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { SupplierCreateComponent } from '../../suppliers/supplier-create/supplier-create.component';
+import { SupplierCreateComponent } from '../../users/suppliers/supplier-create/supplier-create.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { SupplierService } from '../../suppliers/supplier.service';
+import { SupplierService } from '../../users/suppliers/supplier.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PurchaseService } from '../purchase.service';
+import { ProductSelectedComponent } from '../../products/product-selected/product-selected.component';
 
 @Component({
   selector: 'app-purchase-create',
@@ -46,7 +47,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     JsonPipe,
     SupplierCreateComponent,
     NgSelectModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    CommonModule,
+    ProductSelectedComponent
   ],
   templateUrl: './purchase-create.component.html',
   styleUrl: './purchase-create.component.scss',
@@ -68,9 +71,9 @@ export class PurchaseCreateComponent {
   units: any[] = [];
 
   @Output() emitPurchaseCreate = new EventEmitter<any | boolean>();
-  @Input() section: any; 
-  @Input() purchaseable_type: string = ""; 
-  @Input() purchaseable_id: number = 0; 
+  @Input() purchaseable_type: string = "";
+  @Input() purchaseable_id: number = 0;
+  @Input() supplier_id: number | null = 0;
 
   private destroy$ = new Subject<void>();
   modal: any;
@@ -86,64 +89,70 @@ export class PurchaseCreateComponent {
     config.keyboard = false;
   }
 
+
   private formInit(): void {
+
+    const today = new Date().toISOString().split('T')[0];
+
+
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       quantity: [''],
       unit_id: [1],
-      section_id: [],
       price: [''],
       total: [''],
+      purchase_start: [today],
+      purchase_end: [today],
       purchaseable_type: [this.purchaseable_type],
       purchaseable_id: [this.purchaseable_id],
       observations: [''],
-      supplier_id: [''],
+      supplier_id: [this.supplier_id ?? null, Validators.required],
     });
   }
 
   calculosPricetotal() {
-    
-  const round2 = (num: number) => Math.round((num + Number.EPSILON) * 100) / 100;
 
-  const priceControl = this.form.get('price');
-  const totalControl = this.form.get('total');
-  const quantityControl = this.form.get('quantity');
+    const round2 = (num: number) => Math.round((num + Number.EPSILON) * 100) / 100;
 
-  priceControl?.valueChanges.subscribe(price => {
-    const quantity = quantityControl?.value || 0;
-    const total = totalControl?.value;
+    const priceControl = this.form.get('price');
+    const totalControl = this.form.get('total');
+    const quantityControl = this.form.get('quantity');
 
-    if (price != null && quantity > 0) {
-      const calcTotal = round2(price * quantity);
-      if (total !== calcTotal) {
-        totalControl?.setValue(calcTotal, { emitEvent: false });
+    priceControl?.valueChanges.subscribe(price => {
+      const quantity = quantityControl?.value || 0;
+      const total = totalControl?.value;
+
+      if (price != null && quantity > 0) {
+        const calcTotal = round2(price * quantity);
+        if (total !== calcTotal) {
+          totalControl?.setValue(calcTotal, { emitEvent: false });
+        }
       }
-    }
-  });
+    });
 
-  totalControl?.valueChanges.subscribe(total => {
-    const quantity = quantityControl?.value || 0;
-    const price = priceControl?.value;
+    totalControl?.valueChanges.subscribe(total => {
+      const quantity = quantityControl?.value || 0;
+      const price = priceControl?.value;
 
-    if (total != null && quantity > 0) {
-      const calcPrice = round2(total / quantity);
-      if (price !== calcPrice) {
-        priceControl?.setValue(calcPrice, { emitEvent: false });
+      if (total != null && quantity > 0) {
+        const calcPrice = round2(total / quantity);
+        if (price !== calcPrice) {
+          priceControl?.setValue(calcPrice, { emitEvent: false });
+        }
       }
-    }
-  });
+    });
 
-  quantityControl?.valueChanges.subscribe(quantity => {
-    const price = priceControl?.value || 0;
-    const total = totalControl?.value || 0;
+    quantityControl?.valueChanges.subscribe(quantity => {
+      const price = priceControl?.value || 0;
+      const total = totalControl?.value || 0;
 
-    if (price > 0) {
-      const calcTotal = round2(price * quantity);
-      if (total !== calcTotal) {
-        totalControl?.setValue(calcTotal, { emitEvent: false });
+      if (price > 0) {
+        const calcTotal = round2(price * quantity);
+        if (total !== calcTotal) {
+          totalControl?.setValue(calcTotal, { emitEvent: false });
+        }
       }
-    }
-  });
+    });
   }
 
   ngOnInit(): void {
@@ -155,7 +164,7 @@ export class PurchaseCreateComponent {
     // this.initBrands();
     // this.initsuppliers();
 
-    this.form.get('section_id')?.setValue(this.section.id);
+    // this.form.get('section_id')?.setValue(this.section.id);
 
     this.form.statusChanges.subscribe((status) => {
       console.log(status);
@@ -242,7 +251,7 @@ export class PurchaseCreateComponent {
   }
 
   supplierReceiveCreate(supplier: any) {
-    
+
     console.log(supplier);
 
     this.suppliers = [supplier, ...this.suppliers];

@@ -17,6 +17,7 @@ export class InputGroupComponent{
   @Input() text: string = '';
   @Input() col: string = '';
   @Input() mb: number = 3;
+  @Input() error: string = "";
 
   get hasIcon(): boolean {
     return !!this.icon || !!this.icontext;

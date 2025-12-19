@@ -18,6 +18,22 @@ export const routes: Routes = [
   },
 
   {
+    path: 'manufactures',
+    loadChildren: () =>
+      import('../../views/dashboard/manufactures/routes.manufacture').then(
+        (m) => m.routes
+      ),
+  },
+
+  {
+    path: 'purchases',
+    loadChildren: () =>
+      import('../../views/dashboard/purchases/routes.purchase').then(
+        (m) => m.routes
+      ),
+  },
+
+  {
     path: 'categories',
     loadChildren: () =>
       import('../../views/dashboard/categories/routes.category').then(

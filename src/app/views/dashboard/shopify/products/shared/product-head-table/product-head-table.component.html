@@ -1,9 +1,24 @@
 <div class="controls d-flex justify-content-between align-items-between">
     <div class="left d-flex">
-        <button class="btn btn-secondary btn-sm me-1">Todos</button>
-        <button class="btn btn-light btn-sm me-1">Activos</button>
-        <button class="btn btn-light btn-sm me-1">Borrador</button>
-        <button class="btn btn-light btn-sm me-1">Archivados</button>
+        <button class="btn btn-sm me-1" [ngClass]="status === '' ? 'btn-secondary' : 'btn-light'"
+            (click)="goToStatus('')">
+            Todos
+        </button>
+
+        <button class="btn btn-sm me-1" [ngClass]="status === 'ACTIVE' ? 'btn-secondary' : 'btn-light'"
+            (click)="goToStatus('ACTIVE')">
+            Activos
+        </button>
+
+        <button class="btn btn-sm me-1" [ngClass]="status === 'DRAFT' ? 'btn-secondary' : 'btn-light'"
+            (click)="goToStatus('DRAFT')">
+            Borrador
+        </button>
+
+        <button class="btn btn-sm me-1" [ngClass]="status === 'ARCHIVED' ? 'btn-secondary' : 'btn-light'"
+            (click)="goToStatus('ARCHIVED')">
+            Archivados
+        </button>
     </div>
     <div class="right d-flex justify-content-between align-items-between">
 
