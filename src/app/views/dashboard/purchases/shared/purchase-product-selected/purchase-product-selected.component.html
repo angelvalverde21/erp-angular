@@ -1,0 +1,45 @@
+<app-input-group text="{{ text }}" [icon]="faSearch">
+    <input type="text" class="form-control" placeholder="{{ text }}" aria-label="name" (input)="inputSearch($event)"
+        aria-describedby="basic-name" />
+</app-input-group>
+
+@if(show_result){
+
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<ul class="list-group mb-3">
+
+    @for (product of products; track product.id) {
+
+    @for (size of product.sizes; track size.id) {
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+
+            <img [src]="product.image.url_thumbnail" class="me-3" height="50">
+            <span>{{ product.name }} - {{ size.name }}</span>
+
+
+
+        </div>
+        <div class="controls d-flex justify-content-start justify-content-lg-end">
+            <!-- <select class="form-select me-2" aria-label="Default select example">
+
+                @for (i of [].constructor(50).keys(); track i) {
+                <option [value]="i">{{ i }}</option>
+                }
+
+            </select> -->
+            <button type="button" class="btn btn-outline-dark" style="width: 50px;"
+                (click)="selectProduct(product, size)">+</button>
+        </div>
+
+    </li>
+    }
+
+    }
+
+</ul>
+}
+
+}

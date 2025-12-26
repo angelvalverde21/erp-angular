@@ -2,7 +2,9 @@
 
     <!-- {{ color | json }} -->
 
-    <app-upload-dropzone bordeColor="#9BA2AD" [path]="path" (fileUpload)="fileUpload($event)" (lastFileUpload)="finishUpload($event)"></app-upload-dropzone>
+    <app-upload-dropzone bordeColor="#9BA2AD" [path]="path" (fileUpload)="fileUpload($event)"
+        (lastFileUpload)="finishUpload($event)"></app-upload-dropzone>
+        
 </div>
 
 <app-loading *ngIf="loading"></app-loading>

@@ -88,13 +88,19 @@ export const navErp: CustomNavData[] = [
         iconComponent: { name: 'cil-barcode' },
         children: [
             {
-                name: 'productos', url: 'dashboard/products', icon: 'nav-icon-bullet',
+                name: 'productos', url: 'dashboard/products',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
                 }
             },
             {
-                name: 'Inventario', url: 'dashboard/products/inventory', icon: 'nav-icon-bullet',
+                name: 'Colecciones', url: 'dashboard/collections',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+            {
+                name: 'Inventario', url: 'dashboard/products/inventory',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
                 }

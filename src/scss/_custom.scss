@@ -49,3 +49,23 @@
   z-index: 999;
   background: white;   /* opcional */
 }
+
+/* menu del sidebar */
+
+.nav-group  > .nav-link{
+  font-weight: 400;
+}
+
+.nav-item > .nav-link{
+  color: #969696;
+  font-weight: 300;
+}
+
+
+.nav-item > .active{
+  color: #e4e4e4 !important;
+}
+
+.fs-7{
+  font-size: 0.75rem !important;
+}

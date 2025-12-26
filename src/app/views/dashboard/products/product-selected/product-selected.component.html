@@ -1,4 +1,26 @@
-<app-input-group text="Producto (*)" [icon]="faEdit">
-    <input type="text" class="form-control" placeholder="Nombre del producto" aria-label="name" (input)="inputSearch($event)"
+<app-input-group text="{{ text }}" [icon]="faSearch">
+    <input type="text" class="form-control" placeholder="{{ text }}" aria-label="name" (input)="inputSearch($event)"
         aria-describedby="basic-name" />
 </app-input-group>
+
+@if(show_result){
+
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<ul class="list-group mb-3">
+
+    @for (product of products; track product.id) {
+
+    @for (size of product.sizes; track size.id) {
+    <li class="list-group-item">
+        <app-product-selected-row [product]="product" [size]="size" (emitSelectProduct)="receiveProductSelected($event, size)"></app-product-selected-row>
+    </li>
+    }
+
+    }
+
+</ul>
+}
+
+}

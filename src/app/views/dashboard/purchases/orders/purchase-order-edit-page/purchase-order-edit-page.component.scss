@@ -1,0 +1,21 @@
+.modal-control {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 10500000;
+  background-color: #fff;
+  width: 100%;
+  padding: 10px 0;
+  opacity: 95%;
+}
+
+.content-control{
+  width: 100px;
+  position: relative;
+  height: 40px;
+}
+
+.content-control button{
+  position: absolute;
+  right: 15px;
+}

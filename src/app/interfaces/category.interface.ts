@@ -1,6 +1,7 @@
 export interface Category {
   id: number;               // id de la categoría
-  name: string;             // nombre de la categoría
+  name?: string;             // nombre de la categoría
+  full_name?: string;             // nombre de la categoría
   slug: string;             // slug para URLs
 
   parent_id?: number | null; // categoría padre (nullable)

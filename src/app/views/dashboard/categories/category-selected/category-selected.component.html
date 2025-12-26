@@ -4,7 +4,7 @@
     <option [value]="null">Seleccione</option>
 
     @for (category of categories; track category.id) {
-    <option [value]="category.id">{{ category.name }}</option>
+    <option [value]="category.id">{{ category?.full_name }}</option>
 
     <!-- Opciones para las subcategorías -->
 

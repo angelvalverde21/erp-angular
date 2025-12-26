@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, Observable, of } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { API, environment } from '../../environments/environment';
 import { StoreService } from '../stores/store.service';
 import { BaseService } from '../base.service';
 
@@ -22,7 +22,7 @@ export class DashboardService {
     private router: Router,
     private _base: BaseService
   ) {
-    this.baseUrl = `${environment.apiDashboard}/${this._base.store}`;
+    this.baseUrl = `${API.private}/${this._base.store}`;
   }
   
   isValid(name: string): Observable<boolean> {
@@ -94,7 +94,7 @@ export class DashboardService {
 
 
   getGallery(path: string = ""): Observable<any> {
-    const url = `${this.baseUrl}/${path}`;
+    const url = `${this.baseUrl}/dashboard/${path}`;
     console.log(url);
     
     return this.http.get(url);

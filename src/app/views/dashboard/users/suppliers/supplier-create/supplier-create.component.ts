@@ -28,6 +28,8 @@ export class SupplierCreateComponent {
   ) {}
 
   @Output() emitSupplierCreate = new EventEmitter<any>();
+  @Input() button_text: string = 'Guardar';
+  
   faSave = faSave;
 
   disabledButton: boolean = false;
@@ -49,6 +51,15 @@ export class SupplierCreateComponent {
       return;
     }
 
+    Swal.fire({
+      title: 'Espere...',
+      html: 'Registrando proveedor',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    })
+    
 
     this.loadingIcon = true;
     this.disabledButton = true;

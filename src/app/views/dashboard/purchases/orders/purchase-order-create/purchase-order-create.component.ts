@@ -36,6 +36,9 @@ import { SupplierService } from '../../../users/suppliers/supplier.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PurchaseService } from '../../purchase.service';
 import { PurchaseOrderService } from '../purchase_order.service';
+import { ProductSelectedComponent } from '../../../products/product-selected/product-selected.component';
+import { Product } from '../../../../../interfaces/product.interface';
+
 
 @Component({
   selector: 'app-purchase-order-create',
@@ -47,7 +50,9 @@ import { PurchaseOrderService } from '../purchase_order.service';
     JsonPipe,
     SupplierCreateComponent,
     NgSelectModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    JsonPipe,
+    ProductSelectedComponent
   ],
   templateUrl: './purchase-order-create.component.html',
   styleUrl: './purchase-order-create.component.scss',
@@ -88,13 +93,21 @@ export class PurchaseOrderCreateComponent {
   }
 
   private formInit(): void {
+    const today = new Date().toISOString().split('T')[0];
     this.form = this.fb.group({
       supplier_id: ['', [Validators.required]],
-      observations: ['', [Validators.required]],
+      purchase_start: [today],
+      purchase_end: [today],
+      // observations: ['', [Validators.required]],
     });
   }
 
+  purchase_order_items: any = [];
+
   ngOnInit(): void {
+
+    this.purchase_order_items = JSON.parse(localStorage.getItem('purchase_order_items') || '[]');
+
     this.formInit();
 
     this.getSuppliers();
@@ -144,19 +157,27 @@ export class PurchaseOrderCreateComponent {
       return;
     }
 
-
     this.loadingIcon = true;
     this.disabledButton = true;
 
     this.success = false;
     // console.log(this.form.value);
 
+    Swal.fire({
+      title: 'Espere...',
+      html: 'Generando orden de compra',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    })
+    
     this._purchase_order
       .store(this.form.value)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (resp: any) => {
-          Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+          Swal.fire('Guardado', 'Orden de compra creada', 'success');
           this.success = true;
           this.form.reset();
           this.disabledButton = true;
@@ -167,7 +188,7 @@ export class PurchaseOrderCreateComponent {
         error: (error: any) => {
           Swal.fire(
             'Error',
-            'Ocurrio un problema al crear. Inténtalo nuevamente.',
+            'Ocurrio un problema al crear la orden de compra. Inténtalo nuevamente.',
             'error'
           );
           this.disabledButton = true;
@@ -203,9 +224,35 @@ export class PurchaseOrderCreateComponent {
 
     this.form.get('supplier_id')?.setValue(supplier.id);
     // this.form.get('supplier_id')?.setValue(supplier.id);
+    
+    this.create();
 
     if (supplier) {
       this.modal.close();
     }
+
+  }
+
+  products: Product[] = [];
+
+  receiveSearchResult(event: Product[], content: TemplateRef<any>){
+    this.modal = this.modalService.open(content, {
+      centered: true,
+      size: 'xl',
+    });
+
+    this.products = event;
+  }
+
+  
+
+  itemSelected(event: any){
+
+    const purchase_order_items = JSON.parse(localStorage.getItem('purchase_order_items') || '[]');
+
+    localStorage.setItem('purchase_order_items', JSON.stringify([...purchase_order_items, event]));
+
+    this.purchase_order_items = [...purchase_order_items, event];
+
   }
 }

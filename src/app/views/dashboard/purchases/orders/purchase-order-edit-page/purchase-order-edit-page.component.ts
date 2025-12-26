@@ -12,6 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { InputGroupComponent } from '../../../../shared/components/form/input-group/input-group.component';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -22,7 +23,8 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
     ButtonBackComponent,
     PurchaseCreateComponent,
     LoadingComponent,
-    InputGroupComponent
+    InputGroupComponent,
+    CommonModule
   ],
   templateUrl: './purchase-order-edit-page.component.html',
   styleUrl: './purchase-order-edit-page.component.scss',
@@ -104,6 +106,8 @@ export class PurchaseOrderEditPageComponent implements OnInit, OnDestroy {
   closeModal() {
     this.modal.close();
   }
+
+  formActive: boolean = true;
 
 }
 

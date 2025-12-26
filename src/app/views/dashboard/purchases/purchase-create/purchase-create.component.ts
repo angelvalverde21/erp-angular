@@ -61,6 +61,7 @@ export class PurchaseCreateComponent {
   form!: FormGroup;
   loading: boolean = false;
   success: boolean = false;
+  search_result: boolean = false;
 
   faEdit = faEdit;
   faTags = faTags;
@@ -93,7 +94,6 @@ export class PurchaseCreateComponent {
   private formInit(): void {
 
     const today = new Date().toISOString().split('T')[0];
-
 
     this.form = this.fb.group({
       name: ['', [Validators.required]],
@@ -263,4 +263,19 @@ export class PurchaseCreateComponent {
       this.modal.close();
     }
   }
+
+  hidden_fields: boolean = true;
+
+  onSearchResult(result: any){
+    console.log(result);
+    
+    if (result.length > 0){
+      this.hidden_fields = true;
+    }else{
+      this.hidden_fields = false;
+    }
+
+  }
+
+
 }
