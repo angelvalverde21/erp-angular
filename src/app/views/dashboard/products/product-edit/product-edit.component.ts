@@ -11,6 +11,7 @@ import { ButtonComponent } from '../../../shared/components/buttons/button/butto
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { Brand } from '../../../../interfaces/brand.interface';
 import { ButtonGalleryComponent } from '../../../shared/components/buttons/button-gallery/button-gallery.component';
+import { GalleryComponent } from '../../../shared/components/gallery/gallery.component';
 
 @Component({
   selector: 'app-product-edit',
@@ -18,7 +19,8 @@ import { ButtonGalleryComponent } from '../../../shared/components/buttons/butto
     ReactiveFormsModule, 
     ProductFormComponent, 
     ButtonComponent,
-    ButtonGalleryComponent
+    ButtonGalleryComponent,
+    GalleryComponent
   ],
   templateUrl: './product-edit.component.html',
   styleUrl: './product-edit.component.scss'

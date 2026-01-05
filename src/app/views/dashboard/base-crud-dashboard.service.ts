@@ -12,7 +12,6 @@ export abstract class BaseCrudDashboardService {
 
   constructor(protected http: HttpClient, public section: string) {
 
-    
     this.baseUrl = `${API.private}/${this._base.store}/dashboard/${this.section}`
     console.log(this.baseUrl);
 

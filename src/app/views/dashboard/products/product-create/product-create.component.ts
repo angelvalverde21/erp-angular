@@ -120,11 +120,11 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
   private formInit(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
-      price: ['', [Validators.required]],
-      brand_id: ['', [Validators.required]],
-      model: ['', [Validators.required]],
+      // price: ['', [Validators.required]],
+      // brand_id: ['', [Validators.required]],
+      // model: ['', [Validators.required]],
       // unit_id: ['', [Validators.required]],
-      category_id: ['null', [Validators.required]],
+      category_id: [null, [Validators.required]],
       body: ['']
     });
   }

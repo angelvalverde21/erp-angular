@@ -24,7 +24,12 @@ import Swal from 'sweetalert2';
 import { SizeIndexComponent } from '../../sizes/size-index/size-index.component';
 import { ColorCreateComponent } from '../../colors/color-create/color-create.component';
 import { Color } from '../../colors/color.interface';
-
+import { OptionValueIndexComponent } from '../options/OptionValues/option-value-index/option-value-index.component';
+import { AttributeIndexComponent } from '../attributes/attribute-index/attribute-index.component';
+import { JsonPipe } from '@angular/common';
+import { OptionIndexComponent } from '../options/option-index/option-index.component';
+import { OptionValueCreateComponent } from '../options/OptionValues/option-value-create/option-value-create.component';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -39,7 +44,13 @@ import { Color } from '../../colors/color.interface';
     ButtonBackComponent,
     HeadPageComponent,
     SizeIndexComponent,
-    ColorCreateComponent
+    ColorCreateComponent,
+    OptionValueIndexComponent,
+    AttributeIndexComponent,
+    JsonPipe,
+    OptionIndexComponent,
+    OptionValueCreateComponent,
+    NgbAccordionModule
   ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss'
@@ -54,7 +65,7 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
   faPenToSquare = faPenToSquare;
   faPalette = faPalette;
   faRulerCombined = faRulerCombined;
-
+  
   constructor(
     private _product: ProductService,
     private route: ActivatedRoute,
@@ -68,6 +79,11 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
     });
 
   }
+
+  has_color: boolean = false;
+  has_talla: boolean = false;
+
+  options: any;
 
   destroy$ = new Subject<void>();
 
@@ -86,6 +102,8 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
     this.productSetup();
     this.productInit();
 
+    this.options = localStorage.getItem('store') ? JSON.parse(localStorage.getItem('store')!).options_default : [];
+
   }
 
   productInit() {
@@ -100,6 +118,15 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
         this.product = resp.data;
         this.sizes = this.product.sizes;
         this.loadingProduct = false;
+
+        const options = this.product.options;
+
+        this.has_talla = this.product.options.some((o: any) => o.name === 'Talla');
+        console.log(this.product.options);
+        
+        // console.log(this.has_talla);
+
+        this.has_color = this.product.options.some((o: any) => o.name === 'Color');
       },
 
       error: (error: any) => {

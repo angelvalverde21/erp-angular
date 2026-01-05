@@ -1,0 +1,32 @@
+<app-option-value-create [options]="options" (emitOptionValue)="receiveOptionValue($event)"
+    [option_selected]="option_selected"></app-option-value-create>
+
+@for (option of options; track option.id) {
+
+@if(option.option_values?.length > 0){
+
+<ul class="list-group list-group-flush mt-3">
+
+    @for (option_value of option.option_values; track option_value.id){
+
+    <li class="list-group-item">
+        <div class="info d-flex justify-content-between align-items-center">
+            <span>
+                <strong>{{ option.name }} </strong>: {{ option_value.value }}
+            </span>
+            <button class="btn btn-outline-danger btn-sm" (click)="removeOptionValue(option_value.id)">Eliminar</button>
+        </div>
+
+        @if(option.name === "Color"){
+        <div class="item-gallery" style="width: 90px; height: 120px;">
+            <app-gallery [path]="`products/${option.product_id}/options/${option.id}/galleries`"></app-gallery>
+        </div>
+        }
+
+    </li>
+
+    }
+</ul>
+}
+
+}

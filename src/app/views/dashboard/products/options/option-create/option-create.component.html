@@ -1,0 +1,17 @@
+<div [formGroup]="form" class="d-flex justify-content-between align-items-center mb-3">
+    <select class="form-select me-2" 
+    [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched" 
+    formControlName="name" aria-label="Default select example">
+        <option value="">Agregue Opciones</option>
+        @for (option_init of options_init; track $index) {
+        <option [value]="option_init.name">{{ option_init.label
+         }}</option>
+        }
+    </select>
+    <app-button [color]="form.valid ? 'dark' : 'outline-dark'" [icon]="faPlus" [disabled]="loading" [spinner]="loading"
+        (action)="create()">Agregar </app-button>
+</div>
+
+<!-- {{ form.valid }}
+
+{{ form.value | json }} -->

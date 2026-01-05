@@ -19,5 +19,8 @@ export interface Product {
   sizes: Size[];
   image?: Image | null;
   attributes?: Attribute[];
+  attributes_init?: Attribute[];
+  options_init?: any[];
   colors: Color[];
+  options: any[];
 }

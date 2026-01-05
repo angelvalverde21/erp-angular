@@ -3,11 +3,14 @@
     <app-product-form [form]="form" [categories]="categories" [brands]="brands"
         (emitCategorySelected)="categorySelected($event)"></app-product-form>
 
+    <app-gallery [path]="`products/${product.id}/images`"></app-gallery>
+
     <div class="controls d-flex justify-content-between align-items-center">
         <app-button color="dark" [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon" (action)="update()">Guardar
             Cambios</app-button>
 
-        <!-- <app-button-gallery [path]="`products/${product.id}/images`"></app-button-gallery> -->
+        <!-- <app-button-gallery></app-button-gallery> -->
     </div>
+
 
 </form>

@@ -1,0 +1,23 @@
+<form [formGroup]="form" action="" class="content-variants d-flex justify-content-between align-items-center">
+    <select class="form-select me-2" [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+        aria-label="Default select example" formControlName="name">
+        <option value="">Atributos</option>
+        @for (attribute of attributes_init; track $index) {
+        <option [value]="">{{ attribute.name }}</option>
+        }
+
+    </select>
+    <app-input-group [mb]="0">
+        <input formControlName="value" type="text" class="form-control me-2" placeholder="Valor"
+            [class.is-invalid]="form.get('value')?.invalid && form.get('value')?.touched"
+            aria-label="attribute_valuename" aria-describedby="basic-attribute_valuename" UpperCase />
+    </app-input-group>
+
+    <app-button [color]="form.valid ? 'dark' : 'outline-dark'" [icon]="faPlus" [disabled]="loading" [spinner]="loading"
+        (action)="create()">Agregar </app-button>
+
+    <!-- <button type="button" (click)="create()" class="btn"
+        [ngClass]="form.valid ? 'btn-dark' : 'btn-outline-dark'">Agregar</button> -->
+
+    <!-- {{ form.value | json }} -->
+</form>

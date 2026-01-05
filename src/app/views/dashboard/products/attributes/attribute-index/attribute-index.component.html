@@ -1,0 +1,14 @@
+@if(attributes_init.length > 0){
+<app-attribute-create [attributes_init]="attributes_init" (emitAttribute)="receiveAttribute($event)"
+    [product_id]="product_id"></app-attribute-create>
+}
+
+<ul class="list-group list-group-flush mt-3">
+
+    @for (attribute of attributes; track attribute.id){
+    <li class="list-group-item">
+        <app-attribute-row [attribute]="attribute"
+            (emitAttributeDelete)="receiveDeleteStatus($event)"></app-attribute-row>
+    </li>
+    }
+</ul>
