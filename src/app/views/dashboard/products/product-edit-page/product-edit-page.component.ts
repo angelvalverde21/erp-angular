@@ -121,12 +121,12 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
 
         const options = this.product.options;
 
-        this.has_talla = this.product.options.some((o: any) => o.name === 'Talla');
+        this.has_talla = this.product.options?.some((o: any) => o.name === 'Talla');
         console.log(this.product.options);
         
         // console.log(this.has_talla);
 
-        this.has_color = this.product.options.some((o: any) => o.name === 'Color');
+        this.has_color = this.product.options?.some((o: any) => o.name === 'Color');
       },
 
       error: (error: any) => {

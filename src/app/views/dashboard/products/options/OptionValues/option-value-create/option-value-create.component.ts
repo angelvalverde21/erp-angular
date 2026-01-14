@@ -8,6 +8,7 @@ import { OptionValueService } from '../option_value.service';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../../../../../shared/components/buttons/button/button.component';
 import { UpperCaseDirective } from '../../../../../../core/directives/only-uppercase.directive';
+// import { OptionValueIndexComponent } from '../option-value-index/option-value-index.component';
 
 @Component({
   selector: 'app-option-value-create',
@@ -17,7 +18,9 @@ import { UpperCaseDirective } from '../../../../../../core/directives/only-upper
     JsonPipe,
     CommonModule,
     UpperCaseDirective,
-    ButtonComponent
+    ButtonComponent,
+    // OptionValueIndexComponent
+    // OptionValueIndexComponent
   ],
   templateUrl: './option-value-create.component.html',
   styleUrl: './option-value-create.component.scss'
@@ -27,6 +30,7 @@ export class OptionValueCreateComponent implements OnInit {
   @Output() emitOptionValue = new EventEmitter<[]>();
 
   faPlus = faPlus;
+  @Input() option_id: number = 0;
   @Input() options: any[] = [];
   @Input() option_selected: string = "";
   @Input() text_selected: string = "Valor";
@@ -54,16 +58,15 @@ export class OptionValueCreateComponent implements OnInit {
       this.form.get("option_id")?.setValue(option.id);
     }
 
-
-
     this.form.valueChanges.subscribe(value => {
       console.log(value);
     });
+
   }
 
   formInit() {
     this.form = this.fb.group({
-      option_id: ["", Validators.required],
+      option_id: [this.option_id, Validators.required],
       value: ["", Validators.required]
     });
   }

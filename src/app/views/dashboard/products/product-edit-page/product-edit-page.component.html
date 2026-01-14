@@ -9,104 +9,6 @@
 <app-loading></app-loading>
 }@else{
 
-<div ngbAccordion>
-  <div ngbAccordionItem [collapsed]="false">
-    <h2 ngbAccordionHeader>
-      <button ngbAccordionButton>Info Producto</button>
-    </h2>
-    <div ngbAccordionCollapse>
-      <div ngbAccordionBody>
-        <ng-template>
-          <app-product-edit [product]="product" [categories]="categories" [brands]="brands"
-            (emitCategorySelected)="categorySelected($event)"></app-product-edit>
-        </ng-template>
-      </div>
-    </div>
-  </div>
-  <div ngbAccordionItem>
-    <h2 ngbAccordionHeader>
-      <button ngbAccordionButton>
-        Attributos
-      </button>
-    </h2>
-    <div ngbAccordionCollapse>
-      <div ngbAccordionBody>
-        <ng-template>
-          <app-attribute-index [attributes_init]="product.attributes_init" [attributes]="product.attributes"
-            [product_id]="product.id"></app-attribute-index>
-          <!-- <app-option-index [options_init]="product.options_init" [product_id]="product.id"></app-option-index> -->
-
-        </ng-template>
-      </div>
-    </div>
-  </div>
-  <div ngbAccordionItem>
-    <h2 ngbAccordionHeader>
-      <button ngbAccordionButton>
-        Opciones (Colores, tallas)
-      </button>
-    </h2>
-    <div ngbAccordionCollapse>
-      <div ngbAccordionBody>
-        <ng-template>
-
-          <app-option-index [options_init]="product.options_init" [product_id]="product.id"></app-option-index>
-
-          <div class="card mb-3">
-            <div class="card-header py-3">
-              Colores
-            </div>
-            <div class="card-body">
-              <app-option-value-index [options]="product.options" [create]="false"
-                option_selected="Color"></app-option-value-index>
-
-            </div>
-          </div>
-
-          <div class="card mb-3">
-            <div class="card-header py-3">
-              Tallas
-            </div>
-            <div class="card-body">
-              <!-- <app-option-value-create [options]="product.options"
-                text_selected="Agregar talla"></app-option-value-create> -->
-
-              <app-option-value-index [options]="product.options" [create]="false"
-                option_selected="Talla"></app-option-value-index>
-            </div>
-          </div>
-          <!-- 
-          <app-option-value-create [options]="product.options" option_selected="Talla"
-            text_selected="Agregar talla"></app-option-value-create> -->
-
-        </ng-template>
-      </div>
-    </div>
-  </div>
-
-  <div ngbAccordionItem>
-    <h2 ngbAccordionHeader>
-      <button ngbAccordionButton>
-        Inventario
-      </button>
-    </h2>
-    <div ngbAccordionCollapse>
-      <div ngbAccordionBody>
-        <ng-template>
-          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
-          officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf
-          moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim
-          keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur
-          butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably
-          haven't heard of them accusamus labore sustainable VHS.
-        </ng-template>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
 <div class="row">
   <div class="col-lg-12">
     <app-head-page title="{{ product.name }}">
@@ -127,19 +29,8 @@
 
         </div>
 
-        <app-head-page title="Agregue Bloque de Opciones">
-        </app-head-page>
-
-        <div class="card mb-3">
-          <div class="card-body">
-            <app-option-index [options_init]="product.options_init" [product_id]="product.id"></app-option-index>
-
-
-          </div>
-        </div>
-
         <!-- {{ product.i}} -->
-
+        <!-- 
         <app-head-page title="Tallas">
         </app-head-page>
 
@@ -149,27 +40,24 @@
             <app-option-value-create [options]="product.options" option_selected="Talla"
               text_selected="Agregar talla"></app-option-value-create>
           </div>
-        </div>
+        </div> -->
 
 
       </div>
 
       <div class="col-lg-5">
 
-        <app-head-page title="Atributos">
+        <app-head-page title="Agregue Bloque de Opciones">
         </app-head-page>
 
-
-
-        <app-attribute-index [attributes_init]="product.attributes_init" [attributes]="product.attributes"
-          [product_id]="product.id"></app-attribute-index>
-
-        <app-head-page title="Opciones">
-        </app-head-page>
-
-        <!-- <app-option-value-index [options]="product.options"></app-option-value-index> -->
+        <div class="card mb-3">
+          <div class="card-body">
+            <app-option-index [options_init]="product.options_init" [options]="product.options" [product_id]="product.id"></app-option-index>
+          </div>
+        </div>
 
       </div>
+
 
     </div>
 

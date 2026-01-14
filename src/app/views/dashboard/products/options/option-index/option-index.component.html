@@ -1,1 +1,11 @@
-<app-option-create [options_init]="options_init" [product_id]="product_id"></app-option-create>
+<app-option-create [options_init]="options_init" [product_id]="product_id" (emitOption)="receiveOption($event)"></app-option-create>
+
+@for (option of options; track option.id) {
+
+<app-head-page title="{{ option.label }}">
+</app-head-page>
+
+<app-option-value-index [option_values]="option.option_values" [name]="option.name"
+    [option_id]="option.id"></app-option-value-index>
+
+}

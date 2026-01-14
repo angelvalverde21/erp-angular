@@ -1,14 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { OptionValueCreateComponent } from '../option-value-create/option-value-create.component';
 import { HeadPageComponent } from '../../../../../shared/components/head-page/head-page.component';
-import { GalleryComponent } from '../../../../../shared/components/gallery/gallery.component';
+// import { GalleryComponent } from '../../../../../shared/components/gallery/gallery.component';
 
 @Component({
   selector: 'app-option-value-index',
   imports: [
     OptionValueCreateComponent,
     HeadPageComponent,
-    GalleryComponent
+    // GalleryComponent
   ],
   templateUrl: './option-value-index.component.html',
   styleUrl: './option-value-index.component.scss'
@@ -16,18 +16,23 @@ import { GalleryComponent } from '../../../../../shared/components/gallery/galle
 
 export class OptionValueIndexComponent implements OnInit {
 
-  @Input() options: any[] = [];
-  @Input() create: boolean = true;
-  @Input() option_selected="";
+  @Input() option_values: any[] = [];
+  @Input() option_id: number = 0;
+  @Input() name: string = "";
 
-  option_values: any[] = [];
+  // @Input() options: any[] = [];
+  @Input() create: boolean = true;
+  @Input() option_selected = "";
+
+  // option_values: any[] = [];
 
   ngOnInit(): void {
+
     // this.option_values = this.options.flatMap(option => option.values);
 
-    if (this.option_selected != "") {
-      this.options = this.options.filter((o:any) => o.name === this.option_selected);
-    }
+    // if (this.option_selected != "") {
+    //   this.options = this.options.filter((o:any) => o.name === this.option_selected);
+    // }
   }
 
   receiveOptionValue(new_option_value: any) {
@@ -41,23 +46,23 @@ export class OptionValueIndexComponent implements OnInit {
     }
 
     console.log(option);
+    this.option_values = [...(this.option_values ?? []), new_option_value];
 
+    // this.options = this.options.map(option => {
 
-    this.options = this.options.map(option => {
+    //   if (option.id === new_option_value.option.id) {
+    //     // console.log(option.name);
+    //     option.option_values = [
+    //       ...option.option_values,
+    //       new_option_value
+    //     ]
+    //   }
 
-      if (option.id === new_option_value.option.id) {
-        // console.log(option.name);
-        option.option_values = [
-          ...option.option_values,
-          new_option_value
-        ]
-      }
+    //   return option;
 
-      return option;
+    // });
 
-    });
-
-    console.log(this.options);
+    // console.log(this.options);
 
   }
 

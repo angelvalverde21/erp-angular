@@ -1,5 +1,6 @@
 <form [formGroup]="form" action="" class="content-variants d-flex justify-content-between align-items-center">
-    <select class="form-select me-2" [ngClass]="{'d-none': option_selected !== ''}"
+
+    <!-- <select class="form-select me-2" [ngClass]="{'d-none': option_selected !== ''}"
     
         [class.is-invalid]="form.get('option_id')?.invalid && form.get('option_id')?.touched"
         aria-label="Default select example" formControlName="option_id">
@@ -8,7 +9,8 @@
         <option [value]="option.id">{{ option.name }}</option>
         }
 
-    </select>
+    </select> -->
+
     <app-input-group [mb]="0" class="w-100">
         <input formControlName="value" type="text" class="form-control me-2 w-100" [placeholder]="text_selected"
             [class.is-invalid]="form.get('value')?.invalid && form.get('value')?.touched" aria-label="option_valuename"
@@ -19,5 +21,9 @@
 
     <app-button [color]="form.valid ? 'dark' : 'outline-dark'" [icon]="faPlus" [disabled]="loading" [spinner]="loading"
         (action)="create()">Agregar </app-button>
+
     <!-- {{ form.value | json }} -->
 </form>
+
+
+<!-- <app-option-value-index [option]="option"></app-option-value-index> -->
