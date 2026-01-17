@@ -1,1 +1,7 @@
-<p>variant-index works!</p>
+<ul class="list-group list-group-flush">
+
+    @for (variant of variants; track variant.id) {
+        <li class="list-group-item">{{ variant.sku }}</li>
+    }
+
+</ul>

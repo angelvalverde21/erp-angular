@@ -30,6 +30,7 @@ import { JsonPipe } from '@angular/common';
 import { OptionIndexComponent } from '../options/option-index/option-index.component';
 import { OptionValueCreateComponent } from '../options/OptionValues/option-value-create/option-value-create.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { VariantIndexComponent } from '../variants/variant-index/variant-index.component';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -50,7 +51,8 @@ import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
     JsonPipe,
     OptionIndexComponent,
     OptionValueCreateComponent,
-    NgbAccordionModule
+    NgbAccordionModule,
+    VariantIndexComponent
   ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss'
@@ -120,13 +122,6 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
         this.loadingProduct = false;
 
         const options = this.product.options;
-
-        this.has_talla = this.product.options?.some((o: any) => o.name === 'Talla');
-        console.log(this.product.options);
-        
-        // console.log(this.has_talla);
-
-        this.has_color = this.product.options?.some((o: any) => o.name === 'Color');
       },
 
       error: (error: any) => {

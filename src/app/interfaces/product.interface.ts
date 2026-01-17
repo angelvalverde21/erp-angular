@@ -23,4 +23,5 @@ export interface Product {
   options_init?: any[];
   colors: Color[];
   options: any[];
+  variants: any[];
 }

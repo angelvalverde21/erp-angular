@@ -12,7 +12,7 @@ import { JsonPipe } from '@angular/common';
     OptionValueCreateComponent,
     OptionValueIndexComponent,
     JsonPipe
-    
+
   ],
   templateUrl: './option-index.component.html',
   styleUrl: './option-index.component.scss'
@@ -20,14 +20,24 @@ import { JsonPipe } from '@angular/common';
 export class OptionIndexComponent implements OnInit {
 
   @Input() options_init: any;
-  @Input() product_id: number = 0; 
-  @Input() options: any; 
+  @Input() product_id: number = 0;
+  @Input() options: any;
 
   ngOnInit(): void {
+
+    this.options.forEach((option:any) => {
+      this.removeOptionInit(option);
+    });
+
   }
 
-  receiveOption(option: any){
-    this.options = [...this.options, option]
+  receiveOption(option: any) {
+    this.options = [...this.options, option];
+    this.removeOptionInit(option);
+  }
+
+  removeOptionInit(option: any) {
+    this.options_init = this.options_init.filter((o: any) => o.name !== option.name);
   }
 
 }

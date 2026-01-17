@@ -9,6 +9,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../../../../../shared/components/buttons/button/button.component';
 import { UpperCaseDirective } from '../../../../../../core/directives/only-uppercase.directive';
 // import { OptionValueIndexComponent } from '../option-value-index/option-value-index.component';
+import { noCommaValidator } from '../../../../../../core/validators/no-coma'
 
 @Component({
   selector: 'app-option-value-create',
@@ -45,7 +46,7 @@ export class OptionValueCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    
     this.formInit();
 
     console.log(this.options);
@@ -67,7 +68,7 @@ export class OptionValueCreateComponent implements OnInit {
   formInit() {
     this.form = this.fb.group({
       option_id: [this.option_id, Validators.required],
-      value: ["", Validators.required]
+      value: ["", [Validators.required, noCommaValidator]]
     });
   }
 

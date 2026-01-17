@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-variant-index',
@@ -7,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrl: './variant-index.component.scss'
 })
 export class VariantIndexComponent {
+
+    @Input() variants: any[] = []; 
+
 
 }
