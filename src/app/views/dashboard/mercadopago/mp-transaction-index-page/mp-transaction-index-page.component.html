@@ -18,10 +18,10 @@
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
                 <div class="table-buttom d-flex justify-content-between align-items-center w-100">
-                    <div class="authorization-code">{{ transaction.authorization_code}}</div>
+                    <div class="last-four-digits">{{ transaction.transaction_amount |
+                        currency:'PEN':'symbol':'1.2-2':'es-PE' }}</div>
                     <div class="payment-method">{{ transaction.payment_method.id | slice:0:10}}</div>
-                    <div class="last-four-digits">***{{ transaction.card.last_four_digits}}</div>
-                    <div class="last-four-digits">{{ transaction.transaction_amount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</div>
+                    <!-- <div class="last-four-digits">***{{ transaction.card.last_four_digits}}</div> -->
                     <div class="status">
                         @switch (transaction.status) {
                         @case ('approved') {
@@ -42,13 +42,14 @@
 
                         }
                     </div>
-                    <div class="description">{{ transaction.description | slice:0:20}}</div>
+                    <div class="authorization-code d-none d-sm-block">{{ transaction.authorization_code}}</div>
+                    <!-- <div class="description">{{ transaction.description | slice:0:20}}</div> -->
                     <!-- <td>{{ transaction.transaction_amount }}</td> -->
                     <div>
 
                     </div>
-                    <div class="date">{{ transaction.date_created | date:'dd-MM-yyyy HH:mm:ss' }}</div>
-                    <div class="date">{{ transaction.metadata?.shopify_data?.id  | slice:0:10 }}***</div>
+                    <div class="date d-none d-sm-block">{{ transaction.date_created | dateShopify }}</div>
+                    <!-- <div class="date">{{ transaction.metadata?.shopify_data?.id  | slice:0:10 }}***</div> -->
                 </div>
             </button>
         </h2>

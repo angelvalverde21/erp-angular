@@ -5,6 +5,7 @@ import { MercadoPagoService } from '../mercadopago.service';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
 
 @Component({
   selector: 'app-mp-transaction-index-page',
@@ -12,7 +13,8 @@ import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
     JsonPipe,
     LoadingComponent,
     CommonModule,
-    NgbAccordionModule
+    NgbAccordionModule,
+    DateShopifyPipe
   ],
   templateUrl: './mp-transaction-index-page.component.html',
   styleUrl: './mp-transaction-index-page.component.scss'
