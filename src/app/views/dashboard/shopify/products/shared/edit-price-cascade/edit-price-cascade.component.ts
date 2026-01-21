@@ -29,7 +29,7 @@ export class EditPriceCascadeComponent implements OnInit {
     this.prices = this.price_keys.map(key => this.variant?.[key] ?? null);
 
     this.priceSubject
-      .pipe(debounceTime(600))
+      .pipe(debounceTime(500))
       .subscribe(data => {
         console.log("Debounced:", data);
         // this.updatePrice(data);

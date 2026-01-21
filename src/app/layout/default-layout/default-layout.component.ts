@@ -59,6 +59,8 @@ export class DefaultLayoutComponent implements OnInit {
 
   storeName: string = ""
 
+  user: any;
+
   constructor(private _base: BaseService, private router: Router) {
 
   }
@@ -68,10 +70,14 @@ export class DefaultLayoutComponent implements OnInit {
     // const currentUrl = this.router.url;
 
     //Obtengo el usuario de localStorage
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+
+
+    console.log(this.user);
+    
 
     //Obtengo sus roles
-    const localroles = user.roles || [];
+    const localroles = this.user.roles || [];
 
     //Filtro en el menu solo los roles permitidos
     this.navItems = navItems.filter((navItem: any) => {
@@ -80,9 +86,11 @@ export class DefaultLayoutComponent implements OnInit {
       if (!navItem.roles) return true;
 
       // En caso haya restriccion, Si alguno de los roles del user coincide -> mostrar
-      if (localroles.includes('master') || localroles.includes('ceo')) {
-        return true;
-      }
+      // if (localroles.includes('master') || localroles.includes('ceo')) {
+      //   console.log("inclye master o ceo");
+        
+      //   return true;
+      // }
 
       return navItem.roles.some((role: any) => localroles.includes(role)); //Devuelve verdadero o falso segun eso quita o no un item del navItems
       // const result = navItem.roles.some((role:any) => roles.includes(role));

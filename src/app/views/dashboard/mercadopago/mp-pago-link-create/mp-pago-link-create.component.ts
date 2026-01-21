@@ -57,7 +57,7 @@ export class MpPagoLinkCreateComponent {
   private formInit(): void {
     this.form = this.fb.group({
       amount: ['', [Validators.required]],
-      comision: [0, [Validators.required]],
+      comision: [5, [Validators.required]],
     });
   }
 

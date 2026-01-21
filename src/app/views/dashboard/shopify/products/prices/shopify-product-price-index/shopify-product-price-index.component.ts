@@ -12,6 +12,7 @@ import { faShopify } from '@fortawesome/free-brands-svg-icons';
 import { ShopifyProductService } from '../../shopify.product.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
+import { ShopifyImageThumbnailPipe } from '../../../../../shared/pipes/shopify/shopify-image-thumbnail.pipe';
 
 @Component({
   selector: 'app-shopify-product-price-index',
@@ -24,6 +25,7 @@ import Swal from 'sweetalert2';
     EditPriceCascadeComponent,
     EditPriceComponent,
     FontAwesomeModule,
+    ShopifyImageThumbnailPipe
   ],
   templateUrl: './shopify-product-price-index.component.html',
   styleUrl: './shopify-product-price-index.component.scss'
@@ -87,6 +89,7 @@ export class ShopifyProductPriceIndexComponent {
   price_keys = [
     'price_etiqueta',
     'price_oferta',
+    'price_sale',
     'price_feria',
     'price_wholesaler',
     'price_live',
@@ -103,6 +106,15 @@ export class ShopifyProductPriceIndexComponent {
   }
 
   receivePrices(setPrice: any, product: any) {
+
+    // Swal.fire({
+    //   title: 'Espere...',
+    //   html: 'Guardando',
+    //   allowOutsideClick: false,
+    //   didOpen: () => {
+    //     Swal.showLoading();
+    //   }
+    // })
 
     // Copiamos las variantes para evitar mutar el array original
     this.variants = [...product.variants];
@@ -135,6 +147,7 @@ export class ShopifyProductPriceIndexComponent {
     this._productShopify.updatePrices(this.variants).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
+        // Swal.close()
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         console.log(resp);
         // this.product_productShopifys = resp.data;
@@ -153,10 +166,11 @@ export class ShopifyProductPriceIndexComponent {
   }
 
   receivePrice(price: any) {
+
     this._productShopify.updatePrice(price).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+        Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         console.log(resp);
         console.log("respuesta recibida del servidor");
         // this.product_productShopifys = resp.data;

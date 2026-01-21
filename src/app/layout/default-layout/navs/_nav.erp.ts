@@ -42,7 +42,7 @@ export const navErp: CustomNavData[] = [
         children: [
             { name: 'Ordenes de Produccion', url: 'dashboard/manufactures', icon: 'nav-icon-bullet' },
         ],
-        roles: ['ceo', 'master']
+        roles: ['master']
     },
     {
         name: 'Compras',
@@ -62,7 +62,7 @@ export const navErp: CustomNavData[] = [
                 },
             },
         ],
-        roles: ['ceo', 'master']
+        roles: ['master']
     },
     {
         name: 'Movimientos',
@@ -80,7 +80,7 @@ export const navErp: CustomNavData[] = [
                 icon: 'nav-icon-bullet'
             }
         ],
-        roles: ['ceo', 'master']
+        roles: ['master']
     },
     {
         name: 'Productos',
@@ -106,7 +106,7 @@ export const navErp: CustomNavData[] = [
                 }
             },
         ],
-        roles: ['ceo', 'master']
+        roles: ['master']
     },
     {
         name: 'Usuarios',
