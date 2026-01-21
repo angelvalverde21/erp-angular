@@ -91,6 +91,7 @@ export class ShopifyProductPriceIndexComponent {
     'price_oferta',
     'price_sale',
     'price_feria',
+    'price_sale',
     'price_wholesaler',
     'price_live',
     'price_blackfriday'

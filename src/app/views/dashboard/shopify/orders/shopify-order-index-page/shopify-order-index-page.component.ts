@@ -6,11 +6,13 @@ import { JsonPipe } from '@angular/common';
 // import { LoadingComponent } from '@shared/components/loading/loading.component.html';
 
 import { ShopifyOrderIndexComponent } from '../shopify-order-index/shopify-order-index.component';
-import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { Router, RouterModule } from '@angular/router';
 import { ShopifyOrderHeaderNavigationComponent } from '../shared/shopify-order-header-navigation/shopify-order-header-navigation.component';
 import { BaseService } from '../../../../base.service';
+import { HeadPageComponent } from 'src/app/views/shared/components/head-page/head-page.component';
+import { ButtonLinkComponent } from 'src/app/views/shared/components/buttons/button-link/button-link.component';
 
 @Component({
   selector: 'app-shopify-order-index-page',
@@ -19,7 +21,9 @@ import { BaseService } from '../../../../base.service';
     LoadingComponent,
     JsonPipe,
     RouterModule,
-    ShopifyOrderHeaderNavigationComponent
+    ShopifyOrderHeaderNavigationComponent,
+    HeadPageComponent,
+    ButtonLinkComponent
   ],
   templateUrl: './shopify-order-index-page.component.html',
   styleUrl: './shopify-order-index-page.component.scss'
@@ -27,7 +31,7 @@ import { BaseService } from '../../../../base.service';
 export class ShopifyOrderIndexPageComponent implements OnInit, OnDestroy {
 
   destroy$ = new Subject<void>();
-
+  faPlus = faPlus;
   faMagnifyingGlass = faMagnifyingGlass;
   faFilter = faFilter;
   store: string = "";
@@ -98,9 +102,9 @@ export class ShopifyOrderIndexPageComponent implements OnInit, OnDestroy {
 
   }
 
-  searchResult(event:any) {
+  searchResult(event: any) {
     console.log(event);
-    
+
   }
 
 }

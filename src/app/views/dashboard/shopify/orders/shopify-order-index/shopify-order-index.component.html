@@ -17,7 +17,7 @@
                     <!-- <div class="number-of-orders">
                         <small>{{ order.customer?.numberOfOrders }}</small>
                     </div> -->
-                    <div class="date">{{ order.createdAt | dateShopify }}</div>
+                    <div class="date d-none d-sm-block">{{ order.createdAt | dateShopify }}</div>
                     <div class="first_name">
                         <p class="my-1">
                             {{ order.customer?.firstName | uppercase }} {{ order.customer?.lastName | uppercase }}
@@ -29,7 +29,7 @@
                         </p> -->
                     </div>
 
-                    <div class="fullfilmentstatus">
+                    <div class="fullfilmentstatus d-none d-sm-block">
                         @switch (order.displayFulfillmentStatus) {
 
 
@@ -51,9 +51,9 @@
                         }
                     </div>
 
-                    <div class="origen"><app-icon-origen [origen]="order.sourceName"></app-icon-origen></div>
+                    <div class="origen mx-3"><app-icon-origen [origen]="order.sourceName"></app-icon-origen></div>
                     <!-- <div>{{ order.financial_status}}</div> -->
-                    <div>
+                    <div class="mx-1">
                         @switch (order.displayFinancialStatus) {
                         @case ('PAID') {
                         <span class="badge bg-success">Pagado</span>
@@ -79,7 +79,7 @@
 
                         }
                     </div>
-                    <div class="items">Articulos ({{ order.lineItems.length }})</div>
+                    <div class="items d-none d-md-block">Articulos ({{ order.lineItems.length }})</div>
                     <!-- <div>
                         <span style="font-size: 1.25rem;" class="text-primary"><fa-icon
                                 [icon]="faTruck"></fa-icon></span>
@@ -90,8 +90,6 @@
         <div ngbAccordionCollapse>
             <div ngbAccordionBody class="color-body">
                 <ng-template>
-
-
 
                     <div class="item">
 
