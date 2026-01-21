@@ -8,6 +8,8 @@ import { ProductHeadTableComponent } from '../shared/product-head-table/product-
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { PaginatorComponent } from '../../../shared/paginator/paginator.component';
+import { HeadPageComponent } from 'src/app/views/shared/components/head-page/head-page.component';
+import { ButtonLinkComponent } from 'src/app/views/shared/components/buttons/button-link/button-link.component';
 
 @Component({
   selector: 'app-shopify-product-index-page',
@@ -16,7 +18,9 @@ import { PaginatorComponent } from '../../../shared/paginator/paginator.componen
     ShopifyProductIndexComponent,
     ProductHeadTableComponent,
     RouterModule,
-    PaginatorComponent
+    PaginatorComponent,
+    HeadPageComponent,
+    ButtonLinkComponent
   ],
   templateUrl: './shopify-product-index-page.component.html',
   styleUrl: './shopify-product-index-page.component.scss'

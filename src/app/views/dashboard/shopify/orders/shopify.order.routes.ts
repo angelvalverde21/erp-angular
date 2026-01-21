@@ -25,4 +25,12 @@ export const routes: Routes = [
       // name: 'shopify.order.index', // 👈 nombre único
     },
   },
+  {
+    path: 'create',
+    loadComponent: () => import('./shopify-order-prepared-page/shopify-order-prepared-page.component').then((m) => m.ShopifyOrderPreparedPageComponent),
+    data: {
+      title: 'Pedidos preparados',
+      // name: 'shopify.order.index', // 👈 nombre único
+    },
+  },
 ];

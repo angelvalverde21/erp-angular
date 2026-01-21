@@ -88,6 +88,7 @@ export class ShopifyProductPriceIndexComponent {
     'price_etiqueta',
     'price_oferta',
     'price_feria',
+    'price_sale',
     'price_wholesaler',
     'price_live',
     'price_blackfriday'
