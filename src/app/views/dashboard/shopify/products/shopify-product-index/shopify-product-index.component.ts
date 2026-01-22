@@ -151,6 +151,7 @@ export class ShopifyProductIndexComponent{
   }
 
   receivePrice(price: any) {
+    
     this._productShopify.updatePrice(price).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {

@@ -9,7 +9,6 @@ import { debounceTime, Subject } from 'rxjs';
 })
 export class EditPriceCascadeComponent implements OnInit {
 
-
   @Input() variant: any;
   @Input() title: string = "";
   @Input() is_collapsed: boolean = false;
@@ -26,10 +25,15 @@ export class EditPriceCascadeComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.prices = this.price_keys.map(key => this.variant?.[key] ?? null);
+
+    // this.prices = this.price_keys.map(key => this.variant?.[key] ?? null);
+    this.getPrices();
+
+    console.log(this.prices);
+    console.log(this.variant);
 
     this.priceSubject
-      .pipe(debounceTime(500))
+      .pipe(debounceTime(600))
       .subscribe(data => {
         console.log("Debounced:", data);
         // this.updatePrice(data);
@@ -37,13 +41,22 @@ export class EditPriceCascadeComponent implements OnInit {
       });
   }
 
+  getPrices() {
+    this.prices = this.price_keys.map(key => this.variant?.[key] ?? null);
+  }
+
   setPrice(event: any, index: number) {
+
+    // console.log(event);
+
+
+    // this.setVariantDefault = { ...this.setVariantDefault, ...event };
 
     const value = event.target.value;
     const key = this.price_keys[index];
 
-    // console.log(value);
-    // console.log(index);
+    console.log(value);
+    console.log(index);
     // console.log(key);
 
     const obj = {
@@ -51,6 +64,12 @@ export class EditPriceCascadeComponent implements OnInit {
     };
 
     console.log(obj);
+
+    this.variant = { ...this.variant, ...obj };
+
+    console.log(this.variant);
+
+    this.getPrices();
 
     this.priceSubject.next(obj); //se va a suscribe para que se ejecute cada x milisegundos
     // this.emitVariantPrice.emit(obj);

@@ -55,12 +55,16 @@
 
                         <!-- Edicion en cascada -->
 
+                        <!-- {{ product?.variants[0] | json }} -->
+                        <!-- {{ price_keys | json }} -->
+
                         <app-edit-price-cascade class="variants" [variant]="product?.variants[0]"
                             [count_variants]="product?.variants?.length"
                             (emitVariantPrice)="receivePrices($event, product)" [is_collapsed]="item.collapsed"
                             [price_keys]="price_keys" />
 
                         <div class="product_date text-center">{{ product.created_at_shopify | date:'dd-MM-yyyy'}}</div>
+
                     </div>
                 </button>
 

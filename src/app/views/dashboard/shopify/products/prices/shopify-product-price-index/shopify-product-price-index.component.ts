@@ -91,7 +91,6 @@ export class ShopifyProductPriceIndexComponent {
     'price_oferta',
     'price_sale',
     'price_feria',
-    'price_sale',
     'price_wholesaler',
     'price_live',
     'price_blackfriday'
@@ -106,7 +105,11 @@ export class ShopifyProductPriceIndexComponent {
     return split[1];
   }
 
+
+  setVariantDefault: any;
+
   receivePrices(setPrice: any, product: any) {
+
 
     // Swal.fire({
     //   title: 'Espere...',
@@ -150,6 +153,7 @@ export class ShopifyProductPriceIndexComponent {
       next: (resp: any) => {
         // Swal.close()
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+        // this.product.variants
         console.log(resp);
         // this.product_productShopifys = resp.data;
         // this.loading = false;
@@ -171,7 +175,7 @@ export class ShopifyProductPriceIndexComponent {
     this._productShopify.updatePrice(price).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         console.log(resp);
         console.log("respuesta recibida del servidor");
         // this.product_productShopifys = resp.data;
@@ -199,7 +203,7 @@ export class ShopifyProductPriceIndexComponent {
   syncPrice(price_key: any) {
 
     console.log(price_key);
-    
+
 
     const price = {
       "product_id": "gid://shopify/Product/9066191323360",
@@ -213,7 +217,7 @@ export class ShopifyProductPriceIndexComponent {
     }
 
     console.log(price);
- 
+
     this._productShopify.syncPrice(price).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
@@ -234,7 +238,7 @@ export class ShopifyProductPriceIndexComponent {
   syncPrices(price_key: any) {
 
     console.log(price_key);
- 
+
     this._productShopify.syncPrices(price_key).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
