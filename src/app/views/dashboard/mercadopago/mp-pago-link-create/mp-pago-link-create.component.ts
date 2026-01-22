@@ -104,6 +104,8 @@ export class MpPagoLinkCreateComponent {
 
   createLink() {
 
+    // this.form.get('amount')?.setValue(this.display);
+
     this.loading = true;
 
     this._mercadoPago.createLink(this.form.value)
