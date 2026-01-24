@@ -58,6 +58,11 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'app-shopify', //apps de shopify sin el layout general
+        loadChildren: () =>
+            import('./views/app-shopify/routes.app-shopify').then((m) => m.routes),
+      },
+      {
         path: 'login',
         loadComponent: () =>
           import('./views/auth/login/login.component').then(

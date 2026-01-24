@@ -1,40 +1,27 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ShopifyWebService } from '../shopify.web.service'
+import { ShopifyWebService } from '../../shopify.web.service'
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { DateShopifyPipe } from '../../shared/pipes/date-shopify.pipe';
-import { CommonModule, JsonPipe } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
-import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { DateShopifyPipe } from '../../../shared/pipes/date-shopify.pipe';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-tracking',
+  selector: 'app-tracking-details',
   imports: [
     DateShopifyPipe,
-    CommonModule,
-    InputGroupComponent,
-    ReactiveFormsModule,
-    ButtonComponent,
-    JsonPipe
+    CommonModule
   ],
-  templateUrl: './tracking.component.html',
-  styleUrl: './tracking.component.scss'
+  templateUrl: './tracking-details.component.html',
+  styleUrl: './tracking-details.component.scss'
 })
-export class TrackingComponent implements OnInit, OnDestroy {
+export class TrackingDetailsComponent {
 
   order_id: number = 0;
   loading: boolean = false;
   tracking: any;
 
-  form!: FormGroup;
-
-  constructor(
-    private route: ActivatedRoute,
-    private _shopifyWeb: ShopifyWebService,
-    private fb: FormBuilder
-  ) {
+  constructor(private route: ActivatedRoute, private _shopifyWeb: ShopifyWebService) {
 
     console.log("hola");
 
@@ -44,18 +31,6 @@ export class TrackingComponent implements OnInit, OnDestroy {
 
     });
 
-  }
-
-  ngOnInit(): void {
-    this.orderInit();
-    this.formInit();
-  }
-
-  formInit() {
-    this.form = this.fb.group({
-      order_id: ['', Validators.required],
-      phone: ['', Validators.required]
-    });
   }
 
   orderInit() {
@@ -81,7 +56,9 @@ export class TrackingComponent implements OnInit, OnDestroy {
     });
   }
 
-
+  ngOnInit(): void {
+    this.orderInit();
+  }
 
   destroy$ = new Subject<void>();
 
@@ -91,5 +68,6 @@ export class TrackingComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
 
   }
+
 
 }

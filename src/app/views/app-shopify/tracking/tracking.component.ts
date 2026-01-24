@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ShopifyWebService } from '../shopify.web.service'
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { DateShopifyPipe } from '../../shared/pipes/date-shopify.pipe';
@@ -8,6 +7,8 @@ import { CommonModule, JsonPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputGroupComponent } from '../../shared/components/form/input-group/input-group.component';
 import { ButtonComponent } from '../../shared/components/buttons/button/button.component';
+import { AppShopifyService } from '../app-shopify.service';
+import { faGlasses, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-tracking',
@@ -17,7 +18,7 @@ import { ButtonComponent } from '../../shared/components/buttons/button/button.c
     InputGroupComponent,
     ReactiveFormsModule,
     ButtonComponent,
-    JsonPipe
+    JsonPipe,
   ],
   templateUrl: './tracking.component.html',
   styleUrl: './tracking.component.scss'
@@ -27,12 +28,12 @@ export class TrackingComponent implements OnInit, OnDestroy {
   order_id: number = 0;
   loading: boolean = false;
   tracking: any;
-
+  faMagnifyingGlass = faMagnifyingGlass;
   form!: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
-    private _shopifyWeb: ShopifyWebService,
+    private _appShopifyService: AppShopifyService,
     private fb: FormBuilder
   ) {
 
@@ -47,7 +48,6 @@ export class TrackingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.orderInit();
     this.formInit();
   }
 
@@ -58,24 +58,25 @@ export class TrackingComponent implements OnInit, OnDestroy {
     });
   }
 
-  orderInit() {
+  getStatus() {
 
     this.loading = true;
 
-    this._shopifyWeb.tracking(this.order_id).pipe(takeUntil(this.destroy$)).subscribe({
+    console.log("getStatus");
+
+
+    this._appShopifyService.tracking(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         console.log(resp);
-        // this.orders = resp.data;
         this.loading = false;
         this.tracking = resp;
 
       },
 
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         console.error(error);
+        this.loading = false;
       },
 
     });

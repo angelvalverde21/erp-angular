@@ -40,7 +40,10 @@
                     <div class="table-buttom d-flex justify-content-between align-items-center w-100">
 
                         <div class="product_name text-end">
-                            <div>{{ product.title }}</div>
+                            <div>
+                                {{ product.title }}
+                                <p>{{ product.id }}</p>
+                            </div>
                             @if (!item.collapsed && product?.variants.length > 1) {
                             <div class="my-2">
                                 <small><i>(Edicion masiva)</i></small>

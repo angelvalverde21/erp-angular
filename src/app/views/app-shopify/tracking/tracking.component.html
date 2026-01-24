@@ -31,7 +31,8 @@
           </div>
 
           <div class="col-lg-12">
-            <app-button>
+            {{ loading }}
+            <app-button (click)="getStatus()" [icon]="faMagnifyingGlass" [spinner]="loading" [disabled]="loading" class="mt-3 w-100">
               Consultar status
             </app-button>
           </div>
