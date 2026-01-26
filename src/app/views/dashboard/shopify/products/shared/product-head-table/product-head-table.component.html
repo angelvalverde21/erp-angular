@@ -23,7 +23,8 @@
     <div class="right d-flex justify-content-between align-items-between">
 
         @if(showSearch){
-        <input class="form-control form-control-sm me-1" type="text" placeholder="Buscar" aria-label="cajon de busqueda"
+        <button class="btn btn-light" type="button" (click)="resetCampos()">Borrar</button>
+        <input class="form-control form-control-sm me-1" [(ngModel)]="buscar" type="text" placeholder="Buscar" aria-label="cajon de busqueda"
             (input)="fnSearch($event)" />
         }@else{
         <app-button [icon]="faMagnifyingGlass" color="outline-secondary" class="me-1"

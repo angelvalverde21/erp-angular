@@ -118,6 +118,26 @@ export const navErp: CustomNavData[] = [
             { name: 'Proveedores', url: 'dashboard/users/suppliers', icon: 'nav-icon-bullet' },
         ],
         roles: ['ceo', 'master']
+    },
+    {
+        name: 'Couriers',
+        url: 'dashboard/couriers',
+        iconComponent: { name: 'cil-truck' },
+        children: [
+            {
+                name: 'Todos', url: 'dashboard/couriers', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+            {
+                name: 'Crear', url: 'dashboard/couriers/create', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+        ],
+        roles: ['master']
     }
 ];
 

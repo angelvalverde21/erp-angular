@@ -6,13 +6,15 @@ import { ButtonComponent } from '../../../../../shared/components/buttons/button
 import { ShopifyProductService } from '../../shopify.product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: 'app-product-head-table',
   imports: [
     ButtonComponent,
-    CommonModule
-  ],
+    CommonModule,
+    FormsModule
+],
   templateUrl: './product-head-table.component.html',
   styleUrl: './product-head-table.component.scss'
 })
@@ -29,6 +31,7 @@ export class ProductHeadTableComponent implements OnInit, OnDestroy {
   @Output() emitStatusProductsSync = new EventEmitter<boolean>();
   @Input() status: string = ''; //Solo el componente padre debe recibir los gets y repartircelos a sus hijos
 
+  buscar: string = '';
 
 
   private searchSubject = new Subject<string>();
@@ -42,6 +45,11 @@ export class ProductHeadTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.searchWithDebounce(500);
+  }
+
+  resetCampos(){
+    this.buscar = '';
+    // this.fnSearch({target: {value: ''}});
   }
 
   searchWithDebounce(time: number) {
