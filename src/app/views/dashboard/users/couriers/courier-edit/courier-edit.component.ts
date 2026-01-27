@@ -2,12 +2,10 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import Swal from 'sweetalert2';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { UserControlsUpdateComponent } from '../../shared/user-controls-update/user-controls-update.component';
 import { CourierFormComponent } from '../courier-form/courier-form.component';
 import { CourierService } from '../courier.service';
-import { AddressCreateComponent } from '../../../addresses/address-create/address-create.component';
 
 @Component({
   selector: 'app-courier-edit',
@@ -15,7 +13,6 @@ import { AddressCreateComponent } from '../../../addresses/address-create/addres
     CourierFormComponent,
     ButtonComponent,
     UserControlsUpdateComponent,
-    AddressCreateComponent
   ],
   templateUrl: './courier-edit.component.html',
   styleUrl: './courier-edit.component.scss'

@@ -1,13 +1,13 @@
 <div class="row mb-3" [formGroup]="form">
-    
+
     <!-- {{ addressForm.valid }} -->
 
-    
+
     <div class="col-lg-12 col-12">
         <app-input-group [icon]="faUser">
             <input formControlName="name" type="text" inputmode="numeric" class="form-control is-required"
-                [ngClass]="isInvalid('name') ? 'is-invalid' : ''" placeholder="* Nombre completo"
-                aria-label="name" aria-describedby="Nombre completo">
+                [ngClass]="isInvalid('name') ? 'is-invalid' : ''" placeholder="* Nombre completo" aria-label="name"
+                aria-describedby="Nombre completo">
         </app-input-group>
     </div>
 
@@ -26,32 +26,29 @@
         </app-input-group>
     </div>
 
-    <ng-container *ngIf="formType != 'quick'">
-        <div class="col-lg-12 col-12">
-            <app-input-group [icon]="faLocationDot">
-                <input formControlName="primary" type="text" class="form-control is-required"
-                    [ngClass]="isInvalid('primary') ? 'is-invalid' : '' " placeholder="* Direccion"
-                    aria-label="address" aria-describedby="Direccion primaria">
-            </app-input-group>
-        </div>
+    <div class="col-lg-12 col-12">
+        <app-input-group [icon]="faLocationDot">
+            <input formControlName="primary" type="text" class="form-control is-required"
+                [ngClass]="isInvalid('primary') ? 'is-invalid' : '' " placeholder="* Direccion" aria-label="address"
+                aria-describedby="Direccion primaria">
+        </app-input-group>
+    </div>
 
-        <div class="col-lg-12 col-12">
-            <app-input-group>
-                <input formControlName="secondary" type="text" class="form-control" placeholder="Secundaria"
-                    aria-label="address" aria-describedby="Direccion primaria">
-            </app-input-group>
-        </div>
+    <div class="col-lg-12 col-12">
+        <app-input-group>
+            <input formControlName="secondary" type="text" class="form-control" placeholder="Secundaria"
+                aria-label="address" aria-describedby="Direccion primaria">
+        </app-input-group>
+    </div>
 
-        <div class="col-lg-12 col-12">
-            <textarea id="" formControlName="references" class="form-control mb-3"
-                placeholder="Referencia"></textarea>
-        </div>
+    <div class="col-lg-12 col-12">
+        <textarea id="" formControlName="references" class="form-control mb-3" placeholder="Referencia"></textarea>
+    </div>
 
-        <div class="col-lg-12 col-12">
-            <app-input-district-id formControlName="district_id"
-                [isInvalid]="isInvalid('district_id')"></app-input-district-id>
-        </div>
-    </ng-container>
+    <div class="col-lg-12 col-12">
+        <app-input-district-id formControlName="district_id"
+            [isInvalid]="isInvalid('district_id')"></app-input-district-id>
+    </div>
 
 </div>
 

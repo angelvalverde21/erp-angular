@@ -8,6 +8,7 @@ import { ButtonComponent } from '../../../../shared/components/buttons/button/bu
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { phoneValidator } from '../../../../shared/validators/phone.validator';
 import { CourierFormComponent } from '../courier-form/courier-form.component';
+import { AddressCreateComponent } from '../../../addresses/address-create/address-create.component'
 
 @Component({
   selector: 'app-courier-create',
@@ -15,7 +16,8 @@ import { CourierFormComponent } from '../courier-form/courier-form.component';
     ReactiveFormsModule,
     JsonPipe,
     CourierFormComponent,
-    ButtonComponent
+    ButtonComponent,
+    AddressCreateComponent
   ],
   templateUrl: './courier-create.component.html',
   styleUrl: './courier-create.component.scss'

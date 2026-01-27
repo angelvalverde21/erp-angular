@@ -1,6 +1,9 @@
 <app-courier-form [form]="form" [show_roles]="false"></app-courier-form>
 
+<app-address-create></app-address-create>
+
 <div class="text-end">
     <app-button (click)="create()" [icon]="faSave" color="dark" [disabled]="disabledButton"
         [spinner]="loadingIcon">{{ button_text }}</app-button>
 </div>
+
