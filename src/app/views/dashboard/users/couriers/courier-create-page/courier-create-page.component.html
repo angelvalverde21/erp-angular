@@ -1,0 +1,13 @@
+<app-head-page title="Crear Courier">
+    <app-button-back></app-button-back>
+</app-head-page>
+
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<div class="card">
+    <div class="card-body">
+        <app-courier-create [roles]="roles" (emitCourierCreate)="receiveCourierCreate($event)"></app-courier-create>
+    </div>
+</div>
+}

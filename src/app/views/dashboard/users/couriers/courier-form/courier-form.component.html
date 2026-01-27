@@ -1,0 +1,87 @@
+<form [formGroup]="form">
+
+    <div class="row mb-3">
+        <div class="col-lg-12">
+            <app-input-group text="Nombre o Razon Social" [icon]="faPenToSquare">
+                <input formControlName="name" type="text" class="form-control"
+                    [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+                    placeholder="Nombre o Razon Social" aria-label="name" aria-describedby="basic-name" />
+            </app-input-group>
+
+            <!-- hay texto: 
+                {{ form.get('name')?.valid  }} <br>
+                No hay texto:
+                {{ form.get('name')?.invalid  }} <br>
+                Me fui del input
+                {{ form.get('name')?.touched  }} -->
+
+        </div>
+
+        <div class="col-lg-6">
+            <app-input-group text="Telefono" [icon]="faPhone">
+                <input formControlName="phone" type="text" class="form-control" placeholder="Telefono"
+                    [class.is-invalid]="form.get('phone')?.invalid && form.get('phone')?.touched" aria-label="phone"
+                    aria-describedby="basic-name" />
+            </app-input-group>
+        </div>
+
+        <div class="col-lg-6">
+            <app-input-group text="RUC" [icon]="faIdBadge">
+                <input formControlName="document_number" type="text" class="form-control" placeholder="RUC"
+                    [class.is-invalid]="form.get('document_number')?.invalid && form.get('document_number')?.touched"
+                    aria-label="RUC" aria-describedby="basic-name" />
+            </app-input-group>
+        </div>
+
+
+        <div class="col-lg-12">
+            <app-input-group text="Email" [icon]="faEnvelope">
+                <input formControlName="email" type="text" class="form-control" placeholder="Email" aria-label="email"
+                    [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
+                    aria-describedby="basic-name" />
+            </app-input-group>
+        </div>
+
+        <div class="col-lg-4">
+            <label class="mb-2" for="">Acepta Contra Entrega</label>
+            <select class="form-select mb-3" formControlName="is_cash_on_delivery" aria-label="Default select example">
+            
+                <option value="null">Seleccione</option>
+                <option value="1">SI</option>
+                <option value="0">NO</option>
+            
+            </select>
+        </div>
+
+        <div class="col-lg-4">
+            <label class="mb-2" for="">Acepta pago en destino</label>
+
+            <select class="form-select mb-3" formControlName="is_freight_collect" aria-label="Default select example">
+            
+                <option value="null">Seleccione</option>
+                <option value="1">SI</option>
+                <option value="0">NO</option>
+            
+            </select>
+            
+        </div>
+
+        <div class="col-lg-4">
+            <label class="mb-2" for="">Envio Express</label>
+
+            <select class="form-select mb-3" formControlName="is_express_shipping" aria-label="Default select example">
+            
+                <option value="null">Seleccione</option>
+                <option value="1">SI</option>
+                <option value="0">NO</option>
+            
+            </select>
+            
+        </div>
+
+
+        
+    </div>
+
+
+</form>

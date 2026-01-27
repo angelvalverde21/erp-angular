@@ -1,0 +1,34 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<app-head-page title="Couriers">
+    <app-button-link [path]="['./create']">Agregar Courier</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3">
+
+        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)" type="courier"></app-user-head-table>
+
+    </div>
+
+    <div class="card-body p-0">
+
+        @if(couriers.length > 0){
+        <app-courier-index [couriers]="couriers"></app-courier-index>
+        }@else{
+        <p class="p-4">No se cuenta con registro de couriers</p>
+        }
+
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ couriers.length }}</small>
+    </div>
+
+</div>
+
+
+
+}

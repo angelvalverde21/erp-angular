@@ -51,6 +51,26 @@ export abstract class BaseCrudDashboardService {
     return this.http.get<any[]>(`${url}`);
   }
 
+ // Generic method to get all items
+  draft(): Observable<any[]> {
+    const url = `${this.baseUrl}`;
+    console.log(url);
+    return this.http.get<any[]>(`${url}/draft`);
+  }
+  // Generic method to get all items
+  archived(): Observable<any[]> {
+    const url = `${this.baseUrl}`;
+    console.log(url);
+    return this.http.get<any[]>(`${url}/archived`);
+  }
+  
+  // Generic method to get all items
+  active(): Observable<any[]> {
+    const url = `${this.baseUrl}`;
+    console.log(url);
+    return this.http.get<any[]>(`${url}/active`);
+  }
+
   // Generic method to get a single item by ID
   get(id: number | string | null): Observable<any> {
     const url = `${this.baseUrl}/${id}`;

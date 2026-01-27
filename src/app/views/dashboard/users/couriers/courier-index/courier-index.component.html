@@ -1,0 +1,40 @@
+<div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+            <tr>
+                <th class="text-center">#</th>
+                <th>Nombre</th>
+                <th>DNI</th>
+                <th>Telefono</th>
+                <th>Status</th>
+                <th>Creado</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (user of couriers; track user.id) {
+
+            <tr (click)="getCourierId(user.id)">
+                <td class="text-center">{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.document_number }}</td>
+                <td>{{ user.phone }}</td>
+                                <td>
+                    @if(user.status){
+                        <span class="badge text-bg-secondary text-white">Activo</span>
+                    }@else{
+                        <span class="badge text-bg-danger text-white">Bloqueado</span>
+                    }
+                </td>
+                <td>{{ user.created_at | dateShopify }}</td>
+                <td class="text-center">
+                    <div class="controls d-flex justify-content-center align-items-center">
+                    </div>
+                </td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

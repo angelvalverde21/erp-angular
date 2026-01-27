@@ -61,7 +61,7 @@ export const routes: Routes = [
   {
     path: 'couriers',
     loadChildren: () =>
-      import('../../views/dashboard/couriers/routes.courier').then((m) => m.routes),
+      import('../../views/dashboard/users/couriers/routes.courier').then((m) => m.routes),
     // canActivate: [authGuard],
   }
 ];

@@ -1,0 +1,6 @@
+<app-courier-form [form]="form" [show_roles]="false"></app-courier-form>
+
+<div class="text-end">
+    <app-button (click)="create()" [icon]="faSave" color="dark" [disabled]="disabledButton"
+        [spinner]="loadingIcon">{{ button_text }}</app-button>
+</div>

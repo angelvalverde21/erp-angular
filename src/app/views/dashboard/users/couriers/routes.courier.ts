@@ -18,7 +18,7 @@ export const routes: Routes = [
     }
   },
     {
-    path: 'edit',
+    path: ':courier_id',
     loadComponent: () => import('./courier-edit-page/courier-edit-page.component').then((m) => m.CourierEditPageComponent),
     data: {
       title: 'Editar Courier',

@@ -38,24 +38,6 @@ export class ShopifyProductService extends BaseCrudDashboardService {
     return this.http.put(`${url}`, data);
   }
 
-  // Generic method to get all items
-  draft(): Observable<any[]> {
-    const url = `${this.baseUrl}`;
-    console.log(url);
-    return this.http.get<any[]>(`${url}/draft`);
-  }
-  // Generic method to get all items
-  archived(): Observable<any[]> {
-    const url = `${this.baseUrl}`;
-    console.log(url);
-    return this.http.get<any[]>(`${url}/archived`);
-  }
-  // Generic method to get all items
-  active(): Observable<any[]> {
-    const url = `${this.baseUrl}`;
-    console.log(url);
-    return this.http.get<any[]>(`${url}/active`);
-  }
 
   syncPrice(data: any): Observable<any> {
 

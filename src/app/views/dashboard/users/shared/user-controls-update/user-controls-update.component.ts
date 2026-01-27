@@ -7,7 +7,8 @@ import { EmployeeService } from '../../employees/employee.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { JsonPipe } from '@angular/common';
-import { Resp } from 'src/app/interfaces/response.interface';
+import { CourierService } from '../../couriers/courier.service';
+import { Resp } from '../../../../../interfaces/response.interface';
 
 @Component({
   selector: 'app-user-controls-update',
@@ -34,27 +35,26 @@ export class UserControlsUpdateComponent {
   constructor(
     private _customer: CustomerService,
     private _supplier: SupplierService,
-    private _employee: EmployeeService
+    private _employee: EmployeeService,
+    private _courier: CourierService
   ) { }
 
   private getService() {
     switch (this.type) {
       case 'supplier': return this._supplier;
       case 'employee': return this._employee;
+      case 'courier': return this._courier;
       default: return this._customer;
     }
   }
 
   get status() {
-
     return Number(this.formValue.status) === 1 ? 'danger' : 'secondary';
   }
 
   get status_text() {
     return Number(this.formValue?.status ?? 0) === 1 ? 'Bloquear' : 'Desbloquear';
   }
-
-
 
   update() {
 
@@ -64,13 +64,16 @@ export class UserControlsUpdateComponent {
     this.loadingIcon = true;
 
     service.update(this.user_id, this.formValue).pipe(takeUntil(this.destroy$)).subscribe({
-      next: () => {
+      next: (resp: Resp) => {
         Swal.fire('Guardado', 'El registro ha sido actualizado', 'success');
+        this.formValue = resp.data
         this.disabledButton = false;
         this.loadingIcon = false;
       },
       error: (error: any) => {
         Swal.fire('Error', 'Ocurrio un problema al actualizar. Intentalo nuevamente.', 'error');
+        this.disabledButton = false;
+        this.loadingIcon = false;
         console.error(error);
       },
     });
@@ -91,9 +94,10 @@ export class UserControlsUpdateComponent {
       next: (resp: Resp) => {
 
         this.formValue = resp.data
+        // this.formValue.status = resp.data.user.status;
 
         console.log(this.formValue);
-        console.log(this.formValue.status);
+        console.log(resp.status);
 
 
         Swal.fire('Guardado', 'El registro ha sido actualizado', 'success');
@@ -101,7 +105,7 @@ export class UserControlsUpdateComponent {
         this.loadingIcon = false;
       },
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrio un problema al actualizar. Intentalo nuevamente.', 'error');
+        Swal.fire('Error', 'Ocurrio un problema al bloquear. Intentalo nuevamente.', 'error');
         console.error(error);
       },
     });

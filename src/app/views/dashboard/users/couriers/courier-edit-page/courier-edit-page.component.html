@@ -1,0 +1,13 @@
+<app-head-page title="Editar Courier">
+    <app-button-back></app-button-back>
+</app-head-page>
+
+@if(loading || !courier){
+<app-loading></app-loading>
+}@else{
+<div class="card">
+    <div class="card-body">
+        <app-courier-edit [courier]="courier"></app-courier-edit>
+    </div>
+</div>
+}
