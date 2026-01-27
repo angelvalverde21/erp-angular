@@ -7,13 +7,15 @@ import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { UserControlsUpdateComponent } from '../../shared/user-controls-update/user-controls-update.component';
 import { CourierFormComponent } from '../courier-form/courier-form.component';
 import { CourierService } from '../courier.service';
+import { AddressCreateComponent } from '../../../addresses/address-create/address-create.component';
 
 @Component({
   selector: 'app-courier-edit',
   imports: [
     CourierFormComponent,
     ButtonComponent,
-    UserControlsUpdateComponent
+    UserControlsUpdateComponent,
+    AddressCreateComponent
   ],
   templateUrl: './courier-edit.component.html',
   styleUrl: './courier-edit.component.scss'

@@ -1,4 +1,4 @@
-<div class="row mb-3" [formGroup]="addressForm">
+<div class="row mb-3" [formGroup]="form">
     
     <!-- {{ addressForm.valid }} -->
 
@@ -12,14 +12,14 @@
     </div>
 
     <div class="col-lg-6 col-12">
-        <app-input-group [icon]="fa-solid fa-phone">
+        <app-input-group [icon]="faPhone">
             <input type="number" class="form-control is-required" [ngClass]="isInvalid('phone') ? 'is-invalid' : '' "
                 placeholder="* Celular" formControlName="phone" required />
         </app-input-group>
 
     </div>
     <div class="col-lg-6 col-12">
-        <app-input-group icon="fa-solid fa-image-portrait">
+        <app-input-group [icon]="faImagePortrait">
             <input formControlName="dni" type="text" class="form-control"
                 [ngClass]="isInvalid('dni') ? 'is-invalid' : '' " placeholder="DNI" aria-label="DNI"
                 aria-describedby="Documento nacional de identidad">
@@ -28,7 +28,7 @@
 
     <ng-container *ngIf="formType != 'quick'">
         <div class="col-lg-12 col-12">
-            <app-input-group icon="fa-solid fa-location-dot">
+            <app-input-group [icon]="faLocationDot">
                 <input formControlName="primary" type="text" class="form-control is-required"
                     [ngClass]="isInvalid('primary') ? 'is-invalid' : '' " placeholder="* Direccion"
                     aria-label="address" aria-describedby="Direccion primaria">
