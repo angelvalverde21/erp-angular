@@ -36,13 +36,14 @@ export class AddressCreateComponent implements OnInit, OnDestroy {
 
     this.form = this.fb.group({
 
-      name:         ['', [Validators.required]],
-      primary:      ['', [Validators.required]],
-      secondary:    [''],
-      district_id:  ['', [Validators.required]],
-      phone:        ['', [Validators.required]],
-      references:   ['', [Validators.required]],
-
+      name: ['', [Validators.required]],
+      primary: ['', [Validators.required]],
+      secondary: [''],
+      district_id: ['', [Validators.required]],
+      phone: ['', [Validators.required]],
+      references: ['', [Validators.required]],
+      document_number: ['', [Validators.required]],
+      
     });
 
   }
