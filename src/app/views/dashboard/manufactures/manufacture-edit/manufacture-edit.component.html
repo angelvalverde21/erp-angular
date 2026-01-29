@@ -1,1 +1,5 @@
-<p>manufacture-edit works!</p>
+<app-manufacture-form [form]="form"></app-manufacture-form>
+
+<app-button-save (click)="updateManufacture()" [spinner]="loading" [disabled]="disabledButton">Guardar cambios</app-button-save>
+
+{{ form.value | json }}

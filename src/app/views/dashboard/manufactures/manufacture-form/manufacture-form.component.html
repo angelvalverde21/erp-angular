@@ -1,1 +1,30 @@
-<p>manufacture-form works!</p>
+<div class="row mb-3" [formGroup]="form">
+
+    <!-- {{ addressForm.valid }} -->
+
+
+    <div class="col-lg-12 col-12">
+        <app-input-group text="Nombre del producto que se fabricara">
+            <input formControlName="name" type="text" class="form-control"
+                [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+                placeholder="Nombre del producto" aria-label="name" aria-describedby="basic-name" />
+        </app-input-group>
+    </div>
+
+    <div class="col-lg-6 col-12">
+        <app-input-group text="Presupuesto Aproximado" icontext="S/. ">
+            <input type="number" class="form-control is-required" [ngClass]="isInvalid('budget') ? 'is-invalid' : '' "
+                placeholder="Presupuesto" formControlName="budget" required />
+        </app-input-group>
+
+    </div>
+
+    <div class="col-lg-6 col-12">
+        <app-input-group text="Cantidad a fabricar (Espectativa)">
+            <input type="number" class="form-control is-required" [ngClass]="isInvalid('quantity_total') ? 'is-invalid' : '' "
+                placeholder="0" formControlName="quantity_total" required />
+        </app-input-group>
+
+    </div>
+
+</div>

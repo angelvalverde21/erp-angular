@@ -1,1 +1,5 @@
-<p>manufacture-create works!</p>
+<app-manufacture-form [form]="form"></app-manufacture-form>
+
+<app-button-save (click)="createManufacture()" [spinner]="loading" [disabled]="disabledButton">Guardar cambios</app-button-save>
+
+{{ form.value | json }}

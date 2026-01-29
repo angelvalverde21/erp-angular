@@ -1,28 +1,43 @@
 <div class="table-responsive">
-    <table class="table table-striped table-bordered my-0">
-
-        <thead>
+    <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
             <tr>
-                <th scope="col" class="text-center">Codigo</th>
-                <th scope="col">Producto</th>
-                <th scope="col">Status</th>
-                <th scope="col">Costo Total</th>
-                <th scope="col">Inicio</th>
-                <th scope="col" class="text-center">Fin</th>
+                <th class="text-center">#</th>
+                <th>Producto</th>
+                <th class="text-center">Presupuesto</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Merma</th>
+                <th class="text-center">Costo</th>
+                <th>Fabricado por</th>
+                <th>Fecha</th>
+                <th class="text-center">Acciones</th>
             </tr>
         </thead>
-
         <tbody>
 
-            <tr>
-                <th scope="row" class="text-center"></th>
-                <td class="ms-2"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+            @for (manufacture of manufactures; track manufacture.id) {
+
+            <tr (click)="getManufactureId(manufacture.id)">
+                <td class="text-center py-3">{{ manufacture.id }}</td>
+                <td class="">{{ manufacture.name }}</td>
+                <td class="text-center">{{ manufacture.budget }}</td>
+                <td class="text-center">{{ manufacture.quantity_total }}</td>
+                <td class="text-center">
+                    {{ manufacture.quantity_failures }}
+                </td>
+                <td class="text-center">
+                    {{ manufacture.cost }}
+                </td>
+                <td class="text-center">
+                    {{ manufacture.user_id }}
+                </td>
+                <td>{{ manufacture.created_at | dateShopify }}</td>
+                <td class="text-center">
+                    <div class="controls d-flex justify-content-center align-items-center">
+                    </div>
+                </td>
             </tr>
-            
+            }
 
         </tbody>
     </table>

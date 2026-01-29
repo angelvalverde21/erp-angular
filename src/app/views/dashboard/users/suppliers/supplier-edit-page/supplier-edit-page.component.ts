@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { SupplierEditComponent } from '../supplier-edit/supplier-edit.component';
 import { ButtonBackComponent } from '../../../../shared/components/buttons/button-back/button-back.component';
@@ -8,17 +8,24 @@ import { SupplierService } from '../supplier.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { RoleService } from '../../../roles/role.service';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { AddressIndexComponent } from '../../../addresses/address-index/address-index.component';
+import { faListCheck } from '@fortawesome/free-solid-svg-icons';
+import { AddressCreateComponent } from '../../../addresses/address-create/address-create.component';
+
 @Component({
   selector: 'app-supplier-edit-page',
   imports: [
     LoadingComponent,
     SupplierEditComponent,
     HeadPageComponent,
-    ButtonBackComponent
-
+    ButtonBackComponent,
+    AddressIndexComponent,
+    AddressCreateComponent
   ],
   templateUrl: './supplier-edit-page.component.html',
-  styleUrl: './supplier-edit-page.component.scss'
+  styleUrl: './supplier-edit-page.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class SupplierEditPageComponent implements OnInit, OnDestroy {
 
@@ -26,6 +33,8 @@ export class SupplierEditPageComponent implements OnInit, OnDestroy {
     this.supplierInit();
     this.rolesInit();
   }
+
+  faListCheck = faListCheck;
 
   roles: any[] = [];
   loading: boolean = false;
@@ -36,11 +45,19 @@ export class SupplierEditPageComponent implements OnInit, OnDestroy {
     private _supplier: SupplierService,
     private route: ActivatedRoute,
     private _role: RoleService,
+    config: NgbModalConfig,
+    private modalService: NgbModal,
   ) {
+
+    config.backdrop = 'static';
+    config.keyboard = false;
+
     this.route.params.subscribe(params => {
       this.supplier_id = params['supplier_id'];
     });
   }
+
+  modal: any;
 
   supplierInit() {
 
@@ -79,7 +96,6 @@ export class SupplierEditPageComponent implements OnInit, OnDestroy {
 
     });
 
-
   }
 
   destroy$ = new Subject<void>();
@@ -89,4 +105,21 @@ export class SupplierEditPageComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  closeModal() {
+    this.modal.close();
+  }
+
+
+  openVerticallyCentered(content: TemplateRef<any>) {
+    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
+  }
+
+  receiveCreateAddress($event: any) {
+    console.log($event);
+    this.supplier.addresses.unshift($event);
+    this.modal.close();
+  }
+
 }
+
+

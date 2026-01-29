@@ -50,8 +50,8 @@ export class AddressEditComponent implements OnInit, OnDestroy {
       secondary: [''],
       district_id: ['', [Validators.required]],
       phone: ['', [Validators.required]],
-      references: ['', [Validators.required]],
-      document_number: ['', [Validators.required]],
+      references: [''],
+      document_number: [''],
       user_id: [this.user_id, [Validators.required]],
 
     });

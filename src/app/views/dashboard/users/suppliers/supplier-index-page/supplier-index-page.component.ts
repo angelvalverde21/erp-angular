@@ -48,7 +48,7 @@ export class SupplierIndexPageComponent implements OnInit, OnDestroy {
         this.loading = false;
       },
       error: (error: any) => {
-        Swal.fire('Error', 'OcurriA3 un problema al traer los datos de los proveedores', 'error');
+        Swal.fire('Error', 'Ocurrio un problema al traer los datos de los proveedores', 'error');
         console.error(error);
         this.loading = false;
       },

@@ -1,1 +1,21 @@
-<p>manufacture-edit-page works!</p>
+@if(loading){
+<app-loading></app-loading>
+}@else{
+
+<app-head-page title="Editar Manufacture">
+    <app-button-link [path]="['./create']">Agregar manufacture</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-body">
+        <app-manufacture-edit [manufacture]="manufacture"></app-manufacture-edit>
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+
+    </div>
+
+</div>
+
+}

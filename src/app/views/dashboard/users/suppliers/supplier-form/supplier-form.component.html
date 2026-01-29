@@ -1,7 +1,7 @@
 <form [formGroup]="form">
 
     <div class="row mb-3">
-        <div class="col-lg-12">
+        <div class="col-lg-12 col-md-12 col-12">
             <app-input-group text="Nombre completo" [icon]="faPenToSquare">
                 <input formControlName="name" type="text" class="form-control"
                     [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
@@ -17,7 +17,7 @@
 
         </div>
 
-        <div class="col-lg-6">
+        <div class="col-lg-6 col-md-6 col-12">
             <app-input-group text="Telefono" [icon]="faPhone">
                 <input formControlName="phone" type="text" class="form-control" placeholder="Telefono"
                     [class.is-invalid]="form.get('phone')?.invalid && form.get('phone')?.touched" aria-label="phone"
@@ -25,7 +25,7 @@
             </app-input-group>
         </div>
         
-        <div class="col-lg-6">
+        <div class="col-lg-6 col-md-6 col-12">
             <app-input-group text="DNI" [icon]="faIdBadge">
                 <input formControlName="document_number" type="text" class="form-control" placeholder="DNI"
                     [class.is-invalid]="form.get('document_number')?.invalid && form.get('document_number')?.touched"
@@ -34,20 +34,13 @@
         </div>
 
 
-        <div class="col-lg-12">
+        <div class="col-lg-12 col-md-12 col-12">
             <app-input-group text="Email" [icon]="faEnvelope">
                 <input formControlName="email" type="text" class="form-control" placeholder="Email" aria-label="email"
                     [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
                     aria-describedby="basic-name" />
             </app-input-group>
         </div>
-
-
-        @if(show_roles){
-        <label class="mb-2">Agregar Roles</label>
-        <ng-select [items]="roles" [multiple]="true" placeholder="Seleccione roles" formControlName="roles">
-        </ng-select>
-        }
 
     </div>
 </form>

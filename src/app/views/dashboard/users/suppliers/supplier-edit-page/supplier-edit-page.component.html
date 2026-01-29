@@ -5,9 +5,53 @@
 @if(loading || !supplier){
 <app-loading></app-loading>
 }@else{
-<div class="card">
+
+<div class="card mb-3">
     <div class="card-body">
         <app-supplier-edit [supplier]="supplier" [roles]="roles"></app-supplier-edit>
     </div>
 </div>
+
+<app-head-page [icon]="faListCheck" title="Direcciones">
+    <button type="button" class="btn btn-outline-dark btn-sm" (click)="openVerticallyCentered(content)">+ Crear
+        Direccion</button>
+</app-head-page>
+
+<div class="card mb-3">
+
+    <div class="card-body p-0">
+
+        @if(supplier?.addresses?.length > 0){
+
+        <app-address-index [addresses]="supplier.addresses" [user_id]="supplier.user_id"></app-address-index>
+
+        }@else{
+        <div class="p-3">
+            No hay oficinas registradas
+        </div>
+        }
+
+    </div>
+
+    <div class="card-footer" style="border-top: 0;">
+        {{ supplier?.addresses?.length }} Registros encontrados
+    </div>
+
+</div>
+
+<ng-template #content let-modal>
+
+    <div class="modal-header">
+        <h5 class="modal-title">Direccion exacta del proveedor</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-address-create [user_id]="supplier.user_id"
+            (emitCreateAddress)="receiveCreateAddress($event)"></app-address-create>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+
+</ng-template>
 }

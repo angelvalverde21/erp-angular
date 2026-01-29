@@ -13,21 +13,22 @@
         </thead>
         <tbody>
 
-            @for (user of suppliers; track user.id) {
+            @for (supplier of suppliers; track supplier.id) {
 
-            <tr (click)="getSupplierId(user.id)">
-                <td class="text-center">{{ user.id }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.document_number }}</td>
-                <td>{{ user.phone }}</td>
-                                <td>
-                    @if(user.status){
-                        <span class="badge text-bg-secondary text-white">Activo</span>
+            <tr (click)="getSupplierId(supplier.id)">
+                <td class="text-center">{{ supplier.id }}</td>
+                <td class="py-3">{{ supplier.name }}</td>
+                <td class="py-3">{{ supplier.document_number }}</td>
+                <td class="py-3">{{ supplier.phone }}</td>
+                <td class="py-3">
+                    @if(supplier.status){
+                    <span class="badge text-bg-secondary text-white">Activo</span>
                     }@else{
-                        <span class="badge text-bg-danger text-white">Bloqueado</span>
+                    <span class="badge text-bg-danger text-white">Bloqueado</span>
                     }
+
                 </td>
-                <td>{{ user.created_at | dateShopify }}</td>
+                <td>{{ supplier.created_at | dateShopify }}</td>
                 <td class="text-center">
                     <div class="controls d-flex justify-content-center align-items-center">
                     </div>
