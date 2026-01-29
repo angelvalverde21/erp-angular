@@ -5,7 +5,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-button',
-  imports: [LoadingComponent, CommonModule, FontAwesomeModule],
+  imports: [
+    LoadingComponent, 
+    CommonModule, 
+    FontAwesomeModule
+  ],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss'
 })

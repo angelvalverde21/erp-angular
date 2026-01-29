@@ -42,7 +42,7 @@ export const navErp: CustomNavData[] = [
         children: [
             { name: 'Ordenes de Produccion', url: 'dashboard/manufactures', icon: 'nav-icon-bullet' },
         ],
-        roles: ['master']
+        roles: ['master', 'ceo']
     },
     {
         name: 'Compras',
@@ -137,7 +137,7 @@ export const navErp: CustomNavData[] = [
                 }
             },
         ],
-        roles: ['master']
+        roles: ['master', 'ceo']
     }
 ];
 

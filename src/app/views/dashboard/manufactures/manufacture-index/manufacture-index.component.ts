@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-manufacture-index',
@@ -7,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './manufacture-index.component.scss'
 })
 export class ManufactureIndexComponent {
+
+  @Input() manufactures: any; 
 
 }

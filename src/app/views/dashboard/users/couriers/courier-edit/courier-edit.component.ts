@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +10,6 @@ import { CourierService } from '../courier.service';
   selector: 'app-courier-edit',
   imports: [
     CourierFormComponent,
-    ButtonComponent,
     UserControlsUpdateComponent,
   ],
   templateUrl: './courier-edit.component.html',

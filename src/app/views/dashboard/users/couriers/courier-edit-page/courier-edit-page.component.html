@@ -1,13 +1,60 @@
-<app-head-page title="Editar Courier">
+<app-head-page title="Editar Courier" [icon]="faTruck">
     <app-button-back></app-button-back>
 </app-head-page>
 
 @if(loading || !courier){
 <app-loading></app-loading>
 }@else{
-<div class="card">
+<div class="card mb-3">
     <div class="card-body">
         <app-courier-edit [courier]="courier"></app-courier-edit>
     </div>
 </div>
+
+<app-head-page [icon]="faListCheck" title="Sucursales">
+    <button type="button" class="btn btn-outline-dark btn-sm" (click)="openVerticallyCentered(content)">+ Crear
+        Sucursal</button>
+</app-head-page>
+
+<div class="card mb-3">
+
+    <div class="card-header py-3 bg-light d-flex justify-content-between align-items-center">
+       Mostrando {{ addresses.length }} Registros
+    </div>
+
+    <div class="card-body p-0">
+
+        @if(addresses.length > 0){
+
+        <app-address-index [addresses]="courier.addresses" [user_id]="courier.user_id"></app-address-index>
+
+        }@else{
+        <div class="p-3">
+            No hay oficinas registradas
+        </div>
+        }
+
+    </div>
+
+    <div class="card-footer">
+        {{ addresses.length }} Registros encontrados
+    </div>
+
+</div>
+
+
 }
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Crear Oficina</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-address-create [user_id]="courier.user_id"
+            (emitCreateAddress)="receiveCreateAddress($event)"></app-address-create>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>

@@ -44,7 +44,7 @@
 
         <div class="col-lg-4">
             <label class="mb-2" for="">Acepta Contra Entrega</label>
-            <select class="form-select mb-3" formControlName="is_cash_on_delivery" aria-label="Default select example">
+            <select class="form-select mb-3" [class.is-invalid]="form.get('is_cash_on_delivery')?.invalid && form.get('is_cash_on_delivery')?.touched" formControlName="is_cash_on_delivery" aria-label="Default select example">
             
                 <option value="null">Seleccione</option>
                 <option value="1">SI</option>
@@ -56,7 +56,7 @@
         <div class="col-lg-4">
             <label class="mb-2" for="">Acepta pago en destino</label>
 
-            <select class="form-select mb-3" formControlName="is_freight_collect" aria-label="Default select example">
+            <select class="form-select mb-3" [class.is-invalid]="form.get('is_freight_collect')?.invalid && form.get('is_freight_collect')?.touched" formControlName="is_freight_collect" aria-label="Default select example">
             
                 <option value="null">Seleccione</option>
                 <option value="1">SI</option>
@@ -69,7 +69,7 @@
         <div class="col-lg-4">
             <label class="mb-2" for="">Envio Express</label>
 
-            <select class="form-select mb-3" formControlName="is_express_shipping" aria-label="Default select example">
+            <select class="form-select mb-3" [class.is-invalid]="form.get('is_express_shipping')?.invalid && form.get('is_express_shipping')?.touched" formControlName="is_express_shipping" aria-label="Default select example">
             
                 <option value="null">Seleccione</option>
                 <option value="1">SI</option>

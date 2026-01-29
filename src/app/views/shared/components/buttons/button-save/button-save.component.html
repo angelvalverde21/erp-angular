@@ -1,1 +1,18 @@
-<p>button-save works!</p>
+<div class="d-grid d-md-block">
+
+  <button type="button"
+  
+    class="text-{{ colortext }} w-100 py-2 d-flex justify-content-center align-items-center btn btn-{{ color }} btn-{{ size }}"
+    (click)="clickButton()" [disabled]="disabled">
+
+      @if (spinner) {
+      <app-loading size="sm" class="me-{{ separation }}"></app-loading>
+      } @else {
+      <fa-icon [icon]="faSave" class="me-{{ separation }}"></fa-icon>
+      }
+
+    <ng-content></ng-content>
+
+  </button>
+
+</div>

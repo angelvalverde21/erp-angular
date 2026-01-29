@@ -6,16 +6,15 @@
 }
 
 
-.is-required{
+/* .is-required{
     border: 1px solid #949DA4;
     box-shadow:  0px 0px 5px rgba(0, 0, 0, 0.3);
-}
+} */
 
-.is-required::placeholder{
-    color: red;
-}
+/* .is-required::placeholder{
+    color: green;
+} */
 
 .is-invalid{
     border-color: red !important; 
-
 }

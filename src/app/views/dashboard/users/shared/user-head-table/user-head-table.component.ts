@@ -8,6 +8,7 @@ import { SupplierService } from '../../suppliers/supplier.service';
 import { EmployeeService } from '../../employees/employee.service';
 import { ShopifyProductService } from '../../../shopify/products/shopify.product.service';
 import { CourierService } from '../../couriers/courier.service';
+import { ManufactureService } from '../../../manufactures/manufacture.service';
 
 @Component({
   selector: 'app-user-head-table',
@@ -23,7 +24,8 @@ export class UserHeadTableComponent implements OnInit, OnDestroy {
   faMagnifyingGlass = faMagnifyingGlass;
   faFilter = faFilter;
 
-  @Input() type: 'customer' | 'courier' | 'supplier' | 'employee' | 'shopify_product' = 'customer';
+  @Input() type: 'customer' | 'courier' | 'supplier' | 'employee' | 'shopify_product' | 'manufacture' = 'customer'; //Type por defecto es customer en caso no se le pase nada
+  @Input() button_active: boolean = true;
   @Output() emitSearchResult = new EventEmitter<any>();
 
   private searchSubject = new Subject<string>();
@@ -33,6 +35,7 @@ export class UserHeadTableComponent implements OnInit, OnDestroy {
     private _supplier: SupplierService,
     private _employee: EmployeeService,
     private _courier: CourierService,
+    private _manufacture: ManufactureService,
     private _shopify_product: ShopifyProductService
   ) { }
 
@@ -44,8 +47,9 @@ export class UserHeadTableComponent implements OnInit, OnDestroy {
     switch (this.type) {
       case 'supplier': return this._supplier;
       case 'employee': return this._employee;
-      case 'shopify_product': return this._employee;
       case 'courier': return this._courier;
+      case 'manufacture': return this._manufacture;
+      case 'shopify_product': return this._shopify_product;
       default: return this._customer;
     }
   }

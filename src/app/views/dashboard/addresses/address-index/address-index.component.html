@@ -1,1 +1,43 @@
-<p>address-index works!</p>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered my-0">
+
+        <thead>
+            <tr>
+                <th scope="col" class="text-center">Codigo</th>
+                <th scope="col">Contacto</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Oficina</th>
+                <th scope="col">Referencia</th>
+                <th scope="col" class="text-center">Editar</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (address of addresses; track address.id) {
+            <tr>
+                <th scope="row" class="text-center">{{ address?.district_id }}</th>
+                <td class="ms-2">{{ address?.name }}</td>
+                <td>{{ address?.phone }}</td>
+                <td>{{ address?.primary }}</td>
+                <td>{{ address?.references }}</td>
+                <td>{{ address.district.name }}</td>
+                <td class="text-center"><button type="button" class="btn btn-outline-dark" (click)="openVerticallyCentered(content, address.id)">...</button></td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Editar</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-address-edit [address]="current_address" [user_id]="user_id" (emitUpdateAddress)="receiveUpdateAddress($event)"></app-address-edit>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>

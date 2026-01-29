@@ -1,10 +1,17 @@
 <div class="controls d-flex justify-content-between align-items-between">
+
+    @if(button_active){
     <div class="left d-flex">
         <button class="btn btn-secondary btn-sm me-1">Todos</button>
         <button class="btn btn-light btn-sm me-1">Activos</button>
         <!-- <button class="btn btn-light btn-sm me-1">Borrador</button> -->
         <button class="btn btn-light btn-sm me-1">Bloqueados</button>
     </div>
+    }@else{
+        <ng-content></ng-content>
+    }
+
+
     <div class="right d-flex justify-content-between align-items-between">
 
         @if(showSearch){

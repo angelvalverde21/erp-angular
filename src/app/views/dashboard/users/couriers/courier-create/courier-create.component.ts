@@ -8,7 +8,6 @@ import { ButtonComponent } from '../../../../shared/components/buttons/button/bu
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { phoneValidator } from '../../../../shared/validators/phone.validator';
 import { CourierFormComponent } from '../courier-form/courier-form.component';
-import { AddressCreateComponent } from '../../../addresses/address-create/address-create.component'
 
 @Component({
   selector: 'app-courier-create',
@@ -17,7 +16,6 @@ import { AddressCreateComponent } from '../../../addresses/address-create/addres
     JsonPipe,
     CourierFormComponent,
     ButtonComponent,
-    AddressCreateComponent
   ],
   templateUrl: './courier-create.component.html',
   styleUrl: './courier-create.component.scss'

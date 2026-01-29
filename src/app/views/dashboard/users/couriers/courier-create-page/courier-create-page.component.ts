@@ -32,27 +32,27 @@ export class CourierCreatePageComponent implements OnInit, OnDestroy{
   ){}
   
   ngOnInit(): void {
-    this.rolesInit();
+    // this.rolesInit();
   }
 
-  rolesInit() {
+  // rolesInit() {
 
-    this.loading = true;
-    this._role.index().pipe(takeUntil(this.destroy$)).subscribe({
+  //   this.loading = true;
+  //   this._role.index().pipe(takeUntil(this.destroy$)).subscribe({
 
-      next: (resp: any) => {
-        console.log(resp);
-        this.roles = resp.data;
-        this.loading = false;
-      },
+  //     next: (resp: any) => {
+  //       console.log(resp);
+  //       this.roles = resp.data;
+  //       this.loading = false;
+  //     },
 
-      error: (error: any) => {
-        Swal.fire('Error', 'OcurriA3 un problema al listar los roles del sistema', 'error');
-        console.error(error);
-      },
+  //     error: (error: any) => {
+  //       Swal.fire('Error', 'OcurriA3 un problema al listar los roles del sistema', 'error');
+  //       console.error(error);
+  //     },
 
-    });
-  }
+  //   });
+  // }
 
   ngOnDestroy(): void {
     this.destroy$.next();
