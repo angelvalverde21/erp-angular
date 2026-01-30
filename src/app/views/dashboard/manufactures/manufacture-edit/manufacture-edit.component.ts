@@ -1,11 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ManufactureFormComponent } from '../manufacture-form/manufacture-form.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ButtonSaveComponent } from 'src/app/views/shared/components/buttons/button-save/button-save.component';
 import { JsonPipe } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ManufactureService } from '../manufacture.service';
+import { ButtonSaveComponent } from '../../../shared/components/buttons/button-save/button-save.component';
 
 @Component({
   selector: 'app-manufacture-edit',

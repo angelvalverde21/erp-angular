@@ -2,11 +2,11 @@
 <app-loading></app-loading>
 }@else{
 
-<app-head-page title="Editar Manufacture">
-    <app-button-link [path]="['./create']">Agregar manufacture</app-button-link>
+<app-head-page title="Editar Produccion">
+    <app-button-link [path]="['../create']">+ Crear Otra Produccion</app-button-link>
 </app-head-page>
 
-<div class="card">
+<div class="card mb-3">
 
     <div class="card-body">
         <app-manufacture-edit [manufacture]="manufacture"></app-manufacture-edit>
@@ -17,5 +17,39 @@
     </div>
 
 </div>
+
+<app-head-page title="purchases">
+    <app-button-link  (click)="openVerticallyCentered(content)" color="outline-dark">Agregar purchase</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-body p-0">
+        @if(purchases?.length > 0){
+        <app-purchase-index [purchases]="purchases"></app-purchase-index>
+        }@else{
+        <p class="p-4">No se cuenta con registro de purchases</p>
+        }
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ purchases?.length }}</small>
+    </div>
+
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Registrar Compra</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-purchase-create></app-purchase-create>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+
 
 }

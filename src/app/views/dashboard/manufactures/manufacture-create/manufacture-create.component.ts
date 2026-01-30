@@ -36,8 +36,9 @@ export class ManufactureCreateComponent implements OnInit, OnDestroy {
 
   formInit() {
     this.form = this.fb.group({
-      product_id: ['', Validators.required],
-      budget: ['', [Validators.required]],
+      name: ['', Validators.required], //Nombre del proyecto, no del producto
+      budget: ['', Validators.required],
+      quantity_total: ['', Validators.required],
     });
   }
 
