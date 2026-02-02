@@ -52,14 +52,30 @@
 
         <div class="card mb-3">
           <div class="card-body">
-            <app-option-index [options_init]="product.options_init" [options]="product.options" [product_id]="product.id"></app-option-index>
+            <app-option-index [options_init]="product.options_init" [options]="product.options"
+              [product_id]="product.id"></app-option-index>
           </div>
         </div>
 
       </div>
 
       <div class="col-lg-12">
-        <app-variant-index [variants]="product.variants"></app-variant-index>
+        <div class="card">
+
+          <div class="card-header py-3">
+            Variantes
+          </div>
+
+          <div class="card-body p-0">
+            <app-variant-index [variants]="product.variants"></app-variant-index>
+
+          </div>
+
+          <div class="card-footer text-end" style="border-top: 0;">
+            <small class="text-muted">Total: {{ product.variants?.length }}</small>
+          </div>
+
+        </div>
       </div>
 
     </div>

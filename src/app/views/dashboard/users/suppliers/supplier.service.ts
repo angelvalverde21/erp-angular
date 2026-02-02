@@ -6,7 +6,9 @@ import { BaseCrudDashboardService } from '../../base-crud-dashboard.service';
   providedIn: 'root',
 })
 export class SupplierService extends BaseCrudDashboardService {
+
   constructor(http: HttpClient) {
     super(http, 'suppliers');
   }
+  
 }

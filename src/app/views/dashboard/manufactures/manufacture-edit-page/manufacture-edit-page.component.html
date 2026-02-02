@@ -18,33 +18,95 @@
 
 </div>
 
-<app-head-page title="purchases">
-    <app-button-link  (click)="openVerticallyCentered(content)" color="outline-dark">Agregar purchase</app-button-link>
-</app-head-page>
+<div ngbAccordion [closeOthers]="true">
+    <div ngbAccordionItem>
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Productos ({{ manufacture_variants?.length }})</button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+                <ng-template>
 
-<div class="card">
+                    <div class="controls text-end mb-3">
+                        <app-button-add (click)="openVerticallyCentered(content2)" >Agregar</app-button-add>
+                    </div>
 
-    <div class="card-body p-0">
-        @if(purchases?.length > 0){
-        <app-purchase-index [purchases]="purchases"></app-purchase-index>
-        }@else{
-        <p class="p-4">No se cuenta con registro de purchases</p>
-        }
+                    @if(manufacture_variants?.length > 0){
+                    <app-manufacture-variant-index
+                        [manufacture_variants]="manufacture_variants"></app-manufacture-variant-index>
+                    }@else{
+                    <p class="p-4">No se cuenta con registro de variantes</p>
+                    }
+
+                </ng-template>
+            </div>
+        </div>
     </div>
+    <div ngbAccordionItem>
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>
+                <fa-icon [icon]="faBagShopping" class="me-2"></fa-icon> Compras ({{ purchases?.length }})
+            </button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+                <ng-template>
 
-    <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Total: {{ purchases?.length }}</small>
+                    <div class="controls text-end mb-3">
+                        <app-button-add (click)="openVerticallyCentered(content)">Agregar</app-button-add>
+                    </div>
+
+                    @if(purchases?.length > 0){
+                    <app-purchase-index [purchases]="purchases" purchaseable_type="manufacture"
+                        [purchaseable_id]="manufacture.id"></app-purchase-index>
+                    }@else{
+                    <p class="p-4">No se cuenta con registro de compras</p>
+                    }
+
+
+                </ng-template>
+            </div>
+        </div>
     </div>
 
 </div>
 
+<!-- Agregar ManufactureVariant -->
+
+<!-- <app-head-page title="Items a fabricar" [icon]="faBarcode">
+</app-head-page> -->
+
+
+
+<!-- Agregar Compras -->
+
+<!-- <app-head-page title="Compras" [icon]="faBagShopping">
+</app-head-page> -->
+
+
+<!-- Modal -->
+
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">Registrar Compra</h4>
+        <h5 class="modal-title">Registrar Compra</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <app-purchase-create></app-purchase-create>
+        <app-purchase-create purchaseable_type="manufacture" [purchaseable_id]="manufacture.id"
+            (emitPurchaseCreate)="receivePurchaseCreate($event)"></app-purchase-create>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #content2 let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Buscar Variantes</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-variant-search (emitVariantsSelected)="receiveSelectedVariants($event)"></app-variant-search>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>

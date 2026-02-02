@@ -1,0 +1,11 @@
+<app-input-group [icon]="faMagnifyingGlass" text="">
+    <input [(ngModel)]="search" type="text" class="form-control" placeholder="Busca Productos" aria-label="name"
+        (ngModelChange)="onSearchChange($event)" aria-describedby="basic-name" />
+</app-input-group>
+
+@if(variants?.length > 0){
+<app-variant-index [variants]="variants" (variantArraySelected)="receiveSelectedVariants($event)"></app-variant-index>
+<app-button [color]="'dark'" mb="3" [disabled]="buttonDisabled" (click)="addVariants()">Agregar Variantes</app-button>
+}@else{
+<p class="p-4">No se encontraron variantes</p>
+}

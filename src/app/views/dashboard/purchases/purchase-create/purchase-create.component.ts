@@ -5,8 +5,6 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  TemplateRef,
-  ViewEncapsulation,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -18,24 +16,19 @@ import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import {
-  faEdit,
-  faTags,
-  faPlus,
-  faIdCard,
-  faAddressCard,
-  faUser
+  faSave
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component';
 import { UnitService } from '../../units/unit.service';
 import { CommonModule, JsonPipe } from '@angular/common';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+
 import { SupplierCreateComponent } from '../../users/suppliers/supplier-create/supplier-create.component';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { SupplierService } from '../../users/suppliers/supplier.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PurchaseService } from '../purchase.service';
 import { ProductSelectedComponent } from '../../products/product-selected/product-selected.component';
+import { PurchaseFormComponent } from '../purchase-form/purchase-form.component';
 
 @Component({
   selector: 'app-purchase-create',
@@ -46,16 +39,16 @@ import { ProductSelectedComponent } from '../../products/product-selected/produc
     UnitSelectedComponent,
     JsonPipe,
     SupplierCreateComponent,
-    NgSelectModule,
     FontAwesomeModule,
     CommonModule,
-    ProductSelectedComponent
+    ProductSelectedComponent,
+    PurchaseFormComponent
   ],
   templateUrl: './purchase-create.component.html',
-  styleUrl: './purchase-create.component.scss',
-  encapsulation: ViewEncapsulation.None,
+  styleUrl: './purchase-create.component.scss'
 })
 export class PurchaseCreateComponent {
+  
   disabledButton: boolean = true;
   loadingIcon: boolean = false;
   form!: FormGroup;
@@ -63,12 +56,7 @@ export class PurchaseCreateComponent {
   success: boolean = false;
   search_result: boolean = false;
 
-  faEdit = faEdit;
-  faTags = faTags;
-  faPlus = faPlus;
-  faIdCard = faIdCard;
-  faUser = faUser;
-  faAddressCard = faAddressCard;
+  faSave = faSave;
   units: any[] = [];
 
   @Output() emitPurchaseCreate = new EventEmitter<any | boolean>();
@@ -77,17 +65,14 @@ export class PurchaseCreateComponent {
   @Input() supplier_id: number | null = 0;
 
   private destroy$ = new Subject<void>();
-  modal: any;
+
 
   constructor(
-    config: NgbModalConfig,
-    private modalService: NgbModal,
     private fb: FormBuilder,
     private _purchase: PurchaseService,
     private _supplier: SupplierService
   ) {
-    config.backdrop = 'static';
-    config.keyboard = false;
+
   }
 
 
@@ -97,16 +82,16 @@ export class PurchaseCreateComponent {
 
     this.form = this.fb.group({
       name: ['', [Validators.required]],
-      quantity: [''],
-      unit_id: [1],
-      price: [''],
-      total: [''],
+      quantity: ['', [Validators.required]],
+      unit_id: [1, [Validators.required]],
+      price: ['', [Validators.required]],
+      total: ['', [Validators.required]],
       purchase_start: [today],
       purchase_end: [today],
       purchaseable_type: [this.purchaseable_type],
       purchaseable_id: [this.purchaseable_id],
       observations: [''],
-      supplier_id: [this.supplier_id ?? null, Validators.required],
+      supplier_id: [''],
     });
   }
 
@@ -156,6 +141,7 @@ export class PurchaseCreateComponent {
   }
 
   ngOnInit(): void {
+    
     this.formInit();
 
     this.calculosPricetotal();
@@ -200,6 +186,12 @@ export class PurchaseCreateComponent {
   }
 
   create() {
+
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
     this.loadingIcon = true;
     this.disabledButton = true;
 
@@ -239,39 +231,14 @@ export class PurchaseCreateComponent {
     this.destroy$.complete();
   }
 
-  openVerticallyCentered(content: TemplateRef<any>) {
-    this.modal = this.modalService.open(content, {
-      centered: true,
-      size: 'lg',
-    });
-  }
-
-  closeModal() {
-    this.modal.close();
-  }
-
-  supplierReceiveCreate(supplier: any) {
-
-    console.log(supplier);
-
-    this.suppliers = [supplier, ...this.suppliers];
-
-    this.form.get('supplier_id')?.setValue(supplier.id);
-    // this.form.get('supplier_id')?.setValue(supplier.id);
-
-    if (supplier) {
-      this.modal.close();
-    }
-  }
-
   hidden_fields: boolean = true;
 
-  onSearchResult(result: any){
+  onSearchResult(result: any) {
     console.log(result);
-    
-    if (result.length > 0){
+
+    if (result.length > 0) {
       this.hidden_fields = true;
-    }else{
+    } else {
       this.hidden_fields = false;
     }
 

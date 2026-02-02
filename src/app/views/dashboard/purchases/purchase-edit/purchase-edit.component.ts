@@ -25,7 +25,8 @@ import {
   faIdCard,
   faAddressCard,
   faImages,
-  faUser
+  faUser,
+  faSave
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component';
@@ -38,6 +39,7 @@ import { GalleryComponent } from '../../../shared/components/gallery/gallery.com
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SupplierCreateComponent } from '../../users/suppliers/supplier-create/supplier-create.component';
+import { PurchaseFormComponent } from '../purchase-form/purchase-form.component';
 
 @Component({
   selector: 'app-purchase-edit',
@@ -51,7 +53,8 @@ import { SupplierCreateComponent } from '../../users/suppliers/supplier-create/s
     NgSelectModule,
     GalleryComponent,
     FontAwesomeModule,
-    SupplierCreateComponent
+    SupplierCreateComponent,
+    PurchaseFormComponent
   ],
   templateUrl: './purchase-edit.component.html',
   styleUrl: './purchase-edit.component.scss',
@@ -70,11 +73,14 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
   faIdCard = faIdCard;
   faImages = faImages;
   faUser = faUser;
+  faSave = faSave;
 
   faAddressCard = faAddressCard;
   units: any[] = [];
 
   @Input() purchase_id: number = 0;
+  @Input() purchaseable_type: string = '';
+  @Input() purchaseable_id: number = 0;
 
   purchase: any;
 
@@ -96,11 +102,14 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
   private formInit(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
-      quantity: [''],
-      unit_id: [],
-      price: [''],
-      total: [''],
-      section_id: [],
+      quantity: ['', [Validators.required]],
+      unit_id: [1, [Validators.required]],
+      price: ['', [Validators.required]],
+      total: ['', [Validators.required]],
+      purchase_start: [''],
+      purchase_end: [''],
+      purchaseable_type: [this.purchaseable_type],
+      purchaseable_id: [this.purchaseable_id],
       observations: [''],
       supplier_id: [''],
     });
@@ -246,7 +255,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
   }
 
   supplierReceiveCreate(supplier: any) {
-    
+
     console.log(supplier);
 
     this.suppliers = [supplier, ...this.suppliers];

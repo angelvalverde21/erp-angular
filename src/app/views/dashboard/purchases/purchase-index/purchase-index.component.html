@@ -1,13 +1,99 @@
+<div class="table-responsive">
+    <table class="table table-striped table-bordered mb-0 align-middle">
+        <tbody>
+
+            <tr>
+                <th class="text-center" style="width: 75px;">Cantidad</th>
+                <th class="text-center" style="width: 125px;">Unidad</th>
+                <th>Insumo</th>
+                <th class="text-center">Precio</th>
+                <th class="text-center">Total</th>
+                <th style="width: 120px;">Acciones</th>
+            </tr>
+
+            @for (purchase of purchases; track purchase.id) {
+
+            <tr>
+                <td class="text-center">{{ purchase?.quantity }}</td>
+                <td class="text-center">{{ purchase?.unit.name }}</td>
+                <td>
+                    <div>
+                        {{ purchase?.name | capitalize }}
+                    </div>
+                    @if(purchase?.supplier?.user.name){
+                    <div>
+                        - {{ purchase?.supplier?.user.name | capitalize }}
+                    </div>
+                    }
+
+                </td>
+                <td class="text-center">{{ purchase?.price | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+
+                <td class="text-center">{{ purchase?.total | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+                <td style="width: 120px;">
+                    <app-button color="outline-dark" [icon]="faEdit"
+                        (click)="openVerticallyCentered(content, purchase.id)">Editar</app-button>
+                </td>
+            </tr>
+
+            }
+
+            <tr>
+                <td colspan="4" class="text-end"><small class="text-muted"></small></td>
+                <td class="text-center">{{ sumTotalAmount() | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td colspan="6" class="text-end"><small class="text-muted">{{ purchases?.length }} Registros
+                        encontrados</small></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<!-- {{ purchaseable_type }} - {{ purchaseable_id }} -->
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Editar Compra</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-purchase-edit [purchase_id]="purchase.id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
+            [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id"></app-purchase-edit>
+    </div>
+
+</ng-template>
+
+<ng-template #images let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title fs-5 fw-500">Adjuntar Boletas y Facturas</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="vouchers my-4">
+            <app-gallery [path]="`purchases/${purchase.id}/images`"></app-gallery>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+
+<!-- 
 <ul class="list-group list-group-flush">
 
     @if(purchases.length > 0){
-        
-        @for (purchase of purchases; track purchase.id) {
-        <li class="list-group-item px-0 py-0">
-            <app-purchase-index-row [purchase]="purchase"
-                (deletePurchase)="reListPurchases($event)"></app-purchase-index-row>
-        </li>
-        }
+
+    @for (purchase of purchases; track purchase.id) {
+    <li class="list-group-item px-0 py-0">
+        <app-purchase-index-row [purchase]="purchase"
+            (deletePurchase)="reListPurchases($event)"></app-purchase-index-row>
+    </li>
+    }
 
     }@else{
 
@@ -15,4 +101,4 @@
 
     }
 
-</ul>
+</ul> -->

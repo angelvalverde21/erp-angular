@@ -1,4 +1,6 @@
 <button class="btn btn-{{ color }} btn-{{size}}" (click)="clickButton()">
-    <fa-icon [icon]="faPlus" class="me-2"></fa-icon>
-    <ng-content></ng-content>
+    <span class="content d-flex justify-content-between align-items-center">
+        <fa-icon [icon]="faPlus" class="me-2"></fa-icon>
+        <ng-content></ng-content>
+    </span>
 </button>

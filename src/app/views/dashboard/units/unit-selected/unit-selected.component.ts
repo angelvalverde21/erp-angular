@@ -10,6 +10,7 @@ import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/f
 import { Subject, takeUntil } from 'rxjs';
 import { UnitService } from '../unit.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { BaseService } from '../../../base.service';
 
 
 @Component({
@@ -30,11 +31,12 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 })
 
 export class UnitSelectedComponent implements OnInit, ControlValueAccessor {
+
   private destroy$ = new Subject<void>();
 
-  constructor(private _unit: UnitService) {}
+  constructor(private _unit: UnitService, private _base: BaseService) {}
 
-  @Input() units: any[] = [];
+  units: any[] = [];
   // loading: boolean = true;
   unit_id: number | null = null;
   @Output() emitUnitSelected = new EventEmitter<[]>();
@@ -43,38 +45,44 @@ export class UnitSelectedComponent implements OnInit, ControlValueAccessor {
     // Initialization logic here
     //cargar categorias
 
-    this.initUnits();
+    const store = localStorage.getItem('store');
+
+    this.units = store ? JSON.parse(store).units || [] : [];
+
   }
 
   loading: boolean = false;
   private pendingValue: any = null;
 
-  initUnits() {
-    this.loading = true;
-    this._unit
-      .index()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (resp: any) => {
-          this.units = resp.data;
-          console.log(this.units);
-          this.loading = false;
+  // initUnits() {
 
-          // Si había un valor pendiente, lo aplicamos ahora
-          if (this.pendingValue !== null) {
-            console.log("hola");
-            console.log(this.pendingValue);
+  //   this.loading = true;
+  //   this._unit
+  //     .index()
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe({
+  //       next: (resp: any) => {
+
+  //         this.units = resp.data;
+  //         console.log(this.units);
+  //         this.loading = false;
+
+  //         // Si había un valor pendiente, lo aplicamos ahora
+  //         if (this.pendingValue !== null) {
+  //           console.log("hola");
+  //           console.log(this.pendingValue);
             
-            this.value = this.pendingValue;
-            this.pendingValue = null;
-          }
-        },
-        error: (error: any) => {
-          console.error(error);
-          this.loading = false;
-        },
-      });
-  }
+  //           this.value = this.pendingValue;
+  //           this.pendingValue = null;
+  //         }
+  //       },
+  //       error: (error: any) => {
+  //         console.error(error);
+  //         this.loading = false;
+  //       },
+  //     });
+
+  // }
 
   value: any = '';
 

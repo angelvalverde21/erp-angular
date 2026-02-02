@@ -1,15 +1,15 @@
 @if(loading){
-    <app-loading></app-loading>
+<app-loading></app-loading>
 }@else{
-    <select id="SubUnits" class="form-select" aria-label="Default select example" [ngModel]="value" (change)="onUnitChange($event)">
+<select id="SubUnits" class="form-select" aria-label="Default select example" [ngModel]="value"
+    (change)="onUnitChange($event)">
 
-    <option [value]="">Seleccione</option>
+    <option [value]="null">Seleccione</option>
 
-        @for (unit of units; track unit.id) {
-                    <option [value]="unit.id">{{ unit.name }}</option>
-        }
+    @for (unit of units; track unit.id) {
+    <option [value]="unit.id">{{ unit.name }}</option>
+    }
 
 
 </select>
 }
-
