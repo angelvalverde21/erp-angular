@@ -21,7 +21,7 @@
 <div ngbAccordion [closeOthers]="true">
     <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
-            <button ngbAccordionButton><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Productos ({{ manufacture_variants?.length }})</button>
+            <button ngbAccordionButton><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Productos Solicitados ({{ manufacture_variants?.length }})</button>
         </h2>
         <div ngbAccordionCollapse>
             <div ngbAccordionBody>
@@ -45,7 +45,7 @@
     <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
-                <fa-icon [icon]="faBagShopping" class="me-2"></fa-icon> Compras ({{ purchases?.length }})
+                <fa-icon [icon]="faBagShopping" class="me-2"></fa-icon> Gastos ({{ purchases?.length }})
             </button>
         </h2>
         <div ngbAccordionCollapse>

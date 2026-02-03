@@ -1,0 +1,13 @@
+<td class="text-center" scope="row">{{ manufacture_variant.id }}</td>
+<td class="text-center" scope="row">{{ manufacture_variant.quantity }}</td>
+<td class="text-center">
+    <fa-icon [icon]="faBarcode" class="me-3"></fa-icon> {{ manufacture_variant.variant?.sku }}
+</td>
+<td>{{ manufacture_variant.variant?.product?.name }}</td>
+@for (option_value of manufacture_variant.variant?.option_values; track option_value.id) {
+<td class="text-center">{{ option_value.value }}</td>
+}
+
+<td style="width: 125px;"><app-button [icon]="faTrash" colortext="white"
+        (click)="removeVariant(manufacture_variant.id, manufacture_variant.manufacture_id)"
+        color="danger">Eliminar</app-button></td>

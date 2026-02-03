@@ -4,6 +4,7 @@ import { faHome, faUser, faPhone, faImagePortrait, faLocationDot } from '@fortaw
 import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputDistrictIdComponent } from '../../addresses/input-district-id/input-district-id.component';
+import { TwoDecimalsDirective } from 'src/app/core/directives/two-decimals.directive';
 
 @Component({
   selector: 'app-manufacture-form',
@@ -12,7 +13,8 @@ import { InputDistrictIdComponent } from '../../addresses/input-district-id/inpu
     CommonModule,
     InputDistrictIdComponent,
     ReactiveFormsModule,
-    JsonPipe
+    JsonPipe,
+    TwoDecimalsDirective
   ],
   templateUrl: './manufacture-form.component.html',
   styleUrl: './manufacture-form.component.scss'

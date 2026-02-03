@@ -1,0 +1,45 @@
+<ng-container [formGroup]="form">
+    <td class="text-end">
+        <div>
+            {{ product?.title }}
+        </div>
+    </td>
+    <td>
+        
+        <a data-fancybox="gallery" [attr.data-caption]="`${ product?.title}`"
+            [href]="product?.image | shopifyImageMedium">
+            <img [src]="product?.image | shopifyImageThumbnail" class="me-2" height="45px"
+                alt="">
+        </a>
+
+    </td>
+    @for (price_key of price_keys; track $index) {
+    <td>
+
+        <input [formControlName]="price_key" [attr.disabled]="loading ? true : null" type="text"
+            (input)="getSavePrice()" twoDecimals class="form-control text-center" placeholder="0.00" aria-label="price"
+            aria-describedby="basic-price" />
+
+    </td>
+    }
+    <!-- <td class="text-center">{{ form.value | json }}</td> -->
+    <!-- <td class="text-center">
+        <app-button-save [color]="'outline-dark'">Guardar</app-button-save>
+    </td> -->
+    <td class="text-center">
+
+        
+
+        @if(loading){
+        <app-loading></app-loading>
+        }@else{
+        <button class="btn" [ngClass]="sync_status ? 'btn-secondary' : 'btn-outline-dark'"  (click)="setSyncStatus()">
+            <fa-icon [icon]="faCheck"></fa-icon>
+        </button>
+        }
+
+    </td>
+    <td class="text-center">
+        {{ date | DateShopify }}
+    </td>
+</ng-container>

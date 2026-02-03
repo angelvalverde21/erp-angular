@@ -10,9 +10,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import { faShopify } from '@fortawesome/free-brands-svg-icons';
 import { ShopifyProductService } from '../../shopify.product.service';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ShopifyImageThumbnailPipe } from '../../../../../shared/pipes/shopify/shopify-image-thumbnail.pipe';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ShopifyPriceIndexRowComponent } from './shopify-price-index-row/shopify-price-index-row.component';
 
 @Component({
   selector: 'app-shopify-product-price-index',
@@ -25,16 +27,20 @@ import { ShopifyImageThumbnailPipe } from '../../../../../shared/pipes/shopify/s
     EditPriceCascadeComponent,
     EditPriceComponent,
     FontAwesomeModule,
-    ShopifyImageThumbnailPipe
+    ShopifyImageThumbnailPipe,
+    ReactiveFormsModule,
+    ShopifyPriceIndexRowComponent
   ],
   templateUrl: './shopify-product-price-index.component.html',
   styleUrl: './shopify-product-price-index.component.scss'
 })
-export class ShopifyProductPriceIndexComponent {
+export class ShopifyProductPriceIndexComponent{
 
   faSync = faSync;
   faShopify = faShopify;
   @Input() products: any[] = [];
+
+  form!: FormGroup;
 
   current_accordion: string = "";
   current_product_id: number = 0;
@@ -44,9 +50,22 @@ export class ShopifyProductPriceIndexComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private _productShopify: ShopifyProductService
+    private _productShopify: ShopifyProductService,
+    private fb: FormBuilder
   ) {
 
+  }
+
+  formInit(): void {
+    this.form = this.fb.group({
+      price_etiqueta: [''],
+      price_oferta: [''],
+      price_sale: [''],
+      price_feria: [''],
+      price_wholesaler: [''],
+      price_live: [''],
+      price_blackfriday: ['']
+    });
   }
 
   getProductId(id: number = 0) {
@@ -239,16 +258,32 @@ export class ShopifyProductPriceIndexComponent {
 
     console.log(price_key);
 
+    Swal.fire({
+      title: 'Espere...',
+      html: 'Sincronizando precios',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    })
+    
     this._productShopify.syncPrices(price_key).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        Swal.fire('Guardado', 'Sincronizacion correcta', 'success');
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Correcto',
+          text: 'Sincronización completada',
+        })
+        
+        // Swal.fire('Guardado', 'Sincronizacion correcta', 'success');
         console.log(resp);
         // this.loading = false;
       },
 
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió al sincronizar el precio. Inténtalo nuevamente.', 'error');
+        Swal.fire('Error', 'Ocurrió un error al sincronizar los. Inténtalo nuevamente.', 'error');
         console.error(error);
       },
 

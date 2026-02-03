@@ -38,6 +38,24 @@ export class ShopifyProductService extends BaseCrudDashboardService {
     return this.http.put(`${url}`, data);
   }
 
+  updateProductPrice(product_id: number, data: any): Observable<any> {
+
+    console.log(data);
+
+    const url = `${this.baseUrl}/${product_id}/prices`;
+    console.log(url);
+    return this.http.put(`${url}`, data);
+
+  }
+
+  updateProductSyncStatus(product_id: number, sync_status: boolean): Observable<any> {
+
+    const url = `${this.baseUrl}/${product_id}/sync-status`;
+    return this.http.put(`${url}`, { sync_status });
+
+  } 
+
+  //sincroniza los productos del erp con shopify pero solo por cada producto
 
   syncPrice(data: any): Observable<any> {
 
@@ -53,7 +71,7 @@ export class ShopifyProductService extends BaseCrudDashboardService {
     console.log(type);
     const url = `${this.baseUrl}/sync/prices`;
     console.log(url);
-    return this.http.put(`${url}`, {type});
+    return this.http.put(`${url}`, { type });
 
   }
 
