@@ -40,7 +40,7 @@ export const navErp: CustomNavData[] = [
         url: 'dashboard/manufactures',
         iconComponent: { name: 'cil-industry' },
         children: [
-            { name: 'Ordenes de Produccion', url: 'dashboard/manufactures', icon: 'nav-icon-bullet' },
+            { name: 'Todos', url: 'dashboard/manufactures', icon: 'nav-icon-bullet' },
         ],
         roles: ['master', 'ceo']
     },

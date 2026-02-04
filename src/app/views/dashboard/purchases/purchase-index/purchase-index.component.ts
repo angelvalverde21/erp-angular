@@ -75,9 +75,12 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
 
 
   receivePurchaseUpdated(updatedPurchase: any) {
+
     const index = this.purchases.findIndex(p => p.id === updatedPurchase.id);
     if (index !== -1) {
       this.purchases[index] = updatedPurchase;
     }
+    
+    this.closeModal();
   }
 }

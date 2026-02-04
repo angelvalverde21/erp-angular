@@ -46,6 +46,15 @@ export class ManufactureVariantService{
 
   }
 
+  updateQuantity(manufacture_id: number, manufacture_variant_id: number, data: any): Observable<any> {
+
+    const url = `${this.baseUrl}/${manufacture_id}/variants/${manufacture_variant_id}/quantity`;
+    // console.log("imprimiendo url de store");
+    // console.log(url);
+    return this.http.put(`${url}`, data);
+
+  }
+
   // Generic method to delete an item by ID
   destroy(variant_id: number, manufacture_id: number = 0): Observable<any> {
     const url = `${this.baseUrl}/${manufacture_id}/variants/${variant_id}`;

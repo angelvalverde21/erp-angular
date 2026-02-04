@@ -1,13 +1,47 @@
-<td class="text-center" scope="row">{{ manufacture_variant.id }}</td>
-<td class="text-center" scope="row">{{ manufacture_variant.quantity }}</td>
-<td class="text-center">
-    <fa-icon [icon]="faBarcode" class="me-3"></fa-icon> {{ manufacture_variant.variant?.sku }}
-</td>
-<td>{{ manufacture_variant.variant?.product?.name }}</td>
-@for (option_value of manufacture_variant.variant?.option_values; track option_value.id) {
-<td class="text-center">{{ option_value.value }}</td>
-}
+<ng-container [formGroup]="form">
+    <td style="width: 75px;">
+        @if(loading){
+            <app-loading></app-loading>
+        }@else{
+            
+        }
+    </td>
+    <td class="text-center" scope="row" style="width: 100px;">
+        <app-input-group [mb]="0">
+            <input formControlName="quantity" (input)="getUpdateQuantity()" type="text" class="form-control text-center" placeholder="quantity"
+                aria-label="quantity" aria-describedby="basic-quantity" />
+        </app-input-group>
+    </td>
+    <td class="text-center">
+        <fa-icon [icon]="faBarcode" class="me-3"></fa-icon> {{ manufacture_variant.variant?.sku }}
+    </td>
+    <td>{{ manufacture_variant.variant?.product?.name }}</td>
+    @for (option_value of manufacture_variant.variant?.option_values; track option_value.id) {
+    <td class="text-center">{{ option_value.value }}</td>
+    }
 
-<td style="width: 125px;"><app-button [icon]="faTrash" colortext="white"
-        (click)="removeVariant(manufacture_variant.id, manufacture_variant.manufacture_id)"
-        color="danger">Eliminar</app-button></td>
+    <td style="width: 125px;">
+        <app-button [icon]="faEdit"
+            (click)="editManufactureVariant(content, manufacture_variant.id, manufacture_variant.manufacture_id)"
+            color="outline-dark">Recepciones</app-button>
+    </td>
+
+    <td style="width: 125px;"><app-button [icon]="faTrash" colortext="white"
+            (click)="removeVariant(manufacture_variant.id, manufacture_variant.manufacture_id)"
+            color="danger">Eliminar</app-button></td>
+
+    <!-- empieza el modal completo -->
+
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h6 class="modal-title">Editar producto de produccion</h6>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <p>One fine body&hellip;</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+        </div>
+    </ng-template>
+</ng-container>

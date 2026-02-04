@@ -2,9 +2,62 @@
 <app-loading></app-loading>
 }@else{
 
+
+
 <app-head-page title="Editar Produccion">
     <app-button-link [path]="['../create']">+ Crear Otra Produccion</app-button-link>
 </app-head-page>
+
+<div class="widgets mb-3">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card bg-primary text-white">
+                <div class="card-header">
+                    <h6 class="my-0">Costo Produccion</h6>
+                </div>
+                <div class="card-body">
+                    <h4>S/. 29.82</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card bg-secondary text-white">
+                <div class="card-header">
+                    <h6 class="my-0">Gasto Total</h6>
+                </div>
+                <div class="card-body">
+                    <h4>S/. 2,475.60</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card bg-secondary text-white">
+                <div class="card-header">
+                    <h6 class="my-0">Fabricados</h6>
+                </div>
+                <div class="card-body">
+                    <h4>83</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card bg-secondary text-white">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="my-0">Recibidos </h6>
+                    <span><small>Restan: 70</small></span>
+                </div>
+                <div class="card-body">
+                    <h4>13</h4>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>Progreso del proyecto</p>
+
+<ngb-progressbar class="mb-3" [value]="150" />
 
 <div class="card mb-3">
 
@@ -21,21 +74,23 @@
 <div ngbAccordion [closeOthers]="true">
     <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
-            <button ngbAccordionButton><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Productos Solicitados ({{ manufacture_variants?.length }})</button>
+            <button ngbAccordionButton><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Productos a fabricar ({{
+                manufacture_variants?.length }})</button>
         </h2>
         <div ngbAccordionCollapse>
             <div ngbAccordionBody>
                 <ng-template>
 
                     <div class="controls text-end mb-3">
-                        <app-button-add (click)="openVerticallyCentered(content2)" >Agregar</app-button-add>
+                        <app-button-add (click)="openVerticallyCentered(content2)">Agregar</app-button-add>
                     </div>
 
                     @if(manufacture_variants?.length > 0){
                     <app-manufacture-variant-index
                         [manufacture_variants]="manufacture_variants"></app-manufacture-variant-index>
                     }@else{
-                    <p class="p-4">No se cuenta con registro de variantes</p>
+                    <hr>
+                    <p>No se cuenta con registro de variantes</p>
                     }
 
                 </ng-template>
@@ -45,7 +100,7 @@
     <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
-                <fa-icon [icon]="faBagShopping" class="me-2"></fa-icon> Gastos ({{ purchases?.length }})
+                <fa-icon [icon]="faBagShopping" class="me-2"></fa-icon> Gastos de insumos ({{ purchases?.length }})
             </button>
         </h2>
         <div ngbAccordionCollapse>
@@ -60,7 +115,8 @@
                     <app-purchase-index [purchases]="purchases" purchaseable_type="manufacture"
                         [purchaseable_id]="manufacture.id"></app-purchase-index>
                     }@else{
-                    <p class="p-4">No se cuenta con registro de compras</p>
+                    <hr>
+                    <p>No se cuenta con registro de compras</p>
                     }
 
 

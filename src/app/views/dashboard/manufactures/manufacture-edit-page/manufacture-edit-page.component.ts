@@ -18,6 +18,8 @@ import { ManufactureVariantIndexComponent } from '../variants/manufacture-varian
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonAddComponent } from 'src/app/views/shared/components/buttons/button-add/button-add.component';
+import { NgbProgressbarConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-manufacture-edit-page',
@@ -33,12 +35,15 @@ import { ButtonAddComponent } from 'src/app/views/shared/components/buttons/butt
     ManufactureVariantIndexComponent,
     NgbAccordionModule,
     FontAwesomeModule,
-    ButtonAddComponent
-    
+    ButtonAddComponent,
+    NgbProgressbarModule
+
   ],
   templateUrl: './manufacture-edit-page.component.html',
   styleUrl: './manufacture-edit-page.component.scss',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  providers: [NgbProgressbarConfig],
+
 })
 
 export class ManufactureEditPageComponent implements OnInit, OnDestroy {
@@ -54,12 +59,14 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
   modal: any;
   manufacture_variants: any;
 
+
   constructor(
     config: NgbModalConfig,
     private modalService: NgbModal,
     private _manufacture: ManufactureService,
     private route: ActivatedRoute,
-    private _manufactureVariant: ManufactureVariantService
+    private _manufactureVariant: ManufactureVariantService,
+    configProgress: NgbProgressbarConfig
 
 
   ) {
@@ -69,6 +76,12 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.manufacture_id = params['manufacture_id'];
     });
+
+    configProgress.max = 1000;
+		configProgress.striped = true;
+		configProgress.animated = true;
+		configProgress.type = 'primary';
+		configProgress.height = '20px';
 
   }
   ngOnInit(): void {
@@ -87,7 +100,7 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
         this.manufacture_variants = resp.data.manufacture_variants;
         this.purchases = resp.data.purchases;
         console.log(this.manufacture_variants);
-        
+
         this.loading = false;
       },
 
@@ -132,7 +145,7 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
         Swal.showLoading();
       }
     })
-    
+
     this._manufactureVariant.batch(this.manufacture.id, variants).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
@@ -142,12 +155,12 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.modal.close();
       },
-    
+
       error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al insertar los registros. Inténtalo nuevamente.','error');
+        Swal.fire('Error', 'Ocurrió un problema al insertar los registros. Inténtalo nuevamente.', 'error');
         console.error(error);
       },
-    
+
     });
 
   }
@@ -155,6 +168,8 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
   receivePurchaseCreate(purchase: any) {
 
     this.purchases = [purchase, ...this.purchases];
+
+    this.modal.close();
 
   }
 }

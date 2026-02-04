@@ -7,5 +7,5 @@
 <app-variant-index [variants]="variants" (variantArraySelected)="receiveSelectedVariants($event)"></app-variant-index>
 <app-button [color]="'dark'" mb="3" [disabled]="buttonDisabled" (click)="addVariants()">Agregar Variantes</app-button>
 }@else{
-<p class="p-4">No se encontraron variantes</p>
+<p>No se encontraron variantes</p>
 }

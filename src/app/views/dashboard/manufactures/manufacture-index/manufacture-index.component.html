@@ -2,12 +2,13 @@
     <table class="table table-hover mb-0 align-middle">
         <thead class="table-light">
             <tr>
-                <th class="text-center">#</th>
+                <!-- <th class="text-center">#</th> -->
+                <th class="text-center"></th>
                 <th>Producto</th>
-                <th class="text-center">Presupuesto</th>
+                <th class="text-center">Gasto Total</th>
+                <th class="text-center">Costo x unidad</th>
                 <th class="text-center">Cantidad</th>
-                <th class="text-center">Merma</th>
-                <th class="text-center">Costo</th>
+                <th class="text-center">Fallados</th>
                 <th>Fabricado por</th>
                 <th>Fecha</th>
                 <th class="text-center">Acciones</th>
@@ -18,8 +19,11 @@
             @for (manufacture of manufactures; track manufacture.id) {
 
             <tr (click)="getManufactureId(manufacture.id)">
-                <td class="text-center py-3">{{ manufacture.id }}</td>
-                <td class="">{{ manufacture.name }}</td>
+                <!-- <td class="text-center py-3">#{{ manufacture.id }}</td> -->
+                <td class="text-center">
+                    <fa-icon [icon]="faScissors"></fa-icon>
+                </td>
+                <td>{{ manufacture.name }}</td>
                 <td class="text-center">{{ manufacture.budget }}</td>
                 <td class="text-center">{{ manufacture.quantity_total }}</td>
                 <td class="text-center">
@@ -32,9 +36,8 @@
                     {{ manufacture.user_id }}
                 </td>
                 <td>{{ manufacture.created_at | DateShopify }}</td>
-                <td class="text-center">
-                    <div class="controls d-flex justify-content-center align-items-center">
-                    </div>
+                <td class="text-center" style="width: 100px;">
+                    <app-button color="outline-dark">Editar</app-button>
                 </td>
             </tr>
             }

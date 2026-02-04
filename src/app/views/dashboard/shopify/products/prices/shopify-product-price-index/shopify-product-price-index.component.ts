@@ -34,7 +34,7 @@ import { ShopifyPriceIndexRowComponent } from './shopify-price-index-row/shopify
   templateUrl: './shopify-product-price-index.component.html',
   styleUrl: './shopify-product-price-index.component.scss'
 })
-export class ShopifyProductPriceIndexComponent{
+export class ShopifyProductPriceIndexComponent {
 
   faSync = faSync;
   faShopify = faShopify;
@@ -253,42 +253,63 @@ export class ShopifyProductPriceIndexComponent{
     });
 
   }
-
+  
   syncPrices(price_key: any) {
 
-    console.log(price_key);
-
     Swal.fire({
-      title: 'Espere...',
-      html: 'Sincronizando precios',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
+      title: '¿Confirmar sincronización?',
+      text: 'Se sincronizarán los precios con Shopify',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, sincronizar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+    }).then((result) => {
+
+      if (!result.isConfirmed) {
+        return;
       }
-    })
-    
-    this._productShopify.syncPrices(price_key).pipe(takeUntil(this.destroy$)).subscribe({
 
-      next: (resp: any) => {
+      // 🔄 Loading
+      Swal.fire({
+        title: 'Espere...',
+        html: 'Sincronizando precios',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Correcto',
-          text: 'Sincronización completada',
-        })
-        
-        // Swal.fire('Guardado', 'Sincronizacion correcta', 'success');
-        console.log(resp);
-        // this.loading = false;
-      },
+      this._productShopify
+        .syncPrices(price_key)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
 
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un error al sincronizar los. Inténtalo nuevamente.', 'error');
-        console.error(error);
-      },
+          next: (resp: any) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Correcto',
+              text: 'Sincronización completada',
+            });
+
+            console.log(resp);
+          },
+
+          error: (error: any) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Ocurrió un error al sincronizar los precios. Inténtalo nuevamente.',
+            });
+
+            console.error(error);
+          },
+
+        });
 
     });
 
   }
+
 
 }

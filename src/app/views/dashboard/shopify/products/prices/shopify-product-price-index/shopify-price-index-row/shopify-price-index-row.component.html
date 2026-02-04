@@ -17,7 +17,7 @@
     <td>
 
         <input [formControlName]="price_key" [attr.disabled]="loading ? true : null" type="text"
-            (input)="getSavePrice()" twoDecimals class="form-control text-center" placeholder="0.00" aria-label="price"
+            (blur)="savePrice()" twoDecimals class="form-control text-center" placeholder="0.00" aria-label="price"
             aria-describedby="basic-price" />
 
     </td>
