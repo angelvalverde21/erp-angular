@@ -22,6 +22,7 @@ export class ButtonComponent {
   @Input() icon: any; 
   @Input() disabled: boolean = false;
   @Input() spinner: boolean = false;
+  @Input() me: boolean = true; //margin end
   
 
   @Output() action = new EventEmitter<void>();

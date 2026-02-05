@@ -6,6 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ManufactureService } from '../manufacture.service';
 import { ButtonSaveComponent } from '../../../shared/components/buttons/button-save/button-save.component';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-manufacture-edit',
@@ -13,7 +14,8 @@ import { ButtonSaveComponent } from '../../../shared/components/buttons/button-s
     ManufactureFormComponent,
     ReactiveFormsModule,
     ButtonSaveComponent,
-    JsonPipe
+    JsonPipe,
+    LoadingComponent
   ],
   templateUrl: './manufacture-edit.component.html',
   styleUrl: './manufacture-edit.component.scss'
@@ -63,13 +65,13 @@ export class ManufactureEditComponent implements OnInit, OnDestroy {
     this._manufacture.update(this.manufacture.id, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        Swal.fire('Guardado', 'El registro ha sido actualizado', 'success');
+        // Swal.fire('Guardado', 'El registro ha sido actualizado', 'success');
         console.log(resp);
         this.loading = false;
       },
 
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al guardar. Inténtalo nuevamente.', 'error');
+        // Swal.fire('Error', 'Ocurrió un problema al guardar. Inténtalo nuevamente.', 'error');
         console.error(error);
       },
 

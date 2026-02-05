@@ -1,40 +1,41 @@
 <ng-container [formGroup]="form">
-    <td style="width: 75px;">
-        @if(loading){
-            <app-loading></app-loading>
-        }@else{
-            
-        }
-    </td>
+
     <td class="text-center" scope="row" style="width: 100px;">
         <app-input-group [mb]="0">
-            <input formControlName="quantity" (blur)="updateQuantity()" type="text" class="form-control text-center" placeholder="quantity"
-                aria-label="quantity" aria-describedby="basic-quantity" />
+            <input formControlName="quantity" (blur)="updateQuantity()" type="text" class="form-control text-center"
+                placeholder="quantity" aria-label="quantity" aria-describedby="basic-quantity" />
         </app-input-group>
     </td>
-    <td class="text-center">
+
+    <td style="width: 125px;" class="text-center">
+        @if(loading){
+        <app-loading></app-loading>
+        }@else{
+
         <fa-icon [icon]="faBarcode" class="me-3"></fa-icon> {{ manufacture_variant.variant?.sku }}
+        }
     </td>
+
     <td>{{ manufacture_variant.variant?.product?.name }}</td>
     @for (option_value of manufacture_variant.variant?.option_values; track option_value.id) {
     <td class="text-center">{{ option_value.value }}</td>
     }
 
-    <td style="width: 125px;">
-        <app-button [icon]="faEdit"
+    <td style="width: 50px;">
+        <app-button [icon]="faEdit" [me]="false" 
             (click)="editManufactureVariant(content, manufacture_variant.id, manufacture_variant.manufacture_id)"
-            color="outline-dark">Recepciones</app-button>
+            color="outline-dark"></app-button>
     </td>
 
-    <td style="width: 125px;"><app-button [icon]="faTrash" colortext="white"
+    <td style="width: 50px;"><app-button [me]="false" [icon]="faTrash" colortext="white"
             (click)="removeVariant(manufacture_variant.id, manufacture_variant.manufacture_id)"
-            color="danger">Eliminar</app-button></td>
+            color="danger"></app-button></td>
 
     <!-- empieza el modal completo -->
 
     <ng-template #content let-modal>
         <div class="modal-header">
-            <h6 class="modal-title">Editar producto de produccion</h6>
+            <h6 class="modal-title">Editar</h6>
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
         <div class="modal-body">

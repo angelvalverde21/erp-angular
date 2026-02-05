@@ -2,70 +2,14 @@
 <app-loading></app-loading>
 }@else{
 
-<div class="card mb-3">
-
-    <div class="card-body">
-        <app-manufacture-edit [manufacture]="manufacture"></app-manufacture-edit>
-    </div>
-
-</div>
-
 
 <app-head-page title="Editar Produccion">
     <app-button-link [path]="['../create']">+ Crear Otra Produccion</app-button-link>
 </app-head-page>
 
-<div class="widgets mb-3">
-    <div class="row">
-        <div class="col-lg-3">
-            <div class="card bg-primary text-white">
-                <div class="card-header">
-                    <h6 class="my-0">Costo Produccion</h6>
-                </div>
-                <div class="card-body">
-                    <h4>S/. 29.82</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="card bg-secondary text-white">
-                <div class="card-header">
-                    <h6 class="my-0">Gasto Total</h6>
-                </div>
-                <div class="card-body">
-                    <h4>S/. 2,475.60</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="card bg-secondary text-white">
-                <div class="card-header">
-                    <h6 class="my-0">Fabricados</h6>
-                </div>
-                <div class="card-body">
-                    <h4>83</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="card bg-secondary text-white">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="my-0">Recibidos </h6>
-                    <span><small>Restan: 70</small></span>
-                </div>
-                <div class="card-body">
-                    <h4>13</h4>
-                   
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<app-manufacture-edit [manufacture]="manufacture"></app-manufacture-edit>
 
-<p>Progreso del proyecto</p>
-
-<ngb-progressbar class="mb-3" [value]="150" />
-
+<app-manufacture-widgets></app-manufacture-widgets>
 
 <div ngbAccordion [closeOthers]="true">
     <div ngbAccordionItem>

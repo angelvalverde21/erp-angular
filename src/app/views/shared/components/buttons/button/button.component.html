@@ -9,7 +9,7 @@
       @if (spinner) {
       <app-loading size="sm" class="me-{{ separation }}"></app-loading>
       } @else {
-      <fa-icon [icon]="icon" class="me-{{ separation }}"></fa-icon>
+      <fa-icon [icon]="icon" [ngClass]="{'me-1': me}"></fa-icon>
       }
     }
 

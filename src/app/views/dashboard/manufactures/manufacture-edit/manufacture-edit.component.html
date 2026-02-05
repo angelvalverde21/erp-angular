@@ -1,10 +1,18 @@
 <!-- <app-manufacture-form [form]="form"></app-manufacture-form> -->
 
-    <input formControlName="name" type="text" class="form-control"
-        [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched" placeholder="Nombre del producto"
-        aria-label="name" aria-describedby="basic-name" />
+<form [formGroup]="form">
+    <div class="title">
+        <input formControlName="name" type="text" class="form-control py-2 mb-3" (blur)="updateManufacture()"
+            [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+            placeholder="Nombre de la produccion" aria-label="name" aria-describedby="basic-name" />
+        @if(loading){
+        <app-loading class="loading" size="sm"></app-loading>
+        }
+    </div>
+</form>
 
-<app-button-save (click)="updateManufacture()" [spinner]="loading" [disabled]="disabledButton">Guardar
-    cambios</app-button-save>
+
+<!-- <app-button-save (click)="updateManufacture()" [spinner]="loading" [disabled]="disabledButton">Guardar
+    cambios</app-button-save> -->
 
 <!-- {{ form.value | json }} -->

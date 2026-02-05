@@ -57,7 +57,7 @@ export class ManufactureIndexPageComponent implements OnInit, OnDestroy {
       },
     
       error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al traer los datos, intente nuevamente','error');
+        // Swal.fire('Error','Ocurrió un problema al traer los datos, intente nuevamente','error');
         console.error(error);
       },
     

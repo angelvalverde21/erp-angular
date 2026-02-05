@@ -18,9 +18,7 @@ import { ManufactureVariantIndexComponent } from '../variants/manufacture-varian
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonAddComponent } from 'src/app/views/shared/components/buttons/button-add/button-add.component';
-import { NgbProgressbarConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
-
-
+import { ManufactureWidgetsComponent } from '../shared/manufacture-widgets/manufacture-widgets.component';
 @Component({
   selector: 'app-manufacture-edit-page',
   imports: [
@@ -36,13 +34,12 @@ import { NgbProgressbarConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-boo
     NgbAccordionModule,
     FontAwesomeModule,
     ButtonAddComponent,
-    NgbProgressbarModule
+    ManufactureWidgetsComponent
 
   ],
   templateUrl: './manufacture-edit-page.component.html',
   styleUrl: './manufacture-edit-page.component.scss',
-  encapsulation: ViewEncapsulation.None,
-  providers: [NgbProgressbarConfig],
+  encapsulation: ViewEncapsulation.None
 
 })
 
@@ -66,9 +63,6 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
     private _manufacture: ManufactureService,
     private route: ActivatedRoute,
     private _manufactureVariant: ManufactureVariantService,
-    configProgress: NgbProgressbarConfig
-
-
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -76,12 +70,6 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.manufacture_id = params['manufacture_id'];
     });
-
-    configProgress.max = 1000;
-		configProgress.striped = true;
-		configProgress.animated = true;
-		configProgress.type = 'primary';
-		configProgress.height = '20px';
 
   }
   ngOnInit(): void {
