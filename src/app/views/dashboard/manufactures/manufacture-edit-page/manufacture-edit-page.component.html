@@ -2,6 +2,13 @@
 <app-loading></app-loading>
 }@else{
 
+<div class="card mb-3">
+
+    <div class="card-body">
+        <app-manufacture-edit [manufacture]="manufacture"></app-manufacture-edit>
+    </div>
+
+</div>
 
 
 <app-head-page title="Editar Produccion">
@@ -59,17 +66,6 @@
 
 <ngb-progressbar class="mb-3" [value]="150" />
 
-<div class="card mb-3">
-
-    <div class="card-body">
-        <app-manufacture-edit [manufacture]="manufacture"></app-manufacture-edit>
-    </div>
-
-    <div class="card-footer text-end" style="border-top: 0;">
-
-    </div>
-
-</div>
 
 <div ngbAccordion [closeOthers]="true">
     <div ngbAccordionItem>

@@ -8,7 +8,7 @@
     </td>
     <td class="text-center" scope="row" style="width: 100px;">
         <app-input-group [mb]="0">
-            <input formControlName="quantity" (input)="getUpdateQuantity()" type="text" class="form-control text-center" placeholder="quantity"
+            <input formControlName="quantity" (blur)="updateQuantity()" type="text" class="form-control text-center" placeholder="quantity"
                 aria-label="quantity" aria-describedby="basic-quantity" />
         </app-input-group>
     </td>

@@ -1,5 +1,10 @@
-<app-manufacture-form [form]="form"></app-manufacture-form>
+<!-- <app-manufacture-form [form]="form"></app-manufacture-form> -->
 
-<app-button-save (click)="updateManufacture()" [spinner]="loading" [disabled]="disabledButton">Guardar cambios</app-button-save>
+    <input formControlName="name" type="text" class="form-control"
+        [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched" placeholder="Nombre del producto"
+        aria-label="name" aria-describedby="basic-name" />
+
+<app-button-save (click)="updateManufacture()" [spinner]="loading" [disabled]="disabledButton">Guardar
+    cambios</app-button-save>
 
 <!-- {{ form.value | json }} -->
