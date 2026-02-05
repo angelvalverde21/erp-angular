@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, TemplateRef,ViewEncapsulation, } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewEncapsulation, } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { RouterModule } from '@angular/router';
@@ -12,8 +12,11 @@ import { CapitalizePipe } from '../../../shared/pipes/capitalize.pipe';
 import { GalleryComponent } from '../../../shared/components/gallery/gallery.component';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
+import { ButtonComponent } from 'src/app/views/shared/components/buttons/button/button.component';
+
+
 @Component({
-  selector: 'app-purchase-index-row',
+  selector: 'tr[app-purchase-index-row]',
   imports: [
     FontAwesomeModule,
     LoadingComponent,
@@ -21,15 +24,19 @@ import { environment } from '../../../../environments/environment';
     PurchaseEditComponent,
     CapitalizePipe,
     GalleryComponent,
-    CommonModule
+    CommonModule,
+    ButtonComponent,
   ],
   templateUrl: './purchase-index-row.component.html',
   styleUrl: './purchase-index-row.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class PurchaseIndexRowComponent {
+
   @Input() purchase: any;
-  @Output() deletePurchase = new EventEmitter<number>();
+  @Input() purchaseable_type: string = "";
+  @Input() purchaseable_id: number = 0;
+  @Output() emitRemovePurchase = new EventEmitter<number>();
 
   faTrash = faTrash;
   faImages = faImages;
@@ -48,9 +55,9 @@ export class PurchaseIndexRowComponent {
     config.backdrop = 'static';
     config.keyboard = false;
   }
-  openVerticallyCentered(content: TemplateRef<any>) {
-    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
-  }
+  // openVerticallyCentered(content: TemplateRef<any>) {
+  //   this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
+  // }
 
   destroy$ = new Subject<void>();
 
@@ -64,7 +71,9 @@ export class PurchaseIndexRowComponent {
       environment.imageThumbnailPlaceHolderVertical;
   }
 
-  archivar(purchase_id: number) {
+  loading: boolean = false;
+
+  removePurchase(purchase_id: number) {
     Swal.fire({
       title: '¿Estás seguro?',
       text: 'No podrás deshacer esta acción',
@@ -75,24 +84,20 @@ export class PurchaseIndexRowComponent {
       cancelButtonText: 'No, cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.loadingOverlay = true;
+
+        this.loading = true;
 
         this._purchase
           .destroy(purchase_id)
           .pipe(takeUntil(this.destroy$))
           .subscribe({
             next: (resp: any) => {
-              this.loadingOverlay = false;
+              this.loading = false;
               console.log(resp);
-              this.deletePurchase.emit(purchase_id);
-              Swal.fire(
-                'Eliminado!',
-                'El elemento ha sido eliminado.',
-                'success'
-              );
+              this.emitRemovePurchase.emit(purchase_id);
             },
             error: (err) => {
-              this.loadingOverlay = false;
+              this.loading = false;
               console.error(err);
 
               Swal.fire(
@@ -112,14 +117,18 @@ export class PurchaseIndexRowComponent {
     this.modal.close();
   }
 
-
-  receivePurchaseUpdated(purchase : any){
-    if(purchase){
+  receivePurchaseUpdated(purchase: any) {
+    if (purchase) {
       this.purchase = purchase;
-    }else{
+    } else {
       console.log('no se actualizo el registro');
     }
     this.closeModal();
   }
+
+  openVerticallyCentered(content: TemplateRef<any>) {
+    this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
+  }
+
 }
 

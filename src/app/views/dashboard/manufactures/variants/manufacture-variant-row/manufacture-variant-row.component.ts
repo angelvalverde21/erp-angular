@@ -64,36 +64,24 @@ export class ManufactureVariantRowComponent implements OnDestroy {
 
   @Input() manufacture_variant: any = {};
 
-  removeVariant(manufacture_variant_id: number, manufacture_id: number) {
+  removeLoading: boolean = false;
 
-    Swal.fire({
-      title: 'Espere...',
-      html: 'Procesando solicitud',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    })
+  removeManufactureVariant(manufacture_variant_id: number, manufacture_id: number) {
+
+    this.removeLoading = true;
 
     this._manufactureVariantService.destroy(manufacture_variant_id, manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+
         console.log(resp);
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Correcto',
-          text: 'La operacion ha sido ejecutada correctamente',
-          confirmButtonText: 'OK',
-          showConfirmButton: true
-        })
-
+        this.removeLoading = false;
         this.emitDeleteManufactureVariantId.emit(manufacture_variant_id);
 
       },
 
       error: (error: any) => {
+        this.loading = false;
         Swal.fire('Error', 'Ocurrió un problema al eliminar el registro. Inténtalo nuevamente.', 'error');
         console.error(error);
       },

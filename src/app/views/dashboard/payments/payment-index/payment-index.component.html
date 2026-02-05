@@ -1,0 +1,41 @@
+<div class="controls text-end mb-3">
+    <app-button-add (click)="openVerticallyCentered(content)">Agregar</app-button-add>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered mb-0 align-middle">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">Codigo</th>
+                <th class="text-center" scope="col">Monto</th>
+                <th class="text-center" scope="col">Metodo</th>
+                <th class="text-center" scope="col">Status</th>
+                <th class="text-center" scope="col">Imagen</th>
+                <th class="text-center" scope="col">Fecha</th>
+                <th class="text-center" scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (payment of payments; track payment.id) {
+            <tr app-payment-index-row [payment]="payment" [paymentable_type]="paymentable_type"
+                [paymentable_id]="paymentable_id"></tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Modal title</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-payment-create [paymentable_type]="paymentable_type" [paymentable_id]="paymentable_id" (emitCreatePayment)="receiveCreatePayment($event)"></app-payment-create>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>

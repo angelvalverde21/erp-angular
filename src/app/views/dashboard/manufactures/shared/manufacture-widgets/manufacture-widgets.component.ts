@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NgbProgressbarConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
+import { WidgetManufacture } from 'src/app/interfaces/widgetManufacture';
 
 @Component({
   selector: 'app-manufacture-widgets',
@@ -11,7 +12,7 @@ import { NgbProgressbarConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-boo
   styleUrl: './manufacture-widgets.component.scss',
   providers: [NgbProgressbarConfig],
 })
-export class ManufactureWidgetsComponent {
+export class ManufactureWidgetsComponent implements OnInit {
 
   constructor(
     config: NgbProgressbarConfig
@@ -22,5 +23,20 @@ export class ManufactureWidgetsComponent {
     config.type = 'primary';
     config.height = '20px';
   }
-  
+  ngOnInit(): void {
+    this.calculateCost();
+  }
+
+  @Input() widget: WidgetManufacture = {
+    cost: 0,
+    purchase_total: 0,
+    quantity_total: 0,
+    quantity_received: 0,
+    progress: 0
+  };
+
+  calculateCost() {
+    this.widget.cost = Math.round((this.widget.purchase_total / this.widget.quantity_total) * 100) / 100;
+  }
+
 }

@@ -10,7 +10,7 @@
                 <th class="text-center">Cantidad</th>
                 <th class="text-center">Fallados</th>
                 <th>Fabricado por</th>
-                <th>Fecha</th>
+                <th>Creado</th>
                 <th class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -23,21 +23,24 @@
                 <td class="text-center">
                     <fa-icon [icon]="faScissors"></fa-icon>
                 </td>
-                <td>{{ manufacture.name }}</td>
-                <td class="text-center">{{ manufacture.budget }}</td>
-                <td class="text-center">{{ manufacture.quantity_total }}</td>
+                <td>
+                    <div class="name">{{ manufacture.name }}</div>
+                    <div class="name">58%</div>
+                </td>
+                <td class="text-center">{{ manufacture.cost }}</td>
+                <td class="text-center">{{ manufacture.cost }}</td>
+                <td class="text-center">
+                    {{ manufacture.quantity_total }}
+                </td>
                 <td class="text-center">
                     {{ manufacture.quantity_failures }}
                 </td>
-                <td class="text-center">
-                    {{ manufacture.cost }}
-                </td>
-                <td class="text-center">
-                    {{ manufacture.user_id }}
+                <td>
+                    {{ manufacture?.user?.name }}
                 </td>
                 <td>{{ manufacture.created_at | DateShopify }}</td>
-                <td class="text-center" style="width: 100px;">
-                    <app-button color="outline-dark">Editar</app-button>
+                <td class="text-center" style="width: 50px;">
+                    <app-button color="outline-dark" [icon]="faEdit"></app-button>
                 </td>
             </tr>
             }

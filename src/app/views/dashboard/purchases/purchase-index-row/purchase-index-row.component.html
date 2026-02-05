@@ -1,60 +1,39 @@
-<div class="overlay-content my-3">
-
-    @if(purchase != null){
-
-    <div class="row">
-
-        <div class="col-lg-12 col-12">
-            <!-- Description -->
-            <div class="text d-flex justify-content-between align-items-center">
-                <h5>{{ purchase.name | capitalize }}</h5>
-
-                <h6 class="text-success text-center mb-3">S/. {{ purchase.total }}</h6>
-                <!-- <span class="badge text-bg-primary mt-2">{{ purchase.supplier.name }}</span> -->
-            </div>
-        </div>
-
-        <div class="col-lg-12 col-12">
-            <p class="text-muted mt-3 mb-4">
-                {{ purchase.observations }}
-            </p>
-        </div>
-
-
-        <div class="col-lg-12 col-12 d-flex justify-content-between">
-
-                <button class="btn btn-sm" [ngClass]="purchase.images_count > 0 ? 'btn-dark' : 'btn-outline-dark'" [disabled]="purchase.images_count === 0" (click)="openVerticallyCentered(images)"><fa-icon
-                    [icon]="faPaperclip"></fa-icon> Adjuntos ({{
-                purchase.images_count }})</button>
-
-            <button class="btn btn-outline-dark btn-sm"
-                (click)="openVerticallyCentered(content)"><fa-icon [icon]="faEdit"></fa-icon> Editar</button>
-
-        </div>
-
-
+<td class="text-center">{{ purchase?.quantity }}</td>
+<td class="text-center">{{ purchase?.unit.name }}</td>
+<td>
+    <div>
+        {{ purchase?.name | capitalize }}
     </div>
-
-    }@else{
-    El purchase es nullo
+    @if(purchase?.supplier?.user.name){
+    <div>
+        - {{ purchase?.supplier?.user.name | capitalize }}
+    </div>
     }
 
-    @if(loadingOverlay){
-    <div class="overlay">
+</td>
+<td class="text-center">{{ purchase?.price | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+
+<td class="text-center">{{ purchase?.total | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+<td style="width: 50px;">
+    <app-button color="outline-dark" [icon]="faEdit" (click)="openVerticallyCentered(content)"></app-button>
+</td>
+<td style="width: 50px;">
+    @if(loading){
         <app-loading></app-loading>
-    </div>
+    }@else{
+            <app-button [me]="false" [icon]="faTrash" colortext="white"
+        (click)="removePurchase(purchase.id)" color="danger"></app-button>
     }
-
-</div>
+</td>
 
 <ng-template #content let-modal>
-    <div class="modal-header bg-success text-white d-flex justify-content-between align-items-center">
-        <h5 class="modal-title"><fa-icon [icon]="faCashRegister" class="me-2"></fa-icon> Editar Compra</h5>
+    <div class="modal-header">
+        <h5 class="modal-title">Editar Compra</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <app-purchase-edit [purchase_id]="purchase.id"
-            (emitPurchaseUpdated)="receivePurchaseUpdated($event)"></app-purchase-edit>
+        <app-purchase-edit [purchase_id]="purchase.id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
+            [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id"></app-purchase-edit>
     </div>
 
 </ng-template>
@@ -74,6 +53,3 @@
         <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
     </div>
 </ng-template>
-
-
-<!-- btn btn-outline-dark w-xxl-75 w-xl-75 w-lg-75 w-md-75 w-sm-75 w-xs-100 -->

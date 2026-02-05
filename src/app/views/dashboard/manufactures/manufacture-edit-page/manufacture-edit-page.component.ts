@@ -10,7 +10,7 @@ import { PurchaseIndexComponent } from '../../purchases/purchase-index/purchase-
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { PurchaseCreateComponent } from '../../purchases/purchase-create/purchase-create.component';
-import { faBarcode, faBoxArchive, faBagShopping } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode, faBoxArchive, faBagShopping, faMoneyBill1, faCommentDollar } from '@fortawesome/free-solid-svg-icons';
 import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import { VariantSearchComponent } from '../../products/variants/variant-search/variant-search.component';
 import { ManufactureVariantService } from '../variants/manufactureVariant.service';
@@ -19,6 +19,10 @@ import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonAddComponent } from 'src/app/views/shared/components/buttons/button-add/button-add.component';
 import { ManufactureWidgetsComponent } from '../shared/manufacture-widgets/manufacture-widgets.component';
+import { WidgetManufacture } from 'src/app/interfaces/widgetManufacture';
+import { PaymentIndexComponent } from '../../payments/payment-index/payment-index.component';
+// import { PaymentIndexComponent } from '../../payments/payment-edit/payment-index/payment-index.component';
+
 @Component({
   selector: 'app-manufacture-edit-page',
   imports: [
@@ -34,8 +38,8 @@ import { ManufactureWidgetsComponent } from '../shared/manufacture-widgets/manuf
     NgbAccordionModule,
     FontAwesomeModule,
     ButtonAddComponent,
-    ManufactureWidgetsComponent
-
+    ManufactureWidgetsComponent,
+    PaymentIndexComponent
   ],
   templateUrl: './manufacture-edit-page.component.html',
   styleUrl: './manufacture-edit-page.component.scss',
@@ -50,9 +54,20 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
   manufacture_id: number = 0;
   purchases: any;
 
+  widget: WidgetManufacture = {
+    cost: 0,
+    quantity_total: 0,
+    purchase_total: 0,
+    quantity_received: 0,
+    progress: 0
+  };
+
   faBoxArchive = faBoxArchive;
   faBagShopping = faBagShopping;
   faBarcode = faBarcode;
+  faMoneyBill1 = faMoneyBill1;
+  faCommentDollar = faCommentDollar;
+  
   modal: any;
   manufacture_variants: any;
 
@@ -83,11 +98,15 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
     this._manufacture.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
+
         console.log(resp);
         this.manufacture = resp.data;
         this.manufacture_variants = resp.data.manufacture_variants;
         this.purchases = resp.data.purchases;
         console.log(this.manufacture_variants);
+
+        this.widget.quantity_total = resp.data.quantity_total;
+        this.widget.purchase_total = resp.data.purchase_total;
 
         this.loading = false;
       },

@@ -9,10 +9,10 @@
 
 <app-manufacture-edit [manufacture]="manufacture"></app-manufacture-edit>
 
-<app-manufacture-widgets></app-manufacture-widgets>
+<app-manufacture-widgets [widget]="widget"></app-manufacture-widgets>
 
 <div ngbAccordion [closeOthers]="true">
-    <div ngbAccordionItem>
+    <div ngbAccordionItem [destroyOnHide]="false">
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Productos a fabricar ({{
                 manufacture_variants?.length }})</button>
@@ -40,7 +40,7 @@
     <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
-                <fa-icon [icon]="faBagShopping" class="me-2"></fa-icon> Gastos de insumos ({{ purchases?.length }})
+                <fa-icon [icon]="faCommentDollar" class="me-2"></fa-icon> Gastos de insumos ({{ purchases?.length }})
             </button>
         </h2>
         <div ngbAccordionCollapse>
@@ -59,6 +59,22 @@
                     <p>No se cuenta con registro de compras</p>
                     }
 
+
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div ngbAccordionItem>
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>
+                <fa-icon [icon]="faMoneyBill1" class="me-2"></fa-icon> Transferencias Recibidas
+            </button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+                <ng-template>
+
+                    <app-payment-index [payments]="manufacture?.payments" [paymentable_type]="'manufacture'" [paymentable_id]="manufacture.id"></app-payment-index>
 
                 </ng-template>
             </div>

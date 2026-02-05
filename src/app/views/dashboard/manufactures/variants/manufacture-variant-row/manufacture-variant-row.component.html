@@ -22,14 +22,21 @@
     }
 
     <td style="width: 50px;">
-        <app-button [icon]="faEdit" [me]="false" 
+        <app-button [icon]="faEdit" [me]="false"
             (click)="editManufactureVariant(content, manufacture_variant.id, manufacture_variant.manufacture_id)"
             color="outline-dark"></app-button>
     </td>
 
-    <td style="width: 50px;"><app-button [me]="false" [icon]="faTrash" colortext="white"
-            (click)="removeVariant(manufacture_variant.id, manufacture_variant.manufacture_id)"
-            color="danger"></app-button></td>
+    <td style="width: 50px;">
+        @if(removeLoading){
+        <app-loading></app-loading>
+        }@else{
+        <app-button [me]="false" [icon]="faTrash" colortext="white"
+            (click)="removeManufactureVariant(manufacture_variant.id, manufacture_variant.manufacture_id)"
+            color="danger">
+        </app-button>
+        }
+    </td>
 
     <!-- empieza el modal completo -->
 

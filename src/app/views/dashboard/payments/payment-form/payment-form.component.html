@@ -1,0 +1,38 @@
+<form [formGroup]="form">
+
+    <div class="row mb-3">
+        <div class="col-lg-12">
+            <app-input-group text="Monto">
+                <input formControlName="amount" type="text" class="form-control"
+                    [class.is-invalid]="form.get('amount')?.invalid && form.get('amount')?.touched"
+                    placeholder="Nombre o Razon Social" aria-label="amount" aria-describedby="basic-amount" />
+            </app-input-group>
+
+        </div>
+
+        <div class="col-lg-6">
+            <label for="Metodo de pago">Metodo de pago</label>
+            <select formControlName="method" class="form-select mb-3" aria-label="Default select example">
+                <option [value]="null" selected>Metodo de pago</option>
+                @for (method of METHODS; track method.id) {
+                <option value="{{ method.name }}">{{ method.title }}</option>
+                }
+
+            </select>
+
+        </div>
+
+        <div class="col-lg-6">
+            <label for="Status">Status</label>
+            <select formControlName="status" class="form-select mb-3" aria-label="Default select example">
+
+                @for (item of STATUS; track item.id) {
+                    <option value="{{ item.name }}">{{ item.title }}</option>
+                }
+
+            </select>
+
+        </div>
+    </div>
+
+</form>
