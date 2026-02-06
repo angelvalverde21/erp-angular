@@ -19,7 +19,7 @@ import { JsonPipe } from '@angular/common';
 })
 export class PaymentCreateComponent implements OnInit, OnDestroy {
 
-
+  disabledButton: boolean = true;
   form!: FormGroup;
   @Input() paymentable_type: string = "";
   @Input() paymentable_id: number = 0;
@@ -31,18 +31,34 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
     private _paymentService: PaymentService,
   ) {
 
+
+
   }
 
   ngOnInit(): void {
+
     this.formInit();
+
+    this.form.statusChanges.subscribe((status) => {
+      console.log(status);
+
+      if (status === 'VALID') {
+        this.disabledButton = false;
+      } else {
+        this.disabledButton = true;
+      }
+    });
+    
   }
 
   formInit() {
 
+    const today = new Date().toISOString().split('T')[0];
+
     this.form = this.fb.group({
-      amount: [0, [Validators.required]],
+      amount: ['', [Validators.required]],
       method: ['yape', [Validators.required]],
-      status: ['pending', [Validators.required]],
+      date: [today, [Validators.required]],
       direction: ["in", [Validators.required]],
       paymentable_type: [this.paymentable_type, [Validators.required]],
       paymentable_id: [this.paymentable_id, [Validators.required]],
@@ -54,6 +70,11 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
   payment: any;
 
   createPayment() {
+
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.loading = true;
 

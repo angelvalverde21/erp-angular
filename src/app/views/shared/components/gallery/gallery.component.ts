@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faGear, faImages, faImage, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { DashboardService } from '../../../dashboard/dashboard.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { LoadingComponent } from '../loading/loading.component';
 import { ImageComponent } from './image/image.component';
 
@@ -58,18 +58,34 @@ export class GalleryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    
     this.loading = true;
-    this._dashboard.getGallery(this.path).subscribe((resp:any) => {
-      this.images = resp.data;
-      this.loading = false;
-      console.log(resp);
+
+    this._dashboard.getGallery(this.path).pipe(takeUntil(this.destroy$)).subscribe({
+
+      next: (resp: any) => {
+        console.log(resp);
+        this.images = resp.data;
+        this.loading = false;
+      },
+    
+      error: (error: any) => {
+        console.error(error);
+        this.loading = false;
+      },
+    
     });
+
   }
 
+
+  destroy$ = new Subject<void>();
+  
   ngOnDestroy(): void {
-    if(this.gallerySubscription){
-      this.gallerySubscription.unsubscribe(); 
-    }
+  
+    this.destroy$.next();
+    this.destroy$.complete();
+  
   }
   
   closeModal() {

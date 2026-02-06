@@ -74,7 +74,8 @@
             <div ngbAccordionBody>
                 <ng-template>
 
-                    <app-payment-index [payments]="manufacture?.payments" [paymentable_type]="'manufacture'" [paymentable_id]="manufacture.id"></app-payment-index>
+                    <app-payment-index [payments]="manufacture?.payments" [paymentable_type]="'manufacture'"
+                        [paymentable_id]="manufacture.id"></app-payment-index>
 
                 </ng-template>
             </div>
@@ -107,9 +108,7 @@
         <app-purchase-create purchaseable_type="manufacture" [purchaseable_id]="manufacture.id"
             (emitPurchaseCreate)="receivePurchaseCreate($event)"></app-purchase-create>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-    </div>
+
 </ng-template>
 
 <ng-template #content2 let-modal>
@@ -120,9 +119,7 @@
     <div class="modal-body">
         <app-variant-search (emitVariantsSelected)="receiveSelectedVariants($event)"></app-variant-search>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-    </div>
+
 </ng-template>
 
 

@@ -7,16 +7,24 @@
 <td style="width: 50px;">
   <app-button (click)="openVerticallyCentered(content)" [icon]="faEdit" color="outline-dark" [me]="false"></app-button>
 </td>
+<td style="width: 50px;">
+  @if(removeLoading){
+  <app-loading></app-loading>
+  }@else{
+  <app-button [me]="false" [icon]="faTrash" colortext="white"
+    (click)="removePayment(payment.id)" color="danger">
+  </app-button>
+  }
+</td>
 
 <ng-template #content let-modal>
   <div class="modal-header">
-    <h6 class="modal-title">Modal title</h6>
+    <h6 class="modal-title">Editar Pago</h6>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
-    <app-payment-edit [payment]="payment" [paymentable_type]="paymentable_type" [paymentable_id]="paymentable_id"></app-payment-edit>
+    <app-payment-edit [payment]="payment" [paymentable_type]="paymentable_type" [paymentable_id]="paymentable_id"
+      (emitUpdatePayment)="receiveUpdatePayment($event)"></app-payment-edit>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-  </div>
+
 </ng-template>

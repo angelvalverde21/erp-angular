@@ -1,5 +1,7 @@
 <app-payment-form [form]="form"></app-payment-form>
 
-{{ form.value | json }}
+<!-- {{ form.value | json }} -->
 
-<app-button-save (click)="createPayment()">Registrar Pago</app-button-save>
+<div class="mb-3">
+    <app-button-save (click)="createPayment()" [disabled]="disabledButton" [spinner]="loading">Registrar Pago</app-button-save>
+</div>

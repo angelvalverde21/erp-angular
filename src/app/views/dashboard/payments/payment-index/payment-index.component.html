@@ -13,13 +13,14 @@
                 <th class="text-center" scope="col">Imagen</th>
                 <th class="text-center" scope="col">Fecha</th>
                 <th class="text-center" scope="col"></th>
+                <th class="text-center" scope="col"></th>
             </tr>
         </thead>
         <tbody>
 
             @for (payment of payments; track payment.id) {
             <tr app-payment-index-row [payment]="payment" [paymentable_type]="paymentable_type"
-                [paymentable_id]="paymentable_id"></tr>
+                [paymentable_id]="paymentable_id" (emitRemovePayment)="receiveRemovePayment($event)"></tr>
             }
 
         </tbody>
@@ -29,13 +30,10 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">Modal title</h4>
+        <h6 class="modal-title">Registrar Pago</h6>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
         <app-payment-create [paymentable_type]="paymentable_type" [paymentable_id]="paymentable_id" (emitCreatePayment)="receiveCreatePayment($event)"></app-payment-create>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
     </div>
 </ng-template>

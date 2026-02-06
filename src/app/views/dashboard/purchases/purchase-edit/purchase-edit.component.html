@@ -5,9 +5,11 @@
 <app-purchase-form [form]="form" [suppliers]="suppliers"></app-purchase-form>
 
 <!-- {{ form.value | json }} -->
+<div class="mb-3">
+    <app-button [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon" (click)="update()">Actualizar
+        Compra</app-button>
+</div>
 
-<app-button [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon"
-    (click)="update()">Actualizar Compra</app-button>
 
 <!-- <div class="d-flex justify-content-between">
 

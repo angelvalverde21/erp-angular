@@ -1,1 +1,8 @@
-<p>payment-edit works!</p>
+<app-payment-form [form]="form"></app-payment-form>
+
+<app-gallery [path]="`payments/${payment.id}/images`"></app-gallery>
+
+<!-- {{ form.value | json }} -->
+<div class="mb-3">
+    <app-button-save (click)="updatePayment()">Actualizar Pago</app-button-save>
+</div>

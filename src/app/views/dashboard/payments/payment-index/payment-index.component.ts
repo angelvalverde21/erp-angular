@@ -35,7 +35,7 @@ export class PaymentIndexComponent {
   }
 
   openVerticallyCentered(content: TemplateRef<any>) {
-    this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
+    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
   }
 
   closeModal() {
@@ -45,6 +45,10 @@ export class PaymentIndexComponent {
   receiveCreatePayment(event: any){
     this.payments.unshift(event);
     this.closeModal();
+  }
+
+  receiveRemovePayment(payment: any){
+    this.payments = this.payments.filter((p: any) => p.id !== payment.id);
   }
 
 }

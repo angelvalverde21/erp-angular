@@ -94,7 +94,8 @@ export class DashboardService {
 
 
   getGallery(path: string = ""): Observable<any> {
-    const url = `${this.baseUrl}/dashboard/${path}`;
+    const url = API.private + '/' + this._base.store + '/dashboard/' + path;
+    // const url = `${this.baseUrl}/dashboard/${path}`;
     console.log(url);
     
     return this.http.get(url);
