@@ -1,0 +1,31 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-head-page title="Pasarelas de pago">
+    <app-button-link [path]="['./create']">Agregar Gateway</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3">
+        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)" type="gateway" [button_active]="false">
+            Buscar
+        </app-user-head-table>
+    </div>
+
+    <div class="card-body p-0">
+        @if(gateways?.length > 0){
+            <app-gateway-index [gateways]="gateways"></app-gateway-index>
+        }@else{
+            <p class="p-4">No se cuenta con registro de gateways</p>
+        }
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ gateways?.length }}</small>
+    </div>
+
+</div>
+
+}

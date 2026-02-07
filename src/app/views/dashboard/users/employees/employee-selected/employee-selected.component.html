@@ -1,0 +1,23 @@
+<app-input-group [icon]="faSearch" class="input-district">
+    <input 
+        [(ngModel)]="name" (keyup)="keyUpSearch($event)" 
+        type="text" class="form-control is-required"
+        placeholder="Buscar empleado" aria-label="empleado"
+        aria-describedby="Empleado"
+        [disabled]="isDisabled"
+        (blur)="onTouchedCb?.()"
+        [ngClass]="isInvalid ? 'is-invalid' : '' "
+    />
+
+    <div class="loading" *ngIf="loading">
+            <app-loading size="sm"></app-loading>
+    </div>
+</app-input-group>
+
+<ul class="list-group" *ngIf="!showEmployees">
+    <li class="list-group-item" *ngFor="let employee of employees">
+        <a class="btn w-100" (click)="setName(employee)">{{employee.user.name}} - {{employee.user.email}}</a>
+    </li>
+</ul>
+
+<input [(ngModel)]="employee_id" type="hidden">

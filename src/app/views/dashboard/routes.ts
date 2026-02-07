@@ -26,6 +26,14 @@ export const routes: Routes = [
   },
 
   {
+    path: 'pettycashes',
+    loadChildren: () =>
+      import('../../views/dashboard/petty-cashes/route.pettycash').then(
+        (m) => m.routes
+      ),
+  },
+
+  {
     path: 'purchases',
     loadChildren: () =>
       import('../../views/dashboard/purchases/routes.purchase').then(
@@ -62,6 +70,12 @@ export const routes: Routes = [
     path: 'couriers',
     loadChildren: () =>
       import('../../views/dashboard/users/couriers/routes.courier').then((m) => m.routes),
+    // canActivate: [authGuard],
+  },
+  {
+    path: 'gateways',
+    loadChildren: () =>
+      import('../../views/dashboard/gateways/routes.gateway').then((m) => m.routes),
     // canActivate: [authGuard],
   }
 ];

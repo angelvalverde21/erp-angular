@@ -1,0 +1,14 @@
+<app-head-page title="Crear flujo de caja" [icon]="faCashRegister">
+    <app-button-back></app-button-back>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-body">
+
+        <app-petty-cash-create (emitPettyCashCreate)="receivePettyCashCreate($event)"></app-petty-cash-create>
+
+
+    </div>
+
+</div>

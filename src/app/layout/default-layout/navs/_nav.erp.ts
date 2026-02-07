@@ -109,6 +109,20 @@ export const navErp: CustomNavData[] = [
         roles: ['master']
     },
     {
+        name: 'Caja chica',
+        url: 'dashboard/pettycashes',
+        iconComponent: { name: 'cil-wallet' },
+        children: [
+            { 
+                name: 'Todos', url: 'dashboard/pettycashes', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+             },
+        ],
+        roles: ['ceo', 'master']
+    },
+    {
         name: 'Usuarios',
         url: 'dashboard/users',
         iconComponent: { name: 'cil-user' },
@@ -119,25 +133,6 @@ export const navErp: CustomNavData[] = [
         ],
         roles: ['ceo', 'master']
     },
-    {
-        name: 'Couriers',
-        url: 'dashboard/couriers',
-        iconComponent: { name: 'cil-truck' },
-        children: [
-            {
-                name: 'Todos', url: 'dashboard/couriers', icon: 'nav-icon-bullet',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }
-            },
-            {
-                name: 'Crear', url: 'dashboard/couriers/create', icon: 'nav-icon-bullet',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }
-            },
-        ],
-        roles: ['master', 'ceo']
-    }
+
 ];
 

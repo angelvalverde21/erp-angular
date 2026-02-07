@@ -1,0 +1,24 @@
+<form [formGroup]="form">
+
+    <div class="row mb-3">
+        <div class="col-lg-12">
+
+            <app-input-group text="Monto">
+                <input formControlName="amount_assigned" type="number" class="form-control"
+                    [class.is-invalid]="form.get('amount_assigned')?.invalid && form.get('amount_assigned')?.touched"
+                    placeholder="0.00" aria-label="amount_assigned" aria-describedby="basic-name" />
+            </app-input-group>
+
+            <label for="employee_id" class="mb-2">Asignar Empleado</label>
+
+            <app-employee-selected formControlName="employee_id"></app-employee-selected>
+
+        </div>
+
+    </div>
+
+    {{ form.value | json }}
+
+
+</form>
+

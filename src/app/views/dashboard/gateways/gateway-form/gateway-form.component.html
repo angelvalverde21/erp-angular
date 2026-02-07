@@ -1,0 +1,15 @@
+<form [formGroup]="form">
+
+    <div class="row mb-3">
+        <div class="col-lg-12">
+            <app-input-group text="Nombre">
+                <input formControlName="title" type="text" class="form-control"
+                    [class.is-invalid]="form.get('title')?.invalid && form.get('title')?.touched"
+                    placeholder="Crear Gateway" aria-label="title" aria-describedby="basic-title" />
+            </app-input-group>
+
+        </div>
+       
+    </div>
+
+</form>

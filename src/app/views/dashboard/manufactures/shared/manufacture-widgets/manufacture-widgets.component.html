@@ -5,8 +5,11 @@
                 <div class="card-header">
                     <h6 class="my-0">Costo</h6>
                 </div>
+
+                <!-- {{ widget | json }} -->
+
                 <div class="card-body">
-                    <h5>S/. {{ widget.cost }}</h5>
+                    <h5>S/. {{ widget.cost ? widget.cost : 0 }}</h5>
                 </div>
             </div>
         </div>
@@ -16,7 +19,7 @@
                     <h6 class="my-0">Gasto Total</h6>
                 </div>
                 <div class="card-body">
-                    <h5>S/. {{ widget.purchase_total }}</h5>
+                    <h5>S/. {{ widget.purchase_total ? widget.purchase_total : 0 }}</h5>
                 </div>
             </div>
         </div>
@@ -26,7 +29,7 @@
                     <h6 class="my-0">Solicitados</h6>
                 </div>
                 <div class="card-body">
-                    <h5>{{ widget.quantity_total }}</h5>
+                    <h5>{{ widget.quantity_total ? widget.quantity_total : 0 }}</h5>
                 </div>
             </div>
         </div>

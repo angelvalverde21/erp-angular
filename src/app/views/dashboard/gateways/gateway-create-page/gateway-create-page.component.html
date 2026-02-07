@@ -1,0 +1,11 @@
+<app-head-page title="Gateways">
+    <app-button-link [path]="['./create']">Agregar gateway</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-body">
+        <app-gateway-create (emitGatewayCreate)="receiveGatewayCreate($event)"></app-gateway-create>
+    </div>
+
+</div>

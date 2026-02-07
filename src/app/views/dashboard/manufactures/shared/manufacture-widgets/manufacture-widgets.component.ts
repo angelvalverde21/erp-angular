@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbProgressbarConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { WidgetManufacture } from 'src/app/interfaces/widgetManufacture';
@@ -6,6 +7,7 @@ import { WidgetManufacture } from 'src/app/interfaces/widgetManufacture';
   selector: 'app-manufacture-widgets',
   imports: [
     NgbProgressbarModule,
+    JsonPipe
 
   ],
   templateUrl: './manufacture-widgets.component.html',

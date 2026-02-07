@@ -2,6 +2,7 @@ import { navErp } from './navs/_nav.erp';
 import { navShopify } from './navs/_nav.shopify';
 import { navMercadoPago } from './navs/_nav.mercadopago';
 import { CustomNavData } from '../../interfaces/nav.interface';
+import { navConfig } from './navs/_nav.config';
 
 export const navItems: CustomNavData[] = [
 
@@ -13,6 +14,7 @@ export const navItems: CustomNavData[] = [
 
   // ✅ Combina los módulos aquí
   ...navErp,
+  ...navConfig,
   ...navShopify,
   {
     title: true,

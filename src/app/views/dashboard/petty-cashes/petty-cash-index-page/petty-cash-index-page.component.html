@@ -1,0 +1,29 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-head-page title="Gastos diarios">
+    <app-button-link [path]="['./create']">Crear flujo Gasto</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3">
+        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)" type="petty_cash"></app-user-head-table>
+    </div>
+
+    <div class="card-body p-0">
+        @if(petty_cashes?.length > 0){
+            <app-petty-cash-index [petty_cashes]="petty_cashes"></app-petty-cash-index>
+        }@else{
+            <p class="p-4">No se cuenta con registro de flujo de gastos</p>
+        }
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ petty_cashes?.length }}</small>
+    </div>
+
+</div>
+
+}

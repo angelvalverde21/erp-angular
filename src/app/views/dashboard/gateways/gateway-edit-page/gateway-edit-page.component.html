@@ -1,0 +1,11 @@
+<app-head-page title="Gateways">
+    <app-button-link [path]="['./create']">Editar gateway</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-body">
+        <app-gateway-edit [gateway]="gateway" (emitGatewayUpdate)="receiveGatewayUpdate($event)"></app-gateway-edit>
+    </div>
+
+</div>
