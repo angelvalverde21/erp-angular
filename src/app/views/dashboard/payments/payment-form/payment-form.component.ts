@@ -1,12 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputGroupComponent } from 'src/app/views/shared/components/form/input-group/input-group.component';
+import { GatewaySelectedComponent } from '../../gateways/gateway-selected/gateway-selected.component';
 
 @Component({
   selector: 'app-payment-form',
   imports: [
     InputGroupComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    GatewaySelectedComponent
   ],
   templateUrl: './payment-form.component.html',
   styleUrl: './payment-form.component.scss'

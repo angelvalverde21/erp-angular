@@ -12,13 +12,16 @@
 
         <div class="col-lg-6">
             <label for="Metodo de pago" class="mb-2">Metodo de pago</label>
-            <select formControlName="method" class="form-select mb-3" aria-label="Default select example">
+
+            <app-gateway-selected formControlName></app-gateway-selected>
+
+            <!-- <select formControlName="method" class="form-select mb-3" aria-label="Default select example">
                 <option [value]="null" selected>Metodo de pago</option>
                 @for (method of METHODS; track method.id) {
                 <option value="{{ method.name }}">{{ method.title }}</option>
                 }
 
-            </select>
+            </select> -->
 
         </div>
 
