@@ -8,7 +8,7 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import Swal from 'sweetalert2';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { EmployeeService } from '../employee.service';
-import { NgSelectModule } from '@ng-select/ng-select';
+
 
 @Component({
   selector: 'app-employee-selected',
@@ -17,8 +17,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     InputGroupComponent,
     FormsModule,
     CommonModule,
-    LoadingComponent,
-    NgSelectModule
+    LoadingComponent
   ],
   templateUrl: './employee-selected.component.html',
   styleUrl: './employee-selected.component.scss',
@@ -40,9 +39,7 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
 
   isDisabled: boolean = false;
 
-  private pendingEmployeeId: number | null = null;
-
-  employee_id: number | null = null;
+  employee_id: number = 0; //150101 es Lima
   name: string = "";
   employees: any[] = [];
   showEmployees: boolean = true;
@@ -57,22 +54,53 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
   }
 
   ngOnInit(): void {
-    this.employeesInit();
+
+    this.searchSubject
+      .pipe(debounceTime(500))  // Retrasa la búsqueda 300ms después del último evento
+      .subscribe((searchTerm: string) => {
+        this.searchEmployee(searchTerm);
+      });
+
+    // Esto se hace para recibir el valor de employee_id en caso se este editando una direccion
+    // this.addressForm.get('employee_id')?.valueChanges.subscribe((newValue) => {
+    //   this.updatedEmployeeId(newValue);
+
+    // });
+
+  }
+
+  keyUpSearch($event: any) {
+
+    console.log($event.target.value);
+
+    const searchTerm = $event.target.value;
+
+    if (searchTerm.length >= 3) { //permite la busqueda si hay mas de 3 caracteres
+
+      this.loading = true;
+
+      this.searchSubject.next(searchTerm); // Emite el término de búsqueda
+    } else {
+      this.onChangeCb?.(null);
+    }
   }
 
   //***************************************************************************************************** */
 
+  setName(employee: any) {
 
-  setEmployee(employee: any) {
-
+    console.log(employee);
+    
+    this.name = employee.user.name;
     this.employee_id = employee.id;
-    this.onChangeCb?.(employee.id);
+    this.onChangeCb?.(this.employee_id);
+    this.showEmployees = true;
 
   }
 
-  employeesInit() {
+  searchEmployee(name: string) {
 
-    this._employee.index().pipe(takeUntil(this.destroy$)).subscribe({
+    this._employee.search(name).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
 
@@ -80,7 +108,7 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
         this.loading = false;
         this.employees = resp.data;
         console.log(this.employees);
-        this.trySetEmployee();
+
       },
 
       error: (error: any) => {
@@ -111,9 +139,28 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
   onChangeCb?: (employee_id: number | null) => void; //esta funcion es un callback para registerOnChange
   onTouchedCb?: () => void;
 
-  writeValue(employee_id: number | null): void {
-    this.pendingEmployeeId = employee_id;
-    this.trySetEmployee();
+  writeValue(employee_id: number): void {
+
+    this.employee_id = employee_id;
+    console.log(this.employee_id);
+
+    if (this.employee_id > 0) {
+
+      this._employee.get(this.employee_id).pipe(takeUntil(this.destroy$)).subscribe({
+
+        next: (resp: any) => {
+          this.name = resp.data.user.name;
+          console.log(resp.data);
+        },
+
+        error: (error: any) => {
+          Swal.fire('Error', 'Ocurrió un problema al consultar el id del distrito, Inténtalo nuevamente.', 'error');
+          console.error(error);
+        },
+
+      });
+
+    }
   }
 
   registerOnChange(fn: any): void {
@@ -128,19 +175,5 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
     this.isDisabled = isDisabled;
   }
 
-  private trySetEmployee() {
-
-    if (!this.employees.length) return;
-    if (this.pendingEmployeeId == null) return;
-
-    const exists = this.employees.some(
-      e => e.id === this.pendingEmployeeId
-    );
-
-    if (exists) {
-      this.employee_id = this.pendingEmployeeId;
-      this.pendingEmployeeId = null;
-    }
-  }
 
 }

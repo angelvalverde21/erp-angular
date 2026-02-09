@@ -12,7 +12,7 @@ export class EmployeeService extends BaseCrudDashboardService {
 
   constructor(http: HttpClient) {
 
-    super(http, 'users/employees');
+    super(http, 'employees');
   }
 
 }

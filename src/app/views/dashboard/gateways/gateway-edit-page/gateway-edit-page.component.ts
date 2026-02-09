@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { GatewayEditComponent } from '../gateway-edit/gateway-edit.component';
 import { GatewayService } from '../gateway.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-gateway-edit-page',
@@ -15,8 +15,9 @@ import { ActivatedRoute } from '@angular/router';
     ButtonBackComponent,
     HeadPageComponent,
     LoadingComponent,
-    ButtonLinkComponent,
-    GatewayEditComponent
+    GatewayEditComponent,
+    ButtonBackComponent,
+    JsonPipe
   ],
   templateUrl: './gateway-edit-page.component.html',
   styleUrl: './gateway-edit-page.component.scss'

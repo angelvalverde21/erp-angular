@@ -7,11 +7,12 @@ import { InputGroupComponent } from '@shared/components/form/input-group/input-g
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import Swal from 'sweetalert2';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { EmployeeService } from '../employee.service';
+import { GatewayService } from '../gateway.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 
+
 @Component({
-  selector: 'app-employee-selected',
+  selector: 'app-gateway-selected',
   standalone: true,
   imports: [
     InputGroupComponent,
@@ -20,18 +21,18 @@ import { NgSelectModule } from '@ng-select/ng-select';
     LoadingComponent,
     NgSelectModule
   ],
-  templateUrl: './employee-selected.component.html',
-  styleUrl: './employee-selected.component.scss',
+  templateUrl: './gateway-selected.component.html',
+  styleUrl: './gateway-selected.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => EmployeeSelectedComponent),
+      useExisting: forwardRef(() => GatewaySelectedComponent),
       multi: true,
     }
   ]
 })
 
-export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class GatewaySelectedComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
   faSearch = faSearch;
 
@@ -39,57 +40,53 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
   @Input() isInvalid: boolean = false;
 
   isDisabled: boolean = false;
+  private pendingGatewayId: number | null = null;
 
-  private pendingEmployeeId: number | null = null;
-
-  employee_id: number | null = null;
+  gateway_id: number = 0; //150101 es Lima
   name: string = "";
-  employees: any[] = [];
-  showEmployees: boolean = true;
+  gateways: any[] = [];
+  showgateways: boolean = true;
   loading: boolean = false;
 
   searchSubject: Subject<string> = new Subject();
 
   constructor(
-    private _employee: EmployeeService
+    private _gateway: GatewayService
   ) {
 
   }
 
   ngOnInit(): void {
-    this.employeesInit();
+
+    this.gatewayInit();
+
   }
 
   //***************************************************************************************************** */
 
+  gatewayInit() {
 
-  setEmployee(employee: any) {
+    this.loading = true;
 
-    this.employee_id = employee.id;
-    this.onChangeCb?.(employee.id);
-
-  }
-
-  employeesInit() {
-
-    this._employee.index().pipe(takeUntil(this.destroy$)).subscribe({
+    this._gateway.index().pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
 
-        this.showEmployees = false;
         this.loading = false;
-        this.employees = resp.data;
-        console.log(this.employees);
-        this.trySetEmployee();
-      },
+        this.gateways = resp.data;
+        console.log(this.gateways);
+        this.trySetGateway();
 
+      },
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al traer los empleados, intente nuevamente', 'error');
+
+        this.loading = false;
+        Swal.fire('Error', 'Ocurrió un problema al traer los gateways, intente nuevamente', 'error');
         console.error(error);
+
       },
 
     });
-
   }
 
   destroy$ = new Subject<void>();
@@ -108,12 +105,23 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
 
   // }
 
-  onChangeCb?: (employee_id: number | null) => void; //esta funcion es un callback para registerOnChange
+  onChangeCb?: (gateway_id: number | null) => void; //esta funcion es un callback para registerOnChange
   onTouchedCb?: () => void;
 
-  writeValue(employee_id: number | null): void {
-    this.pendingEmployeeId = employee_id;
-    this.trySetEmployee();
+  writeValue(gateway_id: number | null): void {
+
+    console.log(gateway_id);
+    
+
+    this.pendingGatewayId = gateway_id;
+    this.trySetGateway();
+  }
+
+  setGateway(gateway: any) {
+
+    console.log(gateway.id);
+    this.onChangeCb?.(gateway.id);
+
   }
 
   registerOnChange(fn: any): void {
@@ -128,18 +136,18 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
     this.isDisabled = isDisabled;
   }
 
-  private trySetEmployee() {
+  private trySetGateway() {
 
-    if (!this.employees.length) return;
-    if (this.pendingEmployeeId == null) return;
+    if (!this.gateways.length) return;
+    if (this.pendingGatewayId == null) return;
 
-    const exists = this.employees.some(
-      e => e.id === this.pendingEmployeeId
+    const exists = this.gateways.some(
+      e => e.id === this.pendingGatewayId
     );
 
     if (exists) {
-      this.employee_id = this.pendingEmployeeId;
-      this.pendingEmployeeId = null;
+      this.gateway_id = this.pendingGatewayId;
+      this.pendingGatewayId = null;
     }
   }
 

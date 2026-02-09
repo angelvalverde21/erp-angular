@@ -1,1 +1,34 @@
-<p>petty-cash-index works!</p>
+<div class="table-responsive">
+
+    <table class="table table-striped table-bordered mb-0 align-middle">
+
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">#</th>
+                <th class="text-center" scope="col">Empleado</th>
+                <th class="text-center" scope="col">Monto</th>
+                <th class="text-center" scope="col">Metodo</th>
+                <th class="text-center" scope="col">Status</th>
+                <th class="text-center" scope="col">Creado</th>
+                <th class="text-center" scope="col">Editar</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (petty_cashe of petty_cashes; track petty_cashe.id) {
+                <tr>
+                    <th class="text-center" scope="row">{{ petty_cashe.id }}</th>
+                    <td class="text-center">{{ petty_cashe?.employee?.user?.name }}</td>
+                    <td class="text-center">{{ petty_cashe?.amount_assigned }}</td>
+                    <td class="text-center">{{ petty_cashe?.gateway?.title }}</td>
+                    <td class="text-center">Abierto o Cerrado</td>
+                    <td class="text-center">{{ petty_cashe?.created_at | DateShopify }}</td>
+                    <td class="text-center" style="width: 50px;">
+                        <app-button-edit [routerLink]="[petty_cashe.id]" [relativeTo]="route"></app-button-edit>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>

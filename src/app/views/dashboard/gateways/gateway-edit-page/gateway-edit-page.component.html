@@ -1,5 +1,8 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
 <app-head-page title="Gateways">
-    <app-button-link [path]="['./create']">Editar gateway</app-button-link>
+    <app-button-back></app-button-back>
 </app-head-page>
 
 <div class="card">
@@ -9,3 +12,4 @@
     </div>
 
 </div>
+}

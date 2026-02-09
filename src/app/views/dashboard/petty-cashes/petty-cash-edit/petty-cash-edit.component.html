@@ -1,1 +1,3 @@
-<p>petty-cash-edit works!</p>
+<app-petty-cash-form [form]="form"></app-petty-cash-form>
+
+<app-button-save (click)="update()" [disabled]="form.invalid" [spinner]="loading">Guardar Cambios</app-button-save>

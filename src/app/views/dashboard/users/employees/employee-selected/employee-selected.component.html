@@ -1,23 +1,22 @@
-<app-input-group [icon]="faSearch" class="input-district">
-    <input 
-        [(ngModel)]="name" (keyup)="keyUpSearch($event)" 
-        type="text" class="form-control is-required"
-        placeholder="Buscar empleado" aria-label="empleado"
-        aria-describedby="Empleado"
-        [disabled]="isDisabled"
-        (blur)="onTouchedCb?.()"
-        [ngClass]="isInvalid ? 'is-invalid' : '' "
-    />
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<ng-select [items]="employees" [(ngModel)]="employee_id" (change)="setEmployee($event)" bindLabel="user.name"
+    bindValue="id"  placeholder="Selecciona un empleado" [clearable]="false" class="mb-3">
+    <!-- opción en la lista -->
+    <ng-template ng-option-tmp let-item="item">
+        <div class="d-flex align-items-center gap-2">
+            <!-- <img [src]="item.image" width="24" height="24" alt="" /> -->
+            <span>{{ item.user.name }}</span>
+        </div>
+    </ng-template>
 
-    <div class="loading" *ngIf="loading">
-            <app-loading size="sm"></app-loading>
-    </div>
-</app-input-group>
-
-<ul class="list-group" *ngIf="!showEmployees">
-    <li class="list-group-item" *ngFor="let employee of employees">
-        <a class="btn w-100" (click)="setName(employee)">{{employee.user.name}} - {{employee.user.email}}</a>
-    </li>
-</ul>
-
-<input [(ngModel)]="employee_id" type="hidden">
+    <!-- opción seleccionada -->
+    <ng-template ng-label-tmp let-item="item">
+        <div class="d-flex align-items-center gap-2">
+            <!-- <img [src]="item.image" width="20" alt="" /> -->
+            <span>{{ item.user.name }}</span>
+        </div>
+    </ng-template>
+</ng-select>
+}

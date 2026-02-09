@@ -5,17 +5,19 @@ import { ButtonSaveComponent } from '@shared/components/buttons/button-save/butt
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GatewayService } from '../gateway.service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-gateway-edit',
   imports: [
     GatewayFormComponent,
-    ButtonSaveComponent
+    ButtonSaveComponent,
+    JsonPipe
   ],
   templateUrl: './gateway-edit.component.html',
   styleUrl: './gateway-edit.component.scss'
 })
-export class GatewayEditComponent {
+export class GatewayEditComponent implements OnInit{
 
   form!: FormGroup;
 
@@ -36,7 +38,10 @@ export class GatewayEditComponent {
       title: ['', Validators.required]
     });
 
+    console.log(this.gateway);
+    
     this.form.patchValue(this.gateway);
+
   }
 
   loading: boolean = false;

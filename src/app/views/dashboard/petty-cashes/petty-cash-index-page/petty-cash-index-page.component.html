@@ -13,7 +13,9 @@
     </div>
 
     <div class="card-body p-0">
-        @if(petty_cashes?.length > 0){
+
+        <!-- {{ petty_cashes | json }} -->
+        @if (petty_cashes != null) {
             <app-petty-cash-index [petty_cashes]="petty_cashes"></app-petty-cash-index>
         }@else{
             <p class="p-4">No se cuenta con registro de flujo de gastos</p>

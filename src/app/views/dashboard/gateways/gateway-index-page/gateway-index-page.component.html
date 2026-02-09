@@ -1,9 +1,9 @@
 @if(loading){
-    <app-loading></app-loading>
+<app-loading></app-loading>
 }@else{
 
 <app-head-page title="Pasarelas de pago">
-    <app-button-link [path]="['./create']">Agregar Gateway</app-button-link>
+    <app-button-link (click)="openVerticallyCentered(content)">Agregar Gateway</app-button-link>
 </app-head-page>
 
 <div class="card">
@@ -16,9 +16,9 @@
 
     <div class="card-body p-0">
         @if(gateways?.length > 0){
-            <app-gateway-index [gateways]="gateways"></app-gateway-index>
+        <app-gateway-index [gateways]="gateways"></app-gateway-index>
         }@else{
-            <p class="p-4">No se cuenta con registro de gateways</p>
+        <p class="p-4">No se cuenta con registro de gateways</p>
         }
     </div>
 
@@ -27,5 +27,16 @@
     </div>
 
 </div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title">Agregar metodo de pago</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-gateway-create (emitGatewayCreate)="receiveGatewayCreate($event)"></app-gateway-create>
+    </div>
+</ng-template>
+
 
 }

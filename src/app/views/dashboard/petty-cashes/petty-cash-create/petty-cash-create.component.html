@@ -1,3 +1,3 @@
 <app-petty-cash-form [form]="form"></app-petty-cash-form>
 
-<app-button-save (click)="create()">Crear flujo de caja</app-button-save>
+<app-button-save (click)="create()" [disabled]="form.invalid" [spinner]="loading">Crear flujo de caja</app-button-save>

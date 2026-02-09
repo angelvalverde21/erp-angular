@@ -1,1 +1,6 @@
-<p>gateway-index-row works!</p>
+<td class="text-center">{{ gateway.id }}</td>
+<td class="text-center">{{ gateway.title }}</td>
+<td class="text-center">{{ gateway.name }}</td>
+<td class="text-center">{{ gateway.created_at | DateShopify }}</td>
+<td class="text-center" style="width: 50px;"><app-button-edit [routerLink]="[gateway.id]" [relativeTo]="route"></app-button-edit></td>
+<td class="text-center" style="width: 50px;"><app-button-trash></app-button-trash></td>

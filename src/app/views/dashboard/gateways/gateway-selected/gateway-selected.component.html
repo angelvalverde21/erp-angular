@@ -1,0 +1,57 @@
+<!-- <app-input-group [icon]="faSearch" class="input-district">
+    <input 
+        [(ngModel)]="name" (keyup)="keyUpSearch($event)" 
+        type="text" class="form-control is-required"
+        placeholder="Buscar empleado" aria-label="empleado"
+        aria-describedby="Empleado"
+        [disabled]="isDisabled"
+        (blur)="onTouchedCb?.()"
+        [ngClass]="isInvalid ? 'is-invalid' : '' "
+    />
+
+    <div class="loading" *ngIf="loading">
+            <app-loading size="sm"></app-loading>
+    </div>
+</app-input-group>
+
+<ul class="list-group" *ngIf="!showgateways">
+    <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let gateway of gateways">
+        <span>{{gateway.title }}</span>
+        <button class="btn btn-outline-dark" (click)="setName(gateway)">Seleccionar</button>
+    </li>
+</ul>
+
+<input [(ngModel)]="gateway_id" type="hidden">
+
+
+<select class="form-select" aria-label="Default select example">
+
+    <option selected>Agregue Opciones</option>
+    <option value="1">Colores</option>
+    <option value="2">Tallas</option>
+    <option value="3">Dimensiones</option>
+
+</select> -->
+
+
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<ng-select [items]="gateways" bindLabel="name" [(ngModel)]="gateway_id" (change)="setGateway($event)"  bindValue="id" placeholder="Selecciona un gateway" [clearable]="false" class="mb-3">
+    <!-- opción en la lista -->
+    <ng-template ng-option-tmp let-item="item">
+        <div class="d-flex align-items-center gap-2">
+            <!-- <img [src]="item.image" width="24" height="24" alt="" /> -->
+            <span>{{ item.name }}</span>
+        </div>
+    </ng-template>
+
+    <!-- opción seleccionada -->
+    <ng-template ng-label-tmp let-item="item">
+        <div class="d-flex align-items-center gap-2">
+            <!-- <img [src]="item.image" width="20" alt="" /> -->
+            <span>{{ item.name }}</span>
+        </div>
+    </ng-template>
+</ng-select>
+}
