@@ -7,8 +7,8 @@ import { EmployeeService } from '../employee.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
-import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
+import { ButtonSaveComponent } from 'src/app/views/shared/components/buttons/button-save/button-save.component';
 
 @Component({
   selector: 'app-employee-create',
@@ -16,7 +16,7 @@ import { faSave } from '@fortawesome/free-solid-svg-icons';
     ReactiveFormsModule,
     JsonPipe,
     EmployeeFormComponent,
-    ButtonComponent
+    ButtonSaveComponent
   ],
   templateUrl: './employee-create.component.html',
   styleUrl: './employee-create.component.scss'
@@ -43,6 +43,7 @@ export class EmployeeCreateComponent {
       name: ['', [Validators.required]],
       email: ['', [Validators.required]],
       phone: ['', [Validators.required]],
+      identity_id: [null, [Validators.required]],
       document_number: ['', [Validators.required]],
       roles: ['', [Validators.required]],
       salary: ['', [Validators.required]],
@@ -57,6 +58,11 @@ export class EmployeeCreateComponent {
   employee: any;
 
   create(){
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.loadingIcon = true;
     this.disabledButton = true;

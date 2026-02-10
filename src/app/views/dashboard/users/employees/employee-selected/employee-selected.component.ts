@@ -62,7 +62,6 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
 
   //***************************************************************************************************** */
 
-
   setEmployee(employee: any) {
 
     this.employee_id = employee.id;
@@ -71,6 +70,8 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
   }
 
   employeesInit() {
+
+    // this.loading = true;
 
     this._employee.index().pipe(takeUntil(this.destroy$)).subscribe({
 
@@ -82,8 +83,9 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
         console.log(this.employees);
         this.trySetEmployee();
       },
-
+      
       error: (error: any) => {
+        this.loading = false;
         Swal.fire('Error', 'Ocurrió un problema al traer los empleados, intente nuevamente', 'error');
         console.error(error);
       },

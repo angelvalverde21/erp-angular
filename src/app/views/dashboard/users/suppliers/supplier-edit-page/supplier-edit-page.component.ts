@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import { RoleService } from '../../../roles/role.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { AddressIndexComponent } from '../../../addresses/address-index/address-index.component';
-import { faListCheck } from '@fortawesome/free-solid-svg-icons';
+import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import { AddressCreateComponent } from '../../../addresses/address-create/address-create.component';
 
 @Component({
@@ -34,7 +34,7 @@ export class SupplierEditPageComponent implements OnInit, OnDestroy {
     this.rolesInit();
   }
 
-  faListCheck = faListCheck;
+  faHouse = faHouse;
 
   roles: any[] = [];
   loading: boolean = false;

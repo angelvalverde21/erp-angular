@@ -1,43 +1,53 @@
 <form [formGroup]="form">
 
     <div class="row mb-3">
-        <div class="col-lg-12">
+        <div class="col-lg-6">
             <app-input-group text="Nombre completo" [icon]="faPenToSquare">
-                <input formControlName="name" type="text" class="form-control" placeholder="Nombre completo"
+                <input formControlName="name" [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched" type="text" class="form-control" placeholder="Nombre completo"
                     aria-label="name" aria-describedby="basic-name" />
             </app-input-group>
         </div>
 
-        <div class="col-lg-12">
-            <app-input-group text="Email" [icon]="faEnvelope">
-                <input formControlName="email" type="text" class="form-control" placeholder="Email" aria-label="email"
-                    aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
-        <div class="col-lg-6">
-            <app-input-group text="DNI" [icon]="faIdBadge">
-                <input formControlName="document_number" type="text" class="form-control" placeholder="DNI"
-                    aria-label="dni" aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
+        
         <div class="col-lg-6">
             <app-input-group text="Phone" [icon]="faPhone">
-                <input formControlName="phone" type="text" class="form-control" placeholder="Phone" aria-label="phone"
+                <input formControlName="phone" type="text" [class.is-invalid]="form.get('phone')?.invalid && form.get('phone')?.touched" class="form-control" placeholder="Phone" aria-label="phone"
                     aria-describedby="basic-name" />
             </app-input-group>
         </div>
+
+
+        <div class="col-lg-12">
+            <app-input-group text="Email" [icon]="faEnvelope">
+                <input formControlName="email" type="text" [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched" class="form-control" placeholder="Email" aria-label="email"
+                    aria-describedby="basic-name" />
+            </app-input-group>
+        </div>
+
+        <div class="col-lg-6">
+            <label for="identity_id" class="mb-2">Tipo de documento</label>
+            <app-identity-selected [formControlName]="'identity_id'" [class.is-invalid]="form.get('identity_id')?.invalid && form.get('identity_id')?.touched"></app-identity-selected>
+        </div>
+
+
+        <div class="col-lg-6">
+            <app-input-group text="Numero de documento" [icon]="faIdBadge">
+                <input formControlName="document_number" type="text" [class.is-invalid]="form.get('document_number')?.invalid && form.get('document_number')?.touched" class="form-control"
+                    placeholder="Numero de documento" aria-label="Numero de documento" aria-describedby="basic-name" />
+            </app-input-group>
+        </div>
+
 
         <div class="col-lg-12">
             <app-input-group text="Sueldo Mensual" icontext="S/.">
-                <input formControlName="salary" type="text" class="form-control" placeholder="salary" aria-label="salary"
-                    aria-describedby="basic-name" />
+                <input formControlName="salary" type="text" class="form-control" [class.is-invalid]="form.get('salary')?.invalid && form.get('salary')?.touched" placeholder="salary"
+                    aria-label="salary" aria-describedby="basic-name" />
             </app-input-group>
         </div>
 
         <label class="mb-2">Agregar Roles</label>
-        <ng-select [items]="roles" [multiple]="true" placeholder="Seleccione roles" formControlName="roles">
+        <ng-select [items]="roles" [multiple]="true" [class.is-invalid]="form.get('roles')?.invalid &&
+                   (form.get('roles')?.dirty || form.get('roles')?.touched)"  placeholder="Seleccione roles" class="mb-3" formControlName="roles">
         </ng-select>
         <!-- <div class="col-lg-4">
                     <app-input-group text="Slug" [icon]="faIdBadge">
@@ -48,5 +58,5 @@
 
     </div>
 
-    <!-- {{ form.value | json }} -->
+    {{ form.value | json }}
 </form>

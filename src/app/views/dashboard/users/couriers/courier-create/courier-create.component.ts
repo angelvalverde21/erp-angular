@@ -4,10 +4,10 @@ import { JsonPipe } from '@angular/common';
 import { CourierService } from '../courier.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { phoneValidator } from '../../../../shared/validators/phone.validator';
 import { CourierFormComponent } from '../courier-form/courier-form.component';
+import { ButtonSaveComponent } from 'src/app/views/shared/components/buttons/button-save/button-save.component';
 
 @Component({
   selector: 'app-courier-create',
@@ -15,7 +15,7 @@ import { CourierFormComponent } from '../courier-form/courier-form.component';
     ReactiveFormsModule,
     JsonPipe,
     CourierFormComponent,
-    ButtonComponent,
+    ButtonSaveComponent,
   ],
   templateUrl: './courier-create.component.html',
   styleUrl: './courier-create.component.scss'

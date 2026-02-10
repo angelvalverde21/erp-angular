@@ -36,7 +36,7 @@ export class SupplierEditComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.formInit();
-    this.form.patchValue(this.supplier);
+    this.form.patchValue(this.supplier.user);
   }
 
   destroy$ = new Subject<void>();
@@ -52,8 +52,8 @@ export class SupplierEditComponent implements OnDestroy, OnInit {
       email: ['', [Validators.required]],
       phone: ['', [Validators.required]],
       document_number: ['', [Validators.required]],
+      identity_id: ['', [Validators.required]],
       status: ['', [Validators.required]],
-      roles: ['', [Validators.required]],
     });
   }
 

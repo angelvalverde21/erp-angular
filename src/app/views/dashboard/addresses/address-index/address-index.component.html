@@ -20,7 +20,7 @@
                 <td class="py-3">{{ address?.phone }}</td>
                 <td class="py-3">{{ address?.primary }}</td>
                 <td class="py-3">{{ address?.references }}</td>
-                <td class="py-3">{{ address.district.name }}</td>
+                <td class="py-3">{{ address?.district?.name }}</td>
                 <td class="text-center py-3"><button type="button" class="btn btn-outline-dark">...</button></td>
             </tr>
             }
@@ -35,7 +35,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <app-address-edit [address]="current_address" [user_id]="user_id" (emitUpdateAddress)="receiveUpdateAddress($event)"></app-address-edit>
+        <app-address-edit [address]="current_address" [user_id]="user_id" [addressable_type]="addressable_type" [addressable_id]="addressable_id" (emitUpdateAddress)="receiveUpdateAddress($event)"></app-address-edit>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>

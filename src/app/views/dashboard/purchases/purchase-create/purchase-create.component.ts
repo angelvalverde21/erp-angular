@@ -48,7 +48,7 @@ import { PurchaseFormComponent } from '../purchase-form/purchase-form.component'
   styleUrl: './purchase-create.component.scss'
 })
 export class PurchaseCreateComponent {
-  
+
   disabledButton: boolean = true;
   loadingIcon: boolean = false;
   form!: FormGroup;
@@ -91,7 +91,7 @@ export class PurchaseCreateComponent {
       purchaseable_type: [this.purchaseable_type],
       purchaseable_id: [this.purchaseable_id],
       observations: [''],
-      supplier_id: [''],
+      supplier_id: [null],
     });
   }
 
@@ -141,11 +141,11 @@ export class PurchaseCreateComponent {
   }
 
   ngOnInit(): void {
-    
+
     this.formInit();
 
     this.calculosPricetotal();
-    this.getSuppliers();
+    // this.getSuppliers();
     // this.initUnits();
     // this.initBrands();
     // this.initsuppliers();
@@ -167,23 +167,26 @@ export class PurchaseCreateComponent {
 
   suppliers: any[] = [];
 
-  getSuppliers() {
-    this._supplier
-      .index()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (resp: any) => {
-          console.log(resp);
-          this.suppliers = resp.data;
-          this.loading = false;
-          console.log(resp.data);
-        },
+  // getSuppliers() {
+  //   this._supplier
+  //     .index()
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe({
+  //       next: (resp: any) => {
+  //         console.log(resp);
+  //         this.suppliers = resp.data.map((s: any) => ({
+  //           ...s,
+  //           name: s.user?.name
+  //         }));
+  //         this.loading = false;
+  //         console.log(resp.data);
+  //       },
 
-        error: (error: any) => {
-          console.error(error);
-        },
-      });
-  }
+  //       error: (error: any) => {
+  //         console.error(error);
+  //       },
+  //     });
+  // }
 
   create() {
 

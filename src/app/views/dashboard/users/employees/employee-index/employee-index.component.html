@@ -13,24 +13,24 @@
         </thead>
         <tbody>
 
-            @for (user of employees; track user.id) {
+            @for (employee of employees; track employee.id) {
 
             <!-- {{ employee | json }} -->
 
-            <tr (click)="getEmployeeId(user.id)">
-                <td class="text-center">{{ user.id }}</td>
-                <td>{{ user.name }}</td>
+            <tr (click)="getEmployeeId(employee.id)">
+                <td class="text-center">{{ employee.id }}</td>
+                <td>{{ employee.user.name }}</td>
                 <!-- <td>{{ user.category.name }}</td> -->
-                <td>{{ user.document_number }}</td>
-                <td>{{ user.employee.salary }}</td>
+                <td>{{ employee.user.document_number }}</td>
+                <td>{{ employee.salary }}</td>
                 <td>
-                    @if(user.status){
+                    @if(employee.user.status){
                     <span class="badge text-bg-secondary text-white">Activo</span>
                     }@else{
                     <span class="badge text-bg-danger text-white">Bloqueado</span>
                     }
                 </td>
-                <td>{{ user.employee.date_entry | DateShopify }}</td>
+                <td>{{ employee.date_entry | DateShopify }}</td>
                 <td class="text-center">
                     <div class="controls d-flex justify-content-center align-items-center">
                         <!-- <app-button [icon]="faPen" separation="0" color="dark" class="me-2"></app-button> -->

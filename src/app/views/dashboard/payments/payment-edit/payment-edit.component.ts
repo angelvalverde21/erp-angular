@@ -14,7 +14,7 @@ import { GalleryComponent } from '@shared/components/gallery/gallery.component';
     PaymentFormComponent,
     ButtonSaveComponent,
     JsonPipe,
-    GalleryComponent
+    GalleryComponent,
   ],
   templateUrl: './payment-edit.component.html',
   styleUrl: './payment-edit.component.scss'
@@ -41,16 +41,17 @@ export class PaymentEditComponent {
 
   formInit() {
 
-
-
     this.form = this.fb.group({
       amount: ['', [Validators.required]],
-      method: ['', [Validators.required]],
+      gateway_id: [null, [Validators.required]],
       date: ['', [Validators.required]],
       direction: ['', [Validators.required]],
       paymentable_type: [this.paymentable_type, [Validators.required]],
       paymentable_id: [this.paymentable_id, [Validators.required]],
     });
+    
+    console.log(this.payment);
+    
 
     this.form.patchValue(this.payment);
 

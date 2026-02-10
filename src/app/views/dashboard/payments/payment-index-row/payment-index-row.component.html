@@ -1,6 +1,6 @@
 <td class="text-center">#{{ payment.id }}</td>
 <td class="text-center">{{ payment.amount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
-<td class="text-center">{{ payment.method }}</td>
+<td class="text-center">{{ payment?.gateway?.name }}</td>
 <td class="text-center">{{ payment.status }}</td>
 <td class="text-center"></td>
 <td class="text-center">{{ payment.date | DateShopify }}</td>

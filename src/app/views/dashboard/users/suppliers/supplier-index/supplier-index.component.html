@@ -17,11 +17,11 @@
 
             <tr (click)="getSupplierId(supplier.id)">
                 <td class="text-center">{{ supplier.id }}</td>
-                <td class="py-3">{{ supplier.name }}</td>
-                <td class="py-3">{{ supplier.document_number }}</td>
-                <td class="py-3">{{ supplier.phone }}</td>
+                <td class="py-3">{{ supplier.user?.name }}</td>
+                <td class="py-3">{{ supplier.user?.document_number }}</td>
+                <td class="py-3">{{ supplier.user?.phone }}</td>
                 <td class="py-3">
-                    @if(supplier.status){
+                    @if(supplier.user?.status){
                     <span class="badge text-bg-secondary text-white">Activo</span>
                     }@else{
                     <span class="badge text-bg-danger text-white">Bloqueado</span>

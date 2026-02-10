@@ -24,13 +24,12 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
   disabledButton: boolean = false;
   loadingIcon: boolean = false;
   form!: FormGroup;
-  @Input() user!: any;
+  @Input() employee!: any;
 
   @Input() roles: any;
   faSave = faSave;
 
   constructor(
-    private _employee: EmployeeService,
     private fb: FormBuilder,
   ) {
 
@@ -40,13 +39,13 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
     // this.form.patchValue(this.employee);
 
     this.form.patchValue({
-      name: this.user.name,
-      email: this.user.email,
-      phone: this.user.phone,
-      status: this.user.status,
-      document_number: this.user.document_number,
-      roles: this.user.roles,               // ya es array ['produccion','compras']
-      salary: this.user.employee?.salary    // 👈 aquí anidas el salario
+      name: this.employee.user.name,
+      email: this.employee.user.email,
+      phone: this.employee.user.phone,
+      status: this.employee.user.status,
+      document_number: this.employee.user.document_number,
+      roles: this.employee.user.roles,               // ya es array ['produccion','compras']
+      salary: this.employee?.salary    //aquí se anida el salario
     });
 
   }
@@ -66,6 +65,7 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
       email: ['', [Validators.required]],
       phone: ['', [Validators.required]],
       document_number: ['', [Validators.required]],
+      identity_id: ['', [Validators.required]],
       status: ['', [Validators.required]],
       roles: ['', [Validators.required]],
       salary: ['', [Validators.required]],

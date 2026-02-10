@@ -4,50 +4,63 @@
 
 
     <div class="col-lg-12 col-12">
-        <app-input-group [icon]="faUser">
+        <app-input-group [icon]="faUser" text="Nombre completo">
             <input formControlName="name" type="text" inputmode="numeric" class="form-control is-required"
                 [ngClass]="isInvalid('name') ? 'is-invalid' : ''" placeholder="* Nombre completo" aria-label="name"
                 aria-describedby="Nombre completo">
         </app-input-group>
     </div>
 
+
     <div class="col-lg-6 col-12">
-        <app-input-group [icon]="faPhone">
+        <label for="identity_id" class="mb-2">Tipo de documento</label>
+        <app-identity-selected formControlName="identity_id"></app-identity-selected>
+    </div>
+
+    <div class="col-lg-6 col-12">
+        <app-input-group [icon]="faImagePortrait" text="Numero de documento">
+            <input formControlName="document_number" type="text" class="form-control"
+                [ngClass]="isInvalid('document_number') ? 'is-invalid' : '' " placeholder=""
+                aria-label="document_number" aria-describedby="Documento nacional de identidad">
+        </app-input-group>
+    </div>
+
+    <div class="col-lg-12 col-12">
+        <app-input-group [icon]="faPhone" text="Celular">
             <input type="number" class="form-control is-required" [ngClass]="isInvalid('phone') ? 'is-invalid' : '' "
                 placeholder="* Celular" formControlName="phone" required />
         </app-input-group>
 
     </div>
-    <div class="col-lg-6 col-12">
-        <app-input-group [icon]="faImagePortrait">
-            <input formControlName="document_number" type="text" class="form-control"
-                [ngClass]="isInvalid('document_number') ? 'is-invalid' : '' " placeholder="DNI, RUC, CE" aria-label="document_number"
-                aria-describedby="Documento nacional de identidad">
-        </app-input-group>
-    </div>
 
     <div class="col-lg-12 col-12">
-        <app-input-group [icon]="faLocationDot">
+        <app-input-group [icon]="faLocationDot" text="Direccion">
             <input formControlName="primary" type="text" class="form-control is-required"
                 [ngClass]="isInvalid('primary') ? 'is-invalid' : '' " placeholder="* Direccion" aria-label="address"
                 aria-describedby="Direccion primaria">
         </app-input-group>
     </div>
 
+
     <div class="col-lg-12 col-12">
-        <app-input-group>
+        <app-input-group text="Direccion Secundaria">
             <input formControlName="secondary" type="text" class="form-control" placeholder="Direccion Secundaria"
                 aria-label="address" aria-describedby="Direccion Secundaria">
         </app-input-group>
     </div>
 
+
     <div class="col-lg-12 col-12">
+        <label for="references" class="mb-2">Referencia</label>
         <textarea id="" formControlName="references" class="form-control mb-3" placeholder="Referencia"></textarea>
     </div>
 
     <div class="col-lg-12 col-12">
+        <label for="district_id" class="mb-2">Distrito</label>
         <app-input-district-id formControlName="district_id"
             [isInvalid]="isInvalid('district_id')"></app-input-district-id>
     </div>
+
+    {{ form.value | json }}
 
 </div>

@@ -18,6 +18,8 @@ export class AddressIndexComponent implements OnInit, OnDestroy {
 
   @Input() addresses: any[] = [];
   @Input() user_id: number = 0;
+  @Input() addressable_id: number = 0;
+  @Input() addressable_type: string = '';
 
   modal: any;
   current_address: any;

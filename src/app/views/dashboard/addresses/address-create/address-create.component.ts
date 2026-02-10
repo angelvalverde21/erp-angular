@@ -24,6 +24,8 @@ export class AddressCreateComponent implements OnInit, OnDestroy {
 
   @Output() emitCreateAddress = new EventEmitter<any>();
   @Input() user_id: number = 0;
+  @Input() addressable_type: string = '';
+  @Input() addressable_id: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -60,7 +62,10 @@ export class AddressCreateComponent implements OnInit, OnDestroy {
       phone: ['', [Validators.required]],
       references: [''],
       document_number: [''],
+      identity_id: [''],
       user_id: [this.user_id, [Validators.required]],
+      addressable_type: [this.addressable_type, [Validators.required]],
+      addressable_id: [this.addressable_id, [Validators.required]],
 
     });
 

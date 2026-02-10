@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<app-head-page [icon]="faListCheck" title="Direcciones">
+<app-head-page [icon]="faHouse" title="Direcciones">
     <button type="button" class="btn btn-outline-dark btn-sm" (click)="openVerticallyCentered(content)">+ Crear
         Direccion</button>
 </app-head-page>
@@ -23,7 +23,7 @@
 
         @if(supplier?.addresses?.length > 0){
 
-        <app-address-index [addresses]="supplier.addresses" [user_id]="supplier.user_id"></app-address-index>
+        <app-address-index [addresses]="supplier.addresses" [user_id]="supplier.user_id" [addressable_type]="'supplier'" [addressable_id]="supplier.id"></app-address-index>
 
         }@else{
         <div class="p-3">
@@ -45,8 +45,8 @@
         <h5 class="modal-title">Direccion exacta del proveedor</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
-    <div class="modal-body">
-        <app-address-create [user_id]="supplier.user_id"
+    <div class="modal-body px-4">
+        <app-address-create [user_id]="supplier.user_id" [addressable_type]="'supplier'" [addressable_id]="supplier.id"
             (emitCreateAddress)="receiveCreateAddress($event)"></app-address-create>
     </div>
     <div class="modal-footer">

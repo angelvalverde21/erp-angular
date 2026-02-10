@@ -17,7 +17,7 @@ import { faSave } from '@fortawesome/free-solid-svg-icons';
 })
 export class ButtonSaveComponent {
 
-  @Input() color: string = "dark";
+  @Input() color: string = "primary";
   @Input() separation: string = "2";
   @Input() colortext: string = "";
   @Input() size: string = 'sm';

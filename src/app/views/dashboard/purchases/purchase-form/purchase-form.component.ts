@@ -1,5 +1,5 @@
 import {
-  Component, Input, TemplateRef,
+  Component, Input, OnInit, TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -13,6 +13,7 @@ import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.c
 import { SupplierCreateComponent } from '../../users/suppliers/supplier-create/supplier-create.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SupplierSelectedComponent } from '../../users/suppliers/supplier-selected/supplier-selected.component';
 
 @Component({
   selector: 'app-purchase-form',
@@ -26,13 +27,14 @@ import { NgSelectModule } from '@ng-select/ng-select';
     SupplierCreateComponent,
     FontAwesomeModule,
     NgSelectModule,
-    JsonPipe
+    JsonPipe,
+    SupplierSelectedComponent
   ],
   templateUrl: './purchase-form.component.html',
   styleUrl: './purchase-form.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
-export class PurchaseFormComponent {
+export class PurchaseFormComponent{
 
   faEdit = faEdit;
   faTags = faTags;

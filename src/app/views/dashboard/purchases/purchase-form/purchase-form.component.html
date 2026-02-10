@@ -64,16 +64,18 @@
 
                                     <div class="proveedor mb-3 d-flex justify-content-between align-items-center">
 
-                                        <ng-select class="w-100 me-2" formControlName="supplier_id" bindValue="id"
+                                        <!-- <ng-select class="w-100 me-2" formControlName="supplier_id" bindValue="id"
                                             [items]="suppliers" [addTag]="false" bindLabel="name"
                                             placeholder="Escoja una marca">
                                             <ng-template ng-label-tmp let-item="item">
                                                 <fa-icon [icon]="faUser" class="me-2"></fa-icon>
                                                 {{ item.name }}
                                             </ng-template>
-                                        </ng-select>
+                                        </ng-select> -->
 
-                                        <app-button color="outline-dark" [icon]="faPlus"
+                                        <app-supplier-selected class="w-100 me-2" formControlName="supplier_id" [suppliers]="suppliers"></app-supplier-selected>
+
+                                        <app-button [icon]="faPlus"
                                             (click)="openVerticallyCentered(newSupplier)">Crear</app-button>
 
                                     </div>
@@ -102,7 +104,7 @@
                                         placeholder="Observaciones"></textarea>
                                 </div>
 
-                                <!-- {{ form.value | json }} -->
+                                {{ form.value | json }}
 
                             </div>
 

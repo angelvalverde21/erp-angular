@@ -5,9 +5,9 @@ import { SupplierService } from '../supplier.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SupplierFormComponent } from '../supplier-form/supplier-form.component';
-import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
-import { phoneValidator } from '../../../../shared/validators/phone.validator';
+import { phoneValidator } from '@shared/validators/phone.validator';
+import { ButtonSaveComponent } from '@shared/components/buttons/button-save/button-save.component';
 
 @Component({
   selector: 'app-supplier-create',
@@ -15,7 +15,7 @@ import { phoneValidator } from '../../../../shared/validators/phone.validator';
     ReactiveFormsModule,
     JsonPipe,
     SupplierFormComponent,
-    ButtonComponent
+    ButtonSaveComponent
   ],
   templateUrl: './supplier-create.component.html',
   styleUrl: './supplier-create.component.scss'
@@ -94,8 +94,8 @@ export class SupplierCreateComponent {
       name: ['', [Validators.required]],
       phone: ['', phoneValidator],
       email: [''],
+      identity_id: [null],
       document_number: [''],
-      roles: [''],
     });
   }
   

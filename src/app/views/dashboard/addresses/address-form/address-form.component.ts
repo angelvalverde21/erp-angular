@@ -4,6 +4,7 @@ import { faHome, faUser, faPhone, faImagePortrait, faLocationDot } from '@fortaw
 import { InputDistrictIdComponent } from '../input-district-id/input-district-id.component';
 import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { IdentitySelectedComponent } from '../../identities/identity-selected/identity-selected.component';
 
 @Component({
   selector: 'app-address-form',
@@ -12,7 +13,8 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     InputDistrictIdComponent,
     ReactiveFormsModule,
-    JsonPipe
+    JsonPipe,
+    IdentitySelectedComponent
   ],
   templateUrl: './address-form.component.html',
   styleUrl: './address-form.component.scss'

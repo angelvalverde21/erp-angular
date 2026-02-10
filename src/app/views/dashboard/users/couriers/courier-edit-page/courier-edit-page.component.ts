@@ -12,7 +12,7 @@ import { AddressCreateComponent } from '../../../addresses/address-create/addres
 
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { AddressIndexComponent } from '../../../addresses/address-index/address-index.component';
-import { faListCheck, faTruck } from '@fortawesome/free-solid-svg-icons';
+import { faListCheck, faTruck, faHouse } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -40,6 +40,7 @@ export class CourierEditPageComponent implements OnInit, OnDestroy {
 
   faListCheck = faListCheck;
   faTruck = faTruck;
+  faHouse = faHouse;
 
   constructor(
     private _courier: CourierService,

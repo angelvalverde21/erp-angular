@@ -33,8 +33,8 @@ export class PettyCashCreateComponent {
 
     this.form = this.fb.group({
       amount_assigned: [null, [Validators.required]],
-      employee_id: [1, [Validators.required]],
-      gateway_id: [1, [Validators.required]],
+      employee_id: [null, [Validators.required]],
+      gateway_id: [null, [Validators.required]],
       // other form controls
     });
 

@@ -1,7 +1,7 @@
 @if(loading){
 <app-loading></app-loading>
 }@else{
-<ng-select [items]="employees" [(ngModel)]="employee_id" (change)="setEmployee($event)" bindLabel="user.name"
+<ng-select [items]="employees" bindLabel="user.name" [(ngModel)]="employee_id" (change)="setEmployee($event)"
     bindValue="id"  placeholder="Selecciona un empleado" [clearable]="false" class="mb-3">
     <!-- opción en la lista -->
     <ng-template ng-option-tmp let-item="item">

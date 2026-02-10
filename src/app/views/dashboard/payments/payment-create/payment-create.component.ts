@@ -57,9 +57,9 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
 
     this.form = this.fb.group({
       amount: ['', [Validators.required]],
-      method: ['yape', [Validators.required]],
       date: [today, [Validators.required]],
-      direction: ["in", [Validators.required]],
+      direction: ['in', [Validators.required]],
+      gateway_id: [null, [Validators.required]],
       paymentable_type: [this.paymentable_type, [Validators.required]],
       paymentable_id: [this.paymentable_id, [Validators.required]],
     });

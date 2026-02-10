@@ -1,23 +1,23 @@
 <ng-select
-  [items]="gateways"
+  [items]="identities"
   bindLabel="name"
   bindValue="id"
   [clearable]="false"
   [disabled]="isDisabled"
-  [ngModel]="gateway_id"
-  (ngModelChange)="setGateway($event)"
-  placeholder="Selecciona un Gateway"
+  [ngModel]="identity_id"
+  (ngModelChange)="setIdentity($event)"
+  placeholder="Selecciona tipo de documento"
   class="mb-3">
 
   <ng-template ng-option-tmp let-item="item">
     <div class="d-flex align-items-center gap-2">
-      <span>{{ item.title }}</span>
+      <span>{{ item.name }}</span>
     </div>
   </ng-template>
 
   <ng-template ng-label-tmp let-item="item">
     <div class="d-flex align-items-center gap-2">
-      <span>{{ item.title }}</span>
+      <span>{{ item.name }}</span>
     </div>
   </ng-template>
 

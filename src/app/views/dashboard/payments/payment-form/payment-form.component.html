@@ -13,7 +13,7 @@
         <div class="col-lg-6">
             <label for="Metodo de pago" class="mb-2">Metodo de pago</label>
 
-            <app-gateway-selected formControlName></app-gateway-selected>
+            <app-gateway-selected formControlName="gateway_id" [class.is-invalid]="form.get('gateway_id')?.invalid && form.get('gateway_id')?.touched"></app-gateway-selected>
 
             <!-- <select formControlName="method" class="form-select mb-3" aria-label="Default select example">
                 <option [value]="null" selected>Metodo de pago</option>

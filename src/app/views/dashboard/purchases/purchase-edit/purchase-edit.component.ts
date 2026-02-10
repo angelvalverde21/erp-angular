@@ -162,29 +162,11 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
 
   suppliers: any[] = [];
 
-  getSuppliers() {
-    this._supplier
-      .index()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (resp: any) => {
-          console.log(resp);
-          this.suppliers = resp.data;
-          this.loading = false;
-          console.log(resp.data);
-        },
-
-        error: (error: any) => {
-          console.error(error);
-        },
-      });
-  }
 
   ngOnInit(): void {
     this.formInit();
     this.calculosPricetotal();
-    this.loadPurchase();
-    this.getSuppliers();
+    this.purchaseInit();
 
     // this.form.get('section_id')?.setValue(this.section.id);
 
@@ -201,7 +183,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
     //recibir cambios del categoria
   }
 
-  loadPurchase() {
+  purchaseInit() {
     this._purchase
       .get(this.purchase_id)
       .pipe(takeUntil(this.destroy$))

@@ -30,4 +30,5 @@ export class PurchaseCreatePageComponent {
   receivePurchaseCreate(purchase: any) {
     this.router.navigate(['purchases']);
   }
+  
 }

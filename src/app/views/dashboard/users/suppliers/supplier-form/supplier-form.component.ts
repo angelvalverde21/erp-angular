@@ -6,6 +6,7 @@ import { faPenToSquare, faIdBadge, faEnvelope, faPhone } from '@fortawesome/free
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { JsonPipe } from '@angular/common';
+import { IdentitySelectedComponent } from '../../../identities/identity-selected/identity-selected.component';
 
 @Component({
   selector: 'app-supplier-form',
@@ -15,7 +16,8 @@ import { JsonPipe } from '@angular/common';
     InputGroupComponent,
     FontAwesomeModule,
     NgSelectModule,
-    JsonPipe
+    JsonPipe,
+    IdentitySelectedComponent
   ],
   templateUrl: './supplier-form.component.html',
   styleUrl: './supplier-form.component.scss'

@@ -17,6 +17,7 @@ import { faImage, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { JsonPipe } from '@angular/common';
+import { IdentitySelectedComponent } from '../../../identities/identity-selected/identity-selected.component';
 
 @Component({
   selector: 'app-employee-form',
@@ -26,7 +27,8 @@ import { JsonPipe } from '@angular/common';
     InputGroupComponent,
     FontAwesomeModule,
     NgSelectModule,
-    JsonPipe
+    JsonPipe,
+    IdentitySelectedComponent
   ],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss'

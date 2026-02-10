@@ -25,6 +25,8 @@ export class AddressEditComponent implements OnInit, OnDestroy {
 
   @Input() address: any;
   @Input() user_id: number = 0;
+  @Input() addressable_id: number = 0;
+  @Input() addressable_type: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -52,7 +54,10 @@ export class AddressEditComponent implements OnInit, OnDestroy {
       phone: ['', [Validators.required]],
       references: [''],
       document_number: [''],
+      identity_id: [''],
       user_id: [this.user_id, [Validators.required]],
+      addressable_type: [this.addressable_type, [Validators.required]],
+      addressable_id: [this.addressable_id, [Validators.required]],
 
     });
 

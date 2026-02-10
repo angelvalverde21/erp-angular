@@ -20,9 +20,9 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import Swal from 'sweetalert2';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { GatewayService } from '../gateway.service';
+import { IdentityService } from '../identity.service';
 @Component({
-  selector: 'app-gateway-selected',
+  selector: 'app-identity-selected',
   standalone: true,
   imports: [
     FormsModule,
@@ -30,41 +30,41 @@ import { GatewayService } from '../gateway.service';
     LoadingComponent,
     NgSelectModule
   ],
-  templateUrl: './gateway-selected.component.html',
-  styleUrl: './gateway-selected.component.scss',
+  templateUrl: './identity-selected.component.html',
+  styleUrl: './identity-selected.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => GatewaySelectedComponent),
+      useExisting: forwardRef(() => IdentitySelectedComponent),
       multi: true,
     }
   ]
 })
 
-export class GatewaySelectedComponent
+export class IdentitySelectedComponent
 
   implements ControlValueAccessor, OnInit, OnDestroy {
 
   isDisabled = false;
-  gateway_id: number | null = null;
-  gateways: any[] = [];
+  identity_id: number | null = null;
+  identities: any[] = [];
   loading = false;
 
   private destroy$ = new Subject<void>();
-  private pendingGatewayId: number | null = null;
+  private pendingIdentityId: number | null = null;
 
   onChangeCb: (value: number | null) => void = () => {};
   onTouchedCb: () => void = () => {};
 
-  constructor(private _gateway: GatewayService) {}
+  constructor(private _identity: IdentityService) {}
 
   ngOnInit() {
-    this.gatewayInit();
+    this.identityInit();
   }
 
   writeValue(value: number | null): void {
-    this.pendingGatewayId = value;
-    this.trySetGateway();
+    this.pendingIdentityId = value;
+    this.trySetIdentity();
   }
 
   registerOnChange(fn: any): void {
@@ -79,25 +79,25 @@ export class GatewaySelectedComponent
     this.isDisabled = isDisabled;
   }
 
-  setGateway(gatewayId: number | null) {
-    this.gateway_id = gatewayId;
-    this.onChangeCb(gatewayId);
+  setIdentity(identityId: number | null) {
+    this.identity_id = identityId;
+    this.onChangeCb(identityId);
     this.onTouchedCb();
   }
 
-  private gatewayInit() {
-    this._gateway.index()
+  private identityInit() {
+    this._identity.index()
       .pipe(takeUntil(this.destroy$))
       .subscribe((resp: any) => {
-        this.gateways = resp.data;
-        this.trySetGateway();
+        this.identities = resp.data;
+        this.trySetIdentity();
       });
   }
 
-  private trySetGateway() {
-    if (!this.gateways.length || this.pendingGatewayId == null) return;
-    this.gateway_id = this.pendingGatewayId;
-    this.pendingGatewayId = null;
+  private trySetIdentity() {
+    if (!this.identities.length || this.pendingIdentityId == null) return;
+    this.identity_id = this.pendingIdentityId;
+    this.pendingIdentityId = null;
   }
 
   ngOnDestroy() {
