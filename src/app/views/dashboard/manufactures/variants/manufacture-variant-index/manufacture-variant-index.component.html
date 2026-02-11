@@ -6,13 +6,16 @@
 
             @for (manufacture_variant of manufacture_variants; let i = $index; track manufacture_variant.id) {
 
-            <tr app-manufacture-variant-row [manufacture_variant]="manufacture_variant" (emitDeleteManufactureVariantId)="receiveDeleteManufactureVariantId($event)" (emitUpdatedQuantity)="receiveManufactureVariant($event)"></tr>
+            <tr app-manufacture-variant-row [manufacture_variant]="manufacture_variant"
+                (emitDeleteManufactureVariantId)="receiveDeleteManufactureVariantId($event)"
+                (emitUpdatedQuantity)="receiveManufactureVariant($event)"></tr>
 
-        }
+            }
 
             <tr>
                 <td class="text-center">{{ total }}</td>
-                <td colspan="5" class="text-end"><small class="text-muted">{{ manufacture_variants?.length }} Registros encontrados</small></td>
+                <td colspan="5" class="text-end"><small class="text-muted">{{ manufacture_variants?.length }} Registros
+                        encontrados</small></td>
             </tr>
 
         </tbody>

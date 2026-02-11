@@ -1,0 +1,64 @@
+<div class="table-responsive mb-3">
+
+    <table class="table table-striped table-bordered mb-0 align-middle">
+
+        <!-- <thead>
+            <tr>
+                <th class="text-center" scope="col">#</th>
+                <th class="text-center" scope="col">Name</th>
+                <th class="text-center" scope="col">Valor</th>
+                <th class="text-center" scope="col">Sku</th>
+                <th class="text-center" style="width: 150px;" class="text-center" scope="col">
+                    Agregar
+                </th>
+            </tr>
+        </thead> -->
+
+        <tbody>
+
+            @for (variant of variants; let i = $index; track variant.id) {
+
+            <tr>
+
+                <td style="width: 100px;" class="px-3">
+                    <input type="number" class="form-control text-center" placeholder="0"
+                        [ngModel]="quantityArray?.[variant.id] || 0"
+                        (change)="onQuantityChange($event, variant.id)"
+                        name="quantity-{{ variant.id }}"
+                        aria-label="quantity" aria-describedby="basic-quantity" />
+                </td>
+
+                <td style="width: 150px;" class="px-3">
+
+                    <select class="form-select mb-0" aria-label="Default select example">
+
+                        <option selected>Tipo</option>
+                        <option value="1">Ingreso</option>
+                        <option value="2">Salida</option>
+
+                    </select>
+                </td>
+
+                <td class="text-center" scope="row">{{ variant.id }}</td>
+
+                <td class="text-center">
+                    <fa-icon [icon]="faBarcode" class="me-3"></fa-icon> {{ variant.sku }}
+                </td>
+                <td class="text-center">
+                    {{ variant.stock }}</td>
+                <td class="text-center">{{ variant?.product?.name }}</td>
+
+                @for (variant_option_value of variant.variant_option_values; track variant_option_value.id) {
+                <td class="text-center">{{ variant_option_value.option_value.value }}</td>
+                }
+                <td style="width: 75px;" class="px-3">
+                    <app-button [color]="variant_select[variant.id]  ? 'dark' : 'outline-dark'" [icon]="faCheck"
+                        (click)="addVariant(variant.id)"></app-button>
+                </td>
+            </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>

@@ -17,10 +17,14 @@ import { ManufactureVariantService } from '../variants/manufactureVariant.servic
 import { ManufactureVariantIndexComponent } from '../variants/manufacture-variant-index/manufacture-variant-index.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ButtonAddComponent } from 'src/app/views/shared/components/buttons/button-add/button-add.component';
+import { ButtonAddComponent } from '@buttons/button-add/button-add.component';
 import { ManufactureWidgetsComponent } from '../shared/manufacture-widgets/manufacture-widgets.component';
 import { WidgetManufacture } from 'src/app/interfaces/widgetManufacture';
 import { PaymentIndexComponent } from '../../payments/payment-index/payment-index.component';
+import { KardexIndexComponent } from '../../kardex/kardex-index/kardex-index.component';
+import { VariantIndexComponent } from '../../products/variants/variant-index/variant-index.component';
+import { ButtonComponent } from '@buttons/button/button.component';
+import { VariantIndexSelectedComponent } from '../../products/variants/variant-index-selected/variant-index-selected.component';
 // import { PaymentIndexComponent } from '../../payments/payment-edit/payment-index/payment-index.component';
 
 @Component({
@@ -39,7 +43,11 @@ import { PaymentIndexComponent } from '../../payments/payment-index/payment-inde
     FontAwesomeModule,
     ButtonAddComponent,
     ManufactureWidgetsComponent,
-    PaymentIndexComponent
+    PaymentIndexComponent,
+    KardexIndexComponent,
+    VariantIndexComponent,
+    ButtonComponent,
+    VariantIndexSelectedComponent
   ],
   templateUrl: './manufacture-edit-page.component.html',
   styleUrl: './manufacture-edit-page.component.scss',
@@ -53,6 +61,7 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
   manufacture: any = null;
   manufacture_id: number = 0;
   purchases: any;
+  variants: any;
 
   widget: WidgetManufacture = {
     cost: 0,
@@ -69,7 +78,7 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
   faCommentDollar = faCommentDollar;
   faCreditCard = faCreditCard;
   faRightLeft = faRightLeft;
-  
+
   modal: any;
   manufacture_variants: any;
 
@@ -107,6 +116,8 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
         this.purchases = resp.data.purchases;
         console.log(this.manufacture_variants);
 
+        this.variants = this.manufacture_variants.map((mv: any) => mv.variant);
+
         this.widget.quantity_total = resp.data.quantity_total;
         this.widget.purchase_total = resp.data.purchase_total;
 
@@ -140,7 +151,7 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
   }
 
 
-  receiveSelectedVariants(variants: any) {
+  receiveSearchSelectedVariants(variants: any) {
 
     this.modal.close();
 
@@ -180,6 +191,32 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
 
     this.modal.close();
 
+  }
+
+  selected_variants: any = {};
+
+  buttonDisabled: boolean = true;
+
+  receiveSelectedVariants(variants: any) {
+
+    console.log("Selected variants:", variants);
+    this.selected_variants = variants;
+
+    if (Object.keys(variants).length > 0) {
+      this.buttonDisabled = false;
+    } else {
+      this.buttonDisabled = true;
+    }
+
+  }
+
+  addVariants() {
+    if (this.buttonDisabled) {
+      return;
+    } else {
+      console.log("Adding variants:", this.selected_variants);
+      // this.emitVariantsSelected.emit(this.selected_variants);
+    }
   }
 }
 
