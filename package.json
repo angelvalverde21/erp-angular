@@ -19,7 +19,6 @@
   },
   "private": true,
   "dependencies": {
-    "@fancyapps/ui": "^5.0.36",
     "@angular/animations": "^20.0.3",
     "@angular/cdk": "^20.2.1",
     "@angular/common": "^20.0.3",
@@ -38,6 +37,7 @@
     "@coreui/icons": "^3.0.1",
     "@coreui/icons-angular": "~5.5.1",
     "@coreui/utils": "^2.0.2",
+    "@fancyapps/ui": "^5.0.36",
     "@fortawesome/angular-fontawesome": "^2.0.1",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
@@ -50,6 +50,7 @@
     "chart.js": "^4.5.0",
     "dropzone": "^6.0.0-beta.2",
     "lodash-es": "^4.17.21",
+    "ngx-dropzone": "^3.1.0",
     "ngx-lightbox": "^3.0.0",
     "ngx-quill": "^28.0.1",
     "ngx-scrollbar": "^13.0.3",

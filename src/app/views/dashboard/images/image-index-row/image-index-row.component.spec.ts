@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GalleryEditRowComponent } from './gallery-edit-row.component';
+import { ImageIndexRowComponent } from './image-index-row.component';
 
-describe('GalleryEditRowComponent', () => {
-  let component: GalleryEditRowComponent;
-  let fixture: ComponentFixture<GalleryEditRowComponent>;
+describe('ImageIndexRowComponent', () => {
+  let component: ImageIndexRowComponent;
+  let fixture: ComponentFixture<ImageIndexRowComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GalleryEditRowComponent]
+      imports: [ImageIndexRowComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GalleryEditRowComponent);
+    fixture = TestBed.createComponent(ImageIndexRowComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

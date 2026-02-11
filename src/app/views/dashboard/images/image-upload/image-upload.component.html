@@ -1,0 +1,14 @@
+<ngx-dropzone (change)="onSelect($event)" [multiple]="true" accept="image/*">
+
+    <ngx-dropzone-label>
+        <div class="message">
+            <fa-icon [icon]="faFileCirclePlus" class="me-2"></fa-icon>
+            <span>Arrastra Imagenes</span>
+        </div>
+    </ngx-dropzone-label>
+
+    @for (file of images; track file) {
+    <ngx-dropzone-image-preview (removed)="onRemove($event)" [file]="file" [removable]="true">
+    </ngx-dropzone-image-preview>
+    }
+</ngx-dropzone>

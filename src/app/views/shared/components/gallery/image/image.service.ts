@@ -43,10 +43,10 @@ export class ImageService {
   }
 
   // Elimina un Color por su ID (equivalente a destroy($id) en Laravel)
-  destroy(id: number): Observable<any> {
+  destroy(id: number, data: any = null): Observable<any> {
     console.log(`Deleting image with ID: ${id} from ${this.baseUrl}`);
-    
-    return this.http.delete(`${this.baseUrl}/${id}`);
+
+    return this.http.delete(`${this.baseUrl}/${id}`, { body: data });
   }
 
   search(search: string = ""): Observable<any[]> {
@@ -54,6 +54,7 @@ export class ImageService {
     
     return this.http.get<any[]>(`${this.baseUrl}/search/${search}`);
   }
+
 
 
 }

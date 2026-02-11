@@ -4,13 +4,16 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { PaymentIndexRowComponent } from '../payment-index-row/payment-index-row.component';
 import { ButtonAddComponent } from 'src/app/views/shared/components/buttons/button-add/button-add.component';
 import { PaymentCreateComponent } from '../payment-create/payment-create.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faMoneyBill1 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-payment-index',
   imports: [
     PaymentIndexRowComponent,
     ButtonAddComponent,
-    PaymentCreateComponent
+    PaymentCreateComponent,
+    FontAwesomeModule
   ],
   templateUrl: './payment-index.component.html',
   styleUrl: './payment-index.component.scss',
@@ -22,7 +25,7 @@ export class PaymentIndexComponent {
   @Input() paymentable_id: number = 0;
 
   @Input() payments: any;
-
+  faMoneyBill1 = faMoneyBill1;
   modal: any;
 
   constructor(
@@ -42,12 +45,12 @@ export class PaymentIndexComponent {
     this.modal.close();
   }
 
-  receiveCreatePayment(event: any){
+  receiveCreatePayment(event: any) {
     this.payments.unshift(event);
     this.closeModal();
   }
 
-  receiveRemovePayment(payment: any){
+  receiveRemovePayment(payment: any) {
     this.payments = this.payments.filter((p: any) => p.id !== payment.id);
   }
 

@@ -27,7 +27,8 @@
       "dom"
     ],
     "paths": {
-      "@shared/*": ["src/app/views/shared/*", "src/app/views/shared/*.ts"] //ojo: en tsconfig.json normalmente se omite el prefijo ./ para paths, mejor usar src/... directo
+      "@shared/*": ["src/app/views/shared/*", "src/app/views/shared/*.ts"], //ojo: en tsconfig.json normalmente se omite el prefijo ./ para paths, mejor usar src/... directo
+      "@buttons/*": ["src/app/views/buttons/*", "src/app/views/buttons/*.ts"]
     }
   },
   "angularCompilerOptions": {

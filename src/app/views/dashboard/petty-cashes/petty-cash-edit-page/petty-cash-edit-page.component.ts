@@ -5,6 +5,7 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
 import { PettyCashEditComponent } from '../petty-cash-edit/petty-cash-edit.component';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
+import { PaymentIndexComponent } from '../../payments/payment-index/payment-index.component'
 
 @Component({
   selector: 'app-petty-cash-edit-page',
@@ -12,7 +13,8 @@ import { HeadPageComponent } from '@shared/components/head-page/head-page.compon
     LoadingComponent,
     ButtonBackComponent,
     PettyCashEditComponent,
-    HeadPageComponent
+    HeadPageComponent,
+    PaymentIndexComponent
   ],
   templateUrl: './petty-cash-edit-page.component.html',
   styleUrl: './petty-cash-edit-page.component.scss'

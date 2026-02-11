@@ -1,8 +1,8 @@
-<app-payment-form [form]="form"></app-payment-form>
+<app-payment-form [form]="form"  [formCreate]="false"></app-payment-form>
 
-<app-gallery [path]="`payments/${payment.id}/images`"></app-gallery>
+<app-image-index [images]="payment.images" [imageable_type]="'payment'" [imageable_id]="payment.id" (emitImagePreview)="receiveImage($event)"></app-image-index>
 
 <!-- {{ form.value | json }} -->
 <div class="mb-3">
-    <app-button-save (click)="updatePayment()">Actualizar Pago</app-button-save>
+    <app-button-save (click)="updatePayment()">Guardar Cambios</app-button-save>
 </div>

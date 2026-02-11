@@ -6,7 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { PaymentService } from '../payment.service';
 import Swal from 'sweetalert2';
 import { JsonPipe } from '@angular/common';
-import { GalleryComponent } from '@shared/components/gallery/gallery.component';
+import { ImageIndexComponent } from '../../images/image-index/image-index.component';
 
 @Component({
   selector: 'app-payment-edit',
@@ -14,14 +14,14 @@ import { GalleryComponent } from '@shared/components/gallery/gallery.component';
     PaymentFormComponent,
     ButtonSaveComponent,
     JsonPipe,
-    GalleryComponent,
+    ImageIndexComponent
   ],
   templateUrl: './payment-edit.component.html',
   styleUrl: './payment-edit.component.scss'
 })
 export class PaymentEditComponent {
 
-  @Input() payment: any = {}; 
+  @Input() payment: any = {};
   form!: FormGroup;
   @Input() paymentable_type: string = "";
   @Input() paymentable_id: number = 0;
@@ -37,6 +37,8 @@ export class PaymentEditComponent {
 
   ngOnInit(): void {
     this.formInit();
+
+    this.form.valueChanges.subscribe(v => console.log(v));
   }
 
   formInit() {
@@ -46,12 +48,13 @@ export class PaymentEditComponent {
       gateway_id: [null, [Validators.required]],
       date: ['', [Validators.required]],
       direction: ['', [Validators.required]],
+      images: [[]],
       paymentable_type: [this.paymentable_type, [Validators.required]],
       paymentable_id: [this.paymentable_id, [Validators.required]],
     });
-    
+
     console.log(this.payment);
-    
+
 
     this.form.patchValue(this.payment);
 
@@ -101,4 +104,16 @@ export class PaymentEditComponent {
 
   }
 
+  receiveImage(image: any) {
+
+    console.log("imagen actualizada", image);
+
+    this.payment.images = [image, ...this.payment.images];
+    this.emitUpdatePayment.emit(this.payment);
+
+    console.log(this.payment);
+    
+
+  }
+  
 }

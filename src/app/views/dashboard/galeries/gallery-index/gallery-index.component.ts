@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-gallery-index',
@@ -7,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './gallery-index.component.scss'
 })
 export class GalleryIndexComponent {
+
+  @Input() images: any; 
 
 }

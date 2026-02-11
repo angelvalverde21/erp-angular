@@ -31,13 +31,13 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
     private _paymentService: PaymentService,
   ) {
 
-
-
   }
 
   ngOnInit(): void {
 
     this.formInit();
+
+    this.form.valueChanges.subscribe(v => console.log(v));
 
     this.form.statusChanges.subscribe((status) => {
       console.log(status);
@@ -48,7 +48,7 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
         this.disabledButton = true;
       }
     });
-    
+
   }
 
   formInit() {
@@ -60,6 +60,7 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
       date: [today, [Validators.required]],
       direction: ['in', [Validators.required]],
       gateway_id: [null, [Validators.required]],
+      images: [[]],
       paymentable_type: [this.paymentable_type, [Validators.required]],
       paymentable_id: [this.paymentable_id, [Validators.required]],
     });
@@ -87,7 +88,32 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
       }
     })
 
-    this._paymentService.store(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
+    //Crear FormData para enviar archivos
+    const data = new FormData();
+
+    Object.entries(this.form.value).forEach(([key, value]: any) => {
+
+      //las imágenes
+      if (key === 'images' && Array.isArray(value)) {
+        value.forEach((file: File) => {
+          data.append('images[]', file);
+        });
+        return;
+      }
+
+      //resto de campos normales
+      if (value !== null && value !== undefined) {
+        data.append(key, value);
+      }
+
+    });
+
+    (data as any).forEach((value: any, key: string) => {
+      console.log(key, value);
+    });
+
+
+    this._paymentService.store(data).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         Swal.fire('Guardado', 'EL pago ha sido guardado', 'success');

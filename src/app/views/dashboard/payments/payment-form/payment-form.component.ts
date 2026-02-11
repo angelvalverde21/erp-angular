@@ -2,13 +2,20 @@ import { Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputGroupComponent } from 'src/app/views/shared/components/form/input-group/input-group.component';
 import { GatewaySelectedComponent } from '../../gateways/gateway-selected/gateway-selected.component';
+import { NgxDropzoneModule } from 'ngx-dropzone';
+import { faCloud, faFileCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
+
 
 @Component({
   selector: 'app-payment-form',
   imports: [
     InputGroupComponent,
     ReactiveFormsModule,
-    GatewaySelectedComponent
+    GatewaySelectedComponent,
+    NgxDropzoneModule,
+    FontAwesomeModule,
   ],
   templateUrl: './payment-form.component.html',
   styleUrl: './payment-form.component.scss'
@@ -16,6 +23,29 @@ import { GatewaySelectedComponent } from '../../gateways/gateway-selected/gatewa
 export class PaymentFormComponent {
 
   @Input({ required: true }) form!: FormGroup;
+
+  @Input() formCreate: boolean = true;
+
+  images: File[] = [];
+  faFileCirclePlus = faFileCirclePlus;
+
+  onSelect(event: any) {
+    this.images.push(...event.addedFiles);
+    this.syncForm();
+  }
+
+  onRemove(file: any) {
+    this.images = this.images.filter(f => f !== file);
+    this.syncForm();
+    console.log("click en remove");
+
+  }
+
+  private syncForm() {
+    this.form.patchValue({
+      images: this.images
+    });
+  }
 
   STATUS = [
     {

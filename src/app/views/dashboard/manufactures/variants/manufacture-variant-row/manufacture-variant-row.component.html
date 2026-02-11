@@ -20,12 +20,12 @@
     @for (option_value of manufacture_variant.variant?.option_values; track option_value.id) {
     <td class="text-center">{{ option_value.value }}</td>
     }
-
+<!-- 
     <td style="width: 50px;">
         <app-button [icon]="faEdit" [me]="false"
             (click)="editManufactureVariant(content, manufacture_variant.id, manufacture_variant.manufacture_id)"
             color="outline-dark"></app-button>
-    </td>
+    </td> -->
 
     <td style="width: 50px;">
         @if(removeLoading){
@@ -40,7 +40,7 @@
 
     <!-- empieza el modal completo -->
 
-    <ng-template #content let-modal>
+    <!-- <ng-template #content let-modal>
         <div class="modal-header">
             <h6 class="modal-title">Editar</h6>
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
@@ -51,5 +51,5 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
         </div>
-    </ng-template>
+    </ng-template> -->
 </ng-container>

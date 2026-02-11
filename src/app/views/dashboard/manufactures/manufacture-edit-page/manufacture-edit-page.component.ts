@@ -10,7 +10,7 @@ import { PurchaseIndexComponent } from '../../purchases/purchase-index/purchase-
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { PurchaseCreateComponent } from '../../purchases/purchase-create/purchase-create.component';
-import { faBarcode, faBoxArchive, faBagShopping, faMoneyBill1, faCommentDollar } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode, faBoxArchive, faBagShopping, faMoneyBill1, faCommentDollar, faCreditCard, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import { VariantSearchComponent } from '../../products/variants/variant-search/variant-search.component';
 import { ManufactureVariantService } from '../variants/manufactureVariant.service';
@@ -67,6 +67,8 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
   faBarcode = faBarcode;
   faMoneyBill1 = faMoneyBill1;
   faCommentDollar = faCommentDollar;
+  faCreditCard = faCreditCard;
+  faRightLeft = faRightLeft;
   
   modal: any;
   manufacture_variants: any;

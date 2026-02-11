@@ -94,10 +94,10 @@ export abstract class BaseCrudDashboardService {
   }
 
   // Generic method to delete an item by ID
-  destroy(id: number): Observable<any> {
+  destroy(id: number, data: any = null): Observable<any> {
     const url = `${this.baseUrl}/${id}`;
     console.log(url);
-    return this.http.delete(`${url}`);
+    return this.http.delete(`${url}`, { body: data });
   }
 
   search(search: string = ''): Observable<any[]> {

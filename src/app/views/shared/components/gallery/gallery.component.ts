@@ -26,7 +26,7 @@ import { ImageComponent } from './image/image.component';
     NgbCarouselModule,
     CommonModule,
     FontAwesomeModule,
-    UploadDropzoneComponent,
+    // UploadDropzoneComponent,
     LoadingComponent,
     ImageComponent
   ],
