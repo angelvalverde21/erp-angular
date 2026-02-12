@@ -91,3 +91,19 @@ ng-select.is-invalid .ng-select-container {
 // ngx-dropzone {
 //   height: 120px !important;   /* altura mínima */
 // }
+
+/* quitar los spinner de los type number */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input::placeholder {
+  font-size: 0.85rem;
+}
+

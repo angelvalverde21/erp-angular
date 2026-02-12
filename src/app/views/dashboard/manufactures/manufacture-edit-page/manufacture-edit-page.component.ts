@@ -1,17 +1,17 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { ManufactureEditComponent } from '../manufacture-edit/manufacture-edit.component';
-import { HeadPageComponent } from '../../../shared/components/head-page/head-page.component';
-import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
+import { HeadPageComponent } from '@components/head-page/head-page.component';
+import { ButtonLinkComponent } from '@buttons/button-link/button-link.component';
 import { ManufactureService } from '../manufacture.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { PurchaseIndexComponent } from '../../purchases/purchase-index/purchase-index.component';
-import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { LoadingComponent } from '@components/loading/loading.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { PurchaseCreateComponent } from '../../purchases/purchase-create/purchase-create.component';
 import { faBarcode, faBoxArchive, faBagShopping, faMoneyBill1, faCommentDollar, faCreditCard, faRightLeft } from '@fortawesome/free-solid-svg-icons';
-import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
+import { InputGroupComponent } from '@components/form/input-group/input-group.component';
 import { VariantSearchComponent } from '../../products/variants/variant-search/variant-search.component';
 import { ManufactureVariantService } from '../variants/manufactureVariant.service';
 import { ManufactureVariantIndexComponent } from '../variants/manufacture-variant-index/manufacture-variant-index.component';
@@ -24,8 +24,10 @@ import { PaymentIndexComponent } from '../../payments/payment-index/payment-inde
 import { KardexIndexComponent } from '../../kardex/kardex-index/kardex-index.component';
 import { VariantIndexComponent } from '../../products/variants/variant-index/variant-index.component';
 import { ButtonComponent } from '@buttons/button/button.component';
-import { VariantIndexSelectedComponent } from '../../products/variants/variant-index-selected/variant-index-selected.component';
+import { KardexIndexSelectedComponent } from '../../kardex/kardex-index-selected/kardex-index-selected.component';
 // import { PaymentIndexComponent } from '../../payments/payment-edit/payment-index/payment-index.component';
+import { KardexRegisterInComponent } from '../../kardex/kardex-register-in/kardex-register-in.component';
+import { KardexRegisterOutComponent } from '../../kardex/kardex-register-out/kardex-register-out.component';
 
 @Component({
   selector: 'app-manufacture-edit-page',
@@ -46,8 +48,8 @@ import { VariantIndexSelectedComponent } from '../../products/variants/variant-i
     PaymentIndexComponent,
     KardexIndexComponent,
     VariantIndexComponent,
-    ButtonComponent,
-    VariantIndexSelectedComponent
+    KardexRegisterInComponent,
+    KardexRegisterOutComponent
   ],
   templateUrl: './manufacture-edit-page.component.html',
   styleUrl: './manufacture-edit-page.component.scss',
@@ -121,6 +123,8 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
         this.widget.quantity_total = resp.data.quantity_total;
         this.widget.purchase_total = resp.data.purchase_total;
 
+        this.kardexes = resp.data.kardexes;
+
         this.loading = false;
       },
 
@@ -141,6 +145,8 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
 
   }
+
+  kardexes: any[] = [];
 
   closeModal() {
     this.modal.close();
@@ -217,6 +223,11 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
       console.log("Adding variants:", this.selected_variants);
       // this.emitVariantsSelected.emit(this.selected_variants);
     }
+  }
+
+
+  receiveKardexes(event: any){
+    this.kardexes = [...this.kardexes, ...event];
   }
 }
 

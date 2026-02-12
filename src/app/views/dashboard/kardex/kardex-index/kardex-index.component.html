@@ -1,3 +1,59 @@
-{{ variants | json }}
+<div class="table-responsive">
+    <table class="table table-bordered mb-0 align-middle">
+        <thead>
+            <tr class="table-dark">
+                <th scope="col" class="text-center"><fa-icon [icon]="faBarcode"></fa-icon></th>
+                <th scope="col">Nombre</th>
+                <th scope="col" class="text-center">Variante</th>
+                <th scope="col" class="text-center">Cantidad</th>
+                <th scope="col">Comentario</th>
+                <th scope="col" class="text-center">Tipo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (kardex of kardexes; track kardex.id) {
+            <tr [ngClass]="(kardex.direction == 'in') ? 'table-success' : 'table-danger'">
+                <th class="text-center" scope="row">{{ kardex.variant.sku }}</th>
+                <td>{{ kardex?.variant?.product?.name }}</td>
+                @for (option_value of kardex.variant.option_values; track option_value.id) {
+                <td class="text-center">{{ option_value.value }}</td>
+                }
+                <td class="text-center">{{ (kardex?.direction == 'in') ? '' : '-' }}{{ kardex?.quantity }}</td>
+                <td>{{ kardex?.comment }}</td>
+                <td class="text-center">{{ (kardex?.direction == 'in') ? 'Ingreso' : 'Salida' }}</td>
+            </tr>
+            }
 
-ok
+            <tr>
+                <td colspan="3"></td>
+                <td class="text-center">{{ balance }}</td>
+                <td colspan="3"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2">Fallados</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-center">{{ fallados }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="2">Reparados</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-center">{{ reparados }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="2">Saldo (Debe traer)</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-center">{{ saldo }}</td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,4 @@
+<app-kardex-index-selected [variants]="variants" [color_check]="'success'"
+    (emitKardexVariants)="receiveKardexVariants($event)"></app-kardex-index-selected>
+<app-button [color]="'success text-white'" mb="3" [disabled]="buttonDisabled" (click)="registerIn()">Registrar
+    Ingreso</app-button>

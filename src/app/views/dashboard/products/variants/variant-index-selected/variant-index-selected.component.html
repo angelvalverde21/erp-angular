@@ -20,43 +20,48 @@
 
             <tr>
 
-                <td style="width: 100px;" class="px-3">
-                    <input type="number" class="form-control text-center" placeholder="0"
-                        [ngModel]="quantityArray?.[variant.id] || 0"
-                        (change)="onQuantityChange($event, variant.id)"
-                        name="quantity-{{ variant.id }}"
-                        aria-label="quantity" aria-describedby="basic-quantity" />
-                </td>
-
-                <td style="width: 150px;" class="px-3">
-
-                    <select class="form-select mb-0" aria-label="Default select example">
-
-                        <option selected>Tipo</option>
-                        <option value="1">Ingreso</option>
-                        <option value="2">Salida</option>
-
-                    </select>
-                </td>
-
-                <td class="text-center" scope="row">{{ variant.id }}</td>
 
                 <td class="text-center">
                     <fa-icon [icon]="faBarcode" class="me-3"></fa-icon> {{ variant.sku }}
                 </td>
-                <td class="text-center">
-                    {{ variant.stock }}</td>
+
                 <td class="text-center">{{ variant?.product?.name }}</td>
 
-                @for (variant_option_value of variant.variant_option_values; track variant_option_value.id) {
-                <td class="text-center">{{ variant_option_value.option_value.value }}</td>
+                @for (option_value of variant.option_values; track option_value.id) {
+                <td class="text-center">{{ option_value.value }}</td>
                 }
+
+                <td>
+                    <input type="text" class="form-control" placeholder="Motivo" aria-label="comment"
+                        aria-describedby="basic-comment" />
+
+                </td>
+
+                <td style="width: 100px;" class="px-3">
+                    <input type="number" class="form-control text-center" placeholder="0" onclick="this.select()"
+                        [ngModel]="quantityArray?.[variant.id] || 0" (change)="onQuantityChange($event, variant.id)"
+                        name="quantity-{{ variant.id }}" aria-label="quantity" aria-describedby="basic-quantity" />
+                </td>
+
+
                 <td style="width: 75px;" class="px-3">
                     <app-button [color]="variant_select[variant.id]  ? 'dark' : 'outline-dark'" [icon]="faCheck"
                         (click)="addVariant(variant.id)"></app-button>
                 </td>
             </tr>
             }
+
+
+            <tr>
+
+                <td colspan="4"></td>
+                <td class="text-center">
+                    0
+                </td>
+                <td class="text-center">
+                </td>
+            </tr>
+
         </tbody>
 
     </table>

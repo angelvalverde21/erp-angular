@@ -98,7 +98,11 @@ export class ManufactureVariantRowComponent implements OnDestroy {
 
   quantitySubject: Subject<any> = new Subject();
 
+  originalQuantity: any;
+
+
   ngOnInit(): void {
+
 
     this.form = this.fb.group({
       quantity: [''],
@@ -108,11 +112,25 @@ export class ManufactureVariantRowComponent implements OnDestroy {
       quantity: this.manufacture_variant.quantity
     });
 
+
     this.quantitySubject
       .pipe(debounceTime(500))
       .subscribe(data => {
         this.updateQuantity();
       });
+
+
+    //Para actualizar el valor original de quantity cuando el control no esté sucio (dirty) y
+    // const control = this.form.get('quantity');
+
+    this.originalQuantity = this.form.get('quantity')?.value;
+
+    // this.form.get('quantity')?.valueChanges.subscribe(value => {
+
+    //   this.originalQuantity = control?.dirty ? this.originalQuantity : value;
+    //     console.log('Valor de quantity:', value);
+        
+    // });
 
   }
 
@@ -122,7 +140,17 @@ export class ManufactureVariantRowComponent implements OnDestroy {
 
   loading: boolean = false;
 
-  updateQuantity(){
+  updateQuantity() {
+
+
+    console.log("click en updateQuantity");
+    
+    const currentValue = this.form.get('quantity')?.value;
+
+    if (currentValue == this.originalQuantity) {
+      // this.originalQuantity = currentValue;
+      return;
+    }
 
     this.loading = true;
 
@@ -133,19 +161,19 @@ export class ManufactureVariantRowComponent implements OnDestroy {
         this.loading = false;
         this.emitUpdatedQuantity.emit(resp.data); //emite el manufacture_variant actualizado
       },
-    
+
       error: (error: any) => {
-        Swal.fire('Error','Debe especificar una cantidad.','error');
+        Swal.fire('Error', 'Debe especificar una cantidad.', 'error');
         console.error(error);
         this.loading = false;
         this.emitUpdatedQuantity.emit(false);
       },
-    
+
     });
 
   }
 
-  getUpdateQuantity(){
+  getUpdateQuantity() {
 
     this.quantitySubject.next(this.form.value);
 

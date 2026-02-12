@@ -12,12 +12,12 @@
 <app-manufacture-widgets [widget]="widget"></app-manufacture-widgets>
 
 
-<div ngbAccordion [closeOthers]="true">
+<div ngbAccordion [closeOthers]="true" [destroyOnHide]="false">
 
     <div ngbAccordionItem [collapsed]="false">
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
-                <span><fa-icon [icon]="faBagShopping" class="me-2"></fa-icon>Insumos</span>
+                <span style="font-size: 0.85rem;"><fa-icon [icon]="faBagShopping" class="me-2"></fa-icon>Insumos</span>
             </button>
         </h2>
         <div ngbAccordionCollapse>
@@ -45,7 +45,8 @@
     <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
-                <span><fa-icon [icon]="faBarcode" class="me-2"></fa-icon>Productos (Corte)</span>
+                <span style="font-size: 0.85rem;"><fa-icon [icon]="faBarcode" class="me-2"></fa-icon>Productos
+                    (Corte)</span>
             </button>
         </h2>
         <div ngbAccordionCollapse>
@@ -73,7 +74,8 @@
     <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
-                <span><fa-icon [icon]="faCreditCard" class="me-2"></fa-icon>Presupuesto</span>
+                <span style="font-size: 0.85rem;"><fa-icon [icon]="faCreditCard"
+                        class="me-2"></fa-icon>Presupuesto</span>
             </button>
         </h2>
         <div ngbAccordionCollapse>
@@ -90,7 +92,8 @@
     <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
-                <span><fa-icon [icon]="faRightLeft" class="me-2"></fa-icon>Recepcion de mercaderia</span>
+                <span style="font-size: 0.85rem;"><fa-icon [icon]="faRightLeft" class="me-2"></fa-icon>Recepcion de
+                    mercaderia</span>
             </button>
         </h2>
         <div ngbAccordionCollapse>
@@ -100,11 +103,20 @@
                     <div class="bg-white py-3 d-flex justify-content-between align-items-center">
                         <span class="ms-3"><fa-icon [icon]="faRightLeft" class="me-2"></fa-icon>Entrega y
                             recepcion</span>
-                            
 
-                        <app-button-add (click)="openVerticallyCentered(kardex)" class="mb-3">Agregar</app-button-add>
+                        <div class="buttons">
+
+                            <app-button-add color="success text-white" (click)="openVerticallyCentered(ingreso)"
+                                class="mb-3 me-2">Ingreso</app-button-add>
+
+                            <app-button-add color="danger text-white" (click)="openVerticallyCentered(salida)"
+                                class="mb-3">Salida</app-button-add>
+
+                        </div>
 
                     </div>
+
+                    <app-kardex-index [kardexes]="kardexes"></app-kardex-index>
 
                 </ng-template>
             </div>
@@ -143,14 +155,27 @@
 
 </ng-template>
 
-<ng-template #kardex let-modal>
-    <div class="modal-header">
-        <h6 class="modal-title">Seleccione productos</h6>
+<ng-template #ingreso let-modal>
+    <div class="modal-header bg-success text-white">
+        <h6 class="modal-title">+ Ingreso de productos</h6>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <app-variant-index-selected [variants]="variants" (variantArraySelected)="receiveSelectedVariants($event)"></app-variant-index-selected>
-        <app-button [color]="'dark'" mb="3" [disabled]="buttonDisabled" (click)="addVariants()">Agregar Kardex</app-button>
+        <app-kardex-register-in [variants]="variants" [kardexable_type]="'manufacture'" [kardexable_id]="manufacture.id"
+            (emitKardexes)="receiveKardexes($event)"></app-kardex-register-in>
+    </div>
+
+</ng-template>
+
+<ng-template #salida let-modal>
+    <div class="modal-header bg-danger text-white">
+        <h6 class="modal-title">- Salida de productos</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-kardex-register-out [variants]="variants" [kardexable_type]="'manufacture'"
+            [kardexable_id]="manufacture.id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-out>
+
     </div>
 
 </ng-template>

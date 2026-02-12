@@ -27,7 +27,7 @@ export abstract class BaseCrudDashboardService {
 
   index(page: number = 1, status?: string): Observable<any[]> {
     console.log(this.baseUrl);
-    
+
     return this.http.get<any[]>(this.baseUrl, {
       params: {
         page: page > 0 ? page : 1,
@@ -51,7 +51,7 @@ export abstract class BaseCrudDashboardService {
     return this.http.get<any[]>(`${url}`);
   }
 
- // Generic method to get all items
+  // Generic method to get all items
   draft(): Observable<any[]> {
     const url = `${this.baseUrl}`;
     console.log(url);
@@ -63,7 +63,7 @@ export abstract class BaseCrudDashboardService {
     console.log(url);
     return this.http.get<any[]>(`${url}/archived`);
   }
-  
+
   // Generic method to get all items
   active(): Observable<any[]> {
     const url = `${this.baseUrl}`;
@@ -112,6 +112,15 @@ export abstract class BaseCrudDashboardService {
     console.log(url);
 
     return this.http.get<any[]>(url);
+  }
+
+  batch(data: any): Observable<any> {
+
+    const url = `${this.baseUrl}/batch`;
+    // console.log("imprimiendo url de store");
+    // console.log(url);
+    return this.http.post(`${url}`, data);
+
   }
 
 }

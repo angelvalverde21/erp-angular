@@ -18,7 +18,11 @@
       "@buttons/*": [
         "./src/app/views/shared/components/buttons/*",
         "/src/app/views/shared/components/buttons/*.ts"
-      ]
+      ],
+      "@components/*": [
+        "src/app/views/shared/components/*",
+        "src/app/views/shared/components/*.ts"
+      ],
     }
   },
   "files": [

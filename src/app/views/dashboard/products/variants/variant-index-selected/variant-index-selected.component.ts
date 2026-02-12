@@ -3,6 +3,7 @@ import { ButtonComponent } from '../../../../shared/components/buttons/button/bu
 import { faBarcode, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
+import { JsonPipe } from '@angular/common';
 
 
 @Component({
@@ -10,7 +11,8 @@ import { FormsModule } from '@angular/forms';
   imports: [
     ButtonComponent,
     FontAwesomeModule,
-    FormsModule
+    FormsModule,
+    JsonPipe
   ],
   templateUrl: './variant-index-selected.component.html',
   styleUrl: './variant-index-selected.component.scss'
@@ -21,7 +23,7 @@ export class VariantIndexSelectedComponent implements OnInit {
   @Input() variants: any[] = [];
   @Output() variantAdded = new EventEmitter<any>();
 
-  @Output() variantArraySelected = new EventEmitter<any>();
+  @Output() emitVariantsSelected = new EventEmitter<any>();
 
   variant_select: any;
 
@@ -64,9 +66,9 @@ export class VariantIndexSelectedComponent implements OnInit {
       .map(([key]) => Number(key));
 
     // y aqui se exporta o emite el array
-    this.variantArraySelected.emit(variantsSelected);
+    this.emitVariantsSelected.emit(variantsSelected);
 
-    // this.variantArraySelected.emit(variantsSelected);
+    // this.emitVariantsSelected.emit(variantsSelected);
     // const variant = this.variants.find(v => v.id === variantId);
 
     // if (variant) {
@@ -88,9 +90,12 @@ export class VariantIndexSelectedComponent implements OnInit {
   }
 
   onQuantityChange(event: any, variantId: number) {
+
     console.log(event.target.value, variantId);
     
     this.quantityArray[variantId] = event.target.value;
+
+    this.addVariant(variantId);
 
     console.log(this.variant_select);
     

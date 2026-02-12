@@ -1,0 +1,26 @@
+<div class="table-responsive mb-3">
+
+    <table class="table table-striped table-bordered mb-0 align-middle">
+
+        <tbody>
+
+            @for (variant of variants; let i = $index; track variant.id) {
+
+            <tr app-kardex-index-selected-row [variant]="variant" [color_check]="color_check" (emitVariantKardex)="receiveVariantKardex($event)"></tr>
+            }
+
+            <tr>
+
+                <td colspan="4"></td>
+                <td class="text-center">
+                    0
+                </td>
+                <td class="text-center">
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
