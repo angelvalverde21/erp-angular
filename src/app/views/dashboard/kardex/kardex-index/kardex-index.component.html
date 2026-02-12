@@ -12,7 +12,7 @@
         </thead>
         <tbody>
             @for (kardex of kardexes; track kardex.id) {
-            <tr [ngClass]="(kardex.direction == 'in') ? 'table-success' : 'table-danger'">
+            <tr [ngClass]="(kardex.direction == 'in') ? (kardex.comment === 'Reparado' ? 'table-warning' : 'table-success') : 'table-danger'">
                 <th class="text-center" scope="row">{{ kardex.variant.sku }}</th>
                 <td>{{ kardex?.variant?.product?.name }}</td>
                 @for (option_value of kardex.variant.option_values; track option_value.id) {
@@ -30,7 +30,7 @@
                 <td colspan="3"></td>
             </tr>
 
-            <tr>
+            <tr class="table-danger">
                 <td colspan="2">Fallados</td>
                 <td></td>
                 <td></td>
@@ -38,7 +38,7 @@
                 <td class="text-center">{{ fallados }}</td>
             </tr>
 
-            <tr>
+            <tr class="table-warning">
                 <td colspan="2">Reparados</td>
                 <td></td>
                 <td></td>
@@ -47,11 +47,11 @@
             </tr>
 
             <tr>
-                <td colspan="2">Saldo (Debe traer)</td>
+                <td colspan="2"><strong>Saldo (Debe traer)</strong></td>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="text-center">{{ saldo }}</td>
+                <td class="text-center"><h6>{{ saldo }}</h6></td>
             </tr>
 
         </tbody>

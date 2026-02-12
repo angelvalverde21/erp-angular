@@ -10,7 +10,7 @@ import { PurchaseIndexComponent } from '../../purchases/purchase-index/purchase-
 import { LoadingComponent } from '@components/loading/loading.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { PurchaseCreateComponent } from '../../purchases/purchase-create/purchase-create.component';
-import { faBarcode, faBoxArchive, faBagShopping, faMoneyBill1, faCommentDollar, faCreditCard, faRightLeft } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode, faBoxArchive, faBagShopping, faMoneyBill1, faCommentDollar, faCreditCard, faRightLeft, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { InputGroupComponent } from '@components/form/input-group/input-group.component';
 import { VariantSearchComponent } from '../../products/variants/variant-search/variant-search.component';
 import { ManufactureVariantService } from '../variants/manufactureVariant.service';
@@ -23,11 +23,10 @@ import { WidgetManufacture } from 'src/app/interfaces/widgetManufacture';
 import { PaymentIndexComponent } from '../../payments/payment-index/payment-index.component';
 import { KardexIndexComponent } from '../../kardex/kardex-index/kardex-index.component';
 import { VariantIndexComponent } from '../../products/variants/variant-index/variant-index.component';
-import { ButtonComponent } from '@buttons/button/button.component';
-import { KardexIndexSelectedComponent } from '../../kardex/kardex-index-selected/kardex-index-selected.component';
 // import { PaymentIndexComponent } from '../../payments/payment-edit/payment-index/payment-index.component';
 import { KardexRegisterInComponent } from '../../kardex/kardex-register-in/kardex-register-in.component';
 import { KardexRegisterOutComponent } from '../../kardex/kardex-register-out/kardex-register-out.component';
+import { ButtonTrashComponent } from '@buttons/button-trash/button-trash.component';
 
 @Component({
   selector: 'app-manufacture-edit-page',
@@ -49,7 +48,8 @@ import { KardexRegisterOutComponent } from '../../kardex/kardex-register-out/kar
     KardexIndexComponent,
     VariantIndexComponent,
     KardexRegisterInComponent,
-    KardexRegisterOutComponent
+    KardexRegisterOutComponent,
+    ButtonTrashComponent
   ],
   templateUrl: './manufacture-edit-page.component.html',
   styleUrl: './manufacture-edit-page.component.scss',
@@ -80,6 +80,7 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
   faCommentDollar = faCommentDollar;
   faCreditCard = faCreditCard;
   faRightLeft = faRightLeft;
+  faMinus = faMinus;
 
   modal: any;
   manufacture_variants: any;
@@ -226,7 +227,7 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
   }
 
 
-  receiveKardexes(event: any){
+  receiveKardexes(event: any) {
     this.kardexes = [...this.kardexes, ...event];
   }
 }
