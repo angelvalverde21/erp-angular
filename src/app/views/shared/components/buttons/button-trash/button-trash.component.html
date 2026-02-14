@@ -1,20 +1,15 @@
-<div class="d-grid d-md-block">
+<button type="button"
+  class="text-{{ colortext }} d-flex justify-content-center align-items-center btn btn-{{ color }} btn-{{ size }}"
+  (click)="clickButton()" [disabled]="disabled">
 
-  <button type="button"
-  
-    class="text-{{ colortext }} py-2 d-flex justify-content-center align-items-center btn btn-{{ color }} btn-{{ size }}"
-    (click)="clickButton()" [disabled]="disabled">
+  @if (icon != null) {
+  @if (spinner) {
+  <app-loading size="sm" class="me-{{ separation }}"></app-loading>
+  } @else {
+  <fa-icon [icon]="icon" [ngClass]="{'me-1': me}"></fa-icon>
+  }
+  }
 
-    @if (icon != null) {
-      @if (spinner) {
-      <app-loading size="sm" class="me-{{ separation }}"></app-loading>
-      } @else {
-      <fa-icon [icon]="icon" [ngClass]="{'me-1': me}"></fa-icon>
-      }
-    }
+  <ng-content></ng-content>
 
-    <ng-content></ng-content>
-
-  </button>
-
-</div>
+</button>

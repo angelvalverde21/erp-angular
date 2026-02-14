@@ -1,12 +1,19 @@
 <ng-container [formGroup]="form">
 
-    <td class="text-center" scope="row" style="width: 100px;">
+        <td class="text-center" scope="row" style="width: 100px;">
         <app-input-group [mb]="0">
-            <input formControlName="quantity" (blur)="updateQuantity()" onclick="this.select()" type="text" class="form-control text-center"
-                placeholder="quantity" aria-label="quantity" aria-describedby="basic-quantity" />
+            <input formControlName="quantity" (blur)="updateQuantity()" onclick="this.select()" type="text"
+                class="form-control text-center" placeholder="quantity" aria-label="quantity"
+                aria-describedby="basic-quantity" />
         </app-input-group>
     </td>
 
+    @for (option_value of manufacture_variant.variant?.option_values; track option_value.id) {
+    <td class="text-center">{{ option_value.value }}</td>
+    }
+
+    <td>{{ manufacture_variant.variant?.product?.name }}</td>
+    
     <td style="width: 125px;" class="text-center">
         @if(loading){
         <app-loading></app-loading>
@@ -16,11 +23,8 @@
         }
     </td>
 
-    <td>{{ manufacture_variant.variant?.product?.name }}</td>
-    @for (option_value of manufacture_variant.variant?.option_values; track option_value.id) {
-    <td class="text-center">{{ option_value.value }}</td>
-    }
-<!-- 
+
+    <!-- 
     <td style="width: 50px;">
         <app-button [icon]="faEdit" [me]="false"
             (click)="editManufactureVariant(content, manufacture_variant.id, manufacture_variant.manufacture_id)"

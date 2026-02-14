@@ -1,19 +1,21 @@
 <div class="table-responsive">
-    <table class="table table-hover mb-0 align-middle">
+    <table class="table table-hover table-striped mb-0 align-middle">
+
         <thead class="table-light">
             <tr>
                 <!-- <th class="text-center">#</th> -->
                 <!-- <th class="text-center"></th> -->
                 <th>Producto</th>
                 <th class="text-center">Gasto Total</th>
-                <th class="text-center">Costo x unidad</th>
-                <th class="text-center">Cantidad</th>
+                <th class="text-center">Total Corte</th>
+                <th class="text-center">Recibidos</th>
                 <th class="text-center">Fallados</th>
                 <th>Fabricado por</th>
                 <th>Creado</th>
                 <th class="text-center">Acciones</th>
             </tr>
         </thead>
+
         <tbody>
 
             @for (manufacture of manufactures; track manufacture.id) {
@@ -25,10 +27,9 @@
                 </td> -->
                 <td>
                     <div class="name">{{ manufacture.name }}</div>
-                    <div class="name">58%</div>
                 </td>
-                <td class="text-center">{{ manufacture.cost }}</td>
-                <td class="text-center">{{ manufacture.cost }}</td>
+                <td class="text-center">{{ manufacture.purchases_sum_total }}</td>
+                <td class="text-center">{{ manufacture.manufacture_variants_sum_quantity }}</td>
                 <td class="text-center">
                     {{ manufacture.quantity_total }}
                 </td>
@@ -46,5 +47,6 @@
             }
 
         </tbody>
+        
     </table>
 </div>
