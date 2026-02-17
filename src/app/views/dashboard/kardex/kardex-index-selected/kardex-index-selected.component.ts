@@ -9,7 +9,7 @@ import { KardexIndexSelectedRowComponent } from '../kardex-index-selected-row/ka
   templateUrl: './kardex-index-selected.component.html',
   styleUrl: './kardex-index-selected.component.scss'
 })
-export class KardexIndexSelectedComponent{
+export class KardexIndexSelectedComponent implements OnInit {
 
 
   @Input() variants: any[] = [];
@@ -20,9 +20,11 @@ export class KardexIndexSelectedComponent{
   kardex_variants: any[] = [];
   kardexes: any[] = [];
 
-  balance: number = 0;
+  ngOnInit(): void {
+    this.sumQuantity();
+  }
 
-
+  sum: number = 0;
 
   receiveVariantKardex(event: any) {
     //  console.log(event);
@@ -40,13 +42,18 @@ export class KardexIndexSelectedComponent{
           return acc.map((item: any) => item.variant_id === current.variant_id ? current : item);
         }
       }, []);
-
     }
+
+    this.sumQuantity();
 
     console.log(this.kardex_variants);
 
     this.emitKardexVariants.emit(this.kardex_variants);
 
+  }
+
+  sumQuantity(){
+    this.sum = this.kardex_variants.reduce((acc, item) => acc + item.quantity, 0);
   }
 
 }

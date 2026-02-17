@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -10,7 +11,8 @@ import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
   imports: [
     DateShopifyPipe,
     ButtonComponent,
-    FontAwesomeModule
+    FontAwesomeModule,
+    CommonModule
   ],
   templateUrl: './manufacture-index.component.html',
   styleUrl: './manufacture-index.component.scss'
@@ -29,6 +31,8 @@ export class ManufactureIndexComponent {
   ) {}
 
   getManufactureId(id: number = 0) {
+    
     this.router.navigate([id], { relativeTo: this.route });
+
   }
 }

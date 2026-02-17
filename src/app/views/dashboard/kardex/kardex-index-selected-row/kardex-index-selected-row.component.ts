@@ -35,13 +35,25 @@ export class KardexIndexSelectedRowComponent implements OnInit {
   }
 
   comments: string[] = [];
+  comment: string = '';
 
   ngOnInit(): void {
 
-    if (this.color_check === 'success') {
-      this.comments = ['Recepcion', 'Reparado'];
-    } else {
-      this.comments = ['Fallado'];
+
+    switch (this.color_check) {
+      case "danger":
+        this.comment = "Fallado";
+        break;
+      case "success":
+        this.comment = "Recepcion";
+        break;
+      case "warning":
+        this.comment = "Reparado";
+        break;
+    
+      default:
+        this.comment = "No determinado";
+        break;
     }
 
     this.formInit();
@@ -59,7 +71,7 @@ export class KardexIndexSelectedRowComponent implements OnInit {
     this.form = this.fb.group({
       variant_id: [this.variant.id, Validators.required],
       quantity: ['', [Validators.required, Validators.min(1)]],
-      comment: [this.comments[0], Validators.required]
+      comment: [this.comment, Validators.required]
     });
 
   }

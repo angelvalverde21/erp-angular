@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ManufactureFormComponent } from '../manufacture-form/manufacture-form.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
@@ -24,6 +24,8 @@ export class ManufactureCreateComponent implements OnInit, OnDestroy {
 
   @Output() emitCreateManufacture = new EventEmitter<any>();
 
+  @Input() type: string = 'production'; 
+
   loading: boolean = false;
   disabledButton: boolean = false;
 
@@ -37,7 +39,8 @@ export class ManufactureCreateComponent implements OnInit, OnDestroy {
   formInit() {
     this.form = this.fb.group({
       name: ['', Validators.required], //Nombre del proyecto, no del producto
-      // budget: ['', Validators.required],
+      type: [this.type, Validators.required],
+      supplier_id: [null, Validators.required],
       // quantity_total: ['', Validators.required],
     });
   }
@@ -58,6 +61,9 @@ export class ManufactureCreateComponent implements OnInit, OnDestroy {
   }
 
   createManufacture() {
+
+    console.log(this.form.value);
+    
 
     if (!this.form.valid) {
       this.form.markAllAsTouched();

@@ -52,6 +52,15 @@ export class KardexRegisterOutComponent {
 
   registerOut() {
 
+    Swal.fire({
+      title: 'Espere...',
+      html: 'Registrando salida de productos',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    })
+
     this.variantsKardex = this.variantsKardex.map(variant => ({
       ...variant,
       direction: 'out',
@@ -81,11 +90,11 @@ export class KardexRegisterOutComponent {
   }
 
   destroy$ = new Subject<void>();
-  
+
   ngOnDestroy(): void {
-  
+
     this.destroy$.next();
     this.destroy$.complete();
-  
+
   }
 }

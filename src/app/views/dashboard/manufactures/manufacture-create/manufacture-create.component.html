@@ -1,5 +1,5 @@
-<app-manufacture-form [form]="form"></app-manufacture-form>
+<app-manufacture-form [form]="form" [type]="type"></app-manufacture-form>
 
 <app-button-save (click)="createManufacture()" [spinner]="loading" [disabled]="disabledButton">Guardar cambios</app-button-save>
 
-{{ form.value | json }}
+<!-- {{ form.value | json }} -->

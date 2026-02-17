@@ -11,6 +11,15 @@
         </app-input-group>
     </div>
 
+    @if(type === 'order'){
+        <div class="col-lg-12 col-12">
+            <label for="supplier_id" class="mb-2">Proveedor</label>
+            <app-supplier-selected formControlName="supplier_id"></app-supplier-selected>
+        </div>
+    }@else{
+
+    }
+
     <!-- <div class="col-lg-6 col-12">
         <app-input-group text="Presupuesto Aproximado" icontext="S/. ">
             <input type="number" twoDecimals class="form-control is-required" [ngClass]="isInvalid('budget') ? 'is-invalid' : '' "
@@ -26,5 +35,7 @@
         </app-input-group>
 
     </div> -->
+
+    {{ form.value | json }}
 
 </div>

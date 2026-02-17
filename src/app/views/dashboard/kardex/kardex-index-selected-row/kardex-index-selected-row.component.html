@@ -9,15 +9,6 @@
     <td class="text-center">{{ option_value.value }}</td>
     }
 
-    <td>
-        <select class="form-select" formControlName="comment">
-            @for (comment of comments; track comment) {
-            <option [value]="comment">{{ comment }}</option>
-            }
-        </select>
-
-    </td>
-
     <td style="width: 100px;" class="px-3">
         <input type="number" formControlName="quantity" class="form-control text-center" placeholder="0"
             onclick="this.select()" aria-label="quantity" aria-describedby="basic-quantity" />

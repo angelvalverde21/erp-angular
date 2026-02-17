@@ -1,0 +1,3 @@
+<app-kardex-index-selected [variants]="variants" [color_check]="'warning'"
+    (emitKardexVariants)="receiveKardexVariants($event)"></app-kardex-index-selected>
+<app-button [color]="'warning'" mb="3" [disabled]="buttonDisabled" (click)="registerReIn()">Agregar Reparados</app-button>

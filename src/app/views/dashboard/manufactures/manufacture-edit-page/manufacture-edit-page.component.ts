@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ManufactureEditComponent } from '../manufacture-edit/manufacture-edit.component';
 import { HeadPageComponent } from '@components/head-page/head-page.component';
 import { ButtonLinkComponent } from '@buttons/button-link/button-link.component';
@@ -25,8 +25,15 @@ import { KardexIndexComponent } from '../../kardex/kardex-index/kardex-index.com
 import { VariantIndexComponent } from '../../products/variants/variant-index/variant-index.component';
 // import { PaymentIndexComponent } from '../../payments/payment-edit/payment-index/payment-index.component';
 import { KardexRegisterInComponent } from '../../kardex/kardex-register-in/kardex-register-in.component';
+import { KardexRegisterReInComponent } from '../../kardex/kardex-register-re-in/kardex-register-re-in.component';
 import { KardexRegisterOutComponent } from '../../kardex/kardex-register-out/kardex-register-out.component';
 import { ButtonTrashComponent } from '@buttons/button-trash/button-trash.component';
+import { WidgetCostComponent } from '../shared/widgets/widget-cost/widget-cost.component';
+import { WidgetProductsComponent } from '../shared/widgets/widget-products/widget-products.component';
+import { WidgetPurchasesComponent } from '../shared/widgets/widget-purchases/widget-purchases.component';
+import { WidgetReceptionsComponent } from '../shared/widgets/widget-receptions/widget-receptions.component';
+import { KardexService } from '../../kardex/kardex.service';
+// import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-manufacture-edit-page',
@@ -48,8 +55,14 @@ import { ButtonTrashComponent } from '@buttons/button-trash/button-trash.compone
     KardexIndexComponent,
     VariantIndexComponent,
     KardexRegisterInComponent,
+    KardexRegisterReInComponent,
     KardexRegisterOutComponent,
-    ButtonTrashComponent
+    ButtonTrashComponent,
+    WidgetCostComponent,
+    WidgetProductsComponent,
+    WidgetPurchasesComponent,
+    WidgetReceptionsComponent,
+    // NgbDropdownModule
   ],
   templateUrl: './manufacture-edit-page.component.html',
   styleUrl: './manufacture-edit-page.component.scss',
@@ -58,6 +71,7 @@ import { ButtonTrashComponent } from '@buttons/button-trash/button-trash.compone
 })
 
 export class ManufactureEditPageComponent implements OnInit, OnDestroy {
+
 
   loading: boolean = false;
   manufacture: any = null;
@@ -71,6 +85,13 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
     purchase_total: 0,
     quantity_received: 0,
     progress: 0
+  };
+
+  widget_summary: any = {
+    cost: 0,
+    sum_products: 0,
+    sum_purchases: 0,
+    reception: 0
   };
 
   faBoxArchive = faBoxArchive;
@@ -91,7 +112,7 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private _manufacture: ManufactureService,
     private route: ActivatedRoute,
-    private _manufactureVariant: ManufactureVariantService,
+    private _kardex: KardexService
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -101,9 +122,14 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
     });
 
   }
+
   ngOnInit(): void {
+
     this.manufactureInit();
+
   }
+
+  kardex_summary: any;
 
   manufactureInit() {
 
@@ -121,12 +147,22 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
 
         this.variants = this.manufacture_variants.map((mv: any) => mv.variant);
 
-        this.widget.quantity_total = resp.data.quantity_total;
-        this.widget.purchase_total = resp.data.purchase_total;
+
 
         this.kardexes = resp.data.kardexes;
 
+        this.kardex_summary = this._kardex.calculate(this.kardexes);
+
+        this.widget_summary = {
+          cost: resp.data.purchase_total / resp.data.quantity_total,
+          sum_products: resp.data.quantity_total,
+          sum_purchases: resp.data.purchase_total,
+          reception: this.kardex_summary.reception
+        };
+
         this.loading = false;
+
+        // this.calculeCost();
       },
 
       error: (error: any) => {
@@ -136,6 +172,10 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
 
     });
   }
+
+  // calculeCost() {
+  //   this.total_cost = Math.round(this.total_purchases_amount / this.total_products * 100) / 100;
+  // }
 
 
   destroy$ = new Subject<void>();
@@ -158,47 +198,7 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
   }
 
 
-  receiveSearchSelectedVariants(variants: any) {
 
-    this.modal.close();
-
-    console.log("Received variants in manufacture edit page:", variants);
-
-    Swal.fire({
-      title: 'Espere...',
-      html: 'Mientras agregamos sus variantes',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    })
-
-    this._manufactureVariant.batch(this.manufacture.id, variants).pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        Swal.fire('Guardado', 'Las variantes han sido agregadas', 'success');
-        console.log(resp);
-        this.manufacture_variants = [...this.manufacture_variants, ...resp.data];
-        this.loading = false;
-        this.modal.close();
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al insertar los registros. Inténtalo nuevamente.', 'error');
-        console.error(error);
-      },
-
-    });
-
-  }
-
-  receivePurchaseCreate(purchase: any) {
-
-    this.purchases = [purchase, ...this.purchases];
-
-    this.modal.close();
-
-  }
 
   selected_variants: any = {};
 
@@ -227,9 +227,60 @@ export class ManufactureEditPageComponent implements OnInit, OnDestroy {
   }
 
 
-  receiveKardexes(event: any) {
-    this.kardexes = [...this.kardexes, ...event];
+  calculateTotalReceptions() {
+    this.total_receptions = this.kardexes.reduce((acc, kardex) => acc + kardex.quantity * (kardex?.direction === 'in' ? 1 : -1), 0);
   }
+
+
+  receiveKardexes(event: any) {
+
+    this.kardexes = [...this.kardexes, ...event];
+
+    this.kardex_summary = this._kardex.calculate(this.kardexes);
+  }
+
+
+  //Data para los widgets
+
+  total_products: number = 0;
+  total_purchases_amount: number = 0;
+  total_receptions: number = 0;
+
+  receiveSumManufactureVariant(sum_products: number) {
+
+    console.log("received total products:", sum_products);
+
+
+    this.widget_summary = {
+      ...this.widget_summary,
+      cost: this.widget_summary.sum_purchases / sum_products,
+      sum_products: sum_products,
+    };
+
+    // this.widget.progress = this.widget.quantity_received / this.widget.quantity_total * 100;
+  }
+
+  receiveSumPurchaseIndex(sum_purchases: number) {
+
+    this.widget_summary = {
+      ...this.widget_summary,
+      sum_purchases: sum_purchases,
+      cost: sum_purchases / this.widget_summary.sum_products,
+    };
+
+  }
+
+  // receiveSumReceptionIndex(total: number){
+  //   this.total_receptions = total;
+  // }
+
+  saldo: number = 0;
+  total_cost: number = 0;
+
+  receiveKardexSummary(kardex_summary: any) {
+    console.log("Received kardex summary:", kardex_summary);
+    
+    this.kardex_summary = kardex_summary;
+  }
+
 }
-
-

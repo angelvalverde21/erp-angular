@@ -37,6 +37,7 @@ export class PurchaseIndexRowComponent {
   @Input() purchaseable_type: string = "";
   @Input() purchaseable_id: number = 0;
   @Output() emitRemovePurchase = new EventEmitter<number>();
+  @Output() emitPurchaseUpdated = new EventEmitter<any>();
 
   faTrash = faTrash;
   faImages = faImages;
@@ -124,6 +125,7 @@ export class PurchaseIndexRowComponent {
       console.log('no se actualizo el registro');
     }
     this.closeModal();
+    this.emitPurchaseUpdated.emit(purchase);
   }
 
   openVerticallyCentered(content: TemplateRef<any>) {

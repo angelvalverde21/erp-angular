@@ -10,6 +10,8 @@ import { ShopifyProductService } from '../../../shopify/products/shopify.product
 import { CourierService } from '../../couriers/courier.service';
 import { ManufactureService } from '../../../manufactures/manufacture.service';
 import { GatewayService } from '../../../gateways/gateway.service';
+import { ManufactureOrderService } from '../../../manufactures/orders/order.service';
+import { ManufactureProductionService } from '../../../manufactures/productions/production.service';
 
 @Component({
   selector: 'app-user-head-table',
@@ -25,7 +27,7 @@ export class UserHeadTableComponent implements OnInit, OnDestroy {
   faMagnifyingGlass = faMagnifyingGlass;
   faFilter = faFilter;
 
-  @Input() type: 'customer' | 'courier' | 'gateway' | 'petty_cash' | 'supplier' | 'employee' | 'shopify_product' | 'manufacture' = 'customer'; //Type por defecto es customer en caso no se le pase nada
+  @Input() type: 'customer' | 'courier' | 'gateway' | 'petty_cash' | 'supplier' | 'employee' | 'shopify_product' | 'manufacture_production' | 'manufacture_order' |  'manufacture' = 'customer'; //Type por defecto es customer en caso no se le pase nada
   @Input() button_active: boolean = true;
   @Output() emitSearchResult = new EventEmitter<any>();
 
@@ -37,6 +39,8 @@ export class UserHeadTableComponent implements OnInit, OnDestroy {
     private _employee: EmployeeService,
     private _courier: CourierService,
     private _manufacture: ManufactureService,
+    private _manufacture_order: ManufactureOrderService,
+    private _manufacture_production: ManufactureProductionService,
     private _shopify_product: ShopifyProductService,
     private _gateway: GatewayService
   ) { }
@@ -53,6 +57,8 @@ export class UserHeadTableComponent implements OnInit, OnDestroy {
       case 'manufacture': return this._manufacture;
       case 'shopify_product': return this._shopify_product;
       case 'gateway': return this._gateway;
+      case 'manufacture_order': return this._manufacture_order;
+      case 'manufacture_production': return this._manufacture_production;
       default: return this._customer;
     }
   }

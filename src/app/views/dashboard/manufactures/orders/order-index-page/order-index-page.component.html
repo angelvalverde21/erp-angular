@@ -1,0 +1,29 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-head-page title="Ordenes de compra">
+    <app-button-link [path]="['./create']">+ Orden de Compra</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3">
+        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)"  type="manufacture_order" [button_active]="false"></app-user-head-table>
+    </div>
+
+    <div class="card-body p-0">
+        @if(manufactures?.length > 0){
+            <app-manufacture-index [manufactures]="manufactures"></app-manufacture-index>
+        }@else{
+            <p class="p-4">No se cuenta con registro de ordenes de compra</p>
+        }
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ manufactures?.length }}</small>
+    </div>
+
+</div>
+
+}

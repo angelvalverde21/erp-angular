@@ -36,34 +36,47 @@ export const navErp: CustomNavData[] = [
     //     ]
     // },
     {
-        name: 'Produccion',
+        name: 'Fabricacion',
         url: 'dashboard/manufactures',
         iconComponent: { name: 'cil-industry' },
         children: [
-            { name: 'Todos', url: 'dashboard/manufactures', icon: 'nav-icon-bullet' },
+            {
+                name: 'Producciones',
+                url: 'dashboard/manufactures/productions',
+                icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+            {
+                name: 'Ordenes de compra', url: 'dashboard/manufactures/orders', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
         ],
         roles: ['master', 'ceo']
     },
-    {
-        name: 'Compras',
-        url: 'dashboard/purchases',
-        iconComponent: { name: 'cil-notes' },
-        children: [
-            {
-                name: 'Ordenes de compra', url: 'dashboard/purchases/orders', icon: 'nav-icon-bullet',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                },
-            },
-            {
-                name: 'Compras', url: 'dashboard/purchases', icon: 'nav-icon-bullet',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                },
-            },
-        ],
-        roles: ['master']
-    },
+    // {
+    //     name: 'Compras',
+    //     url: 'dashboard/purchases',
+    //     iconComponent: { name: 'cil-notes' },
+    //     children: [
+    //         {
+    //             name: 'Ordenes de compra', url: 'dashboard/purchases/orders', icon: 'nav-icon-bullet',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             },
+    //         },
+    //         {
+    //             name: 'Compras', url: 'dashboard/purchases', icon: 'nav-icon-bullet',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             },
+    //         },
+    //     ],
+    //     roles: ['master']
+    // },
     {
         name: 'Movimientos',
         url: 'dashboard/transactions',
@@ -113,12 +126,12 @@ export const navErp: CustomNavData[] = [
         url: 'dashboard/pettycashes',
         iconComponent: { name: 'cil-wallet' },
         children: [
-            { 
+            {
                 name: 'Todos', url: 'dashboard/pettycashes', icon: 'nav-icon-bullet',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
                 }
-             },
+            },
         ],
         roles: ['ceo', 'master']
     },

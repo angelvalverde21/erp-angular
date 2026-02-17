@@ -64,6 +64,16 @@ export class KardexRegisterInComponent {
     console.log("Registrar entrada de inventario", this.variantsKardex);
 
 
+    Swal.fire({
+      title: 'Espere...',
+      html: 'Registrando entrada de productos',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    })
+
+
     this._kardex.batch(this.variantsKardex).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {

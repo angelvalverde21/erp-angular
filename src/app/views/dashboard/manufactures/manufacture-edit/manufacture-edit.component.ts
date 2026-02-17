@@ -7,6 +7,9 @@ import Swal from 'sweetalert2';
 import { ManufactureService } from '../manufacture.service';
 import { ButtonSaveComponent } from '../../../shared/components/buttons/button-save/button-save.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { SupplierSelectedComponent } from '../../users/suppliers/supplier-selected/supplier-selected.component';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-manufacture-edit',
@@ -15,7 +18,9 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
     ReactiveFormsModule,
     ButtonSaveComponent,
     JsonPipe,
-    LoadingComponent
+    LoadingComponent,
+    SupplierSelectedComponent,
+    FontAwesomeModule
   ],
   templateUrl: './manufacture-edit.component.html',
   styleUrl: './manufacture-edit.component.scss'
@@ -24,7 +29,8 @@ export class ManufactureEditComponent implements OnInit, OnDestroy {
 
 
   form!: FormGroup;
-
+  faUser = faUser;
+  @Input() type: string = 'production';
   loading: boolean = false;
   disabledButton: boolean = false;
 
@@ -49,6 +55,7 @@ export class ManufactureEditComponent implements OnInit, OnDestroy {
       name: ['', Validators.required], //Nombre del proyecto, no del producto
       // budget: ['', Validators.required],
       // quantity_total: ['', Validators.required],
+      supplier_id: ['', Validators.required],
     });
   }
 

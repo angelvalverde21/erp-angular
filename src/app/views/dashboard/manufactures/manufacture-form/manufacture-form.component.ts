@@ -5,6 +5,7 @@ import { InputGroupComponent } from '../../../shared/components/form/input-group
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputDistrictIdComponent } from '../../addresses/input-district-id/input-district-id.component';
 import { TwoDecimalsDirective } from 'src/app/core/directives/two-decimals.directive';
+import { SupplierSelectedComponent } from '../../users/suppliers/supplier-selected/supplier-selected.component';
 
 @Component({
   selector: 'app-manufacture-form',
@@ -14,7 +15,8 @@ import { TwoDecimalsDirective } from 'src/app/core/directives/two-decimals.direc
     InputDistrictIdComponent,
     ReactiveFormsModule,
     JsonPipe,
-    TwoDecimalsDirective
+    TwoDecimalsDirective,
+    SupplierSelectedComponent
   ],
   templateUrl: './manufacture-form.component.html',
   styleUrl: './manufacture-form.component.scss'
@@ -29,6 +31,7 @@ export class ManufactureFormComponent {
   faLocationDot = faLocationDot;
 
   @Input({ required: true }) form!: FormGroup;
+  @Input() type: string = 'production'; 
 
   isInvalid(value: string): boolean {
     if (
