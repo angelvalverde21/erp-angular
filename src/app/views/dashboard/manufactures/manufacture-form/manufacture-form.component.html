@@ -12,13 +12,33 @@
     </div>
 
     @if(type === 'order'){
-        <div class="col-lg-12 col-12">
-            <label for="supplier_id" class="mb-2">Proveedor</label>
+
+    <div class="col-lg-12 col-12">
+        <label for="supplier_id" class="mb-2">Proveedor</label>
+        <div class="mb-3">
             <app-supplier-selected formControlName="supplier_id"></app-supplier-selected>
         </div>
+    </div>
+
+    <div class="col-lg-6 col-12">
+        <app-input-group text="Fecha de entrega">
+            <input formControlName="manufacture_start" type="date" class="form-control"
+                placeholder="Fecha de entrega" aria-label="delivery_date" aria-describedby="basic-delivery_date" />
+        </app-input-group>
+    </div>
+
+    <div class="col-lg-6 col-12">
+        <app-input-group text="Fecha de entrega">
+            <input formControlName="manufacture_end" type="date" class="form-control"
+                placeholder="Fecha de entrega" aria-label="delivery_date" aria-describedby="basic-delivery_date" />
+        </app-input-group>
+    </div>
+
     }@else{
 
     }
+
+
 
     <!-- <div class="col-lg-6 col-12">
         <app-input-group text="Presupuesto Aproximado" icontext="S/. ">
@@ -36,6 +56,6 @@
 
     </div> -->
 
-    {{ form.value | json }}
+    <!-- {{ form.value | json }} -->
 
 </div>

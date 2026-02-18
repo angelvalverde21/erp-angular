@@ -24,7 +24,7 @@ export class ManufactureCreateComponent implements OnInit, OnDestroy {
 
   @Output() emitCreateManufacture = new EventEmitter<any>();
 
-  @Input() type: string = 'production'; 
+  @Input() type: string = 'production';
 
   loading: boolean = false;
   disabledButton: boolean = false;
@@ -37,10 +37,15 @@ export class ManufactureCreateComponent implements OnInit, OnDestroy {
   }
 
   formInit() {
+
+    const today = new Date().toISOString().split('T')[0];
+
     this.form = this.fb.group({
       name: ['', Validators.required], //Nombre del proyecto, no del producto
       type: [this.type, Validators.required],
-      supplier_id: [null, Validators.required],
+      supplier_id: [null],
+      manufacture_start: [today],
+      manufacture_end: [today],
       // quantity_total: ['', Validators.required],
     });
   }
@@ -48,12 +53,12 @@ export class ManufactureCreateComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
 
   manufacture: any;
-  
+
   ngOnDestroy(): void {
-  
+
     this.destroy$.next();
     this.destroy$.complete();
-  
+
   }
 
   ngOnInit(): void {
@@ -63,7 +68,7 @@ export class ManufactureCreateComponent implements OnInit, OnDestroy {
   createManufacture() {
 
     console.log(this.form.value);
-    
+
 
     if (!this.form.valid) {
       this.form.markAllAsTouched();

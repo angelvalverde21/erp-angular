@@ -1,7 +1,7 @@
 <div class="table-responsive">
     <table class="table table-bordered mb-0 align-middle">
         <thead>
-            <tr class="table-dark">
+            <tr class="table-secondary">
                 <th scope="col" class="text-center"><fa-icon [icon]="faBarcode"></fa-icon></th>
                 <th scope="col">Nombre</th>
                 <th scope="col" class="text-center">Variante</th>
@@ -12,25 +12,35 @@
             </tr>
         </thead>
         <tbody>
-            @for (kardex of kardexes; track kardex.id) {
-            <tr
-                [ngClass]="(kardex.direction == 'in') ? (kardex.comment === 'Reparado' ? 'table-warning' : 'table-success') : 'table-danger'">
-                <th class="text-center" scope="row">{{ kardex.variant.sku }}</th>
-                <td>{{ kardex?.variant?.product?.name }}</td>
-                @for (option_value of kardex.variant.option_values; track option_value.id) {
-                <td class="text-center">{{ option_value.value }}</td>
-                }
-                <td>{{ kardex?.comment }}</td>
-                <td class="text-center">{{ (kardex?.direction == 'in') ? 'Ingreso' : 'Salida' }}</td>
-                <td class="text-center">{{ kardex?.created_at | DateShopify }}</td>
-                <td class="text-center">{{ (kardex?.direction == 'in') ? '' : '-' }}{{ kardex?.quantity }}</td>
 
+            @if(kardexes.length == 0){
+            <tr>
+                <td colspan="7" class="text-center py-3">
+                    <p class="mt-3">No hay registros</p>
+                </td>
             </tr>
-            }
+            }@else{
+            @for (kardex of kardexes; track kardex.id) {
+                    <tr
+                        [ngClass]="(kardex.direction == 'in') ? (kardex.comment === 'Reparado' ? 'table-warning' : 'table-success') : 'table-danger'">
+                        <th class="text-center" scope="row">{{ kardex.variant.sku }}</th>
+                        <td>{{ kardex?.variant?.product?.name }}</td>
+                        @for (option_value of kardex.variant.option_values; track option_value.id) {
+                        <td class="text-center">{{ option_value.value }}</td>
+                        }
+                        <td>{{ kardex?.comment }}</td>
+                        <td class="text-center">{{ (kardex?.direction == 'in') ? 'Ingreso' : 'Salida' }}</td>
+                        <td class="text-center">{{ kardex?.created_at | DateShopify }}</td>
+                        <td class="text-center">{{ (kardex?.direction == 'in') ? '' : '-' }}{{ kardex?.quantity }}</td>
 
+                    </tr>
+                }
+            }
             <tr>
                 <td colspan="5"></td>
-                <td class="text-end"><h5 class="mt-3">{{ text_balance }}</h5></td>
+                <td class="text-end">
+                    <h6 class="mt-3">{{ text_balance }}</h6>
+                </td>
                 <td class="text-center">
                     <h5 class="mt-3">{{ kardex_summary.reception }}</h5>
                 </td>
@@ -40,21 +50,23 @@
                 <td colspan="7"></td>
             </tr>
             <tr>
-                <td colspan="7" class="text-center"><h6>Observaciones</h6></td>
-            </tr>
-
-            <tr class="table-danger">
-                <td colspan="6">Fallados</td>
-                <td class="text-center">{{ kardex_summary.fallados }}</td>
-            </tr>
-
-            <tr class="table-warning">
-                <td colspan="6">Reparados</td>
-                <td class="text-center">{{ kardex_summary.reparados }}</td>
+                <td colspan="7" class="text-center">
+                    <h6 class="my-3">Observaciones</h6>
+                </td>
             </tr>
 
             <tr>
-                <td colspan="6"><strong>Saldo (Deuda)</strong></td>
+                <td colspan="6" class="text-end">Fallados</td>
+                <td class="text-center table-danger">{{ kardex_summary.fallados }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="6" class="text-end">Reparados</td>
+                <td class="text-center table-warning">{{ kardex_summary.reparados }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="6" class="text-end"><strong>Saldo (Deuda)</strong></td>
                 <td class="text-center">
                     <h5 class="mt-3">{{ kardex_summary.saldo }}</h5>
                 </td>

@@ -2,19 +2,19 @@ import { CommonModule, JsonPipe } from '@angular/common';
 import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Product } from 'src/app/interfaces/product.interface';
-import { ShopifyImageThumbnailPipe } from 'src/app/views/shared/pipes/shopify/shopify-image-thumbnail.pipe';
+import { ShopifyImageThumbnailPipe } from '@shared/pipes/shopify/shopify-image-thumbnail.pipe';
 import { TwoDecimalsDirective } from '../../../../../../../core/directives/two-decimals.directive';
-import { ButtonSaveComponent } from 'src/app/views/shared/components/buttons/button-save/button-save.component';
+import { ButtonSaveComponent } from '@shared/components/buttons/button-save/button-save.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faSync, faSave } from '@fortawesome/free-solid-svg-icons';
 import { ShopifyProductService } from '../../../shopify.product.service';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { LoadingComponent } from 'src/app/views/shared/components/loading/loading.component';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { Fancybox } from '@fancyapps/ui';
-import { ShopifyImageLargePipe } from 'src/app/views/shared/pipes/shopify/shopify-image-large.pipe';
-import { ShopifyImageMediumPipe } from 'src/app/views/shared/pipes/shopify/shopify-image-medium.pipe';
-import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
+import { ShopifyImageLargePipe } from '@shared/pipes/shopify/shopify-image-large.pipe';
+import { ShopifyImageMediumPipe } from '@shared/pipes/shopify/shopify-image-medium.pipe';
+import { DateShopifyPipe } from '@shared/pipes/date-shopify.pipe';
 
 @Component({
   selector: 'tr[app-shopify-price-index-row]',

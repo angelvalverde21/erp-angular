@@ -1,8 +1,8 @@
 <ng-container [formGroup]="form">
 
-        <td class="text-center" scope="row" style="width: 100px;">
+    <td class="text-center" scope="row" style="width: 100px;">
         <app-input-group [mb]="0">
-            <input formControlName="quantity" (blur)="updateQuantity()" onclick="this.select()" type="text"
+            <input formControlName="quantity" (blur)="update()" onclick="this.select()" type="text"
                 class="form-control text-center" placeholder="quantity" aria-label="quantity"
                 aria-describedby="basic-quantity" />
         </app-input-group>
@@ -12,8 +12,16 @@
     <td class="text-center">{{ option_value.value }}</td>
     }
 
+    <td class="text-center">
+
+        <a data-fancybox="gallery" [attr.data-caption]="`${ manufacture_variant?.quantity}`"
+            [href]="manufacture_variant.variant?.product?.image?.url_medium">
+            <img [src]="manufacture_variant.variant?.product?.image?.url_thumbnail" class="me-2" height="45px" alt="">
+        </a>
+
+    </td>
     <td>{{ manufacture_variant.variant?.product?.name }}</td>
-    
+
     <td style="width: 125px;" class="text-center">
         @if(loading){
         <app-loading></app-loading>
@@ -21,6 +29,14 @@
 
         <fa-icon [icon]="faBarcode" class="me-3"></fa-icon> {{ manufacture_variant.variant?.sku }}
         }
+    </td>
+
+    <td style="width: 125px;">
+        <app-input-group [mb]="0">
+            <input formControlName="price" (blur)="update()" onclick="this.select()" type="text"
+                class="form-control text-center" placeholder="0.00" aria-label="Price"
+                aria-describedby="basic-Price" />
+        </app-input-group>
     </td>
 
 

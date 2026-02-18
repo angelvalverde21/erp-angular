@@ -5,10 +5,10 @@
             <tr>
                 <!-- <th class="text-center">#</th> -->
                 <!-- <th class="text-center"></th> -->
+                <th class="text-center">Total</th>
                 <th>Producto</th>
                 <th class="text-center">Gasto Total</th>
                 <th class="text-center">Costo</th>
-                <th class="text-center">Total Corte</th>
                 <th>Creado</th>
                 <th class="text-center">Fecha</th>
                 <th class="text-center">Acciones</th>
@@ -24,16 +24,16 @@
                 <!-- <td class="text-center">
                     <fa-icon [icon]="faScissors"></fa-icon>
                 </td> -->
-                <td>
+                <td class="text-center" style="width: 75px;">{{ manufacture.sum_products?? 0  }}</td>
+                <th>
                     <div class="name">{{ manufacture.name }}</div>
-                </td>
+                </th>
                 <td class="text-center">{{ manufacture.sum_purchases?? 0  | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</td>
                 <td class="text-center">{{ (manufacture.sum_products > 0) ? manufacture.sum_purchases / manufacture.sum_products : 0  | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
-                <td class="text-center">{{ manufacture.sum_products?? 0  }}</td>
                 <td>
                     {{ manufacture?.user?.name }}
                 </td>
-                <td>{{ manufacture.created_at | DateShopify }}</td>
+                <td class="text-center">{{ manufacture.created_at | DateShopify }}</td>
                 <td class="text-center" style="width: 50px;">
                     <app-button color="outline-dark" [icon]="faEdit"></app-button>
                 </td>

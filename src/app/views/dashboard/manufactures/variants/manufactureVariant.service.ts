@@ -46,9 +46,9 @@ export class ManufactureVariantService{
 
   }
 
-  updateQuantity(manufacture_id: number, manufacture_variant_id: number, data: any): Observable<any> {
+  update(manufacture_id: number, manufacture_variant_id: number, data: any): Observable<any> {
 
-    const url = `${this.baseUrl}/${manufacture_id}/variants/${manufacture_variant_id}/quantity`;
+    const url = `${this.baseUrl}/${manufacture_id}/variants/${manufacture_variant_id}`;
     // console.log("imprimiendo url de store");
     // console.log(url);
     return this.http.put(`${url}`, data);
