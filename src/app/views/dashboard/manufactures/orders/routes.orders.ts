@@ -21,7 +21,7 @@ export const routes: Routes = [
     path: ':order_id',
     loadComponent: () => import( './order-edit-page/order-edit-page.component' ).then((m) => m.OrderEditPageComponent),
     data: {
-      title: 'Producciones',
+      title: 'Ordenes de Compra',
       name: 'dashboard.manufacture.create', // 👈 nombre único
     }
   },

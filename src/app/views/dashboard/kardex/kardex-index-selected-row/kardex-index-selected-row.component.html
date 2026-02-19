@@ -3,6 +3,10 @@
         <fa-icon [icon]="faBarcode" class="me-3"></fa-icon> {{ variant.sku }}
     </td>
 
+    <td class="text-center">
+        <img [src]="variant?.product?.image?.url_thumbnail" height="75px" alt="">
+    </td>
+
     <td class="text-center">{{ variant?.product?.name }}</td>
 
     @for (option_value of variant.option_values; track option_value.id) {

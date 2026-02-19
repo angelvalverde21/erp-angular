@@ -3,7 +3,7 @@ import { ButtonComponent } from '@buttons/button/button.component';
 import { ButtonAddComponent } from '@buttons/button-add/button-add.component';
 import { ManufactureVariantRowComponent } from '../manufacture-variant-row/manufacture-variant-row.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBarcode } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode, faInbox } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { ManufactureVariantService } from '../manufactureVariant.service';
@@ -28,11 +28,12 @@ export class ManufactureVariantIndexComponent implements OnInit {
 
 
   faBarcode = faBarcode;
+  faInbox = faInbox;
 
   @Input() manufacture_variants: any;
   @Input() sum_products: number = 0;
   @Input() manufacture_id: number = 0;
-  @Input() text_button: string = 'Agregar Corte';
+  @Input() text_button: string = 'Agregar Producto';
 
   @Output() emitSumManufactureVariant = new EventEmitter<number>();
 

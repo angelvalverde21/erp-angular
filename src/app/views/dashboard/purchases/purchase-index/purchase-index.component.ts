@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef,
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { PurchaseIndexRowComponent } from '../purchase-index-row/purchase-index-row.component';
 import { CapitalizePipe } from '@shared/pipes/capitalize.pipe';
-import { faEdit, faCashRegister, faBagShopping } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faCashRegister, faBagShopping, faInbox } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import { PurchaseEditComponent } from '../purchase-edit/purchase-edit.component';
 import { GalleryComponent } from '@shared/components/gallery/gallery.component';
@@ -51,7 +51,8 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
   faEdit = faEdit;
   faCashRegister = faCashRegister;
   faBagShopping = faBagShopping;
-
+  faInbox = faInbox;  
+  
   reListPurchases(id: any) {
     this.purchases = this.purchases.filter((purchase) => purchase.id !== id);
     // console.log('Purchase with ID', id, 'has been removed. Updated purchases:', this.purchases);

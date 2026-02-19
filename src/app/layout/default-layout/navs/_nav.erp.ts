@@ -41,17 +41,30 @@ export const navErp: CustomNavData[] = [
         iconComponent: { name: 'cil-industry' },
         children: [
             {
-                name: 'Producciones',
-                url: 'dashboard/manufactures/productions',
-                icon: 'nav-icon-bullet',
+                name: 'Todos',
+                url: 'dashboard/manufactures',
+                icon: 'fas fa-gears',
+                class: 'children-custom',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
                 },
             },
             {
-                name: 'Ordenes de compra', url: 'dashboard/manufactures/orders', icon: 'nav-icon-bullet',
+                name: 'Producciones',
+                url: 'dashboard/manufactures/productions',
+                icon: 'fas fa-gears',
+                class: 'children-custom',
                 linkProps: {
-                    routerLinkActiveOptions: { exact: true }
+                    routerLinkActiveOptions: { exact: false }
+                },
+            },
+            {
+                name: 'Ordenes de compra', 
+                url: 'dashboard/manufactures/orders', 
+                icon: 'fa-solid fa-boxes-stacked', 
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: false }
                 },
             },
         ],
@@ -101,19 +114,22 @@ export const navErp: CustomNavData[] = [
         iconComponent: { name: 'cil-barcode' },
         children: [
             {
-                name: 'productos', url: 'dashboard/products',
+                name: 'productos',
+                url: 'dashboard/products',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
                 }
             },
             {
-                name: 'Colecciones', url: 'dashboard/collections',
+                name: 'Colecciones',
+                url: 'dashboard/collections',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
                 }
             },
             {
-                name: 'Inventario', url: 'dashboard/products/inventory',
+                name: 'Inventario',
+                url: 'dashboard/products/inventory',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
                 }
@@ -123,11 +139,11 @@ export const navErp: CustomNavData[] = [
     },
     {
         name: 'Caja chica',
-        url: 'dashboard/pettycashes',
-        iconComponent: { name: 'cil-wallet' },
+        url: '/dashboard/pettycashes',
+        icon: 'fa-solid fa-comments-dollar',
         children: [
             {
-                name: 'Todos', url: 'dashboard/pettycashes', icon: 'nav-icon-bullet',
+                name: 'Todos', url: '/dashboard/pettycashes', icon: 'nav-icon-bullet',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
                 }

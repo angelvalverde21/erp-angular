@@ -1,5 +1,5 @@
-import { Component, effect, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
 import {
@@ -52,99 +52,89 @@ function isOverflown(element: HTMLElement) {
     IconDirective,
   ],
 })
-
 export class DefaultLayoutComponent implements OnInit {
 
   public navItems: INavData[] = [];
 
-  storeName: string = ""
+  storeName: string = '';
 
   user: any;
 
-  constructor(private _base: BaseService, private router: Router) {
+  constructor(
+    private _base: BaseService,
+    private router: Router
+  ) { }
 
+  @HostListener('document:click', ['$event'])
+  onNavGroupClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const toggle = target.closest('.nav-group-toggle') as HTMLElement;
+
+    if (!toggle) return;
+
+    const navGroup = toggle.closest('.nav-group');
+    const navItems = navGroup?.querySelector('.nav-group-items') as HTMLElement;
+
+    if (!navItems) return;
+
+    const isClosed = navItems.offsetHeight === 0;
+
+    // ✅ Solo navegar si está cerrado
+    if (isClosed) {
+      const firstChildUrl = toggle.getAttribute('data-first-child');
+      if (firstChildUrl) {
+        this.router.navigateByUrl(firstChildUrl);
+      }
+    }
   }
+
+
 
   ngOnInit(): void {
 
-    // const currentUrl = this.router.url;
-
-    //Obtengo el usuario de localStorage
+    // Obtengo el usuario de localStorage
     this.user = JSON.parse(localStorage.getItem('user') || '{}');
 
-
-    console.log(this.user);
-    
-
-    //Obtengo sus roles
+    // Obtengo sus roles
     const localroles = this.user.roles || [];
 
-    //Filtro en el menu solo los roles permitidos
+    // Filtro en el menu solo los roles permitidos
     this.navItems = navItems.filter((navItem: any) => {
-      // Si item no tiene roles definidos, osea no hay restriccion se muestra de frente
-
+      // Si item no tiene roles definidos, no hay restriccion -> se muestra
       if (!navItem.roles) return true;
-
-      // En caso haya restriccion, Si alguno de los roles del user coincide -> mostrar
-      // if (localroles.includes('master') || localroles.includes('ceo')) {
-      //   console.log("inclye master o ceo");
-        
-      //   return true;
-      // }
-
-      return navItem.roles.some((role: any) => localroles.includes(role)); //Devuelve verdadero o falso segun eso quita o no un item del navItems
-      // const result = navItem.roles.some((role:any) => roles.includes(role));
-      // console.log('Resultado permiso:', result);
-      // return result;
-
+      // Si alguno de los roles del user coincide -> mostrar
+      return navItem.roles.some((role: any) => localroles.includes(role));
     });
 
-    // this.navItems = navItems;
-
-    // const store = this._base.store;
-
-    // if (store) {
-    //   this.navItems = this.addToStore([...this.navItems], store);
-    //   this.storeName = store;
-    // } else {
-    //   // Si el store aún no está cargado, esperar a que esté listo
-    //   effect(() => {
-    //     const currentStore = this._base.store;
-    //     if (currentStore) {
-    //       this.navItems = this.addToStore([...this.navItems], currentStore);
-    //       this.storeName = currentStore;
-    //     }
-    //   });
-    // }
-
-    
     this.storeName = this._base.storeName!;
     this.navItems = this.addToStore([...this.navItems], this.storeName);
-    console.log(this.storeName);
-
-    // this.navItems = this.setBasePath(navItems);
   }
 
-  addToStore(navItems: CustomNavData[], storeName: string) {
+  addToStore(navItems: CustomNavData[], storeName: string): CustomNavData[] {
 
     navItems.forEach((item: CustomNavData) => {
 
+      // Actualiza la URL del ítem con el storeName
       if (typeof item.url === 'string' && item.url.trim() !== '') {
-        // Evita duplicar el store si ya está presente
         if (!item.url.startsWith(`/${storeName}/`)) {
           item.url = `/${storeName}/${item.url.replace(/^\//, '')}`;
         }
       }
 
-      // Procesar recursivamente los hijos
+      // Procesar recursivamente los hijos primero
       if (item.children && item.children.length > 0) {
         this.addToStore(item.children, storeName);
+
+        // 👇 Actualiza data-first-child DESPUÉS de procesar hijos
+        // para que tenga la URL ya actualizada con el storeName
+        if (item.attributes) {
+          item.attributes['data-first-child'] = item.children[0].url as string;
+        }
       }
 
     });
 
     return navItems;
-
   }
 
 }

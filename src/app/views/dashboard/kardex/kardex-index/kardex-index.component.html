@@ -3,6 +3,7 @@
         <thead>
             <tr class="table-secondary">
                 <th scope="col" class="text-center"><fa-icon [icon]="faBarcode"></fa-icon></th>
+                <th scope="col"></th>
                 <th scope="col">Nombre</th>
                 <th scope="col" class="text-center">Variante</th>
                 <th scope="col" class="text-center">Observaciones</th>
@@ -24,6 +25,9 @@
                     <tr
                         [ngClass]="(kardex.direction == 'in') ? (kardex.comment === 'Reparado' ? 'table-warning' : 'table-success') : 'table-danger'">
                         <th class="text-center" scope="row">{{ kardex.variant.sku }}</th>
+                        <td class="text-center">
+                            <img [src]="kardex?.variant?.product?.image?.url_thumbnail" height="50px">
+                        </td>
                         <td>{{ kardex?.variant?.product?.name }}</td>
                         @for (option_value of kardex.variant.option_values; track option_value.id) {
                         <td class="text-center">{{ option_value.value }}</td>
@@ -37,7 +41,7 @@
                 }
             }
             <tr>
-                <td colspan="5"></td>
+                <td colspan="6"></td>
                 <td class="text-end">
                     <h6 class="mt-3">{{ text_balance }}</h6>
                 </td>
@@ -46,7 +50,7 @@
                 </td>
             </tr>
 
-            <tr>
+            <!-- <tr>
                 <td colspan="7"></td>
             </tr>
             <tr>
@@ -70,7 +74,7 @@
                 <td class="text-center">
                     <h5 class="mt-3">{{ kardex_summary.saldo }}</h5>
                 </td>
-            </tr>
+            </tr> -->
 
         </tbody>
     </table>

@@ -157,7 +157,7 @@ export class OrderEditPageComponent implements OnInit, OnDestroy {
         this.kardex_summary = this._kardex.calculate(this.kardexes);
 
         this.widget_summary = {
-          cost: (resp.data.quantity_total > 0 ) ? resp.data.purchase_total / resp.data.quantity_total : 0,
+          cost: (resp.data.quantity_total > 0) ? resp.data.purchase_total / resp.data.quantity_total : 0,
           sum_products: resp.data.quantity_total ? resp.data.quantity_total : 0,
           sum_purchases: resp.data.purchase_total ? resp.data.purchase_total : 0,
           reception: this.kardex_summary.reception
@@ -240,6 +240,10 @@ export class OrderEditPageComponent implements OnInit, OnDestroy {
     this.kardexes = [...this.kardexes, ...event];
 
     this.kardex_summary = this._kardex.calculate(this.kardexes);
+
+    Swal.close();
+    this.closeModal();
+
   }
 
 
@@ -282,7 +286,7 @@ export class OrderEditPageComponent implements OnInit, OnDestroy {
 
   receiveKardexSummary(kardex_summary: any) {
     console.log("Received kardex summary:", kardex_summary);
-    
+
     this.kardex_summary = kardex_summary;
   }
 

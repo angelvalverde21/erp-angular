@@ -2,7 +2,7 @@
     <app-loading></app-loading>
 }@else{
 
-<app-head-page title="Ordenes de compra">
+<app-head-page title="Ordenes de compra" [icon]="faBoxesStacked">
     <app-button-link [path]="['./create']">+ Orden de Compra</app-button-link>
 </app-head-page>
 
@@ -14,7 +14,7 @@
 
     <div class="card-body p-0">
         @if(manufactures?.length > 0){
-            <app-manufacture-index [manufactures]="manufactures"></app-manufacture-index>
+            <app-order-index [manufactures]="manufactures"></app-order-index>
         }@else{
             <p class="p-4">No se cuenta con registro de ordenes de compra</p>
         }

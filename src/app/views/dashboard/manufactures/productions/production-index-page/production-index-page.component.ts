@@ -8,6 +8,8 @@ import { UserHeadTableComponent } from '../../../users/shared/user-head-table/us
 import { Subject, takeUntil } from 'rxjs';
 import { ManufactureProductionService } from '../production.service';
 import Swal from 'sweetalert2';
+import { ProductionIndexComponent } from '../production-index/production-index.component';
+import { faGears } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-production-index-page',
@@ -17,7 +19,8 @@ import Swal from 'sweetalert2';
     ButtonBackComponent,
     LoadingComponent,
     ButtonLinkComponent,
-    UserHeadTableComponent
+    UserHeadTableComponent,
+    ProductionIndexComponent
   ],
   templateUrl: './production-index-page.component.html',
   styleUrl: './production-index-page.component.scss'
@@ -26,7 +29,7 @@ import Swal from 'sweetalert2';
 export class ProductionIndexPageComponent implements OnInit, OnDestroy {
 
   manufactures: any;
-
+  faGears = faGears;
   loading: boolean = false;
 
   constructor(

@@ -2,7 +2,7 @@
     <app-loading></app-loading>
 }@else{
 
-<app-head-page title="Lista de Producciones">
+<app-head-page title="Producciones" [icon]="faGears">
     <app-button-link [path]="['./create']">Crear Producción</app-button-link>
 </app-head-page>
 
@@ -14,7 +14,7 @@
 
     <div class="card-body p-0">
         @if(manufactures?.length > 0){
-            <app-manufacture-index [manufactures]="manufactures"></app-manufacture-index>
+            <app-production-index [manufactures]="manufactures"></app-production-index>
         }@else{
             <p class="p-4">No se cuenta con registro de manufactures</p>
         }

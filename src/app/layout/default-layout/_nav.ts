@@ -3,8 +3,9 @@ import { navShopify } from './navs/_nav.shopify';
 import { navMercadoPago } from './navs/_nav.mercadopago';
 import { CustomNavData } from '../../interfaces/nav.interface';
 import { navConfig } from './navs/_nav.config';
+import { buildNav } from './navs/build.nav';
 
-export const navItems: CustomNavData[] = [
+export const navItems: CustomNavData[] = buildNav([
 
   {
     name: 'Dashboard',
@@ -20,7 +21,7 @@ export const navItems: CustomNavData[] = [
     title: true,
     name: 'Pasarelas',
   },
-  ...navMercadoPago,
+  ...navMercadoPago, 
   {
     title: true,
     name: 'Links',
@@ -33,4 +34,4 @@ export const navItems: CustomNavData[] = [
     attributes: { target: '_blank' }
   }
 
-];
+]);

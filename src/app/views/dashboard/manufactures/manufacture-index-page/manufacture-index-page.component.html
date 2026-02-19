@@ -2,14 +2,16 @@
     <app-loading></app-loading>
 }@else{
 
-<app-head-page title="Lista de Producciones">
-    <app-button-link [path]="['./create']">Crear Producción</app-button-link>
-</app-head-page>
+<!-- <app-head-page title="Todos"> -->
+    <!-- <app-button-link [path]="['./create']">Crear Producción</app-button-link> -->
+<!-- </app-head-page> -->
 
 <div class="card">
 
     <div class="card-header py-3">
-        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)"  type="manufacture" [button_active]="false"></app-user-head-table>
+        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)"  type="manufacture" [button_active]="false">
+            <h6>Compras y Producciones</h6>
+        </app-user-head-table>
     </div>
 
     <div class="card-body p-0">

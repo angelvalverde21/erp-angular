@@ -8,6 +8,8 @@ import { UserHeadTableComponent } from '../../../users/shared/user-head-table/us
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ManufactureOrderService } from '../order.service';
+import { OrderIndexComponent } from '../order-index/order-index.component';
+import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-order-index-page',
@@ -17,7 +19,8 @@ import { ManufactureOrderService } from '../order.service';
     ButtonBackComponent,
     LoadingComponent,
     ButtonLinkComponent,
-    UserHeadTableComponent
+    UserHeadTableComponent,
+    OrderIndexComponent
   ],
   templateUrl: './order-index-page.component.html',
   styleUrl: './order-index-page.component.scss'
@@ -26,7 +29,7 @@ import { ManufactureOrderService } from '../order.service';
 export class OrderIndexPageComponent implements OnInit, OnDestroy {
 
   manufactures: any;
-
+  faBoxesStacked = faBoxesStacked;
   loading: boolean = false;
 
   constructor(

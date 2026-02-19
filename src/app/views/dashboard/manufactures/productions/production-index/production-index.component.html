@@ -5,8 +5,7 @@
             <tr>
                 <!-- <th class="text-center">#</th> -->
                 <!-- <th class="text-center"></th> -->
-                <th class="text-center"></th>
-                <th>Tipo</th>
+                <!-- <th class="text-center">Tipo</th> -->
                 <th class="text-center">Total</th>
                 <th>Producto</th>
                 <th class="text-center">Gasto Total</th>
@@ -26,26 +25,13 @@
                 <!-- <td class="text-center">
                     <fa-icon [icon]="faScissors"></fa-icon>
                 </td> -->
-
-                <td class="text-center" style="width: 75px;">
-                    @if(manufacture.type === 'production'){
-                    <fa-icon [icon]="faGears" style="opacity: 0.5;"></fa-icon>
-                    }@else{
-                    <fa-icon [icon]="faBoxesStacked" style="opacity: 0.5;"></fa-icon>
-                    }
-                </td>
-
-                <td style="width: 100px;">
-                    <span>{{ manufacture.type }}</span>
-                </td>
-                <td class="text-center" style="width: 75px;">{{ manufacture.sum_products?? 0 }}</td>
+                <!-- <td class="text-center" style="width: 75px;">{{ manufacture.type  }}</td> -->
+                <td class="text-center" style="width: 75px;">{{ manufacture.sum_products?? 0  }}</td>
                 <th>
                     <div class="name">{{ manufacture.name }}</div>
                 </th>
-                <td class="text-center">{{ manufacture.sum_purchases?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}
-                </td>
-                <td class="text-center">{{ (manufacture.sum_products > 0) ? manufacture.sum_purchases /
-                    manufacture.sum_products : 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+                <td class="text-center">{{ manufacture.sum_purchases?? 0  | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</td>
+                <td class="text-center">{{ (manufacture.sum_products > 0) ? manufacture.sum_purchases / manufacture.sum_products : 0  | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
                 <td>
                     {{ manufacture?.user?.name }}
                 </td>

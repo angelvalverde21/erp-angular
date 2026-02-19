@@ -240,6 +240,10 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
     this.kardexes = [...this.kardexes, ...event];
 
     this.kardex_summary = this._kardex.calculate(this.kardexes);
+
+    // this.modal.close();
+    Swal.close();
+    this.closeModal();
   }
 
 

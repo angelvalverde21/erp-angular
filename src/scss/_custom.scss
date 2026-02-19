@@ -131,3 +131,11 @@ input{
 .widget-manufacture{
   min-height: 120px;
 }
+
+.children-custom a{
+  margin-left: 1rem !important;
+}
+
+.children-custom a .nav-icon {
+  font: 1em sans-serif;
+}

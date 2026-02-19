@@ -18,14 +18,14 @@
         </div>
 
         <div class="col-lg-4 col-12">
-            <div role="button" class="pointer" (click)="accordion.toggle('products')">
-                <app-widget-products [total_products]="widget_summary.sum_products"></app-widget-products>
-            </div>
+            <app-widget-products [total_products]="widget_summary.sum_products"></app-widget-products>
+
         </div>
 
         <div class="col-lg-4 col-12">
             <div role="button" class="pointer" (click)="accordion.toggle('receptions')">
-                <app-widget-receptions [total_receptions]="kardex_summary?.reception" [saldo]="kardex_summary.saldo"></app-widget-receptions>
+                <app-widget-receptions [total_receptions]="kardex_summary?.reception"
+                    [saldo]="kardex_summary.saldo"></app-widget-receptions>
             </div>
         </div>
 
@@ -34,10 +34,22 @@
 
 <app-manufacture-widgets [widget]="widget"></app-manufacture-widgets>
 
+<div class="card mb-3">
+
+    <div class="card-body">
+
+        <app-manufacture-variant-index [text_button]="'Agregar Producto'" [manufacture_id]="manufacture.id"
+            (emitSumManufactureVariant)="receiveSumManufactureVariant($event)"
+            [sum_products]="widget_summary.sum_products"
+            [manufacture_variants]="manufacture_variants"></app-manufacture-variant-index>
+    </div>
+
+</div>
+
 <div ngbAccordion [closeOthers]="true" [destroyOnHide]="false" #accordion="ngbAccordion">
 
     <!-- Products (corte) -->
-    <div ngbAccordionItem [collapsed]="false" ngbAccordionItem="products">
+    <!-- <div ngbAccordionItem [collapsed]="false" ngbAccordionItem="products">
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
                 <span style="font-size: 0.85rem;"><fa-icon [icon]="faBarcode" class="me-2"></fa-icon>Pedido</span>
@@ -47,13 +59,12 @@
             <div ngbAccordionBody>
                 <ng-template>
 
-                    <app-manufacture-variant-index [text_button]="'Agregar Producto'" [manufacture_id]="manufacture.id" (emitSumManufactureVariant)="receiveSumManufactureVariant($event)" [sum_products]="widget_summary.sum_products"
-                        [manufacture_variants]="manufacture_variants"></app-manufacture-variant-index>
+
                 </ng-template>
 
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton>
@@ -95,8 +106,8 @@
                             <app-button-add color="success text-white" (click)="openVerticallyCentered(ingreso)"
                                 class="mb-3 me-2">Ingreso</app-button-add>
 
-                            <app-button-add color="warning text-white" (click)="openVerticallyCentered(reingreso)"
-                                class="mb-3 me-2">Re Ingreso (Reparados)</app-button-add>
+                            <!-- <app-button-add color="warning text-white" (click)="openVerticallyCentered(reingreso)"
+                                class="mb-3 me-2">Re Ingreso (Reparados)</app-button-add> -->
 
                             <app-button-trash [me]="true" [icon]="faMinus" (click)="openVerticallyCentered(salida)"
                                 class="mb-3"> Salida</app-button-trash>
@@ -105,7 +116,8 @@
 
                     </div>
 
-                    <app-kardex-index [kardexes]="kardexes" (emitKardexSummary)="receiveKardexSummary($event)"></app-kardex-index>
+                    <app-kardex-index [kardexes]="kardexes"
+                        (emitKardexSummary)="receiveKardexSummary($event)"></app-kardex-index>
 
                 </ng-template>
             </div>
