@@ -43,7 +43,7 @@ export const navErp: CustomNavData[] = [
             {
                 name: 'Todos',
                 url: 'dashboard/manufactures',
-                icon: 'fas fa-gears',
+                icon: 'fa-solid fa-border-all',
                 class: 'children-custom',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
