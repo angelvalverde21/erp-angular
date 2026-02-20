@@ -7,8 +7,6 @@ import { ButtonLinkComponent } from '@shared/components/buttons/button-link/butt
 import { UserHeadTableComponent } from '../../../users/shared/user-head-table/user-head-table.component';
 import { Subject, takeUntil } from 'rxjs';
 import { ManufactureProductionService } from '../production.service';
-import Swal from 'sweetalert2';
-import { ProductionIndexComponent } from '../production-index/production-index.component';
 import { faGears } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -20,7 +18,6 @@ import { faGears } from '@fortawesome/free-solid-svg-icons';
     LoadingComponent,
     ButtonLinkComponent,
     UserHeadTableComponent,
-    ProductionIndexComponent
   ],
   templateUrl: './production-index-page.component.html',
   styleUrl: './production-index-page.component.scss'

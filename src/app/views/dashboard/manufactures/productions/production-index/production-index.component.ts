@@ -5,6 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faScissors, faTape, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from 'src/app/views/shared/components/buttons/button/button.component';
 import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
+import { ManufactureIndexRowComponent } from '../../manufacture-index-row/manufacture-index-row.component';
 
 @Component({
   selector: 'app-production-index',
@@ -12,7 +13,8 @@ import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
     DateShopifyPipe,
     ButtonComponent,
     FontAwesomeModule,
-    CommonModule
+    CommonModule,
+    ManufactureIndexRowComponent
   ],
   templateUrl: './production-index.component.html',
   styleUrl: './production-index.component.scss'

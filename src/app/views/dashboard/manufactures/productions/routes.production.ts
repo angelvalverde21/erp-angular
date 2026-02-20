@@ -17,6 +17,13 @@ export const routes: Routes = [
       name: 'dashboard.manufacture.create', // 👈 nombre único
     }
   },
+    {
+    path: ':production_id/receptions',
+    loadComponent: () => import( './production-reception-page/production-reception-page.component' ).then((m) => m.ProductionReceptionPageComponent),
+    data: {
+      title: 'Recepciones',
+    }
+  },
   {
     path: ':production_id',
     loadComponent: () => import( './production-edit-page/production-edit-page.component' ).then((m) => m.ProductionEditPageComponent),

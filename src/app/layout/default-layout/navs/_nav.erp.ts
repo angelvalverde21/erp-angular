@@ -36,6 +36,23 @@ export const navErp: CustomNavData[] = [
     //     ]
     // },
     {
+        name: 'Recepciones',
+        url: 'dashboard/manufactures',
+        iconComponent: { name: 'cil-industry' },
+        children: [
+            {
+                name: 'Todos',
+                url: 'dashboard/manufactures',
+                icon: 'fa-solid fa-border-all',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+        ],
+        roles: ['inventory']
+    },
+    {
         name: 'Fabricacion',
         url: 'dashboard/manufactures',
         iconComponent: { name: 'cil-industry' },
@@ -59,9 +76,9 @@ export const navErp: CustomNavData[] = [
                 },
             },
             {
-                name: 'Ordenes de compra', 
-                url: 'dashboard/manufactures/orders', 
-                icon: 'fa-solid fa-boxes-stacked', 
+                name: 'Ordenes de compra',
+                url: 'dashboard/manufactures/orders',
+                icon: 'fa-solid fa-boxes-stacked',
                 class: 'children-custom',
                 linkProps: {
                     routerLinkActiveOptions: { exact: false }

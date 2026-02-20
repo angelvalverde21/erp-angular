@@ -1,0 +1,172 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+
+
+<app-head-page [title]="`${manufacture?.name}`" [icon]="faUser">
+    <!-- <app-button-link [path]="['../create']">+ Orden de compra</app-button-link> -->
+    <!-- {{ manufacture.user.name }} -->
+</app-head-page>
+
+<!-- <app-manufacture-edit [manufacture]="manufacture" [type]="'order'"></app-manufacture-edit> -->
+
+
+<!-- <app-manufacture-widgets [widget]="widget"></app-manufacture-widgets> -->
+
+<div class="row">
+
+
+    <div class="col-lg-6 col-6">
+
+        <div class="card mb-3 bg-success-subtle d-none d-sm-block">
+            <div class="card-body mt-3">
+                <div class="action-card card-recepcion d-flex justify-content-between align-items-center">
+                    <div class="action-card-icon" style="width: 50px;">
+                        <fa-icon [icon]="faCaretDown" style="font-size: 2rem;"></fa-icon>
+                    </div>
+                    <div class="action-card-content w-100">
+                        <button type="button"
+                            class="btn btn-success text-white mb-2 d-flex justify-content-between align-items-center"
+                            (click)="openVerticallyCentered(ingreso)">
+                            <fa-icon [icon]="faPlus" class="me-2"></fa-icon>
+                            <span>ENTRADA</span>
+                        </button>
+                        <p class="action-card-desc my-0">Registrar Entrada</p>
+                    </div>
+                    <div class="action-card-arrow" style="width: 50px;">
+                        <fa-icon [icon]="faChevronRight"></fa-icon>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <button type="button"
+            class="btn btn-success w-100 text-white mb-2 d-flex justify-content-center align-items-center d-block d-sm-none"
+            (click)="openVerticallyCentered(ingreso)">
+            <fa-icon [icon]="faPlus" class="me-2"></fa-icon>
+            <span>ENTRADA</span>
+        </button>
+
+    </div>
+
+    <div class="col-lg-6 col-6">
+        <div class="card mb-3 bg-danger-subtle d-none d-sm-block">
+            <div class="card-body mt-3">
+                <div class="action-card card-recepcion d-flex justify-content-between align-items-center">
+                    <div class="action-card-icon" style="width: 50px;">
+                        <fa-icon [icon]="faCaretUp" style="font-size: 2rem;"></fa-icon>
+                    </div>
+                    <div class="action-card-content w-100">
+                        <button type="button"
+                            class="btn btn-danger text-white mb-2 d-flex justify-content-between align-items-center"
+                            (click)="openVerticallyCentered(salida)">
+                            <fa-icon [icon]="faMinus" class="me-2"></fa-icon>
+                            <span>SALIDA</span>
+                        </button>
+                        <p class="action-card-desc my-0">Registrar Salida</p>
+                    </div>
+                    <div class="action-card-arrow" style="width: 50px;">
+                        <fa-icon [icon]="faChevronRight"></fa-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-danger w-100 text-white mb-3 d-flex justify-content-center align-items-center d-block d-sm-none"
+            (click)="openVerticallyCentered(salida)">
+            <fa-icon [icon]="faMinus" class="me-2"></fa-icon>
+            <span>SALIDA</span>
+        </button>
+    </div>
+
+</div>
+
+<div class="card mb-3">
+
+    <div class="card-body">
+        <app-kardex-index [kardexes]="kardexes" (emitKardexSummary)="receiveKardexSummary($event)"></app-kardex-index>
+
+    </div>
+
+</div>
+<!--
+<div class="card mb-3">
+
+    <div class="card-body">
+
+        <div class="bg-white py-3 d-flex justify-content-between align-items-center">
+
+
+            <span class="ms-3"><fa-icon [icon]="faRightLeft" class="me-2"></fa-icon>Entrega y
+                recepcion</span>
+
+            <div class="buttons d-flex justify-content-end align-items-center bt-sm">
+
+                <app-button-add color="success text-white" (click)="openVerticallyCentered(ingreso)"
+                    class="mb-3 me-2">Ingreso</app-button-add>
+
+                <app-button-add color="warning text-white" (click)="openVerticallyCentered(reingreso)"
+                                class="mb-3 me-2">Re Ingreso (Reparados)</app-button-add>
+
+                <app-button-trash [me]="true" [icon]="faMinus" (click)="openVerticallyCentered(salida)" class="mb-3">
+                    Salida</app-button-trash>
+
+            </div>
+
+        </div>
+
+        <app-kardex-index [kardexes]="kardexes" (emitKardexSummary)="receiveKardexSummary($event)"></app-kardex-index>
+
+    </div>
+
+</div> -->
+
+
+
+<!-- Agregar Compras -->
+
+<!-- <app-head-page title="Compras" [icon]="faBagShopping">
+</app-head-page> -->
+
+<!-- Modal -->
+
+
+
+<ng-template #ingreso let-modal>
+    <div class="modal-header bg-success text-white">
+        <h6 class="modal-title">+ Ingreso de productos</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-kardex-register-in [variants]="variants" [kardexable_type]="'manufacture'" [kardexable_id]="manufacture.id"
+            (emitKardexes)="receiveKardexes($event)"></app-kardex-register-in>
+    </div>
+
+</ng-template>
+
+<ng-template #reingreso let-modal>
+    <div class="modal-header bg-warning text-white">
+        <h6 class="modal-title">+ Re Ingreso (Reparados)</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-kardex-register-re-in [variants]="variants" [kardexable_type]="'manufacture'"
+            [kardexable_id]="manufacture.id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-re-in>
+    </div>
+
+</ng-template>
+
+<ng-template #salida let-modal>
+    <div class="modal-header bg-danger text-white">
+        <h6 class="modal-title">- Salida de productos</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-kardex-register-out [variants]="variants" [kardexable_type]="'manufacture'"
+            [kardexable_id]="manufacture.id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-out>
+
+    </div>
+
+</ng-template>
+
+}

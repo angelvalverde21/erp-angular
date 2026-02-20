@@ -74,25 +74,52 @@ export class ManufactureVariantRowComponent implements OnDestroy, OnInit {
 
   removeManufactureVariant(manufacture_variant_id: number, manufacture_id: number) {
 
-    this.removeLoading = true;
 
-    this._manufactureVariantService.destroy(manufacture_variant_id, manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podrás deshacer esta acción",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'No, cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Acción para eliminar el elemento
 
-      next: (resp: any) => {
+        this.removeLoading = true;
 
-        console.log(resp);
-        this.removeLoading = false;
-        this.emitDeleteManufactureVariantId.emit(manufacture_variant_id);
+        this._manufactureVariantService.destroy(manufacture_variant_id, manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
 
-      },
+          next: (resp: any) => {
 
-      error: (error: any) => {
-        this.loading = false;
-        Swal.fire('Error', 'Ocurrió un problema al eliminar el registro. Inténtalo nuevamente.', 'error');
-        console.error(error);
-      },
+            console.log(resp);
+            this.removeLoading = false;
+            this.emitDeleteManufactureVariantId.emit(manufacture_variant_id);
 
+            Swal.fire(
+              'Eliminado!',
+              'El elemento ha sido eliminado.',
+              'success'
+            );
+
+          },
+
+          error: (error: any) => {
+            this.loading = false;
+            Swal.fire('Error', 'Ocurrió un problema al eliminar el registro. Inténtalo nuevamente.', 'error');
+            console.error(error);
+          },
+
+        });
+
+
+      }
     });
+
+
+
 
     // Aquí puedes agregar la lógica para eliminar el variante del manufacture_variants
   }
@@ -154,7 +181,7 @@ export class ManufactureVariantRowComponent implements OnDestroy, OnInit {
   update() {
 
     console.log(this.form.value);
-    
+
 
     console.log("click en update");
 
@@ -176,7 +203,7 @@ export class ManufactureVariantRowComponent implements OnDestroy, OnInit {
       },
 
       error: (error: any) => {
-        Swal.fire('Error', 'Debe especificar una cantidad.', 'error');
+        // Swal.fire('Error', 'Debe especificar una cantidad.', 'error');
         console.error(error);
         this.loading = false;
         this.emitUpdatedQuantity.emit(false);

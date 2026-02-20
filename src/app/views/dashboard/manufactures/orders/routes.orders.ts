@@ -6,7 +6,6 @@ export const routes: Routes = [
     loadComponent: () => import( './order-index-page/order-index-page.component' ).then((m) => m.OrderIndexPageComponent),
     data: {
       title: 'Todos',
-      name: 'dashboard.manufacture.index', // 👈 nombre único
     }
   },
   {
@@ -14,7 +13,14 @@ export const routes: Routes = [
     loadComponent: () => import( './order-create-page/order-create-page.component' ).then((m) => m.OrderCreatePageComponent),
     data: {
       title: 'Create',
-      name: 'dashboard.manufacture.create', // 👈 nombre único
+    }
+  },
+
+  {
+    path: ':order_id/receptions',
+    loadComponent: () => import( '../receptions/receptions-page/receptions-page.component' ).then((m) => m.ReceptionsPageComponent),
+    data: {
+      title: 'Recepciones',
     }
   },
   {
@@ -22,8 +28,6 @@ export const routes: Routes = [
     loadComponent: () => import( './order-edit-page/order-edit-page.component' ).then((m) => m.OrderEditPageComponent),
     data: {
       title: 'Ordenes de Compra',
-      name: 'dashboard.manufacture.create', // 👈 nombre único
     }
   },
-
 ];

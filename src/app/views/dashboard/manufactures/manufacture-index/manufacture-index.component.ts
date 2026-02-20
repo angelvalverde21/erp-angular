@@ -5,46 +5,22 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faScissors, faTape, faEdit, faGears, faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from 'src/app/views/shared/components/buttons/button/button.component';
 import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
+import { ManufactureIndexRowComponent } from '../manufacture-index-row/manufacture-index-row.component';
 
 
 @Component({
   selector: 'app-manufacture-index',
   imports: [
-    DateShopifyPipe,
-    ButtonComponent,
-    FontAwesomeModule,
-    CommonModule,
-    FontAwesomeModule
+    ManufactureIndexRowComponent
   ],
   templateUrl: './manufacture-index.component.html',
   styleUrl: './manufacture-index.component.scss'
 })
 export class ManufactureIndexComponent {
 
-  faScissors = faScissors;
-  faTape = faTape;
-  faEdit = faEdit;
 
-  faGears = faGears;
-  faBoxesStacked = faBoxesStacked;
   
   @Input() manufactures: any; 
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
 
-  getManufactureId(manufacture: any) {
-
-
-    if(manufacture.type == 'production') {
-      this.router.navigate(['productions', manufacture.id], { relativeTo: this.route });
-    } else {
-      this.router.navigate(['orders', manufacture.id], { relativeTo: this.route });
-    }
-    
-    // this.router.navigate([manufacture.id], { relativeTo: this.route });
-
-  }
 }

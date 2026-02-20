@@ -6,9 +6,7 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { UserHeadTableComponent } from '../../../users/shared/user-head-table/user-head-table.component';
 import { Subject, takeUntil } from 'rxjs';
-import Swal from 'sweetalert2';
 import { ManufactureOrderService } from '../order.service';
-import { OrderIndexComponent } from '../order-index/order-index.component';
 import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -20,7 +18,6 @@ import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
     LoadingComponent,
     ButtonLinkComponent,
     UserHeadTableComponent,
-    OrderIndexComponent
   ],
   templateUrl: './order-index-page.component.html',
   styleUrl: './order-index-page.component.scss'

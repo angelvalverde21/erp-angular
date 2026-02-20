@@ -15,6 +15,7 @@ import { InputGroupComponent } from '@components/form/input-group/input-group.co
 import { VariantSearchComponent } from '../../../products/variants/variant-search/variant-search.component';
 import { ManufactureVariantService } from '../../variants/manufactureVariant.service';
 import { ManufactureVariantIndexComponent } from '../../variants/manufacture-variant-index/manufacture-variant-index.component';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonAddComponent } from '@buttons/button-add/button-add.component';
 import { ManufactureWidgetsComponent } from '../../shared/manufacture-widgets/manufacture-widgets.component';
@@ -33,14 +34,14 @@ import { WidgetPurchasesComponent } from '../../shared/widgets/widget-purchases/
 import { WidgetReceptionsComponent } from '../../shared/widgets/widget-receptions/widget-receptions.component';
 import { KardexService } from '../../../kardex/kardex.service';
 import { ManufactureProductionService } from '../../productions/production.service';
-import { ManufactureOrderService } from '../order.service';
+import { ManufactureOrderService } from '../../orders/order.service';
 import { StoreService } from '../../../../stores/store.service';
 import { BaseService } from '../../../../base.service';
-import { OrderWidgetComponent } from '../order-widget/order-widget.component';
+import { OrderWidgetComponent } from '../../orders/order-widget/order-widget.component';
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-order-edit-page',
+  selector: 'app-receptions-page',
   imports: [
     ManufactureEditComponent,
     LoadingComponent,
@@ -51,6 +52,7 @@ import { OrderWidgetComponent } from '../order-widget/order-widget.component';
     InputGroupComponent,
     VariantSearchComponent,
     ManufactureVariantIndexComponent,
+    NgbAccordionModule,
     FontAwesomeModule,
     ButtonAddComponent,
     ManufactureWidgetsComponent,
@@ -65,16 +67,16 @@ import { OrderWidgetComponent } from '../order-widget/order-widget.component';
     WidgetProductsComponent,
     WidgetPurchasesComponent,
     WidgetReceptionsComponent,
-    OrderWidgetComponent,
+    OrderWidgetComponent
     // NgbDropdownModule
   ],
-  templateUrl: './order-edit-page.component.html',
-  styleUrl: './order-edit-page.component.scss',
+  templateUrl: './receptions-page.component.html',
+  styleUrl: './receptions-page.component.scss',
   encapsulation: ViewEncapsulation.None
 
 })
 
-export class OrderEditPageComponent implements OnInit, OnDestroy {
+export class ReceptionsPageComponent implements OnInit, OnDestroy {
 
 
   loading: boolean = false;
@@ -294,6 +296,7 @@ export class OrderEditPageComponent implements OnInit, OnDestroy {
 
     this.kardex_summary = kardex_summary;
   }
+
 
 
 }

@@ -55,7 +55,7 @@ export class ManufactureEditComponent implements OnInit, OnDestroy {
       name: ['', Validators.required], //Nombre del proyecto, no del producto
       // budget: ['', Validators.required],
       // quantity_total: ['', Validators.required],
-      supplier_id: ['', Validators.required],
+      supplier_id: [''],
     });
   }
 
