@@ -36,6 +36,14 @@ export const routes: Routes = [
     }
   },
   {
+    path: 'receptions',
+    loadComponent: () => import('./receptions/reception-index-page/reception-index-page.component').then((m) => m.ReceptionIndexPageComponent),
+    data: {
+      title: 'Entrada y Salida de mercaderia',
+      // name: 'dashboard.manufacture.edit', // 👈 nombre único
+    }
+  },
+  {
     path: ':manufacture_id',
     loadComponent: () => import('./manufacture-edit-page/manufacture-edit-page.component').then((m) => m.ManufactureEditPageComponent),
     data: {

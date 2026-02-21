@@ -36,23 +36,6 @@ export const navErp: CustomNavData[] = [
     //     ]
     // },
     {
-        name: 'Recepciones',
-        url: 'dashboard/manufactures',
-        iconComponent: { name: 'cil-industry' },
-        children: [
-            {
-                name: 'Todos',
-                url: 'dashboard/manufactures',
-                icon: 'fa-solid fa-border-all',
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                },
-            },
-        ],
-        roles: ['inventory']
-    },
-    {
         name: 'Fabricacion',
         url: 'dashboard/manufactures',
         iconComponent: { name: 'cil-industry' },
@@ -84,6 +67,15 @@ export const navErp: CustomNavData[] = [
                     routerLinkActiveOptions: { exact: false }
                 },
             },
+            {
+                name: 'Recepciones',
+                url: 'dashboard/manufactures/receptions',
+                iconComponent: { name: 'cil-swap-horizontal' },
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: false }
+                },
+            },
         ],
         roles: ['master', 'ceo']
     },
@@ -107,24 +99,24 @@ export const navErp: CustomNavData[] = [
     //     ],
     //     roles: ['master']
     // },
-    {
-        name: 'Movimientos',
-        url: 'dashboard/transactions',
-        iconComponent: { name: 'cil-swap-horizontal' },
-        children: [
-            {
-                name: 'Entradas y Salidas',
-                url: 'dashboard/users/transactions',
-                icon: 'nav-icon-bullet'
-            },
-            {
-                name: 'Transferencias',
-                url: 'dashboard/users/transfers',
-                icon: 'nav-icon-bullet'
-            }
-        ],
-        roles: ['master']
-    },
+    // {
+    //     name: 'Movimientos',
+    //     url: 'dashboard/transactions',
+    //     iconComponent: { name: 'cil-swap-horizontal' },
+    //     children: [
+    //         {
+    //             name: 'Entradas y Salidas',
+    //             url: 'dashboard/users/transactions',
+    //             icon: 'nav-icon-bullet'
+    //         },
+    //         {
+    //             name: 'Transferencias',
+    //             url: 'dashboard/users/transfers',
+    //             icon: 'nav-icon-bullet'
+    //         }
+    //     ],
+    //     roles: ['master']
+    // },
     {
         name: 'Productos',
         url: 'dashboard/products',
