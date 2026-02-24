@@ -1,0 +1,44 @@
+<form action="" [formGroup]="form">
+    <div class="controls d-flex justify-content-between align-items-between">
+
+        <!-- <div class="left d-flex d-flex align-items-center">
+
+    @if(button_active){
+        
+            <button class="btn btn-secondary btn-sm me-1">Todos</button>
+            <button class="btn btn-light btn-sm me-1">Activos</button>
+            <button class="btn btn-light btn-sm me-1">Borrador</button>
+            <button class="btn btn-light btn-sm me-1">Bloqueados</button>
+        }@else{
+            <ng-content></ng-content>
+        }
+    </div> -->
+
+
+        <div class="right d-flex justify-content-between align-items-between">
+
+            @if(showSearch){
+            <input class="form-control form-control-md" formControlName="search" type="text" placeholder="Buscar"
+                (blur)="fnHideSearch()" aria-label="cajon de busqueda" (input)="fnSearch($event)" />
+            }@else{
+            <app-button [icon]="faMagnifyingGlass" color="outline-secondary" separation="0"
+                (click)="fnShowSearch()">Buscar</app-button>
+            }
+
+        </div>
+
+
+        <!-- @if(showSearch){ -->
+        <div class="filter d-flex">
+            <input type="date" class="form-control me-2" placeholder="date" formControlName="startDate"
+                aria-label="date" aria-describedby="basic-date" />
+            <input type="date" class="form-control me-2" placeholder="date" formControlName="endDate" aria-label="date"
+                aria-describedby="basic-date" />
+            <!-- <app-button [icon]="faFilter" color="outline-secondary" separation="0"></app-button> -->
+        </div>
+        <!-- } -->
+
+        <!-- {{ form.value | json }} -->
+
+    </div>
+</form>

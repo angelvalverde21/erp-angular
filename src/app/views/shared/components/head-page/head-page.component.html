@@ -1,5 +1,15 @@
-<div class="head d-flex justify-content-between align-items-center py-3">
-    <h5 class=""><fa-icon [icon]="icon" class="me-2"></fa-icon><span>{{ title }}</span></h5>
-    <!-- <button class="btn btn-secondary btn-sm me-1">Agregar Producto</button> -->
-    <ng-content></ng-content>
+<div class="head d-flex justify-content-between align-items-center pb-3">
+
+    <div>
+        <div class="table-title">
+            <h5 class=""><fa-icon [icon]="icon" class="me-2"></fa-icon><span>{{ title }}</span></h5>
+        </div>
+        <div class="table-subtitle">{{ subtitle }}</div>
+    </div>
+
+
+    <div class="buttons d-flex">
+        <button class="btn btn-white btn-sm me-1"><fa-icon [icon]="faFileExport" class="me-2"></fa-icon>Exportar</button>
+        <ng-content></ng-content>
+    </div>
 </div>

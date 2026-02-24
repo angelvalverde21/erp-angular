@@ -12,7 +12,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 })
 export class ButtonLinkComponent implements OnInit {
 
-  @Input() color: string = 'dark';
+  @Input() color: string = 'success';
   @Input() icon: any;
   @Input() path: any;
   @Input() colortext: string = '';

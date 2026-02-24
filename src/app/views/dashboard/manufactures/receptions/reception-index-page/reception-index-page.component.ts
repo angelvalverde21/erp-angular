@@ -8,6 +8,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { ManufactureService } from '../../manufacture.service';
 import Swal from 'sweetalert2';
 import { ReceptionIndexComponent } from '../reception-index/reception-index.component';
+import { TableComponent } from '@shared/components/table/table.component';
+import { HeadTableComponent } from '@shared/components/head-table/head-table.component';
 
 @Component({
   selector: 'app-reception-index-page',
@@ -17,7 +19,8 @@ import { ReceptionIndexComponent } from '../reception-index/reception-index.comp
     ButtonBackComponent,
     LoadingComponent,
     ButtonLinkComponent,
-    UserHeadTableComponent
+    HeadTableComponent,
+    TableComponent
   ],
   templateUrl: './reception-index-page.component.html',
   styleUrl: './reception-index-page.component.scss'

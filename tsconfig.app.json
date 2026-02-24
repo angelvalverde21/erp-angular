@@ -23,6 +23,10 @@
         "src/app/views/shared/components/*",
         "src/app/views/shared/components/*.ts"
       ],
+      "@dashboard/*": [
+        "src/app/views/dashboard/*",
+        "src/app/views/dashboard/*.ts"
+      ],
     }
   },
   "files": [
