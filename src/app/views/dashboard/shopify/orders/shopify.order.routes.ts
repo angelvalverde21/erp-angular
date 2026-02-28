@@ -27,9 +27,9 @@ export const routes: Routes = [
   },
   {
     path: 'create',
-    loadComponent: () => import('./shopify-order-prepared-page/shopify-order-prepared-page.component').then((m) => m.ShopifyOrderPreparedPageComponent),
+    loadComponent: () => import('./shopify-order-create-page/shopify-order-create-page.component').then((m) => m.ShopifyOrderCreatePageComponent),
     data: {
-      title: 'Pedidos preparados',
+      title: 'Crear Pedido',
       // name: 'shopify.order.index', // 👈 nombre único
     },
   },

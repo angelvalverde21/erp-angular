@@ -11,7 +11,16 @@ export const navShopify: CustomNavData[] = [
     url: 'dashboard/shopify/orders',
     iconComponent: { name: 'cil-cash' },
     children: [
-      { name: 'Pedidos', url: 'dashboard/shopify/orders', icon: 'nav-icon-bullet' }
+      {
+        name: 'Pedidos', url: 'dashboard/shopify/orders', icon: 'nav-icon-bullet', linkProps: {
+          routerLinkActiveOptions: { exact: true }
+        }
+      },
+      {
+        name: 'Crear', url: 'dashboard/shopify/orders/create', icon: 'nav-icon-bullet', linkProps: {
+          routerLinkActiveOptions: { exact: true }
+        }
+      }
     ],
     // roles: ['ventas', 'despacho']
   },
@@ -21,20 +30,9 @@ export const navShopify: CustomNavData[] = [
     iconComponent: { name: 'cil-cash' },
     children: [
       { name: 'Productos', url: 'dashboard/shopify/products/all', icon: 'nav-icon-bullet' },
-      { name: 'Precios Masivos', url: 'dashboard/shopify/products/prices', icon: 'nav-icon-bullet' }
+      { name: 'Precios Masivos', url: 'dashboard/shopify/products/prices', icon: 'nav-icon-bullet', roles: ['master', 'ceo'] }
     ],
     // roles: ['ventas', 'despacho']
   },
-  {
-    name: 'Reportes',
-    url: 'dashboard/shopify/reports',
-    iconComponent: { name: 'cil-chart-line' },
-    children: [
-      { name: 'Últimos 7 Días', url: 'dashboard/shopify/reports/bars/daily', icon: 'nav-icon-bullet' },
-      { name: 'Mensual', url: 'dashboard/shopify/reports/bars/months', icon: 'nav-icon-bullet' },
-      { name: 'Top 10', url: 'dashboard/shopify/reports/top', icon: 'nav-icon-bullet' },
-      { name: 'Ventas Totales', url: 'dashboard/shopify/reports/all', icon: 'nav-icon-bullet' }
-    ],
-    roles: ['ceo']
-  }
+
 ];

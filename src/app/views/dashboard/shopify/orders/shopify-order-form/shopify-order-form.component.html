@@ -1,0 +1,39 @@
+<form [formGroup]="form">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <app-input-group [icon]="faHome" text="Nombre Completo">
+                <input formControlName="name" type="text" class="form-control" placeholder="Name" aria-label="name"
+                    aria-describedby="basic-name" />
+            </app-input-group>
+        </div>
+        <div class="col-lg-6">
+            <app-input-group [icon]="faEnvelope" text="Email">
+                <input formControlName="email" type="email" class="form-control" placeholder="Email" aria-label="email"
+                    aria-describedby="basic-email" />
+            </app-input-group>
+        </div>
+        <div class="col-lg-6">
+            <app-input-group [icon]="faPhone" text="Teléfono">
+                <input formControlName="phone" type="number" class="form-control" placeholder="Phone" aria-label="phone"
+                    aria-describedby="basic-phone" />
+            </app-input-group>
+        </div>
+        <div class="col-lg-12">
+            <app-input-group [icon]="faAddressCard" text="Dirección">
+                <input formControlName="address" type="text" class="form-control" placeholder="Address"
+                    aria-label="address" aria-describedby="basic-address" />
+            </app-input-group>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <label for="variant-search" class="mb-2">Buscar Variantes</label>
+            <app-variant-search (emitVariantsSelected)="receiveSelectedVariants($event)"></app-variant-search>
+        </div>
+    </div>
+    
+
+</form>

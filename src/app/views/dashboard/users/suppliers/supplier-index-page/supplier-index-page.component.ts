@@ -3,12 +3,12 @@ import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SupplierService } from '../supplier.service';
 import { SupplierIndexComponent } from '../supplier-index/supplier-index.component';
-import { ButtonComponent } from "../../../../shared/components/buttons/button/button.component";
-import { ButtonLinkComponent } from "../../../../shared/components/buttons/button-link/button-link.component";
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
-import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
+import { ButtonComponent } from "@shared/components/buttons/button/button.component";
+import { ButtonLinkComponent } from "@shared/components/buttons/button-link/button-link.component";
+import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { HeadPageComponent } from "@shared/components/head-page/head-page.component";
 import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
-import { UserHeadTableComponent } from '../../shared/user-head-table/user-head-table.component';
+import { HeadTableComponent } from '@shared/components/head-table/head-table.component';
 
 @Component({
   selector: 'app-supplier-index-page',
@@ -18,7 +18,7 @@ import { UserHeadTableComponent } from '../../shared/user-head-table/user-head-t
     ButtonLinkComponent,
     LoadingComponent,
     HeadPageComponent,
-    UserHeadTableComponent
+    HeadTableComponent
   ],
   templateUrl: './supplier-index-page.component.html',
   styleUrl: './supplier-index-page.component.scss'

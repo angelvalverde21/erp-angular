@@ -2,14 +2,14 @@
 <app-loading></app-loading>
 }@else{
 <app-head-page title="Empleados">
-    <app-button-link [path]="['./create']">Agregar Empleado</app-button-link>
+    <app-button-link [path]="['./create']">+ A&ntilde;adir Empleado</app-button-link>
 </app-head-page>
 
 <div class="card">
 
     <div class="card-header py-3">
 
-        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)" type="employee"></app-user-head-table>
+        <app-head-table (emitSearchResult)="receiveSearchResult($event)" type="employee"></app-head-table>
 
     </div>
 

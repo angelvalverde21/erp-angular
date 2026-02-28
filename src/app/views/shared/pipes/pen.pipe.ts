@@ -6,7 +6,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class PenPipe implements PipeTransform {
 
-
   transform(value: number): string {
     
     if (typeof value === 'number' && (value || value === 0)) {

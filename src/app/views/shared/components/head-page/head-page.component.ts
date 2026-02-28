@@ -16,5 +16,6 @@ export class HeadPageComponent {
   @Input() title: string = ""; 
   @Input() subtitle: string = "Gestión de la información"; 
   @Input() icon = faTag;
+  @Input() export: boolean = true;
 
 }

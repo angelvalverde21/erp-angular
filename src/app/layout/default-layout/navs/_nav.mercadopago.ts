@@ -1,7 +1,10 @@
 import { CustomNavData } from '../../../interfaces/nav.interface';
 
 export const navMercadoPago: CustomNavData[] = [
-
+  {
+    title: true,
+    name: 'Pasarelas',
+  },
   {
     name: 'Mercado Pago',
     url: 'dashboard/mercadopago',

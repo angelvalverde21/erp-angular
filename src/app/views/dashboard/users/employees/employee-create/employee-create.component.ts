@@ -47,6 +47,8 @@ export class EmployeeCreateComponent {
       document_number: ['', [Validators.required]],
       roles: ['', [Validators.required]],
       salary: ['', [Validators.required]],
+      comission: [''],
+      tag_sales: [''],
     });
   }
 

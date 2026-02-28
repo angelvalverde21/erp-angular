@@ -18,6 +18,14 @@ export const routes: Routes = [
   },
 
   {
+    path: 'marketing',
+    loadChildren: () =>
+      import('../../views/dashboard/marketing/routes.marketing').then(
+        (m) => m.routes
+      ),
+  },
+
+  {
     path: 'manufactures',
     loadChildren: () =>
       import('../../views/dashboard/manufactures/routes.manufacture').then(

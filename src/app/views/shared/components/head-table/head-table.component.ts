@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Subject, switchMap, takeUntil } from 'rxjs';
 import { CustomerService } from '@dashboard/users/customers/customer.service';
 // import { CustomerService } from '@dashboard/users/customers/customer.service';
 import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
@@ -15,6 +15,7 @@ import { ManufactureOrderService } from '@dashboard/manufactures/orders/order.se
 import { ManufactureProductionService } from '@dashboard/manufactures/productions/production.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
+import { ProductService } from '@dashboard/products/product.service';
 
 @Component({
   selector: 'app-head-table',
@@ -32,9 +33,23 @@ export class HeadTableComponent implements OnInit, OnDestroy {
   faMagnifyingGlass = faMagnifyingGlass;
   faFilter = faFilter;
 
-  @Input() type: 'customer' | 'courier' | 'gateway' | 'petty_cash' | 'supplier' | 'employee' | 'shopify_product' | 'manufacture_production' | 'manufacture_order' |  'manufacture' = 'customer'; //Type por defecto es customer en caso no se le pase nada
+  @Input() type:
+    | 'customer'
+    | 'courier'
+    | 'gateway'
+    | 'petty_cash'
+    | 'product'
+    | 'supplier'
+    | 'employee'
+    | 'shopify_product'
+    | 'manufacture_production'
+    | 'manufacture_order'
+    | 'manufacture'
+    = 'customer';
+
   @Input() button_active: boolean = true;
   @Output() emitSearchResult = new EventEmitter<any>();
+  @Output() emitParams = new EventEmitter<{}>();
 
   private searchSubject = new Subject<string>();
 
@@ -50,6 +65,7 @@ export class HeadTableComponent implements OnInit, OnDestroy {
     private _manufacture_production: ManufactureProductionService,
     private _shopify_product: ShopifyProductService,
     private _gateway: GatewayService,
+    private _product: ProductService,
     private fb: FormBuilder
   ) { }
 
@@ -61,19 +77,57 @@ export class HeadTableComponent implements OnInit, OnDestroy {
 
 
     this.form = this.fb.group({
-        search: ['', Validators.required],
-        startDate: [today],
-        endDate: [today],
+      search: ['', Validators.required],
+      start_date: [null],
+      end_date: [today],
     });
 
   }
 
+  // ngOnInit() {
+
+  //   this.formInit();
+
+  //   this.form.valueChanges
+  //     .pipe(
+  //       debounceTime(500),
+  //       switchMap(values => {
+
+  //         if (!values.search?.trim() && !values.start_date && !values.end_date) {
+  //           return [];
+  //         }
+
+  //         return this.getService().search(values);
+
+  //       }),
+  //       takeUntil(this.destroy$)
+  //     )
+  //     .subscribe(resp => {
+  //       // this.emitSearchResult.emit(resp?.data ?? []);
+  //     });
+
+  // }
+
+
   ngOnInit() {
 
-    this.searchWithDebounce(500);
     this.formInit();
 
+    // this.form.valueChanges
+    //   .pipe(
+    //     debounceTime(500),
+    //     takeUntil(this.destroy$)
+    //   )
+    //   .subscribe(resp => {
+
+    //   });
+
   }
+
+  search() {
+    this.emitParams.emit(this.form.value);
+  }
+
 
   private getService() {
     switch (this.type) {
@@ -85,34 +139,9 @@ export class HeadTableComponent implements OnInit, OnDestroy {
       case 'gateway': return this._gateway;
       case 'manufacture_order': return this._manufacture_order;
       case 'manufacture_production': return this._manufacture_production;
+      case 'product': return this._product;
       default: return this._customer;
     }
-  }
-
-
-  searchWithDebounce(time: number) {
-
-    this.searchSubject
-      .pipe(
-        debounceTime(time),
-        distinctUntilChanged(),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(term => {
-
-        const service = this.getService();
-
-        service.search(term).subscribe({
-
-          next: (resp: any) => this.emitSearchResult.emit(resp.data),
-          error: () => {
-            console.log(`Error al buscar el término: ${term}`);
-            // Swal.fire('Error', `Problema al buscar el término: ${term}`, 'error');
-          }
-
-        });
-
-      });
   }
 
   fnShowSearch() { //funcion que activa o desactiva el input de busqueda
@@ -127,10 +156,6 @@ export class HeadTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  fnSearch(event: any) { //funcion que emite el termino de busqueda al componente padre
-    const term = event.target.value;
-    this.searchSubject.next(term);
-  }
 
   destroy$ = new Subject<void>();
 
@@ -141,9 +166,9 @@ export class HeadTableComponent implements OnInit, OnDestroy {
 
   }
 
-  fnHideSearch(){
+  fnHideSearch() {
     console.log("blur");
-    if(this.form.get('search')?.value === ""){
+    if (this.form.get('search')?.value === "") {
       this.showSearch = false;
     }
   }

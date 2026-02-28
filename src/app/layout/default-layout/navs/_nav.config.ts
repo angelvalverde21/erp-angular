@@ -4,6 +4,7 @@ export const navConfig: CustomNavData[] = [
     {
         title: true,
         name: 'Config',
+        roles: ['ceo', 'master']
     },
     {
         name: 'Gateways',

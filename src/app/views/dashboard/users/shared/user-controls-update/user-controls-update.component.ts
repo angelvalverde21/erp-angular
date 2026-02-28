@@ -63,10 +63,16 @@ export class UserControlsUpdateComponent {
     this.disabledButton = true;
     this.loadingIcon = true;
 
+    console.log(this.formValue);
+    
+
     service.update(this.user_id, this.formValue).pipe(takeUntil(this.destroy$)).subscribe({
       next: (resp: Resp) => {
+
+        console.log(resp);
+        
         Swal.fire('Guardado', 'El registro ha sido actualizado', 'success');
-        this.formValue = resp.data
+        // this.formValue = resp.data
         this.disabledButton = false;
         this.loadingIcon = false;
       },

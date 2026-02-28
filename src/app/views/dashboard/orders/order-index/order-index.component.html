@@ -1,0 +1,53 @@
+<div class="table-responsive">
+    <table class="table table-hover table-striped mb-0 align-middle">
+        <thead class="table-light">
+            <tr>
+                <th class="text-center">#</th>
+                <th>Tags</th>
+                <th style="width: 150px;">Creado</th>
+                <th>Articulos</th>
+                <th style="width: 100px;" class="text-center"></th>
+                <th class="text-center">Pago</th>
+                <th class="text-center">Articulos</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (order of orders; track order.id) {
+
+            @let items = order?.lineItems ?? []; 
+            <!-- @let sum = items.reduce((acc, item) => acc + item?.variant?.price, 0); -->
+
+            <tr>
+                <td class="text-center">
+                    {{ order?.name }}
+                </td>
+                <td>{{ order.tags | json}}</td>
+
+                <td>
+                    {{ order?.processedAt | DateShopify }}
+                </td>
+
+                <td>
+                    <!-- <ul class="list-group list-group-flush"> -->
+                        @for (item of items; track $index) {
+                            <li class="list-group-item">{{ item?.name }}</li>
+                        }
+                    <!-- </ul> -->
+                </td>
+
+                <td>{{ getOrderSum(order) | pen }}</td>
+
+                <td class="text-center">
+                    {{ order?.displayFinancialStatus }}
+                </td>
+
+                <td class="text-center">
+                    {{ items.length }}
+                </td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

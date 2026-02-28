@@ -4,6 +4,7 @@ export const navErp: CustomNavData[] = [
     {
         title: true,
         name: 'Erp',
+        roles: ['ceo', 'master']
     },
     // {
     //     name: 'Orders',
@@ -158,6 +159,11 @@ export const navErp: CustomNavData[] = [
                 }
             },
         ],
+        roles: ['ceo', 'master']
+    },
+    {
+        title: true,
+        name: 'Usuarios',
         roles: ['ceo', 'master']
     },
     {

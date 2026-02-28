@@ -1,20 +1,49 @@
 @if(loading || roles_loading){
-<app-loading></app-loading>
+
+    <app-loading></app-loading>
+
 }@else{
 
-<app-head-page title="Editar Empleado">
-    <app-button-back></app-button-back>
-</app-head-page>
+    <app-head-page title="Editar Empleado" [export]="false">
+        <app-button-back></app-button-back>
+    </app-head-page>
 
+    <div class="card mb-3">
 
-<div class="card mb-3">
+        <!-- {{ employee | json }} -->
 
-    <!-- {{ employee | json }} -->
+        <div class="card-body">
+            <app-employee-edit [employee]="employee" [roles]="roles"></app-employee-edit>
+        </div>
 
-    <div class="card-body">
-        <app-employee-edit [employee]="employee" [roles]="roles"></app-employee-edit>
     </div>
 
-</div>
+    @if(is_sales){
+
+        @if(loadingOrders){
+        <app-loading></app-loading>
+        }@else{
+        <p class="mt-3">.</p>
+
+        <app-head-page title="Ventas Realizadas">
+
+        </app-head-page>
+
+        <div class="card mb-3  ">
+
+            <div class="card-header py-3">
+
+                <app-head-table (emitSearchResult)="receiveSearchResult($event)" type="employee"></app-head-table>
+
+            </div>
+
+            <div class="card-body p-0">
+                <app-order-index [orders]="orders"></app-order-index>
+            </div>
+
+        </div>
+
+        }
+    }
 
 }

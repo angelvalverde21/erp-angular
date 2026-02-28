@@ -4,7 +4,6 @@
             <tr>
                 <th class="text-center">#</th>
                 <th>Nombre</th>
-                <th>DNI</th>
                 <th>Telefono</th>
                 <th>Status</th>
                 <th>Creado</th>
@@ -18,7 +17,6 @@
             <tr (click)="getSupplierId(supplier.id)">
                 <td class="text-center">{{ supplier.id }}</td>
                 <td class="py-3">{{ supplier.user?.name }}</td>
-                <td class="py-3">{{ supplier.user?.document_number }}</td>
                 <td class="py-3">{{ supplier.user?.phone }}</td>
                 <td class="py-3">
                     @if(supplier.user?.status){
@@ -31,6 +29,8 @@
                 <td>{{ supplier.created_at | DateShopify }}</td>
                 <td class="text-center">
                     <div class="controls d-flex justify-content-center align-items-center">
+                        <app-button-edit></app-button-edit>
+                        <!-- <app-button [icon]="faTrash" separation="0" color="outline-dark"></app-button> -->
                     </div>
                 </td>
             </tr>

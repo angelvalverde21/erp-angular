@@ -37,18 +37,32 @@
             </app-input-group>
         </div>
 
+        <label class="mb-2">Agregar Roles</label>
+        <ng-select [items]="roles" [multiple]="true" [class.is-invalid]="form.get('roles')?.invalid &&
+                   (form.get('roles')?.dirty || form.get('roles')?.touched)"  placeholder="Seleccione roles" class="mb-3" formControlName="roles">
+        </ng-select>
 
-        <div class="col-lg-12">
+        <div class="col-lg-4">
             <app-input-group text="Sueldo Mensual" icontext="S/.">
                 <input formControlName="salary" type="text" class="form-control" [class.is-invalid]="form.get('salary')?.invalid && form.get('salary')?.touched" placeholder="salary"
                     aria-label="salary" aria-describedby="basic-name" />
             </app-input-group>
         </div>
 
-        <label class="mb-2">Agregar Roles</label>
-        <ng-select [items]="roles" [multiple]="true" [class.is-invalid]="form.get('roles')?.invalid &&
-                   (form.get('roles')?.dirty || form.get('roles')?.touched)"  placeholder="Seleccione roles" class="mb-3" formControlName="roles">
-        </ng-select>
+        <div class="col-lg-4">
+            <app-input-group text="Comision" icontext="%">
+                <input formControlName="comission" type="text" class="form-control" [class.is-invalid]="form.get('comission')?.invalid && form.get('comission')?.touched" placeholder="Comision"
+                    aria-label="Comision" aria-describedby="basic-name" />
+            </app-input-group>
+        </div>
+
+        <div class="col-lg-4">
+            <app-input-group text="Tag Ventas" icontext="%">
+                <input formControlName="tag_sales" type="text" class="form-control" [class.is-invalid]="form.get('tag_sales')?.invalid && form.get('tag_sales')?.touched" placeholder="Etiqueta ventas"
+                    aria-label="tag ventas" aria-describedby="basic-name" />
+            </app-input-group>
+        </div>
+
         <!-- <div class="col-lg-4">
                     <app-input-group text="Slug" [icon]="faIdBadge">
                         <input formControlName="slug" type="text" class="form-control" placeholder="Slug"
@@ -58,5 +72,5 @@
 
     </div>
 
-    {{ form.value | json }}
+    <!-- {{ form.value | json }} -->
 </form>

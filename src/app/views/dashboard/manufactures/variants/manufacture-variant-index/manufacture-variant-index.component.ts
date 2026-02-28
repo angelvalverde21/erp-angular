@@ -33,7 +33,7 @@ export class ManufactureVariantIndexComponent implements OnInit {
   @Input() manufacture_variants: any;
   @Input() sum_products: number = 0;
   @Input() manufacture_id: number = 0;
-  @Input() text_button: string = 'Agregar Producto';
+  @Input() text_button: string = 'Producto';
 
   @Output() emitSumManufactureVariant = new EventEmitter<number>();
 

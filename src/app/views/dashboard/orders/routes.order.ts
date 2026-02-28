@@ -17,14 +17,14 @@ export const routes: Routes = [
       name: 'order.create',
     }
   },
-  {
-    path: 'search/:search',
-    loadComponent: () => import('./order-search/order-search.component').then(m => m.OrderSearchComponent),
-    data: {
-      title: 'Buscar',
-      name: 'order.search',
-    }
-  },
+  // {
+  //   path: 'search/:search',
+  //   loadComponent: () => import('./order-search/order-search.component').then(m => m.OrderSearchComponent),
+  //   data: {
+  //     title: 'Buscar',
+  //     name: 'order.search',
+  //   }
+  // },
   {
     path: ':order_id',
     loadComponent: () => import('./order-edit-page/order-edit-page.component').then(m => m.OrderEditPageComponent),

@@ -10,8 +10,9 @@ import Swal from 'sweetalert2';
 import { RoleService } from '../../../roles/role.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { AddressIndexComponent } from '../../../addresses/address-index/address-index.component';
-import { faHouse } from '@fortawesome/free-solid-svg-icons';
+import { faBagShopping, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { AddressCreateComponent } from '../../../addresses/address-create/address-create.component';
+import { ButtonAddComponent } from '../../../../shared/components/buttons/button-add/button-add.component';
 
 @Component({
   selector: 'app-supplier-edit-page',
@@ -21,7 +22,8 @@ import { AddressCreateComponent } from '../../../addresses/address-create/addres
     HeadPageComponent,
     ButtonBackComponent,
     AddressIndexComponent,
-    AddressCreateComponent
+    AddressCreateComponent,
+    ButtonAddComponent
   ],
   templateUrl: './supplier-edit-page.component.html',
   styleUrl: './supplier-edit-page.component.scss',
@@ -40,7 +42,8 @@ export class SupplierEditPageComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   supplier_id: number = 0;
   supplier: any;
-
+  faBagShopping = faBagShopping;
+  
   constructor(
     private _supplier: SupplierService,
     private route: ActivatedRoute,

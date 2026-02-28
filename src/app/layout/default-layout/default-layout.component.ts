@@ -49,7 +49,7 @@ function isOverflown(element: HTMLElement) {
     RouterLink,
     ShadowOnScrollDirective,
     UpperCasePipe,
-    IconDirective,
+    IconDirective
   ],
 })
 export class DefaultLayoutComponent implements OnInit {
@@ -109,6 +109,7 @@ export class DefaultLayoutComponent implements OnInit {
     this.storeName = this._base.storeName!;
     this.navItems = this.addToStore([...this.navItems], this.storeName);
   }
+  
 
   addToStore(navItems: CustomNavData[], storeName: string): CustomNavData[] {
 

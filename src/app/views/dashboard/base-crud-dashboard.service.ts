@@ -100,7 +100,7 @@ export abstract class BaseCrudDashboardService {
     return this.http.delete(`${url}`, { body: data });
   }
 
-  search(search: string = ''): Observable<any[]> {
+  searchText(search: string = ''): Observable<any[]> {
 
     // Si viene vacío, NO agregamos barra al final
     const clean = search.trim();
@@ -114,10 +114,21 @@ export abstract class BaseCrudDashboardService {
     return this.http.get<any[]>(url);
   }
 
-  batch(data: any): Observable<any> {
+  search(data: any = {}): Observable<any> {
+
+    console.log(data);
+
+    const url = `${this.baseUrl}`;
+    console.log("imprimiendo url de search");
+    console.log(url);
+    return this.http.post(`${url}/search`, data);
+    
+  }
+
+  batch(data: any = {}): Observable<any> {
 
     const url = `${this.baseUrl}/batch`;
-    // console.log("imprimiendo url de store");
+    // console.log("imprimiendo url de batch");
     // console.log(url);
     return this.http.post(`${url}`, data);
 

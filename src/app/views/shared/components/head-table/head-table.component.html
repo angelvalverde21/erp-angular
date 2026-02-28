@@ -19,7 +19,7 @@
 
             @if(showSearch){
             <input class="form-control form-control-md" formControlName="search" type="text" placeholder="Buscar"
-                (blur)="fnHideSearch()" aria-label="cajon de busqueda" (input)="fnSearch($event)" />
+                (blur)="fnHideSearch()" (keydown.enter)="search()" aria-label="cajon de busqueda" />
             }@else{
             <app-button [icon]="faMagnifyingGlass" color="outline-secondary" separation="0"
                 (click)="fnShowSearch()">Buscar</app-button>
@@ -30,10 +30,10 @@
 
         <!-- @if(showSearch){ -->
         <div class="filter d-flex">
-            <input type="date" class="form-control me-2" placeholder="date" formControlName="startDate"
+            <input type="date" class="form-control me-2" placeholder="date" formControlName="start_date" [max]="form.get('end_date')?.value"
                 aria-label="date" aria-describedby="basic-date" />
-            <input type="date" class="form-control me-2" placeholder="date" formControlName="endDate" aria-label="date"
-                aria-describedby="basic-date" />
+            <input type="date" class="form-control" placeholder="date" formControlName="end_date" [min]="form.get('start_date')?.value"
+                aria-label="date" aria-describedby="basic-date" />
             <!-- <app-button [icon]="faFilter" color="outline-secondary" separation="0"></app-button> -->
         </div>
         <!-- } -->

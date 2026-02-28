@@ -97,7 +97,7 @@ export class InputDistrictIdComponent implements ControlValueAccessor, OnInit, O
 
   searchDistrict(name: string) {
 
-    this._district.search(name).pipe(takeUntil(this.destroy$)).subscribe({
+    this._district.searchText(name).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
 

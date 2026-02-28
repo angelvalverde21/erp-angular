@@ -7,6 +7,8 @@ import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { UserControlsUpdateComponent } from '../../shared/user-controls-update/user-controls-update.component';
+import { JsonPipe } from '@angular/common';
+import { HeadTableComponent } from 'src/app/views/shared/components/head-table/head-table.component';
 
 
 @Component({
@@ -14,7 +16,9 @@ import { UserControlsUpdateComponent } from '../../shared/user-controls-update/u
   imports: [
     EmployeeFormComponent,
     ButtonComponent,
-    UserControlsUpdateComponent
+    UserControlsUpdateComponent,
+    JsonPipe,
+    HeadTableComponent
   ],
   templateUrl: './employee-edit.component.html',
   styleUrl: './employee-edit.component.scss'
@@ -29,12 +33,17 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
   @Input() roles: any;
   faSave = faSave;
 
+
   constructor(
     private fb: FormBuilder,
   ) {
 
   }
   ngOnInit(): void {
+
+
+
+
     this.formInit();
     // this.form.patchValue(this.employee);
 
@@ -44,8 +53,11 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
       phone: this.employee.user.phone,
       status: this.employee.user.status,
       document_number: this.employee.user.document_number,
+      identity_id: this.employee.user.identity_id,
+      tag_sales: this.employee.tag_sales,
       roles: this.employee.user.roles,               // ya es array ['produccion','compras']
-      salary: this.employee?.salary    //aquí se anida el salario
+      salary: this.employee?.salary,    //aquí se anida el salario
+      comission: this.employee?.comission
     });
 
   }
@@ -69,7 +81,10 @@ export class EmployeeEditComponent implements OnDestroy, OnInit {
       status: ['', [Validators.required]],
       roles: ['', [Validators.required]],
       salary: ['', [Validators.required]],
+      tag_sales: [''],
+      comission: [''],
     });
   }
+
 
 }

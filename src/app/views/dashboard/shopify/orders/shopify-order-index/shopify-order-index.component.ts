@@ -49,6 +49,7 @@ export class ShopifyOrderIndexComponent implements OnInit {
   observer!: IntersectionObserver;
 
   ngAfterViewInit(): void {
+
     this.observer = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
         this.loadMore.emit(); // 🔥 avisar al padre
@@ -56,6 +57,7 @@ export class ShopifyOrderIndexComponent implements OnInit {
     });
 
     this.observer.observe(this.bottom.nativeElement);
+    
   }
 
   getResizedImage(url: string, width: number, height: number): string {

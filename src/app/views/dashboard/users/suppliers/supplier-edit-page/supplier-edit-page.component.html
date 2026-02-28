@@ -12,9 +12,8 @@
     </div>
 </div>
 
-<app-head-page [icon]="faHouse" title="Direcciones">
-    <button type="button" class="btn btn-outline-dark btn-sm" (click)="openVerticallyCentered(content)">+ Crear
-        Direccion</button>
+<app-head-page [icon]="faHouse" title="Direcciones" subtitle="Lista de direcciones del proveedor" class="my-3">
+    <app-button-add path="" (click)="openVerticallyCentered(content)">Direccion</app-button-add>
 </app-head-page>
 
 <div class="card mb-3">
@@ -23,7 +22,8 @@
 
         @if(supplier?.addresses?.length > 0){
 
-        <app-address-index [addresses]="supplier.addresses" [user_id]="supplier.user_id" [addressable_type]="'supplier'" [addressable_id]="supplier.id"></app-address-index>
+        <app-address-index [addresses]="supplier.addresses" [user_id]="supplier.user_id" [addressable_type]="'supplier'"
+            [addressable_id]="supplier.id"></app-address-index>
 
         }@else{
         <div class="p-3">
@@ -38,6 +38,10 @@
     </div>
 
 </div>
+
+<app-head-page [icon]="faBagShopping" title="Pedidos" subtitle="Lista de pedidos del proveedor" class="my-3">
+    <!-- <app-button-add path="" (click)="openVerticallyCentered(content)">Direccion</app-button-add> -->
+</app-head-page>
 
 <ng-template #content let-modal>
 

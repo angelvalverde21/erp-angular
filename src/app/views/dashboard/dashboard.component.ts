@@ -23,6 +23,7 @@ import { IconDirective } from '@coreui/icons-angular';
 // import { WidgetsBrandComponent } from '../widgets/widgets-brand/widgets-brand.component';
 import { WidgetsDropdownComponent } from '../widgets/widgets-dropdown/widgets-dropdown.component';
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
+import { ReportBarComponent } from './shopify/reports/report-bar/report-bar.component';
 
 interface IUser {
   name: string;
@@ -41,7 +42,27 @@ interface IUser {
 @Component({
   templateUrl: 'dashboard.component.html',
   styleUrls: ['dashboard.component.scss'],
-  imports: [WidgetsDropdownComponent, CardComponent, CardBodyComponent, RowComponent, ColComponent, ButtonDirective, IconDirective, ReactiveFormsModule, ButtonGroupComponent, FormCheckLabelDirective, ChartjsComponent, NgStyle, CardFooterComponent, GutterDirective, ProgressComponent, CardHeaderComponent, TableDirective, AvatarComponent]
+  imports: [
+    WidgetsDropdownComponent, 
+    CardComponent, 
+    CardBodyComponent, 
+    RowComponent, 
+    ColComponent, 
+    ButtonDirective, 
+    IconDirective, 
+    ReactiveFormsModule, 
+    ButtonGroupComponent, 
+    FormCheckLabelDirective, 
+    ChartjsComponent, 
+    NgStyle, 
+    CardFooterComponent, 
+    GutterDirective, 
+    ProgressComponent, 
+    CardHeaderComponent, 
+    TableDirective, 
+    AvatarComponent,
+    ReportBarComponent
+  ]
 })
 export class DashboardComponent implements OnInit {
 

@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-hover mb-0 align-middle">
+    <table class="table table-hover table-striped mb-0 align-middle">
         <thead class="table-light">
             <tr>
                 <th class="text-center">#</th>
@@ -7,7 +7,9 @@
                 <th>DNI</th>
                 <th>Sueldo</th>
                 <th>Status</th>
-                <th>Ingreso</th>
+                <th>Roles</th>
+                <th class="text-center">Comision</th>
+                <th class="text-center">Fecha de ingreso</th>
                 <th class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -30,10 +32,18 @@
                     <span class="badge text-bg-danger text-white">Bloqueado</span>
                     }
                 </td>
-                <td>{{ employee.date_entry | DateShopify }}</td>
+                <td>
+
+                    @for (rol of employee.user.roles; track rol.id) {
+                        <span class="badge text-bg-success text-white me-1">{{ rol.title }}</span>
+                    }
+
+                </td>
+                <td class="text-center">{{ (employee?.comission ?? 0) / 100 | percent }}</td>
+                <td class="text-center">{{ employee?.created_at | DateShopify }}</td>
                 <td class="text-center">
                     <div class="controls d-flex justify-content-center align-items-center">
-                        <!-- <app-button [icon]="faPen" separation="0" color="dark" class="me-2"></app-button> -->
+                        <app-button-edit></app-button-edit>
                         <!-- <app-button [icon]="faTrash" separation="0" color="outline-dark"></app-button> -->
                     </div>
                 </td>

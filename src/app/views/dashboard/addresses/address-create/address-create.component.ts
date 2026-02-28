@@ -62,7 +62,7 @@ export class AddressCreateComponent implements OnInit, OnDestroy {
       phone: ['', [Validators.required]],
       references: [''],
       document_number: [''],
-      identity_id: [''],
+      identity_id: [1],
       user_id: [this.user_id, [Validators.required]],
       addressable_type: [this.addressable_type, [Validators.required]],
       addressable_id: [this.addressable_id, [Validators.required]],

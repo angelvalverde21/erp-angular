@@ -1,4 +1,4 @@
-<div class="head d-flex justify-content-between align-items-center pb-3">
+<div class="head d-flex justify-content-between align-items-center mb-3">
 
     <div>
         <div class="table-title">
@@ -9,7 +9,10 @@
 
 
     <div class="buttons d-flex">
-        <button class="btn btn-white btn-sm me-1"><fa-icon [icon]="faFileExport" class="me-2"></fa-icon>Exportar</button>
+        @if(export){
+            <button class="btn btn-white btn-sm me-1"><fa-icon [icon]="faFileExport" class="me-2"></fa-icon>Exportar</button>
+        }
         <ng-content></ng-content>
     </div>
+    
 </div>
