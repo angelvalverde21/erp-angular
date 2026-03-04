@@ -1,1 +1,199 @@
-<app-shopify-order-form [form]="form"></app-shopify-order-form>
+<form [formGroup]="form">
+    <div ngbAccordion #accordion="ngbAccordion" [closeOthers]="true">
+        <div ngbAccordionItem="first" [collapsed]="false">
+            <h2 ngbAccordionHeader>
+                <button ngbAccordionButton>
+                    <fa-icon [icon]="faUser" class="me-2"></fa-icon> Generar pedido
+                </button>
+            </h2>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template>
+                        <app-address-form></app-address-form>
+                        <div class="controls d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                (click)="accordion.toggle('second')">Siguiente</button>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div ngbAccordionItem="second">
+            <h2 ngbAccordionHeader>
+                <button ngbAccordionButton>
+                    <fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Detalles del pedido
+                </button>
+            </h2>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Agregar items</span>
+                            <app-button-add color="dark"
+                                (click)="openVerticallyCentered(content)">Productos</app-button-add>
+                        </div>
+
+                        @if(variants.length === 0){
+                        <app-void-index></app-void-index>
+                        }@else{
+                        <div class="mb-3">
+                            <app-order-variant-index [variants]="variants"></app-order-variant-index>
+                        </div>
+                        <div class="controls d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                (click)="accordion.toggle('third')">Siguiente</button>
+                        </div>
+                        }
+
+
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div ngbAccordionItem="third">
+            <h2 ngbAccordionHeader>
+                <button ngbAccordionButton>
+                    <fa-icon [icon]="faDolly" class="me-2"></fa-icon> Shipping
+
+                </button>
+            </h2>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template>
+
+                        <label for="courier_address_id" class="mb-2">Seleccionar Courier</label>
+                        <app-courier-selected formControlName="courier_address_id"
+                            (emitCourierSelected)="receiveCourierSelected($event)"></app-courier-selected>
+
+                        <div class="row">
+
+                            @if(is_cash_on_delivery){
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <app-button-check class="w-100 mb-3">
+                                    Contra Entrega
+                                </app-button-check>
+
+                            </div>
+                            }
+                            @if(is_express_shipping){
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <app-button-check class="w-100 mb-3">
+                                    Delivery Express
+                                </app-button-check>
+                            </div>
+                            }
+                            @if(is_freight_collect){
+                            <div class="col-lg-12 col-md-12 col-12">
+                                <app-button-check class="w-100 mb-3">
+                                    Pago en destino
+                                </app-button-check>
+                            </div>
+                            }
+
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <app-input-group [icon]="faDolly" text="Costo de Traslado">
+                                    <input formControlName="delivery_cost" type="number" class="form-control"
+                                        placeholder="0.00" aria-label="delivery_cost"
+                                        aria-describedby="basic-delivery_cost" twoDecimals />
+                                </app-input-group>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <app-input-group [icon]="faTruck" text="Costo de envio">
+                                    <input formControlName="delivery_cost" type="number" class="form-control"
+                                        placeholder="0.00" aria-label="delivery_cost"
+                                        aria-describedby="basic-delivery_cost" twoDecimals />
+                                </app-input-group>
+                            </div>
+                        </div>
+
+                        <div class="controls d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary btn-sm"
+                                (click)="accordion.toggle('fourth')">Siguiente</button>
+                        </div>
+
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div ngbAccordionItem="fourth">
+            <h2 ngbAccordionHeader>
+                <button ngbAccordionButton>Detalle de pagos</button>
+            </h2>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template>
+                        <ul class="list-group list-group-flush mb-3">
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Sub Total</span>
+                                <h6>{{ summary?.subTotal ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>IGV</span>
+                                <h6>{{ summary?.igv ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Delivery</span>
+                                <h6>{{ summary?.delivery ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                <span>Total</span>
+                                <h5>{{ summary?.total ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h5>
+                            </li>
+
+                        </ul>
+
+                        <div class="controls d-flex justify-content-end">
+                            <app-button-save color="dark">Generar Pedido</app-button-save>
+                        </div>
+
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<!-- <pre>
+    {{ form.value | json }}
+</pre> -->
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">A&ntilde;adir Productos</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+
+        <app-variant-search (emitVariantsSelected)="receiveVariantsSelected($event)"></app-variant-search>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+
+</ng-template>
+
+<ng-template #courier let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">A&ntilde;adir Courier</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+
+        <!-- <app-courier-search (emitCourierSelected)="receiveCourierSelected($event)"></app-courier-search> -->
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+
+</ng-template>

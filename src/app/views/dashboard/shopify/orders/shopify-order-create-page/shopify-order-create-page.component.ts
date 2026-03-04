@@ -9,7 +9,8 @@ import { faTruck } from '@fortawesome/free-solid-svg-icons';
   imports: [
     ShopifyOrderCreateComponent,
     HeadPageComponent,
-    ButtonBackComponent
+    ButtonBackComponent,
+    ShopifyOrderCreateComponent
   ],
   templateUrl: './shopify-order-create-page.component.html',
   styleUrl: './shopify-order-create-page.component.scss'

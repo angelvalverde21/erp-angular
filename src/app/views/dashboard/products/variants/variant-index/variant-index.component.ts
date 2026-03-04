@@ -20,6 +20,7 @@ export class VariantIndexComponent implements OnInit {
   @Output() variantAdded = new EventEmitter<any>();
 
   @Output() variantArraySelected = new EventEmitter<any>();
+  @Output() emitVariantsSelected = new EventEmitter<any>();
 
   variant_select: any;
 
@@ -70,6 +71,14 @@ export class VariantIndexComponent implements OnInit {
     // if (variant) {
     //   this.variantAdded.emit(this.variant_select);
     // }
+    
+    const obj = this.variants.filter(v => variantsSelected.includes(v.id));
+
+    console.log(obj);
+    
+
+    this.emitVariantsSelected.emit(obj);
+
 
   }
 

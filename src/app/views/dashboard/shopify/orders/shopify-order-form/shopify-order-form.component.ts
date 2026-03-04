@@ -1,23 +1,28 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { ControlContainer, FormGroupDirective } from '@angular/forms';
 import { faHome, faEnvelope, faPhone, faAddressCard } from '@fortawesome/free-solid-svg-icons';
 import { InputGroupComponent } from '@shared/components/form/input-group/input-group.component';
-import { VariantSearchComponent } from '../../../products/variants/variant-search/variant-search.component';
+import { CourierSelectedComponent } from '../../../users/couriers/courier-selected/courier-selected.component';
 
 @Component({
   selector: 'app-shopify-order-form',
   imports: [
-    ReactiveFormsModule,
     InputGroupComponent,
-    VariantSearchComponent
+    CourierSelectedComponent
   ],
   templateUrl: './shopify-order-form.component.html',
-  styleUrl: './shopify-order-form.component.scss'
+  styleUrl: './shopify-order-form.component.scss',
+  viewProviders: [
+    {
+      provide: ControlContainer,
+      useExisting: FormGroupDirective
+    }
+  ]
 })
 export class ShopifyOrderFormComponent implements OnInit {
 
 
-  @Input() form!: FormGroup;
+  // @Input() form!: FormGroup;
 
   // form!: FormGroup;
 
@@ -34,10 +39,5 @@ export class ShopifyOrderFormComponent implements OnInit {
   faEnvelope = faEnvelope;
   faPhone = faPhone;
   faAddressCard = faAddressCard;
-
-  receiveSelectedVariants(variants: any[]) {
-    console.log('Selected variants:', variants);
-    
-  }
 
 }

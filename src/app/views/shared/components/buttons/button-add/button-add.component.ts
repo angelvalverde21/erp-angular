@@ -17,6 +17,7 @@ export class ButtonAddComponent {
   faPlus = faPlus;
 
   @Input() path: any; 
+  @Input() color: string = 'success'; 
   
   // @Output() action = new EventEmitter<void>();
 

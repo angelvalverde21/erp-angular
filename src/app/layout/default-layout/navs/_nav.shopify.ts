@@ -12,12 +12,12 @@ export const navShopify: CustomNavData[] = [
     iconComponent: { name: 'cil-cash' },
     children: [
       {
-        name: 'Pedidos', url: 'dashboard/shopify/orders', icon: 'nav-icon-bullet', linkProps: {
+        name: 'Crear', url: 'dashboard/shopify/orders/create', icon: 'nav-icon-bullet', linkProps: {
           routerLinkActiveOptions: { exact: true }
         }
       },
       {
-        name: 'Crear', url: 'dashboard/shopify/orders/create', icon: 'nav-icon-bullet', linkProps: {
+        name: 'Pedidos', url: 'dashboard/shopify/orders', icon: 'nav-icon-bullet', linkProps: {
           routerLinkActiveOptions: { exact: true }
         }
       }

@@ -1,3 +1,9 @@
-<app-address-form [form]="form"></app-address-form>
+<form [formGroup]="form">
 
-<app-button-save (click)="updateAddress()" [spinner]="loading" [disabled]="disabledButton">Guardar cambios</app-button-save>
+    <app-address-form></app-address-form>
+
+    <app-button-save (click)="updateAddress()" [spinner]="loading" [disabled]="disabledButton">Guardar
+        cambios</app-button-save>
+
+
+</form>

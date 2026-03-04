@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { faHome, faUser, faPhone, faImagePortrait, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { InputDistrictIdComponent } from '../input-district-id/input-district-id.component';
 import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ControlContainer, FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { IdentitySelectedComponent } from '../../identities/identity-selected/identity-selected.component';
 
 @Component({
@@ -17,7 +17,13 @@ import { IdentitySelectedComponent } from '../../identities/identity-selected/id
     IdentitySelectedComponent
   ],
   templateUrl: './address-form.component.html',
-  styleUrl: './address-form.component.scss'
+  styleUrl: './address-form.component.scss',
+  viewProviders: [
+    {
+      provide: ControlContainer,
+      useExisting: FormGroupDirective
+    }
+  ]
 })
 export class AddressFormComponent {
 
@@ -27,18 +33,15 @@ export class AddressFormComponent {
   faPhone = faPhone;
   faLocationDot = faLocationDot;
 
-  @Input({ required: true }) form!: FormGroup;
+  constructor(private controlContainer: ControlContainer) { }
 
-  isInvalid(value: string): boolean {
-    if (
-      this.form.get(value)?.invalid &&
-      this.form.get(value)?.touched
-    ) {
-      // console.log('INVALIDO');
-      return true;
-    } else {
-      return false;
-    }
+  get form(): FormGroup {
+    return this.controlContainer.control as FormGroup;
+  }
+
+  isInvalid(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return !!(control?.invalid && control?.touched);
   }
 
 }

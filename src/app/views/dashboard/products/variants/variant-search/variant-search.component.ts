@@ -116,12 +116,23 @@ export class VariantSearchComponent implements OnInit {
   }
 
   addVariants() {
+
     if (this.buttonDisabled) {
       return;
     } else {
       console.log("Adding variants:", this.selected_variants);
-      this.emitVariantsSelected.emit(this.selected_variants);
+      console.log("Adding variants:", this.variantsSelected);
+      this.emitVariantsSelected.emit(this.variantsSelected);
     }
+
+  }
+
+  variantsSelected: any;
+
+  receiveVariantsSelected(variantsSelected: any){
+    // this.emitVariantsSelected.emit(variantsSelected);
+    console.log("Received variants selected:", variantsSelected);
+    this.variantsSelected = variantsSelected;
   }
 
 }
