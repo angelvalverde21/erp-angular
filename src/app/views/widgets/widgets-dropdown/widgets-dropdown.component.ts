@@ -13,6 +13,8 @@ import { LoadingComponent } from '../../shared/components/loading/loading.compon
 import { PagoLinkComponent } from '../pago-link/pago-link.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowUpRightFromSquare, faChartColumn, faBarcode, faChartSimple} from '@fortawesome/free-solid-svg-icons';
+import { OrderLinkComponent } from '../order-link/order-link.component';
+import { PurchaseOrderLinkComponent } from '../purchase-order-link/purchase-order-link.component';
 
 @Component({
   selector: 'app-widgets-dropdown',
@@ -26,8 +28,9 @@ import { faArrowUpRightFromSquare, faChartColumn, faBarcode, faChartSimple} from
     CommonModule,
     LoadingComponent, 
     PagoLinkComponent,
-    FontAwesomeModule
-
+    FontAwesomeModule,
+    OrderLinkComponent,
+    PurchaseOrderLinkComponent
   ]
 })
 
@@ -40,12 +43,20 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
   constructor(private _dashboard: DashboardService, private router: Router) {}
 
 
+  user: any;
+  roles: any[] = [];
+
   data: any[] = [];
   options: any[] = [];
 
   ngOnInit(): void {
     // this.setData();
     // this.loadingDashboard();
+    this.user = JSON.parse(localStorage.getItem('user') || '[]');
+    this.roles = this.user.roles || [];
+
+    console.log(this.roles);
+    
   }
 
   destroy$ = new Subject<void>();
@@ -70,7 +81,6 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
         this.stats = resp.data;
         this.loading = false;
         console.log(resp);
-        
       },
     
       error: (error: any) => {

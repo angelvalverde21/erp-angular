@@ -6,7 +6,6 @@ export const routes: Routes = [
     loadComponent: () => import('./manufacture-index-page/manufacture-index-page.component').then((m) => m.ManufactureIndexPageComponent),
     data: {
       title: 'Todos',
-      name: 'dashboard.manufacture.index', // 👈 nombre único
     }
   },
   {
@@ -14,7 +13,6 @@ export const routes: Routes = [
     loadComponent: () => import('./manufacture-create-page/manufacture-create-page.component').then((m) => m.ManufactureCreatePageComponent),
     data: {
       title: 'Create',
-      name: 'dashboard.manufacture.create', // 👈 nombre único
     }
   },
   {
@@ -23,7 +21,6 @@ export const routes: Routes = [
       import('./productions/routes.production').then((m) => m.routes),
     data: {
       title: 'Producciones',
-      name: 'dashboard.manufacture.create', // 👈 nombre único
     }
   },
   {
@@ -32,7 +29,6 @@ export const routes: Routes = [
       import('./orders/routes.orders').then((m) => m.routes),
     data: {
       title: 'Ordenes de compra',
-      name: 'dashboard.manufacture.create', // 👈 nombre único
     }
   },
   {
@@ -48,7 +44,6 @@ export const routes: Routes = [
     loadComponent: () => import('./manufacture-edit-page/manufacture-edit-page.component').then((m) => m.ManufactureEditPageComponent),
     data: {
       title: 'Editar',
-      name: 'dashboard.manufacture.edit', // 👈 nombre único
     }
   },
 ];

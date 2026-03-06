@@ -1,12 +1,15 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { InputGroupComponent } from '../../../../shared/components/form/input-group/input-group.component';
+import { InputGroupComponent } from '@shared/components/form/input-group/input-group.component';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { VariantIndexComponent } from '../variant-index/variant-index.component';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { ProductService } from '../../../products/product.service';
 import Swal from 'sweetalert2';
-import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
+import { ButtonComponent } from '@shared/components/buttons/button/button.component';
+import { VoidIndexComponent } from '@shared/components/void-index/void-index.component';
+import { VariantIndexSelectedComponent } from '../variant-index-selected/variant-index-selected.component';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-variant-search',
@@ -15,7 +18,10 @@ import { ButtonComponent } from '../../../../shared/components/buttons/button/bu
     VariantIndexComponent,
     FormsModule,
     ButtonComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    VoidIndexComponent,
+    VariantIndexSelectedComponent,
+    LoadingComponent
   ],
   templateUrl: './variant-search.component.html',
   styleUrl: './variant-search.component.scss'
@@ -37,6 +43,8 @@ export class VariantSearchComponent implements OnInit {
   ) {
 
   }
+
+  loading: boolean = false;
 
   ngOnInit(): void {
 
@@ -62,8 +70,6 @@ export class VariantSearchComponent implements OnInit {
   //   this.search$.next(value);
   // }
 
-  loading: boolean = false;
-
   getSearch() {
 
     if (!this.form.get('search')?.value) {
@@ -80,6 +86,7 @@ export class VariantSearchComponent implements OnInit {
         console.log(resp);
         this.products = resp.data;
         this.variants = this.products.flatMap((product: any) => product.variants);
+        // this.variants = this.products;
         this.loading = false;
       },
 

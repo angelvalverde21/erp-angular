@@ -6,7 +6,8 @@
     <app-button-back></app-button-back>
 </app-head-page>
 
-<div class="card mb-3">
+@if(roles.includes('master') || roles.includes('ceo')){
+    <div class="card mb-3">
 
     <div class="card-body">
         <app-petty-cash-edit [petty_cash]="petty_cash"></app-petty-cash-edit>
@@ -16,6 +17,7 @@
     </div>
 
 </div>
+}
 
 <app-payment-index [paymentable_type]="'petty_cash'" [payments]="petty_cash?.payments" [paymentable_id]="petty_cash.id"></app-payment-index>
 

@@ -1,0 +1,13 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<div class="card mb-3">
+    <div class="card-body">
+        <app-manufacture-variant-index [manufacture_id]="manufacture.id"
+            (emitSumManufactureVariant)="receiveSumManufactureVariant($event)"
+            [sum_products]="sum_products"
+            [manufacture_variants]="manufacture_variants"></app-manufacture-variant-index>
+    </div>
+
+</div>
+}

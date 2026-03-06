@@ -26,7 +26,12 @@
                 </td>
                 <td class="text-center">
                     {{ variant.stock }}</td>
-                <td class="text-center">{{ variant?.product?.name }}</td>
+                <td class="text-center">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <img [src]="variant?.product?.image.url_thumbnail" width="50px" alt="">
+                        <span>{{ variant?.product?.name }}</span>
+                    </div>
+                </td>
 
                 @for (variant_option_value of variant.variant_option_values; track variant_option_value.id) {
                 <td class="text-center">{{ variant_option_value.option_value.value }}</td>

@@ -1,0 +1,17 @@
+@if(loading) {
+
+    <app-loading></app-loading>
+
+}@else{
+    <div class="card">
+
+    <div class="card-body">
+
+        <app-purchase-index [purchases]="purchases" [sum_purchases]="sum_purchases"
+            (emitSumPurchaseIndex)="receiveSumPurchaseIndex($event)" purchaseable_type="manufacture"
+            [purchaseable_id]="manufacture.id"></app-purchase-index>
+
+    </div>
+
+</div>
+}

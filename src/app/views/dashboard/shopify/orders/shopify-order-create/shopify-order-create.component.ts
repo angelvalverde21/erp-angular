@@ -38,7 +38,8 @@ import { TwoDecimalsDirective } from 'src/app/core/directives/two-decimals.direc
     VoidIndexComponent,
     ButtonSaveComponent,
     ButtonCheckComponent,
-    TwoDecimalsDirective
+    TwoDecimalsDirective,
+    
   ],
   templateUrl: './shopify-order-create.component.html',
   styleUrl: './shopify-order-create.component.scss',
@@ -151,6 +152,8 @@ export class ShopifyOrderCreateComponent {
       this.variants.push(group);
 
     });
+
+    this.modal.close();
 
   }
 

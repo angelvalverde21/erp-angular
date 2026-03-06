@@ -1,0 +1,71 @@
+<app-head-page title="Editar Produccion">
+    <app-button-link [color]="'primary'" [path]="['../create']">+ Produccion</app-button-link>
+</app-head-page>
+
+<!-- <app-manufacture-edit [manufacture]="manufacture"></app-manufacture-edit> -->
+
+<div class="widgets mb-3">
+    <div class="row">
+
+        @for (widget of widgets; track $index) {
+
+        <div class="col-lg-3 col-md-3 col-6">
+
+            <a [routerLink]="widget.link">
+
+                <div class="widget-manufacture mb-3 card text-white" routerLinkActive="bg-primary"
+                    [routerLinkActiveOptions]="{ exact: widget.exact ?? false }">
+
+                    <div class="card-header">
+                        <h6 class="my-0 widget-title">
+                            <fa-icon [icon]="widget.icon" class="me-2"></fa-icon>
+                            {{ widget.title }}
+                        </h6>
+                    </div>
+
+                    <div class="card-body">
+                        <h5>{{ widget.value }}</h5>
+                        <small class="text-white-75">{{ widget.subtitle }}</small>
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+        }
+
+    </div>
+</div>
+<!--     
+    <div class="row">
+
+
+        <div class="col-lg-3 col-md-6 col-6">
+            <app-widget-cost [total_cost]="summary?.cost" ></app-widget-cost>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+            <div role="button" class="pointer" [routerLink]="['.purchases']" routerLinkActive="router-link-active" >
+                <app-widget-purchases [total_purchases_amount]="summary?.sum_purchases"></app-widget-purchases>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+            <div role="button" class="pointer">
+                <app-widget-products [total_products]="summary?.sum_products"></app-widget-products>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-6">
+            <div role="button" class="pointer">
+                <app-widget-receptions [total_receptions]="kardex?.reception" [saldo]="kardex?.saldo"></app-widget-receptions>
+            </div>
+        </div>
+
+    </div> -->
+
+<!-- </div> -->
+
+<!-- <app-manufacture-widgets [widget]="widget"></app-manufacture-widgets> -->

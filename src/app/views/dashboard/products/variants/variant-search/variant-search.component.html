@@ -1,14 +1,31 @@
 <form [formGroup]="form">
-    <app-input-group [icon]="faMagnifyingGlass" text="">
-        <input formControlName="search" type="text" class="form-control" placeholder="Busca Productos" aria-label="name" aria-describedby="basic-name" />
-    </app-input-group>
+
+    <div class="px-3 py-3">
+        <app-input-group [icon]="faMagnifyingGlass" text="">
+            <input formControlName="search" type="text" class="form-control" placeholder="Busca Productos"
+                aria-label="name" aria-describedby="basic-name" />
+        </app-input-group>
+    </div>
+
+    @if(loading){
+    <app-loading></app-loading>
+    }@else{
 
     @if(variants?.length > 0){
-    <app-variant-index [variants]="variants"
-        (variantArraySelected)="receiveSelectedVariants($event)" (emitVariantsSelected)="receiveVariantsSelected($event)"></app-variant-index>
-    <app-button [color]="'dark'" mb="3" [disabled]="buttonDisabled" (click)="addVariants()">Agregar
-        Variantes</app-button>
-    }@else{
-    <!-- <p>No se encontraron variantes</p> -->
+            <app-variant-index [variants]="variants" (variantArraySelected)="receiveSelectedVariants($event)"
+                (emitVariantsSelected)="receiveVariantsSelected($event)"></app-variant-index>
+
+            <!-- <app-variant-index-selected [products]="products"></app-variant-index-selected> -->
+
+            <app-button [color]="'dark'" mb="3" [disabled]="buttonDisabled" (click)="addVariants()">Agregar
+                Variantes</app-button>
+        }@else{
+            <app-void-index [title]="'No se encontraron variantes'" [subtitle]="'Comienza la busqueda'"></app-void-index>
+        }
     }
+
+
+
+
+
 </form>

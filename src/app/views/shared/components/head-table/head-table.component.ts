@@ -48,6 +48,7 @@ export class HeadTableComponent implements OnInit, OnDestroy {
     = 'customer';
 
   @Input() button_active: boolean = true;
+  @Input() is_redirect: boolean = true;
   @Output() emitSearchResult = new EventEmitter<any>();
   @Output() emitParams = new EventEmitter<{}>();
 
@@ -124,8 +125,34 @@ export class HeadTableComponent implements OnInit, OnDestroy {
 
   }
 
+  loading: boolean = false;
+
   search() {
-    this.emitParams.emit(this.form.value);
+
+    if (this.is_redirect) {
+
+      this.emitParams.emit(this.form.value);
+
+    } else {
+
+      this.getService().search(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
+
+        next: (resp: any) => {
+          this.emitSearchResult.emit(resp?.data ?? []);
+          this.loading = false;
+        },
+
+        error: (error: any) => {
+          Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
+          console.error(error);
+        },
+
+      });
+
+      this.getService().search(this.form.value).subscribe((resp: any) => {
+      });
+    }
+
   }
 
 

@@ -99,6 +99,10 @@ export class ManufactureVariantIndexComponent implements OnInit {
 
   receiveSearchSelectedVariants(variants: any) {
 
+    //Solo enviare los id en un array
+
+    const variantsIds = variants.map((variant: any) => variant.id);
+
     this.modal.close();
 
     console.log("Received variants in manufacture edit page:", variants);
@@ -112,7 +116,7 @@ export class ManufactureVariantIndexComponent implements OnInit {
       }
     })
 
-    this._manufactureVariant.batch(this.manufacture_id, variants).pipe(takeUntil(this.destroy$)).subscribe({
+    this._manufactureVariant.batch(this.manufacture_id, variantsIds).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         Swal.fire('Guardado', 'Las variantes han sido agregadas', 'success');

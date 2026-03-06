@@ -6,6 +6,7 @@ import { ButtonBackComponent } from '@shared/components/buttons/button-back/butt
 import { PettyCashEditComponent } from '../petty-cash-edit/petty-cash-edit.component';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { PaymentIndexComponent } from '../../payments/payment-index/payment-index.component'
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-petty-cash-edit-page',
@@ -14,7 +15,8 @@ import { PaymentIndexComponent } from '../../payments/payment-index/payment-inde
     ButtonBackComponent,
     PettyCashEditComponent,
     HeadPageComponent,
-    PaymentIndexComponent
+    PaymentIndexComponent,
+    JsonPipe
   ],
   templateUrl: './petty-cash-edit-page.component.html',
   styleUrl: './petty-cash-edit-page.component.scss'
@@ -25,6 +27,7 @@ export class PettyCashEditPageComponent implements OnInit {
   petty_cash_id: number = 0;
   petty_cash: any;
 
+  roles: any[] = [];
 
   constructor(
     private _pettyCash: PettyCashService,
@@ -36,6 +39,9 @@ export class PettyCashEditPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.roles = JSON.parse(localStorage.getItem('user') || '[]')?.roles;
+
     this.pettyCashInit();
   }
 

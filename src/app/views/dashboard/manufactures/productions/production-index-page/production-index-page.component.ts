@@ -8,6 +8,7 @@ import { UserHeadTableComponent } from '../../../users/shared/user-head-table/us
 import { Subject, takeUntil } from 'rxjs';
 import { ManufactureProductionService } from '../production.service';
 import { faGears } from '@fortawesome/free-solid-svg-icons';
+import { HeadTableComponent } from 'src/app/views/shared/components/head-table/head-table.component';
 
 @Component({
   selector: 'app-production-index-page',
@@ -17,7 +18,7 @@ import { faGears } from '@fortawesome/free-solid-svg-icons';
     ButtonBackComponent,
     LoadingComponent,
     ButtonLinkComponent,
-    UserHeadTableComponent,
+    HeadTableComponent,
   ],
   templateUrl: './production-index-page.component.html',
   styleUrl: './production-index-page.component.scss'

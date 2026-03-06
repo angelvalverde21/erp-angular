@@ -3,7 +3,7 @@ import { ManufactureEditComponent } from '../../manufacture-edit/manufacture-edi
 import { HeadPageComponent } from '@components/head-page/head-page.component';
 import { ButtonLinkComponent } from '@buttons/button-link/button-link.component';
 import { ManufactureService } from '../../manufacture.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { PurchaseIndexComponent } from '../../../purchases/purchase-index/purchase-index.component';
@@ -37,6 +37,7 @@ import { ManufactureOrderService } from '../order.service';
 import { StoreService } from '../../../../stores/store.service';
 import { BaseService } from '../../../../base.service';
 import { OrderWidgetComponent } from '../order-widget/order-widget.component';
+import { OrderEditHeadComponent } from './order-edit-head/order-edit-head.component';
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -66,6 +67,8 @@ import { OrderWidgetComponent } from '../order-widget/order-widget.component';
     WidgetPurchasesComponent,
     WidgetReceptionsComponent,
     OrderWidgetComponent,
+    RouterModule,
+    OrderEditHeadComponent
     // NgbDropdownModule
   ],
   templateUrl: './order-edit-page.component.html',

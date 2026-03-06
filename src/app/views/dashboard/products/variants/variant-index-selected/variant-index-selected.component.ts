@@ -21,6 +21,7 @@ export class VariantIndexSelectedComponent implements OnInit {
 
 
   @Input() variants: any[] = [];
+  @Input() products: any[] = [];
   @Output() variantAdded = new EventEmitter<any>();
 
   @Output() emitVariantsSelected = new EventEmitter<any>();

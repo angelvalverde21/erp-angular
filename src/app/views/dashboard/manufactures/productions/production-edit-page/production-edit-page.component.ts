@@ -3,7 +3,7 @@ import { ManufactureEditComponent } from '../../manufacture-edit/manufacture-edi
 import { HeadPageComponent } from '@components/head-page/head-page.component';
 import { ButtonLinkComponent } from '@buttons/button-link/button-link.component';
 import { ManufactureService } from '../../manufacture.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { PurchaseIndexComponent } from '../../../purchases/purchase-index/purchase-index.component';
@@ -34,6 +34,7 @@ import { WidgetPurchasesComponent } from '../../shared/widgets/widget-purchases/
 import { WidgetReceptionsComponent } from '../../shared/widgets/widget-receptions/widget-receptions.component';
 import { KardexService } from '../../../kardex/kardex.service';
 import { ManufactureProductionService } from '../production.service';
+import { ProductionEditHeadComponent } from './production-edit-head/production-edit-head.component';
 
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -64,6 +65,8 @@ import { ManufactureProductionService } from '../production.service';
     WidgetProductsComponent,
     WidgetPurchasesComponent,
     WidgetReceptionsComponent,
+    ProductionEditHeadComponent,
+    RouterModule
     // NgbDropdownModule
   ],
   templateUrl: './production-edit-page.component.html',
@@ -73,7 +76,6 @@ import { ManufactureProductionService } from '../production.service';
 })
 
 export class ProductionEditPageComponent implements OnInit, OnDestroy {
-
 
   loading: boolean = false;
   manufacture: any = null;
@@ -87,13 +89,6 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
     purchase_total: 0,
     quantity_received: 0,
     progress: 0
-  };
-
-  widget_summary: any = {
-    cost: 0,
-    sum_products: 0,
-    sum_purchases: 0,
-    reception: 0
   };
 
   faBoxArchive = faBoxArchive;
@@ -134,6 +129,7 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
   kardex_summary: any;
 
+  //usado
   manufactureInit() {
 
     this.loading = true;
@@ -144,10 +140,10 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
         console.log(resp);
         this.manufacture = resp.data;
-        this.manufacture_variants = resp.data.manufacture_variants;
         this.purchases = resp.data.purchases;
         console.log(this.manufacture_variants);
-
+        
+        this.manufacture_variants = resp.data.manufacture_variants;
         this.variants = this.manufacture_variants.map((mv: any) => mv.variant);
 
 
@@ -156,12 +152,12 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
         this.kardex_summary = this._kardex.calculate(this.kardexes);
 
-        this.widget_summary = {
-          cost: (resp.data.quantity_total > 0) ? resp.data.purchase_total / resp.data.quantity_total : 0,
-          sum_products: resp.data.quantity_total ? resp.data.quantity_total : 0,
-          sum_purchases: resp.data.purchase_total ? resp.data.purchase_total : 0,
-          reception: this.kardex_summary.reception
-        };
+        // this.widget_summary = {
+        //   cost: (resp.data.quantity_total > 0) ? resp.data.purchase_total / resp.data.quantity_total : 0,
+        //   sum_products: resp.data.quantity_total ? resp.data.quantity_total : 0,
+        //   sum_purchases: resp.data.purchase_total ? resp.data.purchase_total : 0,
+        //   reception: this.kardex_summary.reception
+        // };
 
         this.loading = false;
 
@@ -199,9 +195,6 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
   openVerticallyCentered(content: TemplateRef<any>) {
     this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
   }
-
-
-
 
   selected_variants: any = {};
 
@@ -253,29 +246,18 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
   total_purchases_amount: number = 0;
   total_receptions: number = 0;
 
-  receiveSumManufactureVariant(sum_products: number) {
+  // receiveSumManufactureVariant(sum_products: number) {
 
-    console.log("received total products:", sum_products);
+  //   console.log("received total products:", sum_products);
 
 
-    this.widget_summary = {
-      ...this.widget_summary,
-      cost: this.widget_summary.sum_purchases / sum_products,
-      sum_products: sum_products,
-    };
+  //   this.widget_summary = {
+  //     ...this.widget_summary,
+  //     cost: this.widget_summary.sum_purchases / sum_products,
+  //     sum_products: sum_products,
+  //   };
 
-    // this.widget.progress = this.widget.quantity_received / this.widget.quantity_total * 100;
-  }
-
-  receiveSumPurchaseIndex(sum_purchases: number) {
-
-    this.widget_summary = {
-      ...this.widget_summary,
-      sum_purchases: sum_purchases,
-      cost: sum_purchases / this.widget_summary.sum_products,
-    };
-
-  }
+  // }
 
   // receiveSumReceptionIndex(total: number){
   //   this.total_receptions = total;

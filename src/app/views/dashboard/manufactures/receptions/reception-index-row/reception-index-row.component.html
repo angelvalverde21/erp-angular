@@ -23,6 +23,11 @@
 </td>
 <!-- <td class="text-center">{{ manufacture.created_at | DateShopify }}</td> -->
 <td class="text-center" style="width: 75px;">
-    <app-button color="success text-white" (click)="getManufactureReceptionId(manufacture)" [icon]="faArrowRightArrowLeft"></app-button>
+    @if(manufacture.type === 'production'){
+    <app-button color="primary text-white" (click)="getManufactureReceptionId(manufacture)"
+        [icon]="faArrowRightArrowLeft"></app-button>
+    }@else{
+    <app-button color="success text-white" (click)="getManufactureReceptionId(manufacture)"
+        [icon]="faArrowRightArrowLeft"></app-button>
+    }
 </td>
-

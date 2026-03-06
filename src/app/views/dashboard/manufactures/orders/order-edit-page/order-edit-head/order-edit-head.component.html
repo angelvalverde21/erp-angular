@@ -1,0 +1,40 @@
+<app-head-page title="Orden de Compra">
+    <app-button-link [path]="['../create']">+ Order de compra</app-button-link>
+</app-head-page>
+
+<!-- <app-manufacture-edit [manufacture]="manufacture"></app-manufacture-edit> -->
+
+<div class="widgets mb-3">
+    <div class="row">
+
+        @for (widget of widgets; track $index) {
+
+        <div class="col-lg-4 col-md-4 col-12">
+
+            <a [routerLink]="widget.link">
+
+                <div class="widget-manufacture mb-3 card text-white" routerLinkActive="bg-success"
+                    [routerLinkActiveOptions]="{ exact: widget.exact ?? false }">
+
+                    <div class="card-header">
+                        <h6 class="my-0 widget-title">
+                            <fa-icon [icon]="widget.icon" class="me-2"></fa-icon>
+                            {{ widget.title }}
+                        </h6>
+                    </div>
+
+                    <div class="card-body">
+                        <h5>{{ widget.value }}</h5>
+                        <small class="text-white-75">{{ widget.subtitle }}</small>
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+        }
+
+    </div>
+</div>

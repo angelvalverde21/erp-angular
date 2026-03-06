@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@a
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { MpPagoLinkCreateComponent } from '../../dashboard/mercadopago/mp-pago-link-create/mp-pago-link-create.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-pago-link',
@@ -17,7 +17,8 @@ import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 export class PagoLinkComponent implements OnInit, OnDestroy {
 
   faArrowUpRightFromSquare = faArrowUpRightFromSquare;
-  
+  faCalculator = faCalculator;
+
   modal: any;
   constructor(
     config: NgbModalConfig,
@@ -28,7 +29,7 @@ export class PagoLinkComponent implements OnInit, OnDestroy {
     config.keyboard = false;
   }
   openVerticallyCentered(content: TemplateRef<any>) {
-    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
+    this.modal = this.modalService.open(content, { centered: true });
   }
 
 

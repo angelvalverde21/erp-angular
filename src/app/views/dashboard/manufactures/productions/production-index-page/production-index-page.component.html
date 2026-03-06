@@ -3,14 +3,14 @@
 }@else{
 
 <app-head-page title="Producciones" [icon]="faGears">
-    <app-button-link [path]="['./create']">Crear Producción</app-button-link>
+    <app-button-link [color]="'primary'" [path]="['./create']">A&ntilde;adir Producción</app-button-link>
 </app-head-page>
 
 <div class="card">
 
-    <div class="card-header py-3">
-        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)"  type="manufacture_production" [button_active]="false"></app-user-head-table>
-    </div>
+    <!-- <div class="card-header py-3">
+        <app-head-table (emitSearchResult)="receiveSearchResult($event)" [is_redirect]="false" type="manufacture_production" [button_active]="false"></app-head-table>
+    </div> -->
 
     <div class="card-body p-0">
         @if(manufactures?.length > 0){
