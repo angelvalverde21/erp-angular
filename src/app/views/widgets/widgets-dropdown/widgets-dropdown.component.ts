@@ -15,6 +15,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowUpRightFromSquare, faChartColumn, faBarcode, faChartSimple} from '@fortawesome/free-solid-svg-icons';
 import { OrderLinkComponent } from '../order-link/order-link.component';
 import { PurchaseOrderLinkComponent } from '../purchase-order-link/purchase-order-link.component';
+import { ManufactureProductionLinkComponent } from '../manufacture-production-link/manufacture-production-link.component';
 
 @Component({
   selector: 'app-widgets-dropdown',
@@ -30,7 +31,8 @@ import { PurchaseOrderLinkComponent } from '../purchase-order-link/purchase-orde
     PagoLinkComponent,
     FontAwesomeModule,
     OrderLinkComponent,
-    PurchaseOrderLinkComponent
+    PurchaseOrderLinkComponent,
+    ManufactureProductionLinkComponent
   ]
 })
 

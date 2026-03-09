@@ -4,22 +4,21 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBoxes, faChartSimple, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-purchase-order-link',
+  selector: 'app-manufacture-production-link',
   imports: [
     RouterModule,
     FontAwesomeModule
   ],
-  templateUrl: './purchase-order-link.component.html',
-  styleUrl: './purchase-order-link.component.scss',
+  templateUrl: './manufacture-production-link.component.html',
+  styleUrl: './manufacture-production-link.component.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class PurchaseOrderLinkComponent {
+export class ManufactureProductionLinkComponent {
 
-  @Input() color: string = 'secondary';
+  @Input() color: string = 'primary';
 
   faBoxes = faBoxes;
   faArrowUpRightFromSquare = faArrowUpRightFromSquare;
   store: string | null = null;
 
 }
-

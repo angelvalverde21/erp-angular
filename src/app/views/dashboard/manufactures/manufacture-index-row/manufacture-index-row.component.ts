@@ -48,9 +48,9 @@ export class ManufactureIndexRowComponent {
 
 
     if (manufacture.type == 'order') {
-      this.link = [this._base.store, 'dashboard', 'manufactures', 'orders', this.manufacture.id];
+      this.link = [this._base.store, 'dashboard', 'manufactures', 'orders', this.manufacture.id, 'variants'];
     } else {
-      this.link = [this._base.store, 'dashboard', 'manufactures', 'productions', this.manufacture.id];
+      this.link = [this._base.store, 'dashboard', 'manufactures', 'productions', this.manufacture.id, 'variants'];
     }
 
     return this.router.navigate(this.link);

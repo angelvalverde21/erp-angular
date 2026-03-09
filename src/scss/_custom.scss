@@ -10,7 +10,7 @@ body {
   font-family: "Segoe UI", sans-serif;
   // font-family: var(--cui-font-sans-serif) !important;
   // font-weight: 200 !important; /* 🔹 más delgado */
-  font-size: 12px;
+  font-size: 14px;
 }
 
 // custom calendar today cell color
@@ -174,5 +174,9 @@ input {
 }
 
 button{
+    font-size: 0.75rem !important;
+  }
+  
+.nav-link{
     font-size: 0.75rem !important;
 }

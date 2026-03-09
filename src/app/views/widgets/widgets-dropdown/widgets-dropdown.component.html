@@ -1,7 +1,16 @@
 <div class="row">
 
-  @if(roles.includes('master') || roles.includes('ceo')) {
+  @if(roles.includes('ceo')) {
+  <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+    <app-purchase-order-link [color]="'success'"></app-purchase-order-link>
+  </div>
 
+  <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+    <app-manufacture-production-link></app-manufacture-production-link>
+  </div>
+  }
+
+  @if(roles.includes('sales')) {
   <div class="col-lg-6 col-md-6 col-sm-6 col-6">
     <app-pago-link class="w-100"></app-pago-link>
   </div>
@@ -9,21 +18,9 @@
   <div class="col-lg-6 col-md-6 col-sm-6 col-6">
     <app-order-link></app-order-link>
   </div>
-
-  <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-    <app-purchase-order-link [color]="'success'"></app-purchase-order-link>
-  </div>
   }
+  @if(roles.includes('master')) {
 
-  @if(roles.includes('sales') || roles.includes('ceo')) {
-    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-      <app-pago-link class="w-100"></app-pago-link>
-    </div>
-
-    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-      <app-order-link></app-order-link>
-    </div>
   }
-
 
 </div>
