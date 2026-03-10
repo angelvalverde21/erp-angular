@@ -49,6 +49,7 @@ export class HeadTableComponent implements OnInit, OnDestroy {
 
   @Input() button_active: boolean = true;
   @Input() is_redirect: boolean = true;
+  @Input() box_search: boolean = true;
   @Output() emitSearchResult = new EventEmitter<any>();
   @Output() emitParams = new EventEmitter<{}>();
 
@@ -70,17 +71,15 @@ export class HeadTableComponent implements OnInit, OnDestroy {
     private fb: FormBuilder
   ) { }
 
+  today = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
 
   formInit() {
 
 
-    const today = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
-
-
     this.form = this.fb.group({
       search: ['', Validators.required],
-      start_date: [null],
-      end_date: [today],
+      start_date: [this.today],
+      end_date: [this.today],
     });
 
   }
@@ -129,7 +128,13 @@ export class HeadTableComponent implements OnInit, OnDestroy {
 
   search() {
 
+    console.log(this.form.value);
+    
+
     if (this.is_redirect) {
+
+      console.log("is_redirect");
+      
 
       this.emitParams.emit(this.form.value);
 

@@ -1,49 +1,125 @@
 @if(loading || roles_loading){
 
-    <app-loading></app-loading>
+<app-loading></app-loading>
 
 }@else{
 
-    <app-head-page title="Editar Empleado" [export]="false">
-        <app-button-back></app-button-back>
-    </app-head-page>
+<app-head-page title="Editar Empleado" [export]="false">
+    @if(is_sales){
+    <app-button (click)="openVerticallyCentered(content)" [icon]="faChartLine" color="success" colortext="white"
+        class="me-2">Reporte</app-button>
+    }
+    <app-button-back></app-button-back>
+</app-head-page>
 
-    <div class="card mb-3">
+<div class="card mb-3">
 
-        <!-- {{ employee | json }} -->
+    <!-- {{ employee | json }} -->
 
-        <div class="card-body">
-            <app-employee-edit [employee]="employee" [roles]="roles"></app-employee-edit>
-        </div>
-
+    <div class="card-body">
+        <app-employee-edit [employee]="employee" [roles]="roles"></app-employee-edit>
     </div>
 
-    @if(is_sales){
+</div>
+
+}
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title">Reporte de ventas</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+
+        <app-head-table (emitParams)="receiveParams($event)" [box_search]="false"></app-head-table>
 
         @if(loadingOrders){
         <app-loading></app-loading>
         }@else{
-        <p class="mt-3">.</p>
 
-        <app-head-page title="Ventas Realizadas">
+        @if(orders.length > 0){
 
-        </app-head-page>
+        <div ngbAccordion #accordion="ngbAccordion" class="mt-3">
+            <div ngbAccordionItem="first" [collapsed]="false">
+                <h2 ngbAccordionHeader>
+                    <button ngbAccordionButton class="d-flex justify-content-between align-items-center">
+                        <fa-icon [icon]="faCalculator" class="me-2"></fa-icon>
+                        <span>Reporte de comisiones ({{ employee.user.name | uppercase }})</span>
+                    </button>
+                </h2>
+                <div ngbAccordionCollapse>
+                    <div ngbAccordionBody class="p-0">
+                        <ng-template>
 
-        <div class="card mb-3  ">
+                            <ul class="list-group list-group-flush">
 
-            <div class="card-header py-3">
 
-                <app-head-table (emitSearchResult)="receiveSearchResult($event)" type="employee"></app-head-table>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>Total pedidos</span>
+                                    <span class="badge bg-primary rounded-pill">{{ orders.length }}</span>
+                                </li>
 
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>Venta (Bruto)</span>
+                                    <span>{{ pricesLabel | pen }}</span>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>Descuentos</span>
+                                    <span>{{ discount | pen }}</span>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>Envios</span>
+                                    <span>{{ shippingTotal | pen }}</span>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>Vental Total</span>
+                                    <span><strong>{{ pricesFinal | pen }}</strong></span>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><strong>Comision ({{ employee.comission }}%)</strong></span>
+                                    <h4>{{ commission | pen }}</h4>
+                                </li>
+
+
+
+                            </ul>
+
+                        </ng-template>
+                    </div>
+                </div>
             </div>
-
-            <div class="card-body p-0">
-                <app-order-index [orders]="orders"></app-order-index>
+            <div ngbAccordionItem="second">
+                <h2 ngbAccordionHeader>
+                    <button ngbAccordionButton>
+                        <fa-icon [icon]="faInbox" class="me-2"></fa-icon>
+                        <span>Detalles de operaciones</span>
+                    </button>
+                </h2>
+                <div ngbAccordionCollapse>
+                    <div ngbAccordionBody>
+                        <ng-template>
+                            <app-order-index [orders]="orders"></app-order-index>
+                        </ng-template>
+                    </div>
+                </div>
             </div>
-
         </div>
 
-        }
-    }
+        }@else{
 
-}
+        <app-void-index [title]="'Reporte de ventas'" [subtitle]="'Seleccione un rango de fechas'"></app-void-index>
+
+        }
+
+        }
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>

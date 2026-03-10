@@ -27,5 +27,12 @@ export class EmployeeService extends BaseCrudDashboardService {
     });
   }
 
+  ordersSearch(employee_id: number, data: any): Observable<any[]> {
+
+    console.log(`${this.baseUrl}/orders`);
+    return this.http.post<any[]>(`${this.baseUrl}/${employee_id}/orders/search`, data);
+
+  }
+
 }
 

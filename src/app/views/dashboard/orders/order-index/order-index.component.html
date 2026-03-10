@@ -3,11 +3,12 @@
         <thead class="table-light">
             <tr>
                 <th class="text-center">#</th>
-                <th>Tags</th>
                 <th style="width: 150px;">Creado</th>
                 <th>Articulos</th>
-                <th style="width: 100px;" class="text-center"></th>
+                <th style="width: 100px;" class="text-center">Etiqueta</th>
+                <th class="text-center">Final</th>
                 <th class="text-center">Pago</th>
+                <th class="text-center">Envio</th>
                 <th class="text-center">Articulos</th>
             </tr>
         </thead>
@@ -15,14 +16,13 @@
 
             @for (order of orders; track order.id) {
 
-            @let items = order?.lineItems ?? []; 
+            @let items = order?.lineItems ?? [];
             <!-- @let sum = items.reduce((acc, item) => acc + item?.variant?.price, 0); -->
 
             <tr>
                 <td class="text-center">
                     {{ order?.name }}
                 </td>
-                <td>{{ order.tags | json}}</td>
 
                 <td>
                     {{ order?.processedAt | DateShopify }}
@@ -30,13 +30,21 @@
 
                 <td>
                     <!-- <ul class="list-group list-group-flush"> -->
-                        @for (item of items; track $index) {
-                            <li class="list-group-item">{{ item?.name }}</li>
-                        }
+                    @for (item of items; track $index) {
+                    <li class="list-group-item">{{ item?.name }}</li>
+                    }
                     <!-- </ul> -->
                 </td>
 
-                <td>{{ getOrderSum(order) | pen }}</td>
+                <td class="text-center">{{ getOrderSum(order) | pen }}</td>
+
+                <td class="text-center">
+                    {{ order?.totalPriceSet?.shopMoney?.amount | pen }}
+                </td>
+
+                <td class="text-center">
+                    {{ order?.totalShippingPriceSet?.shopMoney?.amount | pen }}
+                </td>
 
                 <td class="text-center">
                     {{ order?.displayFinancialStatus }}
@@ -47,6 +55,16 @@
                 </td>
             </tr>
             }
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-center">{{ getOrdersSum(orders) | pen }}</td>
+                <td></td>
+                <td></td>
+            </tr>
 
         </tbody>
     </table>

@@ -24,5 +24,17 @@ export class OrderIndexComponent {
       0
     );
   }
-     
+
+  getOrderTotal(order: any): number {
+    return order?.totalPriceSet?.shopMoney?.amount ?? 0;
+  }
+
+  getShipping(order: any): number {
+    return order?.totalShippingPriceSet?.shopMoney?.amount ?? 0;
+  }
+
+  getOrdersSum(orders: any[]): number {
+    return orders.reduce((acc, order) => acc + this.getOrderSum(order), 0);
+  }
+
 }

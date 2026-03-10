@@ -171,8 +171,8 @@ export const navErp: CustomNavData[] = [
         url: 'dashboard/users',
         iconComponent: { name: 'cil-user' },
         children: [
-            { name: 'Clientes', url: 'dashboard/users/customers', icon: 'nav-icon-bullet' },
             { name: 'Colaboradores', url: 'dashboard/users/employees', icon: 'nav-icon-bullet' },
+            { name: 'Clientes', url: 'dashboard/users/customers', icon: 'nav-icon-bullet' },
             { name: 'Proveedores', url: 'dashboard/users/suppliers', icon: 'nav-icon-bullet' },
         ],
         roles: ['ceo', 'master']
