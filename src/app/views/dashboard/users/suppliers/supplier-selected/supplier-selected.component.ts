@@ -23,6 +23,8 @@ import Swal from 'sweetalert2';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SupplierService } from '../supplier.service';
+import { Supplier } from '@interfaces/supplier.interface';
+
 @Component({
   selector: 'app-supplier-selected',
   standalone: true,
@@ -50,7 +52,7 @@ export class SupplierSelectedComponent
   supplier_id: number | null = null;
   loading = false;
 
-  @Input() suppliers: any[] = [];
+  suppliers: Supplier[] = [];
 
   private destroy$ = new Subject<void>();
   private pendingSupplierId: number | null = null;
@@ -63,7 +65,7 @@ export class SupplierSelectedComponent
   ngOnChanges(changes: SimpleChanges) {
 
     if (changes['suppliers']) {
-      this.suppliers = this.normalizeSuppliers(changes['suppliers'].currentValue);
+      this.suppliers = this.normalizeSuppliers(changes['suppliers'].currentValue ?? []);
     }
 
   }
@@ -103,17 +105,25 @@ export class SupplierSelectedComponent
         //Da formato porque el json viene de la forma supplier.user.name 
 
         this.suppliers = this.normalizeSuppliers(resp.data);
+        console.log(this.suppliers);
 
         this.trySetSupplier();
+
       });
 
   }
 
-  private normalizeSuppliers(suppliers: any[]): any[] {
-    return suppliers.map(s => ({
-      ...s,
+  private normalizeSuppliers(suppliers: any[] = []): any[] {
+
+    const user = suppliers.map(s => ({
+      id: s.id,
       name: s.user?.name
     }));
+
+    console.log(user);
+
+
+    return user;
   }
 
   private trySetSupplier() {

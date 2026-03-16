@@ -1,8 +1,63 @@
 <form [formGroup]="form" class="px-2">
 
-    <div class="row mb-3">
+    <div class="row">
 
-        <!-- <app-product-selected formControlName="name" (emitSearchResult)="onSearchResult($event)"></app-product-selected> -->
+        <div class="col-lg-12 col-md-12 col-12" [ngClass]="{'d-none': supplier_id != null  ? false : true }">
+
+            <label class="mb-2">Escoger Proveedor</label>
+
+            <div class="proveedor mb-3 d-flex justify-content-between align-items-center">
+
+                <!-- <ng-select class="w-100 me-2" formControlName="supplier_id" bindValue="id"
+                                            [items]="suppliers" [addTag]="false" bindLabel="name"
+                                            placeholder="Escoja una marca">
+                                            <ng-template ng-label-tmp let-item="item">
+                                                <fa-icon [icon]="faUser" class="me-2"></fa-icon>
+                                                {{ item.name }}
+                                            </ng-template>
+                                        </ng-select> -->
+
+                <app-supplier-selected class="w-100 me-2" formControlName="supplier_id"></app-supplier-selected>
+
+                <app-button [icon]="faPlus" (click)="openVerticallyCentered(newSupplier)">Crear</app-button>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6 col-6 col-md-6">
+            <app-input-group text="Fecha Pedido">
+                <input formControlName="purchase_start" type="date" class="form-control" placeholder="Fecha Pedido"
+                    aria-label="purchase_start" aria-describedby="purchase_start" />
+            </app-input-group>
+        </div>
+
+        <div class="col-lg-6 col-6 col-md-6">
+            <app-input-group text="Fecha de entrega">
+                <input formControlName="purchase_end" type="date" class="form-control" placeholder="Fecha Entrega"
+                    aria-label="purchase_end" aria-describedby="purchase_end" />
+            </app-input-group>
+        </div>
+
+
+        <!-- {{ form.value | json }} -->
+
+    </div>
+    <!-- Purchase Items -->
+
+
+
+    <div class="row">
+        <div class="col-lg-12 col-12">
+            <label class="mb-2">Observaciones</label>
+            <textarea formControlName="observations" class="form-control mb-3" placeholder="Observaciones"></textarea>
+        </div>
+    </div>
+
+
+
+
+    <!-- <div class="row mb-3">
 
         <div class="col-lg-12 col-md-6 col-12">
             <app-input-group text="Registrar insumo" [icon]="faEdit">
@@ -11,8 +66,6 @@
                     placeholder="Nombre del insumo" aria-label="name" aria-describedby="basic-name" />
             </app-input-group>
         </div>
-
-        <!-- [ngClass]="{'d-none': this.form.value.name != null }" -->
 
         <div class="col-lg-3 col-6 col-md-6">
             <app-input-group text="Cantidad (*)">
@@ -55,58 +108,6 @@
                     <div ngbAccordionBody>
                         <ng-template>
 
-                            <div class="row">
-
-                                <div class="col-lg-12 col-md-12 col-12"
-                                    [ngClass]="{'d-none': supplier_id != null  ? false : true }">
-
-                                    <label class="mb-2">Escoger Proveedor</label>
-
-                                    <div class="proveedor mb-3 d-flex justify-content-between align-items-center">
-
-                                        <!-- <ng-select class="w-100 me-2" formControlName="supplier_id" bindValue="id"
-                                            [items]="suppliers" [addTag]="false" bindLabel="name"
-                                            placeholder="Escoja una marca">
-                                            <ng-template ng-label-tmp let-item="item">
-                                                <fa-icon [icon]="faUser" class="me-2"></fa-icon>
-                                                {{ item.name }}
-                                            </ng-template>
-                                        </ng-select> -->
-
-                                        <app-supplier-selected class="w-100 me-2" formControlName="supplier_id" [suppliers]="suppliers"></app-supplier-selected>
-
-                                        <app-button [icon]="faPlus"
-                                            (click)="openVerticallyCentered(newSupplier)">Crear</app-button>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="col-lg-6 col-6 col-md-6">
-                                    <app-input-group text="Fecha Pedido">
-                                        <input formControlName="purchase_start" type="date" class="form-control"
-                                            placeholder="Fecha Pedido" aria-label="purchase_start"
-                                            aria-describedby="purchase_start" />
-                                    </app-input-group>
-                                </div>
-
-                                <div class="col-lg-6 col-6 col-md-6">
-                                    <app-input-group text="Fecha de entrega">
-                                        <input formControlName="purchase_end" type="date" class="form-control"
-                                            placeholder="Fecha Entrega" aria-label="purchase_end"
-                                            aria-describedby="purchase_end" />
-                                    </app-input-group>
-                                </div>
-
-                                <div class="col-lg-12 col-12">
-                                    <label class="mb-2">Observaciones</label>
-                                    <textarea formControlName="observations" class="form-control mb-3"
-                                        placeholder="Observaciones"></textarea>
-                                </div>
-
-                                <!-- {{ form.value | json }} -->
-
-                            </div>
 
                         </ng-template>
                     </div>
@@ -115,11 +116,7 @@
 
         </div>
 
-        <!-- Si ya hay un proveedor seleccionado, por ejemplo en la orde de compra entonces ya no lo mostramos -->
-        <!-- [ngClass]="{'d-none': supplier_id != null }" -->
-
-
-    </div>
+    </div> -->
 
 </form>
 

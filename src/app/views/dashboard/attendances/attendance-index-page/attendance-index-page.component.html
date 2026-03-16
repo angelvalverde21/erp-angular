@@ -1,0 +1,66 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+
+<app-head-page title="Lista de asistencias" [icon]="faClipboardUser" [export]="false">
+    <button class="btn btn-outline-dark btn-sm d-flex justify-content-between align-items-center me-1"
+        (click)="openVerticallyCentered(content)">
+        <fa-icon [icon]="faUpload" class="me-1"></fa-icon>
+        <span>Upload</span>
+    </button>
+    <app-button-back></app-button-back>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3 bg-dark text-white">
+        Lista de Asistencia
+    </div>
+
+    <div class="card-body">
+
+        <app-attendance-index [attendances]="attendances"></app-attendance-index>
+
+    </div>
+
+</div>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Modal title</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+
+            <div class="modal-body">
+
+                <div class="mb-3">
+                    <label class="form-label">CSV File</label>
+
+                    <input type="file" class="form-control" accept=".csv" (change)="onFileChange($event)">
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">
+                    Cancel
+                </button>
+
+                <button type="submit" class="btn btn-dark" [disabled]="form.invalid">
+                    Upload
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</ng-template>
+
+}

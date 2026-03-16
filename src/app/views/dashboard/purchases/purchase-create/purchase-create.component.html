@@ -1,7 +1,55 @@
-<app-purchase-form [form]="form" [suppliers]="suppliers"></app-purchase-form>
+<form [formGroup]="form">
 
-<div class="w-100 mb-3">
-    <app-button color="dark" [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon"
-        (click)="create()">Registrar Compra</app-button>
-</div>
+    <div ngbAccordion [closeOthers]="true">
+        <div ngbAccordionItem>
+            <h2 ngbAccordionHeader>
+                <button ngbAccordionButton>Proveedor</button>
+            </h2>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template>
+                        <app-purchase-form [form]="form"></app-purchase-form>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div ngbAccordionItem>
+            <h2 ngbAccordionHeader>
+                <button ngbAccordionButton>Items</button>
+            </h2>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template>
+                        <app-purchase-item-index [purchase_items]="purchase_items"
+                            (emitAddItem)="addItem()"></app-purchase-item-index>
 
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div ngbAccordionItem>
+            <h2 ngbAccordionHeader>
+                <button ngbAccordionButton>Pagos</button>
+            </h2>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template>
+                        <app-payment-form [form]="form"></app-payment-form>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="w-100 mb-3">
+        <app-button color="dark" [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon"
+            (click)="create()">Registrar Compra</app-button>
+    </div>
+
+    {{ form.value | json }}
+    {{ form.status }}
+
+
+
+</form>

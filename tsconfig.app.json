@@ -27,6 +27,10 @@
         "src/app/views/dashboard/*",
         "src/app/views/dashboard/*.ts"
       ],
+      "@interfaces/*": [
+        "src/app/interfaces/*",
+        "src/app/interfaces/*.ts"
+      ],
     }
   },
   "files": [

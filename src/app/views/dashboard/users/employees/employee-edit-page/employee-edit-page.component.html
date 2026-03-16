@@ -22,6 +22,20 @@
 
 </div>
 
+<div class="card">
+
+    <div class="card-header py-3 bg-secondary text-white">
+        Registro de asistencias: {{ employee.user.name | uppercase }}
+    </div>
+
+    <div class="card-body">
+
+        <app-attendance-index [attendances]="employee.attendances"></app-attendance-index>
+
+    </div>
+
+</div>
+
 }
 
 

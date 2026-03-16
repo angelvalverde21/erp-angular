@@ -99,7 +99,7 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
           data.append('images[]', file);
         });
         return;
-      }
+      } 
 
       //resto de campos normales
       if (value !== null && value !== undefined) {

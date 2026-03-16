@@ -18,6 +18,7 @@ import { VoidIndexComponent } from 'src/app/views/shared/components/void-index/v
 import { PenPipe } from '@shared/pipes/pen.pipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
+import { AttendanceIndexComponent } from '../../../attendances/attendance-index/attendance-index.component';
 
 @Component({
   selector: 'app-employee-edit-page',
@@ -33,7 +34,8 @@ import { CommonModule } from '@angular/common';
     VoidIndexComponent,
     PenPipe,
     FontAwesomeModule,
-    CommonModule
+    CommonModule,
+    AttendanceIndexComponent
   ],
   templateUrl: './employee-edit-page.component.html',
   styleUrl: './employee-edit-page.component.scss',
@@ -87,6 +89,8 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
 
       next: (resp: any) => {
         this.employee = resp.data;
+        console.log(this.employee);
+        
         this.is_sales = this.employee.user.roles.includes('sales');
         this.loading = false
       },
@@ -109,7 +113,7 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
 
       next: (resp: any) => {
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
-        console.log(resp);
+        // console.log(resp);
         this.roles = resp.data;
         this.roles_loading = false;
       },

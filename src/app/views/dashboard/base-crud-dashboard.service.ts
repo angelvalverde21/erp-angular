@@ -86,6 +86,7 @@ export abstract class BaseCrudDashboardService {
     return this.http.post(`${url}`, data);
   }
 
+
   // Generic method to update an existing item
   update(id: number, data: any): Observable<any> {
     const url = `${this.baseUrl}/${id}`;
@@ -122,7 +123,7 @@ export abstract class BaseCrudDashboardService {
     console.log("imprimiendo url de search");
     console.log(url);
     return this.http.post(`${url}/search`, data);
-    
+
   }
 
   batch(data: any = {}): Observable<any> {
@@ -132,6 +133,14 @@ export abstract class BaseCrudDashboardService {
     // console.log(url);
     return this.http.post(`${url}`, data);
 
+  }
+
+  // Generic method to create a new item
+  upload(data: any): Observable<any> {
+    const url = `${this.baseUrl}/upload`;
+    console.log("imprimiendo url de upload");
+    console.log(url);
+    return this.http.post(`${url}`, data);
   }
 
 }

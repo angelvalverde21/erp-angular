@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { OrderVariantRowComponent } from '../order-variant-row/order-variant-row.component';
-import { ControlContainer, FormArray, FormGroup, FormGroupDirective } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-order-variant-index',

@@ -45,6 +45,26 @@ export const navConfig: CustomNavData[] = [
             },
         ],
         roles: ['master', 'ceo']
+    },
+    {
+        name: 'Asistencias',
+        url: 'dashboard/attendances',
+        iconComponent: { name: 'cil-truck' },
+        children: [
+            {
+                name: 'Todos', url: 'dashboard/attendances', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+            {
+                name: 'Subir', url: 'dashboard/attendances/upload', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+        ],
+        roles: ['master', 'ceo']
     }
 ];
 

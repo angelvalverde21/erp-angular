@@ -6,13 +6,19 @@ import { PurchaseIndexComponent } from '@dashboard/purchases/purchase-index/purc
 import { ProductionEditHeadComponent } from '../production-edit-head/production-edit-head.component';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { AccordionComponent } from '../../../../../shared/components/accordion/accordion.component';
+import { AccordionItemComponent } from '../../../../../shared/components/accordion/accordion-item/accordion-item.component';
 
 @Component({
   selector: 'app-production-purchase-index',
   imports: [
     PurchaseIndexComponent,
     ProductionEditHeadComponent,
-    LoadingComponent
+    LoadingComponent,
+    NgbAccordionModule,
+    AccordionComponent,
+    AccordionItemComponent
   ],
   templateUrl: './production-purchase-index.component.html',
   styleUrl: './production-purchase-index.component.scss'
@@ -31,6 +37,12 @@ export class ProductionPurchaseIndexComponent {
     sum_purchases: 0,
     reception: 0
   };
+
+  items = [
+    { title: 'Usuarios', content: 'Lista de usuarios' },
+    { title: 'Productos', content: 'Lista de productos' },
+    { title: 'Ventas', content: 'Lista de ventas' }
+  ];
 
   constructor(
     private _manufactureProduction: ManufactureProductionService,
