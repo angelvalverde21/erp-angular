@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
@@ -36,10 +37,11 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 import { SupplierService } from '../../users/suppliers/supplier.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { GalleryComponent } from '../../../shared/components/gallery/gallery.component';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SupplierCreateComponent } from '../../users/suppliers/supplier-create/supplier-create.component';
 import { PurchaseFormComponent } from '../purchase-form/purchase-form.component';
+import { PurchaseItemIndexComponent } from '../purchase-item-index/purchase-item-index.component';
 
 @Component({
   selector: 'app-purchase-edit',
@@ -54,7 +56,9 @@ import { PurchaseFormComponent } from '../purchase-form/purchase-form.component'
     GalleryComponent,
     FontAwesomeModule,
     SupplierCreateComponent,
-    PurchaseFormComponent
+    PurchaseFormComponent,
+    PurchaseItemIndexComponent,
+    NgbAccordionModule
   ],
   templateUrl: './purchase-edit.component.html',
   styleUrl: './purchase-edit.component.scss',
@@ -100,63 +104,26 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
   }
 
   private formInit(): void {
+
+    const today = new Date().toISOString().split('T')[0];
+
     this.form = this.fb.group({
-      name: ['', [Validators.required]],
-      quantity: ['', [Validators.required]],
-      unit_id: [1, [Validators.required]],
-      price: ['', [Validators.required]],
-      total: ['', [Validators.required]],
-      purchase_start: [''],
-      purchase_end: [''],
+      purchase_start: [today],
+      purchase_end: [today],
       purchaseable_type: [this.purchaseable_type],
       purchaseable_id: [this.purchaseable_id],
       observations: [''],
-      supplier_id: [''],
-    });
-  }
-
-  calculosPricetotal() {
-    const round2 = (num: number) =>
-      Math.round((num + Number.EPSILON) * 100) / 100;
-
-    const priceControl = this.form.get('price');
-    const totalControl = this.form.get('total');
-    const quantityControl = this.form.get('quantity');
-
-    priceControl?.valueChanges.subscribe((price) => {
-      const quantity = quantityControl?.value || 0;
-      const total = totalControl?.value;
-
-      if (price != null && quantity > 0) {
-        const calcTotal = round2(price * quantity);
-        if (total !== calcTotal) {
-          totalControl?.setValue(calcTotal, { emitEvent: false });
-        }
-      }
-    });
-
-    totalControl?.valueChanges.subscribe((total) => {
-      const quantity = quantityControl?.value || 0;
-      const price = priceControl?.value;
-
-      if (total != null && quantity > 0) {
-        const calcPrice = round2(total / quantity);
-        if (price !== calcPrice) {
-          priceControl?.setValue(calcPrice, { emitEvent: false });
-        }
-      }
-    });
-
-    quantityControl?.valueChanges.subscribe((quantity) => {
-      const price = priceControl?.value || 0;
-      const total = totalControl?.value || 0;
-
-      if (price > 0) {
-        const calcTotal = round2(price * quantity);
-        if (total !== calcTotal) {
-          totalControl?.setValue(calcTotal, { emitEvent: false });
-        }
-      }
+      supplier_id: [null],
+      gateway_id: [2, [Validators.required]],
+      purchase_items: this.fb.array([
+        this.fb.group({
+          name: ['', [Validators.required]],
+          quantity: ['', [Validators.required]],
+          unit_id: [1, [Validators.required]],
+          price: ['', [Validators.required]],
+          subtotal: ['', [Validators.required]],
+        })
+      ])
     });
   }
 
@@ -165,7 +132,6 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.formInit();
-    this.calculosPricetotal();
     this.purchaseInit();
 
     // this.form.get('section_id')?.setValue(this.section.id);
@@ -184,16 +150,41 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
   }
 
   purchaseInit() {
+
     this._purchase
       .get(this.purchase_id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((resp: any) => {
-        console.log(resp.data);
-        this.form.patchValue(resp.data);
-        this.purchase = resp.data;
-        //  console.log(this.purchase.category);
+        const data = resp.data;
+
+        // limpiar antes de cargar
+        this.purchase_items.clear();
+
+        // llenar items
+        data.items.forEach((item: any) => {
+          this.purchase_items.push(this.createPurchaseItem(item));
+        });
+
+        // setear el resto del formulario
+        this.form.patchValue({
+          ...data,
+          purchase_items: [] // evitar conflicto con el FormArray
+        });
+
+        this.purchase = data;
         this.loading = false;
       });
+      
+  }
+
+  createPurchaseItem(item?: any): FormGroup {
+    return this.fb.group({
+      name: [item?.name || null],
+      unit_id: [item?.unit_id || null],
+      quantity: [item?.quantity || 1],
+      price: [item?.price || 0],
+      subtotal: [item?.subtotal || 0],
+    });
   }
 
   update() {
@@ -249,4 +240,22 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
       this.modal.close();
     }
   }
+
+  get purchase_items(): FormArray<FormGroup> {
+    return this.form.get('purchase_items') as FormArray<FormGroup>;
+  }
+
+  addItem() {
+    const item = this.fb.group({
+      name: ['', [Validators.required]],
+      quantity: ['', [Validators.required]],
+      price: ['', [Validators.required]],
+      subtotal: ['', [Validators.required]],
+      unit_id: [1, [Validators.required]],
+    });
+
+    this.purchase_items.push(item);
+  }
+
+
 }

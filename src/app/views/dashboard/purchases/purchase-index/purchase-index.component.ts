@@ -11,6 +11,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonAddComponent } from '@buttons/button-add/button-add.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { PurchaseCreateComponent } from '../purchase-create/purchase-create.component';
+import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
+import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/button-edit/button-edit.component';
 
 @Component({
   selector: 'app-purchase-index',
@@ -24,7 +26,9 @@ import { PurchaseCreateComponent } from '../purchase-create/purchase-create.comp
     CurrencyPipe,
     FontAwesomeModule,
     ButtonAddComponent,
-    PurchaseCreateComponent
+    PurchaseCreateComponent,
+    DateShopifyPipe,
+    ButtonEditComponent
   ],
   templateUrl: './purchase-index.component.html',
   styleUrl: './purchase-index.component.scss',

@@ -12,7 +12,9 @@ import { CapitalizePipe } from '../../../shared/pipes/capitalize.pipe';
 import { GalleryComponent } from '../../../shared/components/gallery/gallery.component';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
-import { ButtonComponent } from 'src/app/views/shared/components/buttons/button/button.component';
+import { ButtonComponent } from '@shared/components/buttons/button/button.component';
+import { DateShopifyPipe } from '@shared/pipes/date-shopify.pipe';
+import { ButtonEditComponent } from '@shared/components/buttons/button-edit/button-edit.component';
 
 
 @Component({
@@ -26,6 +28,8 @@ import { ButtonComponent } from 'src/app/views/shared/components/buttons/button/
     GalleryComponent,
     CommonModule,
     ButtonComponent,
+    DateShopifyPipe,
+    ButtonEditComponent
   ],
   templateUrl: './purchase-index-row.component.html',
   styleUrl: './purchase-index-row.component.scss',

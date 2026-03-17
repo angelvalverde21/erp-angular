@@ -96,6 +96,7 @@ export class SupplierCreateComponent {
       email: [''],
       identity_id: [null],
       document_number: [''],
+      address: [''],
     });
   }
   

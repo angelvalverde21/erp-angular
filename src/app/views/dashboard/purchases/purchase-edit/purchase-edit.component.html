@@ -1,25 +1,15 @@
-@if(loading){
+<!-- @if(loading){
 <app-loading></app-loading>
 }@else{
 
 <app-purchase-form [form]="form" [suppliers]="suppliers"></app-purchase-form>
 
-<!-- {{ form.value | json }} -->
+
 <div class="mb-3">
     <app-button [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon" (click)="update()">Actualizar
         Compra</app-button>
 </div>
 
-
-<!-- <div class="d-flex justify-content-between">
-
-        <app-button [color]="purchase?.images_count > 0 ? 'outline-success' : 'outline-secondary'" [icon]="faImages"
-            (click)="openVerticallyCentered(content)">Adjuntos ({{ purchase?.images_count }}) </app-button>
-
-        <app-button color="success" colortext="white" [icon]="faPlus" [disabled]="disabledButton"
-            [spinner]="loadingIcon" (click)="update()">Actualizar Compra</app-button>
-
-    </div> -->
 
 <ng-template #content let-modal>
     <div class="modal-header">
@@ -48,5 +38,50 @@
     </div>
 
 </ng-template>
+
+} -->
+
+@if(loading){
+<div class="py-4">
+    <app-loading></app-loading>
+</div>
+}@else{
+
+<form [formGroup]="form">
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <app-purchase-item-index [purchase_items]="purchase_items"
+                (emitAddItem)="addItem()"></app-purchase-item-index>
+        </div>
+    </div>
+
+    <div ngbAccordion [closeOthers]="true" class="mb-3">
+        <div ngbAccordionItem>
+            <h2 ngbAccordionHeader>
+                <button ngbAccordionButton>+ Opciones</button>
+            </h2>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template>
+                        <app-purchase-form [form]="form"></app-purchase-form>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="w-100 mb-3">
+        <app-button color="dark" [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon"
+            (click)="update()">Guardar cambios</app-button>
+    </div>
+
+    {{ form.value | json }}
+    {{ form.status }}
+
+
+
+</form>
 
 }

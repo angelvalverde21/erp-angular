@@ -95,8 +95,6 @@ export class PurchaseCreateComponent {
       observations: [''],
       supplier_id: [null],
       gateway_id: [2, [Validators.required]],
-      amount: ['', [Validators.required]],
-      date: [today, [Validators.required]],
       purchase_items: this.fb.array([
         this.fb.group({
           name: ['', [Validators.required]],

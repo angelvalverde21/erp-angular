@@ -1,5 +1,5 @@
-<td class="text-center">{{ purchase?.quantity }}</td>
-<td class="text-center">{{ purchase?.unit.name }}</td>
+<!-- <td class="text-center">{{ purchase?.quantity }}</td>
+<td class="text-center">{{ purchase?.unit?.name }}</td>
 <td>
     <div>
         {{ purchase?.name | capitalize }}
@@ -24,11 +24,21 @@
             <app-button [me]="false" [icon]="faTrash" colortext="white"
         (click)="removePurchase(purchase.id)" color="danger"></app-button>
     }
+</td> -->
+<td colspan="5" class="table-title">
+    <div class="d-flex justify-content-between align-items-center">
+        <span>{{ purchase.supplier?.user?.name }}</span>
+        <div class="d-flex justify-content-center align-items-center gap-2">
+            <span>{{ purchase?.created_at | DateShopify }}</span>
+            <app-button-edit [color]="'outline-secondary'" (click)="openVerticallyCentered(content)"></app-button-edit>
+        </div>
+    </div>
 </td>
+
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h5 class="modal-title">Editar Compra</h5>
+        <h6 class="modal-title">Editar Compra</h6>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">

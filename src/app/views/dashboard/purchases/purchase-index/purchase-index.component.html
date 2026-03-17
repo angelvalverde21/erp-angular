@@ -14,19 +14,10 @@
     <small class="text-muted">Comienza registrando una compra</small>
 </div>
 }@else{
-<div class="table-responsive mb-3">
-    <table class="table table-striped table-bordered mb-0 align-middle">
-        <tbody>
 
-            <tr>
-                <th class="text-center" style="width: 75px;">Cantidad</th>
-                <th class="text-center" style="width: 125px;">Unidad</th>
-                <th>Insumo</th>
-                <th class="text-center">Precio</th>
-                <th class="text-center">Total</th>
-                <th></th>
-                <th></th>
-            </tr>
+<div class="table-responsive mb-3">
+    <table class="table table-hover table-bordered mb-0 align-middle">
+        <tbody>
 
             @for (purchase of purchases; track purchase.id) {
 
@@ -34,6 +25,29 @@
                 [purchaseable_id]="purchaseable_id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
                 (emitRemovePurchase)="receiveRemovePurchase($event)"></tr>
 
+            <!-- <tr>
+                <td [attr.rowspan]="purchase.items.length + 1" class="text-center" style="width: 50px;">
+                    <app-button-edit [color]="'outline-secondary'"></app-button-edit>
+                </td>
+            </tr> -->
+
+            @for (item of purchase.items; track item.id) {
+            <!--  -->
+
+            <tr>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td>{{ item.name }}</td>
+                <td class="text-center">{{ item.unit?.name }}</td>
+                <td class="text-center">{{ item.price }}</td>
+                <td class="text-center">{{ item.subtotal }}</td>
+
+            </tr>
+
+            }
+
+            <tr class="separador">
+                <td colspan="5">x</td>
+            </tr>
             }
 
             <tr>
@@ -41,22 +55,12 @@
                 <td class="text-center">
                     <h6>{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
                 </td>
-                <td></td>
-                <td></td>
             </tr>
-
-            <!-- <tr>
-                <td colspan="7" class="text-end"><small class="text-muted">{{ purchases?.length }} Registros
-                        encontrados</small></td>
-            </tr> -->
 
         </tbody>
     </table>
 </div>
 }
-
-
-
 
 <ng-template #content let-modal>
     <div class="modal-header">

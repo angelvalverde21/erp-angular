@@ -17,10 +17,8 @@ export class PurchaseItemIndexComponent {
 
     @Input() purchase_items!: FormArray<FormGroup>;
 
-
     @Output() emitAddItem = new EventEmitter<boolean>();
     
-
     addItem(){
         this.emitAddItem.emit(true);
     }

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 import { InputGroupComponent } from '../../../../shared/components/form/input-group/input-group.component';
-import { faPenToSquare, faIdBadge, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faIdBadge, faEnvelope, faPhone, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { JsonPipe } from '@angular/common';
@@ -33,7 +33,8 @@ export class SupplierFormComponent {
   faIdBadge = faIdBadge;
   faEnvelope = faEnvelope;
   faPhone = faPhone;
-
+  faHouse = faHouse;
+  
   // get control() {
   //   return this.form.controls;
   // }
