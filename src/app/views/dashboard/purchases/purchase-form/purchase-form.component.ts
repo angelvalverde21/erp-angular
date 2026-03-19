@@ -85,9 +85,18 @@ export class PurchaseFormComponent implements OnInit {
 
   supplierReceiveCreate(supplier: any) {
 
-    console.log(supplier);
+    console.log('listado de suppliers en el componente padre', this.suppliers);
+    console.log('nuevo supplier', supplier);
 
-    this.suppliers = [supplier, ...this.suppliers];
+    const newSupplier = {
+      id: supplier.id,
+      name: supplier.user.name,
+    };
+
+    console.log('new supplier', newSupplier);
+    
+
+    this.suppliers = [newSupplier, ...this.suppliers];
 
     this.form.get('supplier_id')?.setValue(supplier.id);
     // this.form.get('supplier_id')?.setValue(supplier.id);
@@ -95,6 +104,7 @@ export class PurchaseFormComponent implements OnInit {
     if (supplier) {
       this.modal.close();
     }
+
   }
 
   @Input() purchase_items!: FormArray<FormGroup>;

@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 
-export class ManufactureVariantService{
+export class ManufactureVariantService {
 
   // private _base = inject(BaseService);
   baseUrl: string;
@@ -26,6 +26,17 @@ export class ManufactureVariantService{
 
   }
 
+  index(manufacture_id: number = 0,  page: number = 1, status?: string): Observable<any[]> {
+
+    return this.http.get<any[]>(`${this.baseUrl}/${manufacture_id}/variants`, {
+      params: {
+        page: page > 0 ? page : 1,
+        ...(status && { status })
+      }
+    });
+  }
+
+
   // Generic method to create a new item
   store(manufacture_id: number, data: any): Observable<any> {
 
@@ -36,7 +47,7 @@ export class ManufactureVariantService{
 
   }
   // Generic method to create a new item
-  
+
   batch(manufacture_id: number, data: any): Observable<any> {
 
     const url = `${this.baseUrl}/${manufacture_id}/variants/batch`;

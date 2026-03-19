@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef,
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { PurchaseIndexRowComponent } from '../purchase-index-row/purchase-index-row.component';
 import { CapitalizePipe } from '@shared/pipes/capitalize.pipe';
-import { faEdit, faCashRegister, faBagShopping, faInbox } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faCashRegister, faBagShopping, faInbox, faReceipt } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import { PurchaseEditComponent } from '../purchase-edit/purchase-edit.component';
 import { GalleryComponent } from '@shared/components/gallery/gallery.component';
@@ -35,6 +35,9 @@ import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/but
   encapsulation: ViewEncapsulation.None
 })
 export class PurchaseIndexComponent implements OnInit, OnDestroy {
+
+  
+  faReceipt = faReceipt;
 
   @Input() purchases: any[] = [];
   @Input() purchaseable_type: string = '';

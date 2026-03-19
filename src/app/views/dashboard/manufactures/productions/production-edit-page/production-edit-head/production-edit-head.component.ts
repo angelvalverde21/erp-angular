@@ -12,6 +12,7 @@ import { faBarcode, faBagShopping, faCalculator, faRightLeft } from '@fortawesom
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { BaseService } from '../../../../../base.service';
+import { PenPipe } from '@shared/pipes/pen.pipe';
 
 @Component({
   selector: 'app-production-edit-head',
@@ -25,7 +26,8 @@ import { BaseService } from '../../../../../base.service';
     ManufactureWidgetsComponent,
     RouterModule,
     FontAwesomeModule,
-    CommonModule
+    CommonModule,
+    PenPipe
   ],
   templateUrl: './production-edit-head.component.html',
   styleUrl: './production-edit-head.component.scss'
@@ -38,9 +40,8 @@ export class ProductionEditHeadComponent implements OnInit {
   faRightLeft = faRightLeft;
 
   @Input() manufacture_id: number = 0;
-  @Input() summary: any;
-  @Input() kardex: any;
-  @Input() widget: any;
+  @Input() summary: any = null;
+
   widgets: any[] = [];
 
   store: string | null = '';
@@ -76,31 +77,35 @@ export class ProductionEditHeadComponent implements OnInit {
       {
         title: 'Costo',
         subtitle: 'Por unidad',
-        value: 'S/. 0.00',
+        value: (this.summary?.sum_products > 0 ? (this.summary?.sum_purchases / this.summary?.sum_products ? this.summary?.sum_purchases / this.summary?.sum_products : 0) : 0),
         link: ['./'],
         exact: true,
-        icon: faBarcode
+        icon: faBarcode,
+        type: 'currency'
       },
       {
         title: 'Compras',
         subtitle: 'Totales',
-        value: this.summary?.sum_products,
+        value: this.summary?.sum_purchases  ? this.summary?.sum_purchases : 0,
         link: ['./purchases'],
-        icon: faBagShopping
+        icon: faBagShopping,
+        type: 'currency'
       },
       {
         title: 'Corte Total',
         subtitle: 'Cortados',
-        value: this.summary?.sum_products,
+        value: this.summary?.sum_products ? this.summary?.sum_products : 0,
         link: ['./variants'],
-        icon: faCalculator
+        icon: faCalculator,
+        type: 'units'
       },
       {
         title: 'Recepción',
-        subtitle: 'Total',
-        value: this.summary?.sum_products,
+        subtitle: 'Recibidos',
+        value: this.summary?.sum_reception ? this.summary?.sum_reception : 0,
         link: ['./receptions'],
-        icon: faRightLeft
+        icon: faRightLeft,
+        type: 'units'
       }
     ];
   }

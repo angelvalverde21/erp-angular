@@ -17,7 +17,7 @@
                                             </ng-template>
                                         </ng-select> -->
 
-                <app-supplier-selected class="w-100 me-2" formControlName="supplier_id"></app-supplier-selected>
+                <app-supplier-selected class="w-100 me-2" formControlName="supplier_id" [suppliers]="suppliers"></app-supplier-selected>
 
                 <app-button [icon]="faPlus" (click)="openVerticallyCentered(newSupplier)">Crear</app-button>
 

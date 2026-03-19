@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { KardexIndexSelectedRowComponent } from '../kardex-index-selected-row/kardex-index-selected-row.component';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-kardex-index-selected',
   imports: [
-    KardexIndexSelectedRowComponent
+    KardexIndexSelectedRowComponent,
+    JsonPipe
   ],
   templateUrl: './kardex-index-selected.component.html',
   styleUrl: './kardex-index-selected.component.scss'

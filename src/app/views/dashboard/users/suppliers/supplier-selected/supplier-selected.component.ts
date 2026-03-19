@@ -44,15 +44,13 @@ import { Supplier } from '@interfaces/supplier.interface';
     }
   ]
 })
-export class SupplierSelectedComponent
-
-  implements ControlValueAccessor, OnInit, OnDestroy {
+export class SupplierSelectedComponent implements ControlValueAccessor, OnDestroy {
 
   isDisabled = false;
   supplier_id: number | null = null;
   loading = false;
 
-  suppliers: Supplier[] = [];
+  @Input() suppliers: Supplier[] = [];
 
   private destroy$ = new Subject<void>();
   private pendingSupplierId: number | null = null;
@@ -62,17 +60,6 @@ export class SupplierSelectedComponent
 
   constructor(private _supplier: SupplierService) { }
 
-  ngOnChanges(changes: SimpleChanges) {
-
-    if (changes['suppliers']) {
-      this.suppliers = this.normalizeSuppliers(changes['suppliers'].currentValue ?? []);
-    }
-
-  }
-
-  ngOnInit() {
-    this.supplierInit();
-  }
 
   writeValue(value: number | null): void {
     this.pendingSupplierId = value;
@@ -97,34 +84,6 @@ export class SupplierSelectedComponent
     this.onTouchedCb();
   }
 
-  private supplierInit() {
-
-    this._supplier.index()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resp: any) => {
-        //Da formato porque el json viene de la forma supplier.user.name 
-
-        this.suppliers = this.normalizeSuppliers(resp.data);
-        console.log(this.suppliers);
-
-        this.trySetSupplier();
-
-      });
-
-  }
-
-  private normalizeSuppliers(suppliers: any[] = []): any[] {
-
-    const user = suppliers.map(s => ({
-      id: s.id,
-      name: s.user?.name
-    }));
-
-    console.log(user);
-
-
-    return user;
-  }
 
   private trySetSupplier() {
     if (!this.suppliers.length || this.pendingSupplierId == null) return;

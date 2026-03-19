@@ -5,6 +5,7 @@ import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.c
 import { ButtonComponent } from 'src/app/views/shared/components/buttons/button/button.component';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ButtonTrashComponent } from 'src/app/views/shared/components/buttons/button-trash/button-trash.component';
+import { TwoDecimalsDirective } from 'src/app/core/directives/two-decimals.directive';
 
 @Component({
   selector: 'tr[app-purchase-item-row]',
@@ -13,7 +14,8 @@ import { ButtonTrashComponent } from 'src/app/views/shared/components/buttons/bu
     UnitSelectedComponent,
     ReactiveFormsModule,
     ButtonComponent,
-    ButtonTrashComponent
+    ButtonTrashComponent,
+    TwoDecimalsDirective
   ],
   templateUrl: './purchase-item-row.component.html',
   styleUrl: './purchase-item-row.component.scss'
@@ -22,7 +24,7 @@ export class PurchaseItemRowComponent implements OnInit {
 
 
   @Output() emitPurchaseItemRemove = new EventEmitter<void>();
-  
+
 
   @Input() formGroup!: FormGroup;
   @Input() index!: number;
@@ -68,7 +70,7 @@ export class PurchaseItemRowComponent implements OnInit {
     const subtotal = qty * price;
 
     this.form.patchValue({
-      subtotal: subtotal
+      subtotal: this.round2(subtotal)
     }, { emitEvent: false });
 
   }
@@ -83,15 +85,19 @@ export class PurchaseItemRowComponent implements OnInit {
       const price = subtotal / qty;
 
       this.form.patchValue({
-        price: price
+        price: this.round2(price)
       }, { emitEvent: false });
 
     }
 
   }
 
-  removeItem(){
+  removeItem() {
     this.emitPurchaseItemRemove.emit();
+  }
+
+  round2(value: number): number {
+    return Number(value.toFixed(2));
   }
 
 }

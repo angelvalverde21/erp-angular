@@ -112,6 +112,7 @@ export class PurchaseCreateComponent {
 
     this.formInit();
 
+    this.supplierInit();
     // this.getSuppliers();
     // this.initUnits();
     // this.initBrands();
@@ -230,4 +231,29 @@ export class PurchaseCreateComponent {
     this.purchase_items.push(item);
   }
 
+  private supplierInit() {
+
+    this._supplier.index()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: any) => {
+        //Da formato porque el json viene de la forma supplier.user.name 
+
+        this.suppliers = this.normalizeSuppliers(resp.data);
+        console.log(this.suppliers);
+
+      });
+
+  }
+
+  private normalizeSuppliers(suppliers: any[] = []): any[] {
+
+    const user = suppliers.map(s => ({
+      id: s.id,
+      name: s.user?.name
+    }));
+
+    console.log(user);
+    return user;
+
+  }
 }

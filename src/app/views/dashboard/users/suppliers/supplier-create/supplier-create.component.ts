@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { SupplierService } from '../supplier.service';
@@ -8,7 +8,7 @@ import { SupplierFormComponent } from '../supplier-form/supplier-form.component'
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { phoneValidator } from '@shared/validators/phone.validator';
 import { ButtonSaveComponent } from '@shared/components/buttons/button-save/button-save.component';
-
+import { Supplier } from '@interfaces/supplier.interface';
 @Component({
   selector: 'app-supplier-create',
   imports: [
@@ -20,19 +20,19 @@ import { ButtonSaveComponent } from '@shared/components/buttons/button-save/butt
   templateUrl: './supplier-create.component.html',
   styleUrl: './supplier-create.component.scss'
 })
-export class SupplierCreateComponent {
+export class SupplierCreateComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
     private _supplier: SupplierService
-  ) {}
+  ) { }
 
   @Output() emitSupplierCreate = new EventEmitter<any>();
   @Input() button_text: string = 'Guardar';
-  
+
   faSave = faSave;
 
-  disabledButton: boolean = false;
+  disabledButton: boolean = true;
   loadingIcon: boolean = false;
 
   form!: FormGroup;
@@ -40,11 +40,18 @@ export class SupplierCreateComponent {
 
   ngOnInit(): void {
     this.formInit();
+
+
+    this.form.valueChanges.pipe(takeUntil(this.destroy$)).subscribe((resp) => {
+      // Aquí puedes realizar acciones cada vez que el formulario cambie, como validar o habilitar/deshabilitar el botón
+      this.disabledButton = !this.form.valid;
+    });
+
   }
 
   supplier: any;
 
-  create(){
+  create() {
 
     if (!this.form.valid) {
       this.form.markAllAsTouched();
@@ -59,7 +66,7 @@ export class SupplierCreateComponent {
         Swal.showLoading();
       }
     })
-    
+
 
     this.loadingIcon = true;
     this.disabledButton = true;
@@ -74,7 +81,7 @@ export class SupplierCreateComponent {
         this.disabledButton = false;
       },
       error: (error: any) => {
-        Swal.fire('Error','Ocurrio un problema al crear. Intentalo nuevamente.','error');
+        Swal.fire('Error', 'Ocurrio un problema al crear. Intentalo nuevamente.', 'error');
         console.error(error);
         this.loadingIcon = false;
         this.disabledButton = false;
@@ -83,7 +90,7 @@ export class SupplierCreateComponent {
   }
 
   destroy$ = new Subject<void>();
-  
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -93,11 +100,13 @@ export class SupplierCreateComponent {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       phone: ['', phoneValidator],
-      email: [''],
       identity_id: [null],
       document_number: [''],
-      address: [''],
+      address: ['', [Validators.required]],
+      district_id: ['', [Validators.required]],
     });
   }
-  
+
+
+
 }

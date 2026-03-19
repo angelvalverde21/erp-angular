@@ -6,7 +6,6 @@ export const routes: Routes = [
     loadComponent: () => import('./production-index-page/production-index-page.component').then((m) => m.ProductionIndexPageComponent),
     data: {
       title: 'Todos',
-      name: 'dashboard.manufacture.index', // 👈 nombre único
     }
   },
   {

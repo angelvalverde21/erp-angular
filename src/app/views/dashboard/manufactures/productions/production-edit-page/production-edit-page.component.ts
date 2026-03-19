@@ -35,7 +35,7 @@ import { WidgetReceptionsComponent } from '../../shared/widgets/widget-reception
 import { KardexService } from '../../../kardex/kardex.service';
 import { ManufactureProductionService } from '../production.service';
 import { ProductionEditHeadComponent } from './production-edit-head/production-edit-head.component';
-
+import { SummaryPurchase } from 'src/app/interfaces/summary.interface';
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -127,7 +127,12 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
   }
 
-  kardex_summary: any;
+  summary: SummaryPurchase = {
+    cost: 0,
+    sum_products: 0,
+    sum_purchases: 0,
+    sum_reception: 0
+  };
 
   //usado
   manufactureInit() {
@@ -140,24 +145,13 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
         console.log(resp);
         this.manufacture = resp.data;
-        this.purchases = resp.data.purchases;
-        console.log(this.manufacture_variants);
-        
-        this.manufacture_variants = resp.data.manufacture_variants;
-        this.variants = this.manufacture_variants.map((mv: any) => mv.variant);
 
-
-
-        this.kardexes = resp.data.kardexes;
-
-        this.kardex_summary = this._kardex.calculate(this.kardexes);
-
-        // this.widget_summary = {
-        //   cost: (resp.data.quantity_total > 0) ? resp.data.purchase_total / resp.data.quantity_total : 0,
-        //   sum_products: resp.data.quantity_total ? resp.data.quantity_total : 0,
-        //   sum_purchases: resp.data.purchase_total ? resp.data.purchase_total : 0,
-        //   reception: this.kardex_summary.reception
-        // };
+        this.summary = {
+          cost: resp.data.purchase_total / resp.data.variants_sum_quantity ? resp.data.purchase_total / resp.data.variants_sum_quantity : 0,
+          sum_products: resp.data.variants_sum_quantity,
+          sum_purchases: resp.data.purchase_total,
+          sum_reception: resp.data.kardexes_sum_quantity
+        }
 
         this.loading = false;
 
@@ -196,80 +190,6 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
     this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
   }
 
-  selected_variants: any = {};
 
-  buttonDisabled: boolean = true;
-
-  receiveSelectedVariants(variants: any) {
-
-    console.log("Selected variants:", variants);
-    this.selected_variants = variants;
-
-    if (Object.keys(variants).length > 0) {
-      this.buttonDisabled = false;
-    } else {
-      this.buttonDisabled = true;
-    }
-
-  }
-
-  addVariants() {
-    if (this.buttonDisabled) {
-      return;
-    } else {
-      console.log("Adding variants:", this.selected_variants);
-      // this.emitVariantsSelected.emit(this.selected_variants);
-    }
-  }
-
-
-  calculateTotalReceptions() {
-    this.total_receptions = this.kardexes.reduce((acc, kardex) => acc + kardex.quantity * (kardex?.direction === 'in' ? 1 : -1), 0);
-  }
-
-
-  receiveKardexes(event: any) {
-
-    this.kardexes = [...this.kardexes, ...event];
-
-    this.kardex_summary = this._kardex.calculate(this.kardexes);
-
-    // this.modal.close();
-    Swal.close();
-    this.closeModal();
-  }
-
-
-  //Data para los widgets
-
-  total_products: number = 0;
-  total_purchases_amount: number = 0;
-  total_receptions: number = 0;
-
-  // receiveSumManufactureVariant(sum_products: number) {
-
-  //   console.log("received total products:", sum_products);
-
-
-  //   this.widget_summary = {
-  //     ...this.widget_summary,
-  //     cost: this.widget_summary.sum_purchases / sum_products,
-  //     sum_products: sum_products,
-  //   };
-
-  // }
-
-  // receiveSumReceptionIndex(total: number){
-  //   this.total_receptions = total;
-  // }
-
-  saldo: number = 0;
-  total_cost: number = 0;
-
-  receiveKardexSummary(kardex_summary: any) {
-    console.log("Received kardex summary:", kardex_summary);
-
-    this.kardex_summary = kardex_summary;
-  }
 
 }

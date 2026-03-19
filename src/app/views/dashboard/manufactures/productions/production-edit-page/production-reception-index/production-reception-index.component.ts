@@ -14,6 +14,8 @@ import { KardexRegisterOutComponent } from 'src/app/views/dashboard/kardex/karde
 import { KardexRegisterReInComponent } from 'src/app/views/dashboard/kardex/kardex-register-re-in/kardex-register-re-in.component';
 import { ButtonTrashComponent } from 'src/app/views/shared/components/buttons/button-trash/button-trash.component';
 import { LoadingComponent } from 'src/app/views/shared/components/loading/loading.component';
+import { ManufactureVariantService } from '../../../variants/manufactureVariant.service';
+import { ManufactureService } from '../../../manufacture.service';
 
 @Component({
   selector: 'app-production-reception-index',
@@ -33,17 +35,20 @@ import { LoadingComponent } from 'src/app/views/shared/components/loading/loadin
 })
 export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
 
-  manufacture_id: string | null = null;
+  manufacture_id: number = 0;
 
   faRightLeft = faRightLeft;
   faMinus = faMinus;
 
   constructor(
     private _manufactureProduction: ManufactureProductionService,
+    private _manufactureVariant: ManufactureVariantService,
+    private _manufacture: ManufactureService,
     private route: ActivatedRoute,
     private _kardex: KardexService,
     config: NgbModalConfig,
     private modalService: NgbModal,
+
   ) {
 
     // this.route.params.subscribe(params => {
@@ -53,7 +58,7 @@ export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
     config.keyboard = false;
 
     this.route.parent?.paramMap.subscribe(params => {
-      this.manufacture_id = params.get('production_id');
+      this.manufacture_id = Number(params.get('production_id'));
 
     });
 
@@ -78,17 +83,22 @@ export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
 
     this.loading = true;
 
-    this._manufactureProduction.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
+    this._manufacture.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
 
-        this.manufacture = resp.data;
+
+
+        // this.manufacture = resp.data;
 
         this.kardexes = resp.data.kardexes;
 
-        this.kardex_summary = this._kardex.calculate(this.kardexes);
+        // this.kardex_summary = this._kardex.calculate(this.kardexes);
         this.manufacture_variants = resp.data.manufacture_variants;
         this.variants = this.manufacture_variants.map((mv: any) => mv.variant);
+        console.log(resp.data);
+        
+        // this.variants = resp.data;
 
         this.loading = false;
 
@@ -136,6 +146,8 @@ export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
   modal: any;
 
   openVerticallyCentered(content: TemplateRef<any>) {
+
+
     this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
   }
 

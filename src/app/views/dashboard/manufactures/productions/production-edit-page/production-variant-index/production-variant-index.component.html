@@ -5,9 +5,10 @@
 
         <div class="card-body">
 
-            <app-manufacture-variant-index [manufacture_id]="manufacture.id"
+            <app-manufacture-variant-index [manufacture_id]="manufacture_id"
                 (emitSumManufactureVariant)="receiveSumManufactureVariant($event)" [sum_products]="sum_products"
                 [manufacture_variants]="manufacture_variants"></app-manufacture-variant-index>
+                
         </div>
 
     </div>

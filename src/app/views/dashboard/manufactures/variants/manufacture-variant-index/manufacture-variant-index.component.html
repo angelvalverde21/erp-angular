@@ -19,6 +19,16 @@
 
         <tbody>
 
+            <tr>
+                <td class="text-center">Cantidad</td>
+                <td class="text-center">Variante</td>
+                <td class="text-center">Color</td>
+                <td class="">Descripcion</td>
+                <td class="text-center">Codigo Barras</td>
+                <td class="text-center">Precio</td>
+                <td class="text-center"></td>
+            </tr>
+
             @for (manufacture_variant of manufacture_variants; let i = $index; track manufacture_variant.id) {
 
             <tr app-manufacture-variant-row [manufacture_variant]="manufacture_variant"

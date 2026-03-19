@@ -7,6 +7,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { JsonPipe } from '@angular/common';
 import { IdentitySelectedComponent } from '../../../identities/identity-selected/identity-selected.component';
+import { InputDistrictIdComponent } from '../../../addresses/input-district-id/input-district-id.component';
 
 @Component({
   selector: 'app-supplier-form',
@@ -17,7 +18,8 @@ import { IdentitySelectedComponent } from '../../../identities/identity-selected
     FontAwesomeModule,
     NgSelectModule,
     JsonPipe,
-    IdentitySelectedComponent
+    IdentitySelectedComponent,
+    InputDistrictIdComponent
   ],
   templateUrl: './supplier-form.component.html',
   styleUrl: './supplier-form.component.scss'

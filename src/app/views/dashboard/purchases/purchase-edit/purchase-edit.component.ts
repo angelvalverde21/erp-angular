@@ -155,6 +155,10 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
       .get(this.purchase_id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((resp: any) => {
+
+        console.log(resp);
+        
+
         const data = resp.data;
 
         // limpiar antes de cargar

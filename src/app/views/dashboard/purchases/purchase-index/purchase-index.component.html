@@ -16,7 +16,9 @@
 }@else{
 
 <div class="table-responsive mb-3">
+
     <table class="table table-hover table-bordered mb-0 align-middle">
+        
         <tbody>
 
             @for (purchase of purchases; track purchase.id) {
@@ -36,8 +38,8 @@
 
             <tr>
                 <td class="text-center">{{ item.quantity }}</td>
-                <td>{{ item.name }}</td>
                 <td class="text-center">{{ item.unit?.name }}</td>
+                <td>{{ item.name }}</td>
                 <td class="text-center">{{ item.price }}</td>
                 <td class="text-center">{{ item.subtotal }}</td>
 
@@ -45,13 +47,26 @@
 
             }
 
+            <tr>
+                <td colspan="3"></td>
+                <!-- <td class="text-end">Boletas</td>
+                <td class="text-center">
+                    <div style="width: 50px !important;" class="mx-auto">
+                        <app-button [icon]="faReceipt" color="outline-secondary">0</app-button>
+                    </div>
+                </td> -->
+                <td class="text-center bg-light">Sub Total</td>
+                <td class="text-center bg-light">S/. 0.00</td>
+            </tr>
+
             <tr class="separador">
                 <td colspan="5">x</td>
             </tr>
             }
 
             <tr>
-                <td colspan="4" class="text-end"><small class="text-muted"></small></td>
+                <td colspan="3" class="text-end"><small class="text-muted"></small></td>
+                <td class="text-center"><h6>Total</h6></td>
                 <td class="text-center">
                     <h6>{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
                 </td>

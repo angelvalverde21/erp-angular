@@ -36,7 +36,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <app-kardex-register-in [variants]="variants" [kardexable_type]="'manufacture'" [kardexable_id]="manufacture.id"
+        <app-kardex-register-in [variants]="variants" [kardexable_type]="'manufacture'" [kardexable_id]="manufacture_id"
             (emitKardexes)="receiveKardexes($event)"></app-kardex-register-in>
     </div>
 
@@ -49,7 +49,7 @@
     </div>
     <div class="modal-body">
         <app-kardex-register-re-in [variants]="variants" [kardexable_type]="'manufacture'"
-            [kardexable_id]="manufacture.id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-re-in>
+            [kardexable_id]="manufacture_id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-re-in>
     </div>
 
 </ng-template>
@@ -61,7 +61,7 @@
     </div>
     <div class="modal-body">
         <app-kardex-register-out [variants]="variants" [kardexable_type]="'manufacture'"
-            [kardexable_id]="manufacture.id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-out>
+            [kardexable_id]="manufacture_id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-out>
 
     </div>
 

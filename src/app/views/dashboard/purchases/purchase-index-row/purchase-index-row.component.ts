@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, TemplateRef, ViewEncapsulation,
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { RouterModule } from '@angular/router';
-import { faTrash, faEdit, faCashRegister, faImages, faPaperclip } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEdit, faCashRegister, faImages, faPaperclip, faReceipt } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import { PurchaseService } from '../purchase.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -50,6 +50,7 @@ export class PurchaseIndexRowComponent {
   faCashRegister = faCashRegister;
   loadingOverlay: boolean = false;
   modal: any;
+  faReceipt = faReceipt;
 
   constructor(
     config: NgbModalConfig,

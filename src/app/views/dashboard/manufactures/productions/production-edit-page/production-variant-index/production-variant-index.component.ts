@@ -5,6 +5,7 @@ import { ManufactureProductionService } from '../../production.service';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ManufactureVariantIndexComponent } from '../../../variants/manufacture-variant-index/manufacture-variant-index.component';
+import { ManufactureVariantService } from '../../../variants/manufactureVariant.service';
 
 @Component({
   selector: 'app-production-variant-index',
@@ -18,7 +19,7 @@ import { ManufactureVariantIndexComponent } from '../../../variants/manufacture-
 export class ProductionVariantIndexComponent {
 
   manufacture: any;
-  manufacture_id: string | null = null;
+  manufacture_id: number = 0;
   purchases: any;
   loading: boolean = false;
 
@@ -28,6 +29,7 @@ export class ProductionVariantIndexComponent {
 
   constructor(
     private _manufactureProduction: ManufactureProductionService,
+    private _manufactureVariant: ManufactureVariantService,
     private route: ActivatedRoute
   ) {
 
@@ -36,7 +38,7 @@ export class ProductionVariantIndexComponent {
     // });
 
     this.route.parent?.paramMap.subscribe(params => {
-      this.manufacture_id = params.get('production_id');
+      this.manufacture_id = Number(params.get('production_id'));
 
     });
 
@@ -56,14 +58,14 @@ export class ProductionVariantIndexComponent {
 
     this.loading = true;
 
-    this._manufactureProduction.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
+    this._manufactureVariant.index(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
 
         console.log(resp);
         this.manufacture = resp.data;
         this.purchases = resp.data.purchases;
-        this.manufacture_variants = resp.data.manufacture_variants;
+        this.manufacture_variants = resp.data;
 
         this.loading = false;
 

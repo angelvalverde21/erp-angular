@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="card-body">
-                        <h5>{{ widget.value }}</h5>
+                        <h5>{{ widget.type === 'currency' ? (widget.value | pen) : widget.value }}</h5>
                         <small class="text-white-75">{{ widget.subtitle }}</small>
                     </div>
 

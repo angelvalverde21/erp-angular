@@ -2,6 +2,9 @@
 
     <table class="table table-striped table-bordered mb-0 align-middle">
 
+
+        <!-- {{ variants | json }} -->
+
         <tbody>
 
             @for (variant of variants; let i = $index; track variant.id) {
@@ -11,7 +14,7 @@
 
             <tr>
 
-                <td colspan="3"></td>
+                <td colspan="4"></td>
                 <td class="text-center">
                     <h5>{{ sum }}</h5>
                 </td>

@@ -54,6 +54,8 @@ export class KardexRegisterInComponent {
 
   registerIn() {
 
+    console.log(this.variantsKardex);
+
     this.variantsKardex = this.variantsKardex.map(variant => ({
       ...variant,
       direction: 'in',
