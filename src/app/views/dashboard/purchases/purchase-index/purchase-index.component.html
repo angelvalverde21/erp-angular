@@ -1,11 +1,17 @@
-<div class="bg-white py-3 d-flex justify-content-between align-items-center">
-    <span class="ms-3"><fa-icon [icon]="faBagShopping" class="me-2"></fa-icon> Lista de compras
-        ({{
-        purchases?.length
-        }})</span>
-    <app-button-add (click)="openVerticallyCentered(content)" color="dark">Compra</app-button-add>
-
+<!-- ── HEADER ── -->
+<div class="card border-0 shadow-sm rounded-3 mb-4">
+    <div class="card-body d-flex justify-content-between align-items-center py-3 px-4">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-lock text-secondary"></i>
+            <h6 class="mb-0 fw-bold">Lista de compras </h6>
+            <span class="badge bg-light text-secondary rounded-pill px-3">({{
+                purchases?.length
+                }})</span>
+        </div>
+        <app-button-add (click)="openVerticallyCentered(content)" color="dark">Compra</app-button-add>
+    </div>
 </div>
+
 
 @if(purchases.length == 0){
 <div class="empty-state py-4 text-center">
@@ -15,10 +21,86 @@
 </div>
 }@else{
 
+
+<!-- ── TIMELINE ── -->
+<div class="timeline">
+
+    <!-- ══ ITEM 1 ══ -->
+
+    @for (purchase of purchases; track purchase.id) {
+
+    <div class="tl-item">
+        <div class="tl-icon"><i class="fas fa-cart-shopping"></i></div>
+        <div class="card tl-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <span class="badge bg-secondary">Sin tipo</span>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <small class="fw-semibold text-dark"><i class="far fa-clock me-1 text-secondary"></i>Hoy a las
+                        01:02</small>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-light border" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                            <li><a class="dropdown-item" href="#"><i
+                                        class="fas fa-edit me-2 text-success"></i>Editar</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-danger" href="#"><i
+                                        class="fas fa-trash me-2"></i>Eliminar</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <table class="table purchase-table mb-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-center">Unidad</th>
+                            <th>Descripción</th>
+                            <th class="text-center">Precio</th>
+                            <th class="text-center">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (item of purchase.items; track item.id) {
+                        <tr>
+                            <td class="text-center">{{ item.quantity }}</td>
+                            <td class="text-center text-primary">{{ item.unit?.name }}</td>
+                            <td>{{ item.name }}</td>
+                            <td class="text-center">{{ item.price }}</td>
+                            <td class="text-center">{{ item.subtotal }}</td>
+                        </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-end text-muted fw-normal">Subtotal</td>
+                            <td class="text-center">S/. 2,402.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    }
+
+</div>
+
+<!-- ── TOTAL GENERAL ── -->
+<div class="total-bar d-flex justify-content-end align-items-center gap-4 mt-2">
+    <span class="label-text">Total General</span>
+    <span class="amount fs-5">{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</span>
+</div>
+
 <div class="table-responsive mb-3">
 
     <table class="table table-hover table-bordered mb-0 align-middle">
-        
+
         <tbody>
 
             @for (purchase of purchases; track purchase.id) {
@@ -73,7 +155,9 @@
 
             <tr>
                 <td colspan="3" class="text-end"><small class="text-muted"></small></td>
-                <td class="text-center"><h6>Total</h6></td>
+                <td class="text-center">
+                    <h6>Total</h6>
+                </td>
                 <td class="text-center">
                     <h6>{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
                 </td>
