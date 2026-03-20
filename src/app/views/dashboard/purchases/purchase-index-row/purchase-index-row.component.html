@@ -27,7 +27,7 @@
 </td> -->
 <td colspan="5" class="table-title">
     <div class="d-flex justify-content-between align-items-center">
-        <span>{{ purchase.supplier?.user?.name }}</span>
+        <span>{{ purchase?.supplier?.user?.name }}</span>
         <div class="d-flex justify-content-center align-items-center gap-2">
             <span>{{ purchase?.created_at | DateShopify }}</span>
             <app-button-edit [color]="'outline-secondary'" (click)="openVerticallyCentered(content)"></app-button-edit>

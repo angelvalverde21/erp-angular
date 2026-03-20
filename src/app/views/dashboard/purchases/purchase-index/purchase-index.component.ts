@@ -77,7 +77,7 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
   sumTotalAmount() {
 
     this.sum_purchases = this.purchases.reduce(
-      (sum, purchase) => sum + Number(purchase.total ?? 0),
+      (sum, purchase) => sum + Number(purchase.subtotal ?? 0),
       0
     );
 

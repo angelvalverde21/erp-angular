@@ -132,6 +132,9 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.formInit();
+
+    this.supplierInit();
+    
     this.purchaseInit();
 
     // this.form.get('section_id')?.setValue(this.section.id);
@@ -157,7 +160,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
       .subscribe((resp: any) => {
 
         console.log(resp);
-        
+
 
         const data = resp.data;
 
@@ -178,7 +181,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
         this.purchase = data;
         this.loading = false;
       });
-      
+
   }
 
   createPurchaseItem(item?: any): FormGroup {
@@ -259,6 +262,32 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
     });
 
     this.purchase_items.push(item);
+  }
+
+  private normalizeSuppliers(suppliers: any[] = []): any[] {
+
+    const user = suppliers.map(s => ({
+      id: s.id,
+      name: s.user?.name
+    }));
+
+    console.log(user);
+    return user;
+
+  }
+
+  private supplierInit() {
+
+    this._supplier.index()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: any) => {
+        //Da formato porque el json viene de la forma supplier.user.name 
+
+        this.suppliers = this.normalizeSuppliers(resp.data);
+        console.log(this.suppliers);
+
+      });
+
   }
 
 

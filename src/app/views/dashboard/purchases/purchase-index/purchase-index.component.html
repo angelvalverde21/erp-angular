@@ -33,6 +33,14 @@
                 </td>
             </tr> -->
 
+            <tr>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Unidad</th>
+                <th>Descripción</th>
+                <th class="text-center">Precio</th>
+                <th class="text-center">Subtotal</th>
+            </tr>
+
             @for (item of purchase.items; track item.id) {
             <!--  -->
 
@@ -48,14 +56,13 @@
             }
 
             <tr>
-                <td colspan="3"></td>
+                <td colspan="4"></td>
                 <!-- <td class="text-end">Boletas</td>
                 <td class="text-center">
                     <div style="width: 50px !important;" class="mx-auto">
                         <app-button [icon]="faReceipt" color="outline-secondary">0</app-button>
                     </div>
                 </td> -->
-                <td class="text-center bg-light">Sub Total</td>
                 <td class="text-center bg-light">S/. 0.00</td>
             </tr>
 
