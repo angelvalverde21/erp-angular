@@ -14,6 +14,7 @@ export const environment = {
     apiShopify: 'http://shopify.test/api/v1/shopify',
     apiMercadopago: 'http://shopify.test/api/v1/mercadopago',
     apiUrl: 'http://shopify.test/api/v1/dashboard',
+    apiErp: 'http://erp.test/api/v1',
 
 
     imageMediumPlaceHolder: 'https://placehold.co/400x400',
