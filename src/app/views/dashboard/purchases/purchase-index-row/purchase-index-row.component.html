@@ -25,6 +25,28 @@
         (click)="removePurchase(purchase.id)" color="danger"></app-button>
     }
 </td> -->
+
+<div class="d-flex align-items-center gap-2 flex-wrap">
+    <span class="badge bg-secondary">Sin tipo</span>
+</div>
+<div class="d-flex align-items-center gap-3">
+    <small class="fw-semibold text-dark"><i class="far fa-clock me-1 text-secondary"></i>Hoy a las
+        01:02</small>
+    <div class="dropdown">
+        <button class="btn btn-sm btn-light border" data-bs-toggle="dropdown">
+            <i class="fas fa-ellipsis-h"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2 text-success"></i>Editar</a></li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-trash me-2"></i>Eliminar</a></li>
+        </ul>
+    </div>
+</div>
+
+
 <td colspan="5" class="table-title">
     <div class="d-flex justify-content-between align-items-center">
         <span>{{ purchase?.supplier?.user?.name }}</span>

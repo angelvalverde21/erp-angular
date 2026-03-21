@@ -1,0 +1,70 @@
+<div class="d-flex justify-content-between align-items-center">
+
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+
+        @if(purchase?.supplier?.user){
+        <span class="text-provider"><i class="fas fa-user-tie me-1"></i>{{ purchase?.supplier?.user?.name }}</span>
+        }@else{
+        <span class="text-provider"><i class="fas fa-user-tie me-1"></i>Sin proveedor</span>
+        }
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+        <small class="fw-semibold text-dark"><i class="far fa-clock me-1 text-secondary"></i>
+            {{ purchase?.created_at | DateShopify }}
+        </small>
+
+        <div ngbDropdown class="d-inline-block">
+            <button type="button" class="btn btn-outline-dark btn-sm" id="dropdownBasic1" ngbDropdownToggle>
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button ngbDropdownItem class="btn-sm" (click)="openVerticallyCentered(content)">
+                    <i class="fas fa-edit me-2 text-success"></i>Editar
+                </button>
+                <button ngbDropdownItem class="btn-sm">
+                    <i class="fas fa-trash me-2 text-danger"></i>Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <td colspan="5" class="table-title">
+    <div class="d-flex justify-content-between align-items-center">
+        <span>{{ purchase?.supplier?.user?.name }}</span>
+        <div class="d-flex justify-content-center align-items-center gap-2">
+            <span>{{ purchase?.created_at | DateShopify }}</span>
+            <app-button-edit [color]="'outline-secondary'" (click)="openVerticallyCentered(content)"></app-button-edit>
+        </div>
+    </div>
+</td> -->
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title">Editar Compra</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-purchase-edit [purchase_id]="purchase.id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
+            [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id"></app-purchase-edit>
+    </div>
+
+</ng-template>
+
+<ng-template #images let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title fs-5 fw-500">Adjuntar Boletas y Facturas</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="vouchers my-4">
+            <app-gallery [path]="`purchases/${purchase.id}/images`"></app-gallery>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>

@@ -32,29 +32,14 @@
     <div class="tl-item">
         <div class="tl-icon"><i class="fas fa-cart-shopping"></i></div>
         <div class="card tl-card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <span class="badge bg-secondary">Sin tipo</span>
-                </div>
-                <div class="d-flex align-items-center gap-3">
-                    <small class="fw-semibold text-dark"><i class="far fa-clock me-1 text-secondary"></i>Hoy a las
-                        01:02</small>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-light border" data-bs-toggle="dropdown">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                            <li><a class="dropdown-item" href="#"><i
-                                        class="fas fa-edit me-2 text-success"></i>Editar</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item text-danger" href="#"><i
-                                        class="fas fa-trash me-2"></i>Eliminar</a></li>
-                        </ul>
-                    </div>
-                </div>
+
+            <div class="card-header">
+                
+                <app-purchase-index-head [purchase]="purchase" [purchaseable_type]="purchaseable_type"
+                [purchaseable_id]="purchaseable_id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
+                (emitRemovePurchase)="receiveRemovePurchase($event)"></app-purchase-index-head>
             </div>
+
             <div class="card-body p-0">
                 <table class="table purchase-table mb-0">
                     <thead>
@@ -80,11 +65,12 @@
                     <tfoot>
                         <tr>
                             <td colspan="4" class="text-end text-muted fw-normal">Subtotal</td>
-                            <td class="text-center">S/. 2,402.00</td>
+                            <td class="text-center">{{ sum_purchase(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
+
         </div>
     </div>
     }
@@ -97,75 +83,6 @@
     <span class="amount fs-5">{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</span>
 </div>
 
-<div class="table-responsive mb-3">
-
-    <table class="table table-hover table-bordered mb-0 align-middle">
-
-        <tbody>
-
-            @for (purchase of purchases; track purchase.id) {
-
-            <tr app-purchase-index-row [purchase]="purchase" [purchaseable_type]="purchaseable_type"
-                [purchaseable_id]="purchaseable_id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
-                (emitRemovePurchase)="receiveRemovePurchase($event)"></tr>
-
-            <!-- <tr>
-                <td [attr.rowspan]="purchase.items.length + 1" class="text-center" style="width: 50px;">
-                    <app-button-edit [color]="'outline-secondary'"></app-button-edit>
-                </td>
-            </tr> -->
-
-            <tr>
-                <th class="text-center">Cantidad</th>
-                <th class="text-center">Unidad</th>
-                <th>Descripción</th>
-                <th class="text-center">Precio</th>
-                <th class="text-center">Subtotal</th>
-            </tr>
-
-            @for (item of purchase.items; track item.id) {
-            <!--  -->
-
-            <tr>
-                <td class="text-center">{{ item.quantity }}</td>
-                <td class="text-center">{{ item.unit?.name }}</td>
-                <td>{{ item.name }}</td>
-                <td class="text-center">{{ item.price }}</td>
-                <td class="text-center">{{ item.subtotal }}</td>
-
-            </tr>
-
-            }
-
-            <tr>
-                <td colspan="4"></td>
-                <!-- <td class="text-end">Boletas</td>
-                <td class="text-center">
-                    <div style="width: 50px !important;" class="mx-auto">
-                        <app-button [icon]="faReceipt" color="outline-secondary">0</app-button>
-                    </div>
-                </td> -->
-                <td class="text-center bg-light">S/. 0.00</td>
-            </tr>
-
-            <tr class="separador">
-                <td colspan="5">x</td>
-            </tr>
-            }
-
-            <tr>
-                <td colspan="3" class="text-end"><small class="text-muted"></small></td>
-                <td class="text-center">
-                    <h6>Total</h6>
-                </td>
-                <td class="text-center">
-                    <h6>{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-</div>
 }
 
 <ng-template #content let-modal>

@@ -13,6 +13,7 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { PurchaseCreateComponent } from '../purchase-create/purchase-create.component';
 import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
 import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/button-edit/button-edit.component';
+import { PurchaseIndexHeadComponent } from './purchase-index-head/purchase-index-head.component';
 
 @Component({
   selector: 'app-purchase-index',
@@ -28,7 +29,8 @@ import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/but
     ButtonAddComponent,
     PurchaseCreateComponent,
     DateShopifyPipe,
-    ButtonEditComponent
+    ButtonEditComponent,
+    PurchaseIndexHeadComponent
   ],
   templateUrl: './purchase-index.component.html',
   styleUrl: './purchase-index.component.scss',
@@ -128,5 +130,17 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
     this.modal.close();
   }
 
+  sum_purchase(purchase: any) {
+
+    const items = purchase.items || [];
+
+    return items.reduce((sum: number, item: any) => {
+      const quantity = Number(item.quantity) || 0;
+      const price = Number(item.price) || 0;
+      return sum + (quantity * price);
+    }, 0);
+
+
+  }
 
 }
