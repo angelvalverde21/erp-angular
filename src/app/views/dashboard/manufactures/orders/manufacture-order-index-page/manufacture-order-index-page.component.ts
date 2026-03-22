@@ -10,7 +10,7 @@ import { ManufactureOrderService } from '../order.service';
 import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-order-index-page',
+  selector: 'app-manufacture-order-index-page',
   imports: [
     ManufactureIndexComponent,
     HeadPageComponent,
@@ -19,11 +19,11 @@ import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
     ButtonLinkComponent,
     UserHeadTableComponent,
   ],
-  templateUrl: './order-index-page.component.html',
-  styleUrl: './order-index-page.component.scss'
+  templateUrl: './manufacture-order-index-page.component.html',
+  styleUrl: './manufacture-order-index-page.component.scss'
 })
 
-export class OrderIndexPageComponent implements OnInit, OnDestroy {
+export class ManufactureOrderIndexPageComponent implements OnInit, OnDestroy {
 
   manufactures: any;
   faBoxesStacked = faBoxesStacked;

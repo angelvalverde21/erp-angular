@@ -28,14 +28,19 @@ export class ManufactureVariantService {
 
   index(manufacture_id: number = 0,  page: number = 1, status?: string): Observable<any[]> {
 
-    return this.http.get<any[]>(`${this.baseUrl}/${manufacture_id}/variants`, {
+
+    const url = `${this.baseUrl}/${manufacture_id}/variants`;
+
+    console.log(url);
+    
+
+    return this.http.get<any[]>(url, {
       params: {
         page: page > 0 ? page : 1,
         ...(status && { status })
       }
     });
   }
-
 
   // Generic method to create a new item
   store(manufacture_id: number, data: any): Observable<any> {

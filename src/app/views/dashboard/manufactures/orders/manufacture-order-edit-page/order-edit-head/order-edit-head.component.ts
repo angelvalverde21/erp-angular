@@ -82,16 +82,16 @@ export class OrderEditHeadComponent {
         icon: faBarcode
       },
       {
-        title: 'Pedido',
+        title: 'Orden de compra',
         subtitle: 'Total',
-        value: this.summary?.sum_products,
+        value: this.summary?.sum_products ? this.summary?.sum_products : 0,
         link: ['./variants'],
         icon: faBagShopping
       },
       {
         title: 'Recepción',
         subtitle: 'Total',
-        value: this.summary?.sum_products,
+        value: this.summary?.sum_reception ? this.summary?.sum_reception : 0,
         link: ['./receptions'],
         icon: faRightLeft
       }

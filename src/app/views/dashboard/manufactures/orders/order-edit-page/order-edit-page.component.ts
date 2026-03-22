@@ -94,7 +94,7 @@ export class OrderEditPageComponent implements OnInit, OnDestroy {
     progress: 0
   };
 
-  widget_summary: any = {
+  summary: any = {
     cost: 0,
     sum_products: 0,
     sum_purchases: 0,
@@ -136,7 +136,7 @@ export class OrderEditPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.manufactureInit();
+    // this.manufactureInit();
 
   }
 
@@ -164,11 +164,10 @@ export class OrderEditPageComponent implements OnInit, OnDestroy {
 
         this.kardex_summary = this._kardex.calculate(this.kardexes);
 
-        this.widget_summary = {
-          cost: (resp.data.quantity_total > 0) ? resp.data.purchase_total / resp.data.quantity_total : 0,
+        this.summary = {
           sum_products: resp.data.quantity_total ? resp.data.quantity_total : 0,
           sum_purchases: resp.data.purchase_total ? resp.data.purchase_total : 0,
-          reception: this.kardex_summary.reception
+          sum_reception: this.kardex_summary.reception
         };
 
         this.loading = false;
@@ -266,9 +265,9 @@ export class OrderEditPageComponent implements OnInit, OnDestroy {
     console.log("received total products:", sum_products);
 
 
-    this.widget_summary = {
-      ...this.widget_summary,
-      cost: this.widget_summary.sum_purchases / sum_products,
+    this.summary = {
+      ...this.summary,
+      cost: this.summary.sum_purchases / sum_products,
       sum_products: sum_products,
     };
 
@@ -277,10 +276,10 @@ export class OrderEditPageComponent implements OnInit, OnDestroy {
 
   receiveSumPurchaseIndex(sum_purchases: number) {
 
-    this.widget_summary = {
-      ...this.widget_summary,
+    this.summary = {
+      ...this.summary,
       sum_purchases: sum_purchases,
-      cost: sum_purchases / this.widget_summary.sum_products,
+      cost: sum_purchases / this.summary.sum_products,
     };
 
   }

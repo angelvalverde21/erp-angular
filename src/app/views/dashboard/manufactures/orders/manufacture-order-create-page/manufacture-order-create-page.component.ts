@@ -6,17 +6,18 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-order-create-page',
+  selector: 'app-manufacture-order-create-page',
   imports: [
     ManufactureCreateComponent,
     ButtonBackComponent,
     HeadPageComponent,
     LoadingComponent
   ],
-  templateUrl: './order-create-page.component.html',
-  styleUrl: './order-create-page.component.scss'
+  templateUrl: './manufacture-order-create-page.component.html',
+  styleUrl: './manufacture-order-create-page.component.scss'
 })
-export class OrderCreatePageComponent {
+
+export class ManufactureOrderCreatePageComponent {
 
   loading: boolean = false;
 

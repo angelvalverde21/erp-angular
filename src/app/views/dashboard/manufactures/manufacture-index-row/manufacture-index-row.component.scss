@@ -1,0 +1,25 @@
+button[ngbDropdownToggle]::after {
+  display: none !important;
+}
+
+.date-main {
+  font-weight: 600;
+  color: #344054;
+  font-size: 0.82rem;
+}
+.date-sub {
+  color: #9ca3af;
+  font-size: 0.73rem;
+}
+
+.avatar-circle {
+  width: 34px;
+  height: 34px;
+  font-size: 13px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}

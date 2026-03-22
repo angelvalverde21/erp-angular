@@ -44,7 +44,7 @@ import { Supplier } from '@interfaces/supplier.interface';
     }
   ]
 })
-export class SupplierSelectedComponent implements ControlValueAccessor, OnDestroy {
+export class SupplierSelectedComponent implements ControlValueAccessor, OnDestroy, OnInit{
 
   isDisabled = false;
   supplier_id: number | null = null;
@@ -59,6 +59,23 @@ export class SupplierSelectedComponent implements ControlValueAccessor, OnDestro
   onTouchedCb: () => void = () => { };
 
   constructor(private _supplier: SupplierService) { }
+
+  ngOnInit(): void {
+
+    console.log(this.suppliers);
+    
+
+    this.suppliers = this.suppliers.map((supplier: Supplier) => {
+      return {
+        name: supplier?.user?.name,
+        id: supplier.id
+      }
+    });
+
+    console.log(this.suppliers);
+    
+
+  }
 
 
   writeValue(value: number | null): void {
