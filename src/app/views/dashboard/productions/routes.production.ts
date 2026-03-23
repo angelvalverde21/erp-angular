@@ -1,43 +1,44 @@
 import { Routes } from '@angular/router';
 
-export const  
-routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./production-index-page/production-index-page.component').then((m) => m.ProductionIndexPageComponent),
     data: {
       title: 'Todos',
+      name: 'dashboard.production.index', // 👈 nombre único
     }
   },
   {
     path: 'create',
     loadComponent: () => import('./production-create-page/production-create-page.component').then((m) => m.ProductionCreatePageComponent),
     data: {
-      title: 'Create'
+      title: 'Create',
+      name: 'dashboard.production.create', // 👈 nombre único
     }
   },
-  // {
-  //   path: ':production_id/purchases',
-  //   loadComponent: () =>
-  //     import('./production-edit-page/production-purchase-index-page/production-purchase-index-page.component')
-  //       .then(m => m.ProductionPurchaseIndexPageComponent),
-  //   data: { title: 'Compras' }
-  // },
+  {
+    path: 'search',
+    loadComponent: () => import('./production-search-page/production-search-page.component').then((m) => m.ProductionSearchPageComponent),
+    data: {
+      title: 'Search',
+      name: 'dashboard.production.search', // 👈 nombre único
+    }
+  },
   {
     path: ':production_id',
-    loadComponent: () =>
-      import('./production-edit-page/production-edit-page.component')
-        .then(m => m.ProductionEditPageComponent),
+    loadComponent: () => import('./production-edit-page/production-edit-page.component').then((m) => m.ProductionEditPageComponent),
     data: {
-      title: 'Producciones',
+      title: 'Editar',
+      name: 'dashboard.production.edit', // 👈 nombre único
     },
     children: [
       {
         path: '',
         loadComponent: () =>
-          import('./production-edit-page/production-summary/production-summary.component')
-            .then(m => m.ProductionSummaryComponent),
-        data: { title: 'Producciones/Recepciones' }
+          import('./production-edit-page/production-calendar/production-calendar.component')
+            .then(m => m.ProductionCalendarComponent),
+        data: { title: 'Producciones/calendar' }
       },
       {
         path: 'purchases',
@@ -63,6 +64,4 @@ routes: Routes = [
 
     ]
   },
-
-
 ];

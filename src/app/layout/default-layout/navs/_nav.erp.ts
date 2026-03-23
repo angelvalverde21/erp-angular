@@ -36,6 +36,32 @@ export const navErp: CustomNavData[] = [
     //         { name: 'Proveedores', url: 'dashboard/productions/suppliers', icon: 'nav-icon-bullet' },
     //     ]
     // },
+
+    {
+        name: 'Produccion',
+        url: 'dashboard/productions',
+        iconComponent: { name: 'cil-industry' },
+        children: [
+            {
+                name: 'Todos',
+                url: 'dashboard/productions', icon: 'nav-icon-bullet',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+            {
+                name: 'Crear',
+                url: 'dashboard/productions/create', icon: 'nav-icon-bullet',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+        ],
+        roles: ['master', 'ceo']
+    },
+
     {
         name: 'Fabricacion',
         url: 'dashboard/manufactures',

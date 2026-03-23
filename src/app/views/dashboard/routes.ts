@@ -34,6 +34,14 @@ export const routes: Routes = [
   },
 
   {
+    path: 'productions',
+    loadChildren: () =>
+      import('../../views/dashboard/productions/routes.production').then(
+        (m) => m.routes
+      ),
+  },
+
+  {
     path: 'pettycashes',
     loadChildren: () =>
       import('../../views/dashboard/petty-cashes/route.pettycash').then(

@@ -1,0 +1,10 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+<app-production-form [form]="form"></app-production-form>
+
+<app-button-save (click)="createProduction()" color="dark" [spinner]="loading" [disabled]="disabledButton">Guardar
+    cambios</app-button-save>
+
+<!-- {{ form.value | json }} -->
+}
