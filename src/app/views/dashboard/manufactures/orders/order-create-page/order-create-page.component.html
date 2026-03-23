@@ -1,0 +1,18 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-head-page title="Crear Orden de Compra">
+    <!-- <app-button-link [path]="['./create']">Agregar manufacture</app-button-link> -->
+    <app-button-back></app-button-back>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-body">
+        <app-manufacture-create (emitCreateManufacture)="receiveManufactureCreate($event)" [type]="'order'"></app-manufacture-create>
+    </div>
+
+</div>
+
+}

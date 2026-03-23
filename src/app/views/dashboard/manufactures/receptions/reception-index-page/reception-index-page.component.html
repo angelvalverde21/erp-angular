@@ -1,0 +1,32 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-head-page title="Todos">
+    <app-button-link [path]="['./create']">+ Añadir Producción</app-button-link>
+</app-head-page>
+
+<div class="card mb-3">
+
+    <div class="card-header py-3">
+        <app-head-table (emitSearchResult)="receiveSearchResult($event)"  type="manufacture" [button_active]="false">
+            <h6>Compras y Producciones</h6>
+        </app-head-table>
+    </div>
+
+    <div class="card-body p-0">
+        @if(manufactures?.length > 0){
+            <app-reception-index [manufactures]="manufactures"></app-reception-index>
+        }@else{
+            <p class="p-4">No se cuenta con registro de manufactures</p>
+        }
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ manufactures?.length }}</small>
+    </div>
+
+</div>
+
+
+}

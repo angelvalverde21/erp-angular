@@ -1,0 +1,8 @@
+<app-payment-form [form]="form"  [formCreate]="false"></app-payment-form>
+
+<app-image-index [images]="payment.images" [imageable_type]="'payment'" [imageable_id]="payment.id" (emitImagePreview)="receiveImage($event)"></app-image-index>
+
+<!-- {{ form.value | json }} -->
+<div class="mb-3">
+    <app-button-save (click)="updatePayment()">Guardar Cambios</app-button-save>
+</div>

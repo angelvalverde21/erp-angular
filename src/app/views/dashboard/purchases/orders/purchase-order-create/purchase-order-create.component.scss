@@ -1,0 +1,11 @@
+.ng-select .ng-select-container{
+    min-height: 40px;
+}
+
+.ng-input>input{
+    margin: 5px 20px !important;
+}
+
+.is-invalid > .ng-select-container{
+    border-color: red;
+}

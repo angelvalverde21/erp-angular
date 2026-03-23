@@ -1,0 +1,25 @@
+@if (links?.length) {
+  <div class="pagination d-flex justify-content-center align-items-center">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+
+        @for (link of links; track $index) {
+          <li class="page-item"
+              [class.active]="link.active"
+              [class.disabled]="!link.url">
+
+            <a
+              class="page-link"
+              [routerLink]="[]"
+              [queryParams]="getQueryParams(link)"
+              queryParamsHandling="merge"
+              [innerHTML]="link.label">
+            </a>
+
+          </li>
+        }
+
+      </ul>
+    </nav>
+  </div>
+}

@@ -15,4 +15,11 @@ export const routes: Routes = [
           title: `tracking`
         }
     },
+    {
+        path: 'tracking/:order_id',
+        loadComponent: () => import('./tracking/tracking.component').then(m => m.TrackingComponent),
+        data: {
+          title: `tracking`
+        }
+    },
 ];

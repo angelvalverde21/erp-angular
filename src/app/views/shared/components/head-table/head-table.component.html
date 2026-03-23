@@ -1,0 +1,50 @@
+<form action="" [formGroup]="form">
+    <div class="controls d-flex justify-content-between align-items-between">
+
+        <!-- <div class="left d-flex d-flex align-items-center">
+
+    @if(button_active){
+        
+            <button class="btn btn-secondary btn-sm me-1">Todos</button>
+            <button class="btn btn-light btn-sm me-1">Activos</button>
+            <button class="btn btn-light btn-sm me-1">Borrador</button>
+            <button class="btn btn-light btn-sm me-1">Bloqueados</button>
+        }@else{
+            <ng-content></ng-content>
+        }
+    </div> -->
+
+
+        @if(box_search){
+                    <div class="right d-flex justify-content-between align-items-between">
+
+            @if(showSearch){
+            <input class="form-control form-control-md" formControlName="search" type="text" placeholder="Buscar"
+                (blur)="fnHideSearch()" (keydown.enter)="search()" aria-label="cajon de busqueda" />
+            }@else{
+            <app-button [icon]="faMagnifyingGlass" color="outline-secondary" separation="0"
+                (click)="fnShowSearch()">Buscar</app-button>
+            }
+
+        </div>
+        }
+
+
+        <!-- @if(showSearch){ -->
+        <div class="filter d-flex">
+
+            <input type="date" class="form-control me-2" placeholder="date" formControlName="start_date" [max]="form.get('end_date')?.value"
+                aria-label="date" aria-describedby="basic-date" />
+            <input type="date" class="form-control me-2" placeholder="date" formControlName="end_date" [min]="form.get('start_date')?.value" [max]="today"
+                aria-label="date" aria-describedby="basic-date" />
+
+                <app-button [icon]="faMagnifyingGlass" (click)="search()">Buscar</app-button>
+            <!-- <app-button [icon]="faFilter" color="outline-secondary" separation="0"></app-button> -->
+             
+        </div>
+        <!-- } -->
+
+        <!-- {{ form.value | json }} -->
+
+    </div>
+</form>

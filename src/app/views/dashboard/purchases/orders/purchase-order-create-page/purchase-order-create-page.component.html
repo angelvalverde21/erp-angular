@@ -1,0 +1,13 @@
+<app-head-page title="Agregar Orden Compra" [icon]="faCreditCard">
+    <app-button-back></app-button-back>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-body">
+
+        <app-purchase-order-create (emitPurchaseCreate)="receivePurchaseCreate($event)"></app-purchase-order-create>
+
+    </div>
+
+</div>

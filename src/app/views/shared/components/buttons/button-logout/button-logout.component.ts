@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../../../../core/auth/auth.service';
+import { AuthService } from '../../../../auth/auth.service';
+// import { AuthService } from '../../../../../core/auth/auth.service';
 
 
 @Component({
@@ -18,6 +19,8 @@ export class ButtonLogoutComponent implements OnInit{
 
   logout(){
 
+    console.log("click logout");
+    
     this._auth.logout();
     
   }

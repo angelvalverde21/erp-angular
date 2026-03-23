@@ -3,14 +3,13 @@ import { CategoryService } from '../category.service';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
-import { ProductListTemplateComponent } from '../../../shared/templates/product-list-template/product-list-template.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-category-index-slug-page',
-  imports: [LoadingComponent, ButtonLinkComponent, ProductListTemplateComponent, CommonModule],
+  imports: [LoadingComponent, ButtonLinkComponent, CommonModule],
   templateUrl: './category-index-slug-page.component.html',
   styleUrl: './category-index-slug-page.component.scss',
 })

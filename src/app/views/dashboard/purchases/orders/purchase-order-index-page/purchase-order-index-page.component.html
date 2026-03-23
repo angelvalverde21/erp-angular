@@ -1,0 +1,24 @@
+@if(loading){
+<app-loading></app-loading>
+
+}@else{
+<app-head-page title="Ordenes de compra" [icon]="faCreditCard">
+  <app-button-link [path]="['./create']">+ Orden de compra</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+  <div class="card-header py-3">
+
+    <app-purchase-order-head-table></app-purchase-order-head-table>
+
+  </div>
+
+  <div class="card-body p-0">
+
+    <app-purchase-order-index [purchase_orders]="purchase_orders"></app-purchase-order-index>
+
+
+  </div>
+</div>
+}

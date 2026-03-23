@@ -1,0 +1,25 @@
+<div class="upload mb-3">
+    <app-image-upload [imageable_type]="imageable_type" [imageable_id]="imageable_id" (emitImagesUpload)="receiveImagesUpload($event)"></app-image-upload>
+</div>
+
+<div class="table-responsive">
+
+    <table class="table table-striped table-bordered align-middle">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">#</th>
+                <th class="text-center" scope="col">Image</th>
+                <th class="text-center" scope="col">Name</th>
+                <th class="text-center" scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (image of images; track image.id) {
+                <tr app-image-index-row [image]="image" (emitRemoveImage)="onRemoveImage($event)"></tr>
+            }
+            
+        </tbody>
+    </table>
+
+</div>

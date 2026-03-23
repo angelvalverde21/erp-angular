@@ -1,0 +1,67 @@
+<div class="bg-white py-3 d-flex justify-content-between align-items-center">
+    <span class="ms-3"><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Productos</span>
+
+    <app-button-add (click)="openVerticallyCentered(content)" class="mb-3" color="dark">{{ text_button }}</app-button-add>
+
+</div>
+
+
+@if(manufacture_variants?.length == 0){
+<div class="empty-state py-4 text-center">
+    <fa-icon [icon]="faInbox" style="font-size: 2rem; opacity: 0.5;"></fa-icon>
+    <p class="mb-0 mt-3">No hay productos registrados</p>
+    <small class="text-muted">Comienza agregando un producto</small>
+</div>
+}@else{
+<div class="table-responsive mb-3">
+
+    <table class="table table-striped table-bordered mb-0 align-middle">
+
+        <tbody>
+
+            <tr>
+                <td class="text-center">Cantidad</td>
+                <td class="text-center">Variante</td>
+                <td class="text-center">Color</td>
+                <td class="">Descripcion</td>
+                <td class="text-center">Codigo Barras</td>
+                <td class="text-center">Precio</td>
+                <td class="text-center"></td>
+            </tr>
+
+            @for (manufacture_variant of manufacture_variants; let i = $index; track manufacture_variant.id) {
+
+            <tr app-manufacture-variant-row [manufacture_variant]="manufacture_variant"
+                (emitDeleteManufactureVariantId)="receiveDeleteManufactureVariantId($event)"
+                (emitUpdatedQuantity)="receiveManufactureVariant($event)"></tr>
+
+            }
+
+            <tr>
+                <td class="text-center">
+                    <h6>{{ sum_products }}</h6>
+                </td>
+                <td colspan="6" class="text-end"><small class="text-muted">{{ manufacture_variants?.length }} Registros
+                        encontrados</small></td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+}
+
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title">Agregar Productos</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-variant-search (emitVariantsSelected)="receiveSearchSelectedVariants($event)"></app-variant-search>
+    </div>
+
+</ng-template>

@@ -1,6 +1,8 @@
-<button type="button" class="d-flex justify-content-between btn btn-{{ color }} btn-{{ size }}" (click)="selected()">
+<button type="button" class="w-100 mb-3 btn btn-{{ color }} btn-{{ size }}" (click)="selected()">
 
-      <fa-icon  [icon]="faCircleCheck" class="me-2"></fa-icon>
-      <ng-content></ng-content>
+      <div class="d-flex justify-content-center">
+            <fa-icon [icon]="faCircleCheck" class="me-2"></fa-icon>
+            <ng-content></ng-content>
+      </div>
 
 </button>

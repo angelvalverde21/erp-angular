@@ -1,0 +1,35 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<!-- <app-head-page title="Clientes" [icon]="faUsers">
+    <app-button-link [path]="['./create']">Agregar Cliente</app-button-link>
+</app-head-page> -->
+
+<div class="card mb-3">
+
+    <div class="card-header py-3">
+
+        <app-product-head-table [status]="status" (emitSearchResult)="receiveSearchResult($event)" (emitStatusProductsSync)="reListProduct()"></app-product-head-table>
+
+    </div>
+
+    <div class="card-body p-0">
+
+        @if(products != undefined && products.length > 0){
+            <app-shopify-product-price-index [products]="products"></app-shopify-product-price-index>
+        }@else{
+            <p class="p-4">No se cuenta con registro de productos   </p>
+        }
+
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ products?.length }}</small>
+    </div>
+
+</div>
+
+<app-paginator [links]="links"/>
+
+}
+

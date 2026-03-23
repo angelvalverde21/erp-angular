@@ -1,0 +1,8 @@
+.list-group-item:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+ol li:nth-child(odd) {
+  background-color: #f2f2f2;
+}

@@ -1,0 +1,40 @@
+<div class="card mb-3">
+
+    <div class="card-header py-3">
+
+    </div>
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover table-striped mb-0 align-middle">
+
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">
+                            <input class="form-check-input sp-check" type="checkbox" value="" id="flexCheckDefault">
+                        </th>
+                        <th scope="col">First <fa-icon [icon]="faSort"></fa-icon></th>
+                        <th scope="col">Last <fa-icon [icon]="faSort"></fa-icon></th>
+                        <th scope="col">Handle <fa-icon [icon]="faSort"></fa-icon></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @for (item of data; track item.id) {
+                        <tr app-row [item]="item"></tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+
+    </div>
+
+</div>

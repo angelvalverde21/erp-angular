@@ -1,4 +1,9 @@
-<button class="btn btn-{{ color }} btn-{{size}}" (click)="clickButton()">
-    <fa-icon [icon]="faPlus" class="me-2"></fa-icon>
-    <ng-content></ng-content>
+@if(path){
+<button type="button" class="text-white d-flex justify-content-center btn btn-sm btn-{{ color }}" [routerLink]="path ?? null">
+    + Añadir <ng-content></ng-content>
 </button>
+}@else{
+<button type="button" class="text-white d-flex justify-content-center btn btn-sm btn-{{ color }}">
+    + Añadir <ng-content></ng-content>
+</button>
+}

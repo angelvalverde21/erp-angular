@@ -1,0 +1,22 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<app-head-page title="Agregar Empleado">
+    <app-button-back></app-button-back>
+</app-head-page>
+
+
+<div class="card">
+
+    <div class="card-body">
+
+        <app-employee-create [roles]="roles" (emitEmployeeCreate)="receiveEmployeeCreate($event)"></app-employee-create>
+
+    </div>
+    <!-- 
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total de productos: 2</small>
+    </div> -->
+
+</div>
+}

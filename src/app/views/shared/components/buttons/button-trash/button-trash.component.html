@@ -1,0 +1,16 @@
+<button type="button" class="text-{{ colortext }} btn btn-{{ color }} btn-{{ size }}" (click)="clickButton()"
+  [disabled]="disabled">
+
+  <div class="content d-flex justify-content-center align-items-center">
+    @if (icon != null) {
+    @if (spinner) {
+    <app-loading size="sm" class="me-{{ separation }}"></app-loading>
+    } @else {
+    <fa-icon [icon]="icon" [ngClass]="{'me-1': me}"></fa-icon>
+    }
+    }
+
+    <ng-content></ng-content>
+  </div>
+
+</button>

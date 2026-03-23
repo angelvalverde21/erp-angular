@@ -1,0 +1,41 @@
+<div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+            <tr>
+                <th class="text-center">#</th>
+                <th>Nombre</th>
+                <th>Telefono</th>
+                <th>Status</th>
+                <th>Creado</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (supplier of suppliers; track supplier.id) {
+
+            <tr (click)="getSupplierId(supplier.id)">
+                <td class="text-center">{{ supplier.id }}</td>
+                <td class="py-3">{{ supplier.user?.name }}</td>
+                <td class="py-3">{{ supplier.user?.phone }}</td>
+                <td class="py-3">
+                    @if(supplier.user?.status){
+                    <span class="badge text-bg-secondary text-white">Activo</span>
+                    }@else{
+                    <span class="badge text-bg-danger text-white">Bloqueado</span>
+                    }
+
+                </td>
+                <td>{{ supplier.created_at | DateShopify }}</td>
+                <td class="text-center">
+                    <div class="controls d-flex justify-content-center align-items-center">
+                        <app-button-edit></app-button-edit>
+                        <!-- <app-button [icon]="faTrash" separation="0" color="outline-dark"></app-button> -->
+                    </div>
+                </td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

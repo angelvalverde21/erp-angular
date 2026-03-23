@@ -14,48 +14,34 @@ import { Observable } from 'rxjs';
 })
 export class TokenInterceptor implements HttpInterceptor {
 
-  private opciones = {
-    headers: new HttpHeaders({
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,POST,OPTIONS,DELETE,PUT',
-      'Content-Type': 'application/json; charset=utf-8',
-      Accept: 'application/json,text/*;q=0.99',
-    }),
-  }
-
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    // const headers = new HttpHeaders({
-    //   'token-userx': 'asasdasasd'
-    // });
 
-    // const reqClone = req.clone({
-    //   headers
-    // });
-
-    // const headers = new HttpHeaders({
-    //   'token-usuario': 'ABC1290381902ALKSDJ1902'
-    // });
-
-    if (typeof window !== 'undefined') {
-      
-      const token = localStorage.getItem('access_token');
-
-      // Combina los headers de opciones con el token de autorización
-      const headers = this.opciones.headers.set(
-        'Authorization',
-        `Bearer ${token}`
-      );
-
-      const reqClone = req.clone({ headers });
-
-      return next.handle(reqClone);
-    } else {
-      // Manejo en caso de no estar en un entorno de navegador
+    if (typeof window === 'undefined') {
       return next.handle(req);
     }
+
+    const token = localStorage.getItem('access_token');
+
+    // 👇 solo agregamos Authorization
+    let headers = req.headers;
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    // 🚨 NO forzar Content-Type si es FormData
+    if (!(req.body instanceof FormData)) {
+      headers = headers.set(
+        'Content-Type',
+        'application/json; charset=utf-8'
+      );
+    }
+
+    const reqClone = req.clone({ headers });
+
+    return next.handle(reqClone);
   }
-  
 }

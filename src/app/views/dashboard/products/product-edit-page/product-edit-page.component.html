@@ -1,71 +1,102 @@
-<app-form-search></app-form-search>
+<!-- <app-form-search></app-form-search> -->
 
 <!-- ProductEdit -->
-@if(loading){
+@if(setupLoading){
 <app-loading></app-loading>
 }@else{
 
-<div class="card mb-3">
+@if(loadingProduct){
+<app-loading></app-loading>
+}@else{
 
-  <div class="card-header py-3 bg-info text-white">
-    <fa-icon [icon]="faPenToSquare" class="me-2"></fa-icon> Edicion Producto
-  </div>
+<div class="row">
+  <div class="col-lg-12">
+    <app-head-page title="{{ product.name }}">
+      <app-button-back></app-button-back>
+    </app-head-page>
 
-  <div class="card-body">
-    <app-product-edit [product]="product" (emitCategorySelected)="categorySelected($event)"></app-product-edit>
-  </div>
 
-</div>
+    <div class="row">
+      <div class="col-lg-7">
+        <div class="card mb-3">
 
-<div class="card mb-3">
+          <!-- {{ product | json }} -->
 
-  <div class="card-body">
-
-    <h5 class="card-title mb-3">Variantes</h5>
-
-    <app-button [icon]="faPlus">Agregar Variante</app-button>
-
-    @if(product.colors.length > 0){
-      
-      <app-color-index [colors]="product.colors"></app-color-index>
-    }
-
-  </div>
-
-</div>
-
-<!-- Opciones -->
-
-    <div class="card mb-3">
-
-      <div class="card-body">
-
-        <h5 class="card-title mb-3">Gallery</h5>
-
-        <app-gallery [path]="`products/${product.id}/images`"></app-gallery>
-
-      </div>
-
-    </div>
-
-    <div class="card mb-3">
-
-      <div class="card-body">
-
-        <h5 class="card-title mb-3"> Tallas</h5>
-
-        <div class="attributes mx-auto">
-
-          @if(sizes.length > 0){
-            <app-size-index [sizes]="sizes"></app-size-index>
-          }
-          <app-size-create [product_id]="product.id" (emitSizeCreate)="receiveSizeCreate($event)"></app-size-create>
+          <div class="card-body">
+            <app-product-edit [product]="product" [categories]="categories" [brands]="brands"
+              (emitCategorySelected)="categorySelected($event)"></app-product-edit>
+          </div>
 
         </div>
 
+        <!-- {{ product.i}} -->
+        <!-- 
+        <app-head-page title="Tallas">
+        </app-head-page>
+
+
+        <div class="card">
+          <div class="card-body">
+            <app-option-value-create [options]="product.options" option_selected="Talla"
+              text_selected="Agregar talla"></app-option-value-create>
+          </div>
+        </div> -->
+
 
       </div>
 
+      <div class="col-lg-5">
+
+        <app-head-page title="Agregue Bloque de Opciones">
+        </app-head-page>
+
+        <div class="card mb-3">
+          <div class="card-body">
+            <app-option-index [options_init]="product.options_init" [options]="product.options"
+              [product_id]="product.id"></app-option-index>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-12">
+        <div class="card">
+
+          <div class="card-header py-3">
+            Variantes
+          </div>
+
+          <div class="card-body p-0">
+            <app-variant-index [variants]="product.variants"></app-variant-index>
+
+          </div>
+
+          <div class="card-footer text-end" style="border-top: 0;">
+            <small class="text-muted">Total: {{ product.variants?.length }}</small>
+          </div>
+
+        </div>
+      </div>
+
     </div>
+
+
+    <!-- Variantes -->
+    <!-- <app-head-page title="Inventario">
+    </app-head-page>
+
+    <div class="card mb-3">
+
+      <div class="card-body">
+
+      </div>
+
+    </div> -->
+
+  </div>
+
+</div>
+
+}
 
 }

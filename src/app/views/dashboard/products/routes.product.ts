@@ -17,4 +17,20 @@ export const routes: Routes = [
       name: 'dashboard.product.create', // 👈 nombre único
     }
   },
+  {
+    path: 'search',
+    loadComponent: () => import( './product-search-page/product-search-page.component' ).then((m) => m.ProductSearchPageComponent),
+    data: {
+      title: 'Search',
+      name: 'dashboard.product.search', // 👈 nombre único
+    }
+  },
+  {
+    path: ':product_id',
+    loadComponent: () => import( './product-edit-page/product-edit-page.component' ).then((m) => m.ProductEditPageComponent),
+    data: {
+      title: 'Editar',
+      name: 'dashboard.product.edit', // 👈 nombre único
+    }
+  },
 ];

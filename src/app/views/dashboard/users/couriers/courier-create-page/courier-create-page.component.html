@@ -1,0 +1,9 @@
+<app-head-page title="Crear Courier">
+    <app-button-back></app-button-back>
+</app-head-page>
+
+<div class="card">
+    <div class="card-body">
+        <app-courier-create (emitCourierCreate)="receiveCourierCreate($event)"></app-courier-create>
+    </div>
+</div>

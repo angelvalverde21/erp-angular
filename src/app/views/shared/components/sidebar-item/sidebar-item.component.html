@@ -1,0 +1,26 @@
+<a [routerLink]="item.url" class="nav-link">
+
+  <!-- FontAwesome SVG -->
+  <fa-icon
+    *ngIf="isFaIcon(item.icon)"
+    [icon]="item.icon"
+    class="nav-icon">
+  </fa-icon>
+
+  <!-- CoreUI icon (string) -->
+  <i
+    *ngIf="!isFaIcon(item.icon) && item.icon"
+    class="nav-icon"
+    [ngClass]="item.icon">
+  </i>
+
+  {{ item.name }}
+</a>
+
+<!-- Children -->
+<div *ngIf="item.children">
+  <app-sidebar-item
+    *ngFor="let child of item.children"
+    [item]="child">
+  </app-sidebar-item>
+</div>

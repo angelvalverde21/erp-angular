@@ -1,13 +1,114 @@
+<div class="bg-white py-3 d-flex justify-content-between align-items-center">
+    <span class="ms-3"><fa-icon [icon]="faBagShopping" class="me-2"></fa-icon> Lista de compras
+        ({{
+        purchases?.length
+        }})</span>
+    <app-button-add (click)="openVerticallyCentered(content)" color="dark">Compra</app-button-add>
+
+</div>
+
+@if(purchases.length == 0){
+<div class="empty-state py-4 text-center">
+    <fa-icon [icon]="faInbox" style="font-size: 2rem; opacity: 0.5;"></fa-icon>
+    <p class="mb-0 mt-3">No hay compras registradas</p>
+    <small class="text-muted">Comienza registrando una compra</small>
+</div>
+}@else{
+
+<div class="table-responsive mb-3">
+
+    <table class="table table-hover table-bordered mb-0 align-middle">
+        
+        <tbody>
+
+            @for (purchase of purchases; track purchase.id) {
+
+            <tr app-purchase-index-row [purchase]="purchase" [purchaseable_type]="purchaseable_type"
+                [purchaseable_id]="purchaseable_id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
+                (emitRemovePurchase)="receiveRemovePurchase($event)"></tr>
+
+            <!-- <tr>
+                <td [attr.rowspan]="purchase.items.length + 1" class="text-center" style="width: 50px;">
+                    <app-button-edit [color]="'outline-secondary'"></app-button-edit>
+                </td>
+            </tr> -->
+
+            <tr>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Unidad</th>
+                <th>Descripción</th>
+                <th class="text-center">Precio</th>
+                <th class="text-center">Subtotal</th>
+            </tr>
+
+            @for (item of purchase.items; track item.id) {
+            <!--  -->
+
+            <tr>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td class="text-center">{{ item.unit?.name }}</td>
+                <td>{{ item.name }}</td>
+                <td class="text-center">{{ item.price }}</td>
+                <td class="text-center">{{ item.subtotal }}</td>
+
+            </tr>
+
+            }
+
+            <tr>
+                <td colspan="4"></td>
+                <!-- <td class="text-end">Boletas</td>
+                <td class="text-center">
+                    <div style="width: 50px !important;" class="mx-auto">
+                        <app-button [icon]="faReceipt" color="outline-secondary">0</app-button>
+                    </div>
+                </td> -->
+                <td class="text-center bg-light">S/. 0.00</td>
+            </tr>
+
+            <tr class="separador">
+                <td colspan="5">x</td>
+            </tr>
+            }
+
+            <tr>
+                <td colspan="3" class="text-end"><small class="text-muted"></small></td>
+                <td class="text-center"><h6>Total</h6></td>
+                <td class="text-center">
+                    <h6>{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+}
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title">Registrar Compra</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-purchase-create [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id"
+            (emitPurchaseCreate)="receivePurchaseCreate($event)"></app-purchase-create>
+    </div>
+
+</ng-template>
+<!-- {{ purchaseable_type }} - {{ purchaseable_id }} -->
+
+
+<!-- 
 <ul class="list-group list-group-flush">
 
     @if(purchases.length > 0){
-        
-        @for (purchase of purchases; track purchase.id) {
-        <li class="list-group-item px-0 py-0">
-            <app-purchase-index-row [purchase]="purchase"
-                (deletePurchase)="reListPurchases($event)"></app-purchase-index-row>
-        </li>
-        }
+
+    @for (purchase of purchases; track purchase.id) {
+    <li class="list-group-item px-0 py-0">
+        <app-purchase-index-row [purchase]="purchase"
+            (deletePurchase)="reListPurchases($event)"></app-purchase-index-row>
+    </li>
+    }
 
     }@else{
 
@@ -15,4 +116,4 @@
 
     }
 
-</ul>
+</ul> -->

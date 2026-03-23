@@ -1,0 +1,31 @@
+<div class="controls d-flex justify-content-between align-items-between">
+    <div class="left d-flex">
+        <button class="btn btn-sm me-1" [ngClass]="status === '' ? 'btn-secondary' : 'btn-light'"
+            (click)="goToStatus('')">
+            Todos
+        </button>
+
+        <button class="btn btn-sm me-1" [ngClass]="status === 'ACTIVE' ? 'btn-secondary' : 'btn-light'"
+            (click)="goToStatus('ACTIVE')">
+            Activas
+        </button>
+
+        <button class="btn btn-sm me-1" [ngClass]="status === 'DRAFT' ? 'btn-secondary' : 'btn-light'"
+            (click)="goToStatus('DRAFT')">
+            Devueltas
+        </button>
+
+    </div>
+    <div class="right d-flex justify-content-between align-items-between">
+
+        @if(showSearch){
+        <input class="form-control form-control-sm me-1" type="text" placeholder="Buscar" aria-label="cajon de busqueda"
+            (input)="fnSearch($event)" />
+        }@else{
+        <app-button [icon]="faMagnifyingGlass" color="outline-secondary" class="me-1"
+            (click)="fnShowSearch()">Buscar</app-button>
+        }
+
+        <!-- <app-button (click)="sync()" [icon]="faRotate" color="outline-dark" separation="0"></app-button> -->
+    </div>
+</div>

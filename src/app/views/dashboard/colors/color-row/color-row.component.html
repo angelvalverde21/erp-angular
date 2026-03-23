@@ -1,0 +1,16 @@
+<!-- <app-gallery [path]="`products/${color.product_id}`"></app-gallery> -->
+
+<div class="d-flex justify-content-between align-items-center">
+    <span>{{ color.name }}</span>
+
+    <div class="controls d-flex justify-content-between align-items-center">
+        <app-button-gallery class="me-2"></app-button-gallery>
+        <app-button color="outline-danger" size="sm" [icon]="faTrash" (action)="delete(color)">Borrar</app-button>
+        @if(loading){
+        <div class="overlay">
+            <app-loading></app-loading>
+        </div>
+        }
+    </div>
+
+</div>

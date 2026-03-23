@@ -5,7 +5,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-button',
-  imports: [LoadingComponent, CommonModule, FontAwesomeModule],
+  imports: [
+    LoadingComponent, 
+    CommonModule, 
+    FontAwesomeModule
+  ],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss'
 })
@@ -18,6 +22,7 @@ export class ButtonComponent {
   @Input() icon: any; 
   @Input() disabled: boolean = false;
   @Input() spinner: boolean = false;
+  @Input() me: boolean = true; //margin end
   
 
   @Output() action = new EventEmitter<void>();

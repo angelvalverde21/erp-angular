@@ -1,0 +1,42 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<ng-select [items]="couriers" bindLabel="name" bindValue="id" [clearable]="false" [disabled]="isDisabled"
+    [ngModel]="courier_id" (ngModelChange)="setCourier($event)" placeholder="Selecciona courier" class="mb-3">
+
+    <ng-template ng-option-tmp let-item="item">
+        <div class="d-flex align-items-center gap-2">
+            <span>{{ item.name }}</span>
+        </div>
+    </ng-template>
+
+    <ng-template ng-label-tmp let-item="item">
+        <div class="d-flex align-items-center gap-2">
+            <span>{{ item.name }}</span>
+        </div>
+    </ng-template>
+
+</ng-select>
+
+@if(showSelectedAddress){
+
+<ng-select [items]="addresses" bindLabel="primary" bindValue="id" [clearable]="false" [disabled]="isDisabled"
+    [ngModel]="courier_address_id" (ngModelChange)="setCourierAddress($event)" placeholder="Selecciona Sucursal"
+    class="mb-3">
+
+    <ng-template ng-option-tmp let-item="item">
+        <div class="d-flex align-items-center gap-2">
+            <span>{{ item.name }} - {{ item.primary }}</span>
+        </div>
+    </ng-template>
+
+    <ng-template ng-label-tmp let-item="item">
+        <div class="d-flex align-items-center gap-2">
+            <span>{{ item.name }} - {{ item.primary }}</span>
+        </div>
+    </ng-template>
+
+</ng-select>
+
+}
+}

@@ -16,7 +16,6 @@ export const environment = {
     apiUrl: 'http://shopify.test/api/v1/dashboard',
     apiErp: 'http://erp.test/api/v1',
 
-
     imageMediumPlaceHolder: 'https://placehold.co/400x400',
     imageThumbnailPlaceHolder: 'https://placehold.co/200x200',
     imageThumbnailPlaceHolderVertical: 'https://placehold.co/300x400',

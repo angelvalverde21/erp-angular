@@ -1,7 +1,3 @@
-@if(loadingCategories || brandsLoading){
-<app-loading></app-loading>
-}@else{
-
 <form [formGroup]="form" (ngSubmit)="create()">
 
 
@@ -10,7 +6,6 @@
   <app-button color="dark" [icon]="faPlus" [disabled]="disabledButton" [spinner]="loadingIcon"
     (action)="create()">Crear Producto</app-button>
 
-  <!-- {{ form.value | json }} -->
+  {{ form.value | json }}
 
 </form>
-}

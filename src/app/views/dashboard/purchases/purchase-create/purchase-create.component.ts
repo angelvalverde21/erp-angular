@@ -5,10 +5,9 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  TemplateRef,
-  ViewEncapsulation,
 } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
@@ -16,25 +15,24 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { PurchaseService } from '../purchase.service';
 import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
 import {
-  faEdit,
-  faTags,
-  faPlus,
-  faIdCard,
-  faAddressCard,
-  faUser
+  faSave
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component';
 import { UnitService } from '../../units/unit.service';
-import { JsonPipe } from '@angular/common';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { SupplierCreateComponent } from '../../suppliers/supplier-create/supplier-create.component';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { SupplierService } from '../../suppliers/supplier.service';
+import { CommonModule, JsonPipe } from '@angular/common';
+
+import { SupplierCreateComponent } from '../../users/suppliers/supplier-create/supplier-create.component';
+import { SupplierService } from '../../users/suppliers/supplier.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PurchaseService } from '../purchase.service';
+import { ProductSelectedComponent } from '../../products/product-selected/product-selected.component';
+import { PurchaseFormComponent } from '../purchase-form/purchase-form.component';
+import { PurchaseItemIndexComponent } from '../purchase-item-index/purchase-item-index.component';
+import { PaymentFormComponent } from '../../payments/payment-form/payment-form.component';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-purchase-create',
@@ -45,117 +43,82 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     UnitSelectedComponent,
     JsonPipe,
     SupplierCreateComponent,
-    NgSelectModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    CommonModule,
+    ProductSelectedComponent,
+    PurchaseFormComponent,
+    PurchaseItemIndexComponent,
+    PaymentFormComponent,
+    NgbAccordionModule
   ],
   templateUrl: './purchase-create.component.html',
-  styleUrl: './purchase-create.component.scss',
-  encapsulation: ViewEncapsulation.None,
+  styleUrl: './purchase-create.component.scss'
 })
 export class PurchaseCreateComponent {
+
+  items = ['First', 'Second', 'Third'];
+
   disabledButton: boolean = true;
   loadingIcon: boolean = false;
   form!: FormGroup;
   loading: boolean = false;
   success: boolean = false;
+  search_result: boolean = false;
 
-  faEdit = faEdit;
-  faTags = faTags;
-  faPlus = faPlus;
-  faIdCard = faIdCard;
-  faUser = faUser;
-  faAddressCard = faAddressCard;
+  faSave = faSave;
   units: any[] = [];
 
   @Output() emitPurchaseCreate = new EventEmitter<any | boolean>();
-  @Input() section: any; 
-  @Input() purchaseable_type: string = ""; 
-  @Input() purchaseable_id: number = 0; 
+  @Input() purchaseable_type: string = "";
+  @Input() purchaseable_id: number = 0;
+  @Input() supplier_id: number | null = 0;
 
   private destroy$ = new Subject<void>();
-  modal: any;
 
   constructor(
-    config: NgbModalConfig,
-    private modalService: NgbModal,
     private fb: FormBuilder,
     private _purchase: PurchaseService,
     private _supplier: SupplierService
   ) {
-    config.backdrop = 'static';
-    config.keyboard = false;
+
   }
 
   private formInit(): void {
+
+    const today = new Date().toISOString().split('T')[0];
+
     this.form = this.fb.group({
-      name: ['', [Validators.required]],
-      quantity: [''],
-      unit_id: [1],
-      section_id: [],
-      price: [''],
-      total: [''],
+      purchase_start: [today],
+      purchase_end: [today],
       purchaseable_type: [this.purchaseable_type],
       purchaseable_id: [this.purchaseable_id],
       observations: [''],
-      supplier_id: [''],
+      supplier_id: [null],
+      gateway_id: [2, [Validators.required]],
+      purchase_items: this.fb.array([
+        this.fb.group({
+          name: ['', [Validators.required]],
+          quantity: ['', [Validators.required]],
+          unit_id: [1, [Validators.required]],
+          price: ['', [Validators.required]],
+          subtotal: ['', [Validators.required]],
+        })
+      ])
     });
   }
 
-  calculosPricetotal() {
-    
-  const round2 = (num: number) => Math.round((num + Number.EPSILON) * 100) / 100;
-
-  const priceControl = this.form.get('price');
-  const totalControl = this.form.get('total');
-  const quantityControl = this.form.get('quantity');
-
-  priceControl?.valueChanges.subscribe(price => {
-    const quantity = quantityControl?.value || 0;
-    const total = totalControl?.value;
-
-    if (price != null && quantity > 0) {
-      const calcTotal = round2(price * quantity);
-      if (total !== calcTotal) {
-        totalControl?.setValue(calcTotal, { emitEvent: false });
-      }
-    }
-  });
-
-  totalControl?.valueChanges.subscribe(total => {
-    const quantity = quantityControl?.value || 0;
-    const price = priceControl?.value;
-
-    if (total != null && quantity > 0) {
-      const calcPrice = round2(total / quantity);
-      if (price !== calcPrice) {
-        priceControl?.setValue(calcPrice, { emitEvent: false });
-      }
-    }
-  });
-
-  quantityControl?.valueChanges.subscribe(quantity => {
-    const price = priceControl?.value || 0;
-    const total = totalControl?.value || 0;
-
-    if (price > 0) {
-      const calcTotal = round2(price * quantity);
-      if (total !== calcTotal) {
-        totalControl?.setValue(calcTotal, { emitEvent: false });
-      }
-    }
-  });
-  }
 
   ngOnInit(): void {
+
     this.formInit();
 
-    this.calculosPricetotal();
-    this.getSuppliers();
+    this.supplierInit();
+    // this.getSuppliers();
     // this.initUnits();
     // this.initBrands();
     // this.initsuppliers();
 
-    this.form.get('section_id')?.setValue(this.section.id);
+    // this.form.get('section_id')?.setValue(this.section.id);
 
     this.form.statusChanges.subscribe((status) => {
       console.log(status);
@@ -172,25 +135,34 @@ export class PurchaseCreateComponent {
 
   suppliers: any[] = [];
 
-  getSuppliers() {
-    this._supplier
-      .index()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (resp: any) => {
-          console.log(resp);
-          this.suppliers = resp.data;
-          this.loading = false;
-          console.log(resp.data);
-        },
+  // getSuppliers() {
+  //   this._supplier
+  //     .index()
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe({
+  //       next: (resp: any) => {
+  //         console.log(resp);
+  //         this.suppliers = resp.data.map((s: any) => ({
+  //           ...s,
+  //           name: s.user?.name
+  //         }));
+  //         this.loading = false;
+  //         console.log(resp.data);
+  //       },
 
-        error: (error: any) => {
-          console.error(error);
-        },
-      });
-  }
+  //       error: (error: any) => {
+  //         console.error(error);
+  //       },
+  //     });
+  // }
 
   create() {
+
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
     this.loadingIcon = true;
     this.disabledButton = true;
 
@@ -230,28 +202,58 @@ export class PurchaseCreateComponent {
     this.destroy$.complete();
   }
 
-  openVerticallyCentered(content: TemplateRef<any>) {
-    this.modal = this.modalService.open(content, {
-      centered: true,
-      size: 'lg',
-    });
-  }
+  hidden_fields: boolean = true;
 
-  closeModal() {
-    this.modal.close();
-  }
+  onSearchResult(result: any) {
+    console.log(result);
 
-  supplierReceiveCreate(supplier: any) {
-    
-    console.log(supplier);
-
-    this.suppliers = [supplier, ...this.suppliers];
-
-    this.form.get('supplier_id')?.setValue(supplier.id);
-    // this.form.get('supplier_id')?.setValue(supplier.id);
-
-    if (supplier) {
-      this.modal.close();
+    if (result.length > 0) {
+      this.hidden_fields = true;
+    } else {
+      this.hidden_fields = false;
     }
+
+  }
+
+  get purchase_items(): FormArray<FormGroup> {
+    return this.form.get('purchase_items') as FormArray<FormGroup>;
+  }
+
+  addItem() {
+    const item = this.fb.group({
+      name: ['', [Validators.required]],
+      quantity: ['', [Validators.required]],
+      price: ['', [Validators.required]],
+      subtotal: ['', [Validators.required]],
+      unit_id: [1, [Validators.required]],
+    });
+
+    this.purchase_items.push(item);
+  }
+
+  private supplierInit() {
+
+    this._supplier.index()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: any) => {
+        //Da formato porque el json viene de la forma supplier.user.name 
+
+        this.suppliers = this.normalizeSuppliers(resp.data);
+        console.log(this.suppliers);
+
+      });
+
+  }
+
+  private normalizeSuppliers(suppliers: any[] = []): any[] {
+
+    const user = suppliers.map(s => ({
+      id: s.id,
+      name: s.user?.name
+    }));
+
+    console.log(user);
+    return user;
+
   }
 }

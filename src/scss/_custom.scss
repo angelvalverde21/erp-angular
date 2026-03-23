@@ -6,7 +6,14 @@
 // custom tweaks for scrollbar styling (wip)
 @use "scrollbar";
 
- // custom calendar today cell color
+body {
+  font-family: "Segoe UI", sans-serif;
+  // font-family: var(--cui-font-sans-serif) !important;
+  // font-weight: 200 !important; /* 🔹 más delgado */
+  font-size: 14px;
+}
+
+// custom calendar today cell color
 .calendar-cell.today {
   --cui-calendar-cell-today-color: var(--cui-info) !important;
 }
@@ -16,19 +23,161 @@
   cursor: pointer;
 }
 
-.overlay{
-    background-color: #a1a1a1;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.overlay {
+  background-color: #a1a1a1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .overlay-content {
-    position: relative;
+  position: relative;
+}
+
+.transparent-list .list-group-item {
+  background-color: transparent !important;
+}
+
+.sticky-head {
+  position: sticky;
+  top: 113px; /* se fija 80px debajo del borde superior */
+  z-index: 10;
+}
+
+.sticky-bottom {
+  position: sticky;
+  bottom: 0; /* se pega al fondo de la ventana */
+  z-index: 999;
+  background: white; /* opcional */
+}
+
+/* menu del sidebar */
+
+.nav-group > .nav-link {
+  // font-weight: 400;
+}
+
+.nav-item > .nav-link {
+  color: #969696;
+  // font-weight: 300;
+}
+
+.nav-item > .active {
+  color: #e4e4e4 !important;
+}
+
+.fs-7 {
+  font-size: 0.75rem !important;
+}
+
+/* estilos globales para los accordiones */
+
+.accordion-button {
+  color: #676767;
+  font-weight: 100;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #e7e7e7 !important;
+  color: #000;
+  font-weight: 500;
+}
+
+ng-select.is-invalid .ng-select-container {
+  border-color: #dc3545;
+}
+
+// ngx-dropzone {
+//   height: 120px !important;   /* altura mínima */
+// }
+
+/* quitar los spinner de los type number */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input::placeholder {
+  font-size: 0.85rem !important;
+  color: #bbb !important;
+}
+
+input {
+  font-size: 0.85rem !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.pointer:hover {
+  transform: scale(1.02);
+}
+
+.widget-title {
+  font-size: 0.85rem;
+}
+
+.text-white-75 {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.widget-manufacture {
+  min-height: 120px;
+}
+
+.children-custom a {
+  margin-left: 1rem !important;
+}
+
+.children-custom a .nav-icon {
+  font: 1em sans-serif;
+}
+
+.table {
+  font-size: 0.8rem;
+}
+
+.table-title {
+}
+
+.table-subtitle {
+  // font-size: 0.75rem;
+  color: #6d7175;
+}
+
+.btn-white {
+    border-radius: var(--cui-border-radius);
+  --cui-btn-color: #333;
+  --cui-btn-bg: #ffffff;
+  --cui-btn-border-color: #ccc;
+
+  --cui-btn-hover-color: #000;
+  --cui-btn-hover-bg: #f8f8f8;
+  --cui-btn-hover-border-color: #bbb;
+
+  --cui-btn-active-bg: #f8f8f8;
+  --cui-btn-active-border-color: #bbb;
+
+  --cui-btn-disabled-bg: #ffffff;
+  --cui-btn-disabled-border-color: #ddd;
+}
+
+button{
+    // font-size: 0.75rem !important;
+  }
+  
+.nav-link{
+    font-size: 0.75rem !important;
 }

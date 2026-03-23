@@ -1,0 +1,13 @@
+<div ngbAccordionItem [collapsed]="collapsed">
+
+    <div ngbAccordionHeader class="accordion-button">
+        {{ title }}
+    </div>
+
+    <div ngbAccordionCollapse>
+        <div ngbAccordionBody>
+            <ng-content></ng-content>
+        </div>
+    </div>
+
+</div>

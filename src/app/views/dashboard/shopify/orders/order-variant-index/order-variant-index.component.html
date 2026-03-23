@@ -1,0 +1,21 @@
+<div class="table-responsive">
+    <table class="table table-hover table-striped mb-0 align-middle">
+        <thead class="table-light">
+            <tr>
+                <th scope="col" class="text-center">#</th>
+                <th scope="col" class="text-center">Qty</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="text-center">Variante</th>
+                <th scope="col" class="text-center">Price</th>
+                <th scope="col" class="text-center">Total</th>
+                <th scope="col" class="text-center" style="width: 75px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody formArrayName="variants">
+            @for (control of variants.controls; let i = $index; track i) {
+            <tr app-order-variant-row [formGroup]="control" [index]="i">
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

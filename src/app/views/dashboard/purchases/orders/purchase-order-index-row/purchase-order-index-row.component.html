@@ -1,0 +1,79 @@
+<div class="overlay-content my-3">
+
+    @if(purchase_order != null){
+
+    <div class="row">
+
+        <div class="col-lg-12 col-12">
+            <!-- Description -->
+            <div class="text d-flex justify-content-between align-items-center">
+                <h5>{{ purchase_order.name | capitalize }}</h5>
+
+                <h6 class="text-success text-center mb-3">S/. {{ purchase_order.total }}</h6>
+                <!-- <span class="badge text-bg-primary mt-2">{{ purchase_order.supplier.name }}</span> -->
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-12">
+            <p class="text-muted mt-3 mb-4">
+                {{ purchase_order.observations }}
+            </p>
+        </div>
+
+
+        <div class="col-lg-12 col-12 d-flex justify-content-between">
+
+                <button class="btn btn-sm" [ngClass]="purchase_order.images_count > 0 ? 'btn-dark' : 'btn-outline-dark'" [disabled]="purchase_order.images_count === 0" (click)="openVerticallyCentered(images)"><fa-icon
+                    [icon]="faPaperclip"></fa-icon> Adjuntos ({{
+                purchase_order.images_count }})</button>
+
+            <button class="btn btn-outline-dark btn-sm"
+                (click)="openVerticallyCentered(content)"><fa-icon [icon]="faEdit"></fa-icon> Editar</button>
+
+        </div>
+
+
+    </div>
+
+    }@else{
+    El purchase es nullo
+    }
+
+    @if(loadingOverlay){
+    <div class="overlay">
+        <app-loading></app-loading>
+    </div>
+    }
+
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header bg-success text-white d-flex justify-content-between align-items-center">
+        <h5 class="modal-title"><fa-icon [icon]="faCashRegister" class="me-2"></fa-icon> Editar Compra</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-purchase-edit [purchase_id]="purchase_order.id"
+            (emitPurchaseUpdated)="receivePurchaseUpdated($event)"></app-purchase-edit>
+    </div>
+
+</ng-template>
+
+<ng-template #images let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title fs-5 fw-500">Adjuntar Boletas y Facturas</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="vouchers my-4">
+            <app-gallery [path]="`purchases/${purchase_order.id}/images`"></app-gallery>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+
+
+<!-- btn btn-outline-dark w-xxl-75 w-xl-75 w-lg-75 w-md-75 w-sm-75 w-xs-100 -->

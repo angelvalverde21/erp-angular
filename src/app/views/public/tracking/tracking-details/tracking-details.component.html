@@ -1,0 +1,55 @@
+<div class="container my-5">
+  <h4 class="mb-4 fw-bold text-center">Seguimiento de tu pedido #6888</h4>
+
+  <!-- 🔹 Etapas principales -->
+  <ul class="progressbar">
+    <li class="active">Pedido recibido</li>
+    <!-- <li [ngClass]="{'active': tracking.displayFulfillmentStatus === 'FULFILLED'}">Listo para envio o recojo</li> -->
+    <li>En tránsito</li>
+    <li>Entregado</li>
+  </ul>
+
+  <!-- 🔹 Línea de tiempo (historial) -->
+  <div class="timeline mt-5">
+    
+    <div class="timeline-item">
+      <div class="timeline-icon bg-secondary"></div>
+      <div class="timeline-content">
+        <h6 class="mb-1 fw-semibold">Pedido entregado</h6>
+        <small class="text-muted">2025-11-08 14:25</small>
+        <p class="mb-0 text-secondary">El paquete fue entregado en la dirección indicada.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-icon bg-secondary"></div>
+      <div class="timeline-content">
+        <h6 class="mb-1 fw-semibold">En tránsito</h6>
+        <small class="text-muted">2025-11-07 19:30</small>
+        <p class="mb-0 text-secondary">El pedido está en ruta hacia tu destino.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <!-- @if(tracking.displayFulfillmentStatus === 'FULFILLED'){
+        <div class="timeline-icon bg-success"></div>
+      }@else{
+        <div class="timeline-icon bg-secondary"></div>
+      } -->
+      <div class="timeline-content">
+          <h6 class="mb-1 fw-semibold">Listo para envio o recojo</h6>
+        <!-- <small class="text-muted">{{ tracking.processedAt | dateShopify }}</small> -->
+          <p class="mb-0 text-secondary">El pedido fue embalado y etiquetado, esta listo para envio o recojo en tienda</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-icon bg-success"></div>
+      <div class="timeline-content">
+        <h6 class="mb-1 fw-semibold">Pedido Recibido</h6>
+        <!-- <small class="text-muted">{{ tracking.createdAt | dateShopify }}</small> -->
+        <p class="mb-0 text-secondary">Se recibió el pago y se confirmó el pedido.</p>
+      </div>
+    </div>
+  </div>
+</div>

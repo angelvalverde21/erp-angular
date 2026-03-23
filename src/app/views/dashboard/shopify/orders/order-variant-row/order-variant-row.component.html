@@ -1,0 +1,36 @@
+<ng-container [formGroup]="formGroup">
+
+    <th class="text-center">
+        {{ data.sku }}
+    </th>
+
+    <td class="text-center">
+        <input formControlName="quantity" class="form-control text-center mx-auto" style="width: 50px;" type="number">
+    </td>
+
+    <td>
+        {{ data.name }}
+    </td>
+
+
+    @for (opt of data.variant_option_values; track opt.id) {
+    <td class="text-center">
+        {{ opt.option_value.value }}
+    </td>
+    }
+
+    <td class="text-center">
+        <input formControlName="price" class="form-control text-center mx-auto" style="width: 75px;" type="number" twoDecimals>
+    </td>
+
+
+    <td class="text-center fw-bold">
+        {{ total | currency:'PEN':'symbol':'1.2-2':'es-PE' }}
+    </td>
+
+    <td class="text-center">
+        <app-button-trash (click)="removeVariant(data.id)">
+        </app-button-trash>
+    </td>
+
+</ng-container>

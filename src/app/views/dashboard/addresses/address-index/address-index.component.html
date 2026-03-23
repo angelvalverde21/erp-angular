@@ -1,0 +1,43 @@
+<div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+            <tr>
+                <th scope="col" class="text-center">Codigo</th>
+                <th scope="col">Contacto</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Oficina</th>
+                <th scope="col">Referencia</th>
+                <th scope="col">Distrito</th>
+                <th scope="col" class="text-center">Editar</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (address of addresses; track address.id) {
+            <tr (click)="openVerticallyCentered(content, address.id)">
+                <th scope="row" class="text-center py-3">{{ address?.district_id }}</th>
+                <td class="py-3" class="ms-2">{{ address?.name }}</td>
+                <td class="py-3">{{ address?.phone }}</td>
+                <td class="py-3">{{ address?.primary }}</td>
+                <td class="py-3">{{ address?.references }}</td>
+                <td class="py-3">{{ address?.district?.name }}</td>
+                <td class="text-center py-3"><button type="button" class="btn btn-outline-dark">...</button></td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Editar</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-address-edit [address]="current_address" [user_id]="user_id" [addressable_type]="addressable_type" [addressable_id]="addressable_id" (emitUpdateAddress)="receiveUpdateAddress($event)"></app-address-edit>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>

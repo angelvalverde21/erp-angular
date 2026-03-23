@@ -1,7 +1,8 @@
+import { Color } from "../views/dashboard/colors/color.interface";
 import { Attribute } from "./attribute.interface";
 import { Category } from "./category.interface";
-import { Color } from "./color.interface";
 import { Size } from "./size.interface";
+import { Image } from "./image.interface";
 
 export interface Product {
   id: number;               // bigint en MySQL → number en TS
@@ -14,8 +15,13 @@ export interface Product {
   store_id?: number | null; // bigint, nullable
   created_at?: string | null; // timestamp, nullable → se puede usar string o Date
   updated_at?: string | null; // timestamp
-  category: Category;
+  category?: Category;
   sizes: Size[];
-  attributes: Attribute[];
+  image?: Image | null;
+  attributes?: Attribute[];
+  attributes_init?: Attribute[];
+  options_init?: any[];
   colors: Color[];
+  options: any[];
+  variants: any[];
 }

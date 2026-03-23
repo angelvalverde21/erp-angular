@@ -1,0 +1,10 @@
+<td class="text-center">{{ image.id }}</td>
+<td class="text-center"><img [src]="image.url_thumbnail" height="100" alt=""></td>
+<td class="text-center">{{ image.name }}</td>
+<td class="text-center" style="width: 50px;">
+    @if(loading){
+    <app-loading></app-loading>
+    }@else{
+    <app-button-trash (click)="removeImage(image.id)"></app-button-trash>
+    }
+</td>

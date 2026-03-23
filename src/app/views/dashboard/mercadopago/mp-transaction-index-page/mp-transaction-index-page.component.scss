@@ -1,0 +1,89 @@
+.accordion-button::after {
+  transform: rotate(270deg); /* 👉 apunta a la derecha (cerrado) */
+  transition: transform 0.25s ease;
+}
+
+.accordion-button:not(.collapsed)::after {
+  transform: rotate(360deg); /* 🔽 apunta hacia abajo (abierto) */
+}
+
+// .accordion-button:focus {
+// }
+
+.accordion-button{
+    color: #676767
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #f7f7f7;
+  color: #000
+}
+
+.accordion-button:focus{
+    box-shadow: none;
+    border-bottom: 0px solid #dfdfdf;
+}
+
+/*******************************************/
+
+.accordion-item:first-child .accordion-button {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+/* Quita esquinas redondeadas del contenedor principal */
+.accordion,
+.transactions {
+  border-radius: 0 !important;
+}
+
+/* Quita esquinas redondeadas del primer item */
+.accordion-item:first-child,
+.accordion-item:first-child .accordion-button {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+/* Quita esquinas redondeadas del último item */
+.accordion-item:last-child,
+.accordion-item:last-child .accordion-button {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+/* También asegúrate de que los botones no agreguen redondeado por defecto */
+.accordion-button {
+  border-radius: 0 !important;
+}
+
+/******************************************/
+
+.authorization-code{
+    width: 100px;
+    text-align: center;
+}
+
+.payment-method{
+    width: 125px;
+    text-align: center;
+}
+
+.last-four-digits{
+    width: 100px;
+    text-align: center;
+}
+
+.status{
+    width: 100px;
+    text-align: center;
+}
+
+.description{
+    width: 200px;
+    text-align: center;
+}
+
+.date{
+     width: 200px;
+    text-align: center;   
+}

@@ -18,6 +18,15 @@
   //}
 }
 
+// fuerza que un grupo se abra si tiene un hijo activo
+.c-sidebar-nav-group:not(.show) .c-sidebar-nav-link.active {
+  // Abre visualmente el grupo contenedor
+  & ~ .c-sidebar-nav {
+    display: block !important;
+    height: auto !important;
+  }
+}
+
 // ng-scrollbar css variables
 //.cui-scrollbar {
 //  --scrollbar-border-radius: 7px;

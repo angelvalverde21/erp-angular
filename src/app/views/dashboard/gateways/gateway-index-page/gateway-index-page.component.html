@@ -1,0 +1,42 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+
+<app-head-page title="Pasarelas de pago">
+    <app-button-link (click)="openVerticallyCentered(content)">Agregar Gateway</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3">
+        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)" type="gateway" [button_active]="false">
+            Buscar
+        </app-user-head-table>
+    </div>
+
+    <div class="card-body p-0">
+        @if(gateways?.length > 0){
+        <app-gateway-index [gateways]="gateways"></app-gateway-index>
+        }@else{
+        <p class="p-4">No se cuenta con registro de gateways</p>
+        }
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ gateways?.length }}</small>
+    </div>
+
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title">Agregar metodo de pago</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-gateway-create (emitGatewayCreate)="receiveGatewayCreate($event)"></app-gateway-create>
+    </div>
+</ng-template>
+
+
+}

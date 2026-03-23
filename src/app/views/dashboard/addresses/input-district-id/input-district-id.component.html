@@ -1,0 +1,23 @@
+<app-input-group [icon]="faPenSquare" class="input-district">
+    <input 
+        [(ngModel)]="name" (keyup)="keyUpSearch($event)" 
+        type="text" class="form-control is-required"
+        placeholder="* Distrito" aria-label="address"
+        aria-describedby="Distrito"
+        [disabled]="isDisabled"
+        (blur)="onTouchedCb?.()"
+        [ngClass]="isInvalid ? 'is-invalid' : '' "
+    />
+
+    <div class="loading" *ngIf="loading">
+            <app-loading size="sm"></app-loading>
+    </div>
+</app-input-group>
+
+<ul class="list-group" *ngIf="!showDistricts">
+    <li class="list-group-item" *ngFor="let district of districts">
+        <a class="btn w-100" (click)="setName(district)">{{district.name}} - {{district.province.name}} - {{district.province.department.name}}</a>
+    </li>
+</ul>
+
+<input [(ngModel)]="district_id" type="hidden">

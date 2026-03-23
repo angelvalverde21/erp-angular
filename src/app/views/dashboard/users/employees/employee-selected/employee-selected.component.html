@@ -1,0 +1,22 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<ng-select [items]="employees" bindLabel="user.name" [(ngModel)]="employee_id" (change)="setEmployee($event)"
+    bindValue="id"  placeholder="Selecciona un empleado" [clearable]="false" class="mb-3">
+    <!-- opción en la lista -->
+    <ng-template ng-option-tmp let-item="item">
+        <div class="d-flex align-items-center gap-2">
+            <!-- <img [src]="item.image" width="24" height="24" alt="" /> -->
+            <span>{{ item.user.name }}</span>
+        </div>
+    </ng-template>
+
+    <!-- opción seleccionada -->
+    <ng-template ng-label-tmp let-item="item">
+        <div class="d-flex align-items-center gap-2">
+            <!-- <img [src]="item.image" width="20" alt="" /> -->
+            <span>{{ item.user.name }}</span>
+        </div>
+    </ng-template>
+</ng-select>
+}

@@ -1,0 +1,75 @@
+<ng-container [formGroup]="form">
+
+    <td class="text-center" scope="row" style="width: 100px;">
+        <app-input-group [mb]="0">
+            <input formControlName="quantity" (blur)="update()" onclick="this.select()" type="text"
+                class="form-control text-center" placeholder="quantity" aria-label="quantity"
+                aria-describedby="basic-quantity" />
+        </app-input-group>
+    </td>
+
+    @for (option_value of manufacture_variant.variant?.option_values; track option_value.id) {
+    <td class="text-center">{{ option_value.value }}</td>
+    }
+
+    <td class="text-center">
+
+        <a data-fancybox="gallery" [attr.data-caption]="`${ manufacture_variant?.quantity}`"
+            [href]="manufacture_variant.variant?.product?.image?.url_medium">
+            <img [src]="manufacture_variant.variant?.product?.image?.url_thumbnail" class="me-2" height="45px" alt="">
+        </a>
+
+    </td>
+    <td>{{ manufacture_variant.variant?.product?.name }}</td>
+
+    <td style="width: 125px;" class="text-center">
+        @if(loading){
+        <app-loading></app-loading>
+        }@else{
+
+        <fa-icon [icon]="faBarcode" class="me-3"></fa-icon> {{ manufacture_variant.variant?.sku }}
+        }
+    </td>
+
+    <td style="width: 125px;">
+        <app-input-group [mb]="0">
+            <input formControlName="price" (blur)="update()" onclick="this.select()" type="text"
+                class="form-control text-center" placeholder="0.00" aria-label="Price"
+                aria-describedby="basic-Price" />
+        </app-input-group>
+    </td>
+
+
+    <!-- 
+    <td style="width: 50px;">
+        <app-button [icon]="faEdit" [me]="false"
+            (click)="editManufactureVariant(content, manufacture_variant.id, manufacture_variant.manufacture_id)"
+            color="outline-dark"></app-button>
+    </td> -->
+
+    <td style="width: 50px;">
+        @if(removeLoading){
+        <app-loading></app-loading>
+        }@else{
+        <app-button [me]="false" [icon]="faTrash" colortext="white"
+            (click)="removeManufactureVariant(manufacture_variant.id, manufacture_variant.manufacture_id)"
+            color="danger">
+        </app-button>
+        }
+    </td>
+
+    <!-- empieza el modal completo -->
+
+    <!-- <ng-template #content let-modal>
+        <div class="modal-header">
+            <h6 class="modal-title">Editar</h6>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <p>One fine body&hellip;</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+        </div>
+    </ng-template> -->
+</ng-container>

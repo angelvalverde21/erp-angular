@@ -1,0 +1,14 @@
+@switch (origen) {
+    @case ('web') {
+        <fa-icon [icon]="faGlobe"></fa-icon>
+    }
+    
+    @case ('shopify_draft_order') {
+        <fa-icon [icon]="faStore"></fa-icon>
+    }
+
+    @default {
+        {{ origen }}
+    }
+
+}

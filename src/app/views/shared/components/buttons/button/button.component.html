@@ -1,13 +1,14 @@
 <div class="d-grid d-md-block">
+
   <button type="button"
-    class="text-{{ colortext }} d-flex justify-content-center align-items-center btn btn-{{ color }} btn-{{ size }}"
+   class="text-{{ colortext }} w-100 d-flex justify-content-center align-items-center btn btn-{{ color }} btn-{{ size }}"
     (click)="clickButton()" [disabled]="disabled">
 
     @if (icon != null) {
       @if (spinner) {
       <app-loading size="sm" class="me-{{ separation }}"></app-loading>
       } @else {
-      <fa-icon [icon]="icon" class="me-{{ separation }}"></fa-icon>
+      <fa-icon [icon]="icon" [ngClass]="{'me-1': me}"></fa-icon>
       }
     }
 

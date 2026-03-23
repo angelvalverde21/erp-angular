@@ -1,0 +1,21 @@
+<div class="row">
+
+    <div class="col-lg-4 col-12">
+        <app-widget-cost [total_cost]="widget_summary.cost"></app-widget-cost>
+    </div>
+
+    <div class="col-lg-4 col-12">
+        <div role="button" class="pointer" (click)="goTo()">
+            <app-widget-products [total_products]="widget_summary.sum_products"></app-widget-products>
+        </div>
+
+    </div>
+
+    <div class="col-lg-4 col-12">
+        <div role="button" class="pointer" (click)="goTo('receptions')">
+            <app-widget-receptions [total_receptions]="widget_summary?.reception"
+                [saldo]="widget_summary.saldo"></app-widget-receptions>
+        </div>
+    </div>
+
+</div>

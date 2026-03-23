@@ -1,0 +1,23 @@
+<ng-select
+  [items]="suppliers"
+  bindLabel="name"
+  bindValue="id"
+  [clearable]="false"
+  [disabled]="isDisabled"
+  [ngModel]="supplier_id"
+  (ngModelChange)="setSupplier($event)"
+  placeholder="Seleccione un proveedor">
+
+  <ng-template ng-option-tmp let-item="item">
+    <div class="d-flex align-items-center gap-2">
+      <span>{{ item.name }}</span>
+    </div>
+  </ng-template>
+
+  <ng-template ng-label-tmp let-item="item">
+    <div class="d-flex align-items-center gap-2">
+      <span>{{ item.name }}</span>
+    </div>
+  </ng-template>
+
+</ng-select>

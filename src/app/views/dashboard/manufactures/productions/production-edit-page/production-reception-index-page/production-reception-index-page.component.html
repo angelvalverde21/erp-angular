@@ -1,0 +1,60 @@
+<div class="bg-white py-3 d-flex justify-content-between align-items-center">
+
+
+    <span class="ms-3"><fa-icon [icon]="faRightLeft" class="me-2"></fa-icon>Entrega y
+        recepcion</span>
+
+    <div class="buttons d-flex justify-content-end align-items-center bt-sm">
+
+        <app-button-add color="success text-white" (click)="openVerticallyCentered(ingreso)"
+            class="mb-3 me-2">Ingreso</app-button-add>
+
+        <!-- <app-button-add color="warning text-white" (click)="openVerticallyCentered(reingreso)"
+                                class="mb-3 me-2">Re Ingreso (Reparados)</app-button-add> -->
+
+        <app-button-trash [me]="true" [icon]="faMinus" (click)="openVerticallyCentered(salida)" class="mb-3">
+            Salida</app-button-trash>
+
+    </div>
+
+</div>
+
+<app-kardex-index [kardexes]="kardexes" (emitKardexSummary)="receiveKardexSummary($event)"></app-kardex-index>
+
+
+<ng-template #ingreso let-modal>
+    <div class="modal-header bg-success text-white">
+        <h6 class="modal-title">+ Ingreso de productos</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-kardex-register-in [variants]="variants" [kardexable_type]="'manufacture'" [kardexable_id]="manufacture.id"
+            (emitKardexes)="receiveKardexes($event)"></app-kardex-register-in>
+    </div>
+
+</ng-template>
+
+<ng-template #reingreso let-modal>
+    <div class="modal-header bg-warning text-white">
+        <h6 class="modal-title">+ Re Ingreso (Reparados)</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-kardex-register-re-in [variants]="variants" [kardexable_type]="'manufacture'"
+            [kardexable_id]="manufacture.id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-re-in>
+    </div>
+
+</ng-template>
+
+<ng-template #salida let-modal>
+    <div class="modal-header bg-danger text-white">
+        <h6 class="modal-title">- Salida de productos</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-kardex-register-out [variants]="variants" [kardexable_type]="'manufacture'"
+            [kardexable_id]="manufacture.id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-out>
+
+    </div>
+
+</ng-template>

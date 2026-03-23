@@ -1,0 +1,28 @@
+<div class="table-responsive">
+    <table class="table table-hover table-striped mb-0 align-middle">
+
+        <thead class="table-light">
+            <tr>
+                <!-- <th class="text-center">#</th> -->
+                <!-- <th class="text-center"></th> -->
+                <th class="text-center"></th>
+                <th class="text-center">Total</th>
+                <th>Producto</th>
+                <!-- <th class="text-center">Gasto Total</th>
+                <th class="text-center">Costo</th> -->
+                <th>Fabricado</th>
+                <th class="text-center">Recepcion</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @for (manufacture of manufactures; track manufacture.id) {
+
+                <tr app-reception-index-row [manufacture]="manufacture" (click)="getManufactureReceptionId(manufacture)"></tr>
+            }
+
+        </tbody>
+
+    </table>
+</div>

@@ -1,0 +1,15 @@
+<ul 
+  cdkDropList 
+  class="list-group ps-3 list-group-flush" 
+  (cdkDropListDropped)="reOrderSizes($event)">
+
+  @for (size of sizes; track size.id) {
+    <li class="list-group-item" cdkDrag>
+      <app-size-row 
+        [size]="size" 
+        (emitSizeId)="reListSizes($event)">
+      </app-size-row>
+    </li>
+  }
+
+</ul>

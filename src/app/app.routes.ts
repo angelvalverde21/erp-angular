@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './views/auth/auth.guard';
+import { StoreNameGuard } from './views/StoreNameGuard.';
 
 export const routes: Routes = [
   {
@@ -7,7 +8,6 @@ export const routes: Routes = [
     redirectTo: 'register',
     pathMatch: 'full',
   },
-
   {
     path: '404',
     loadComponent: () =>
@@ -28,7 +28,6 @@ export const routes: Routes = [
       title: 'Page 500',
     },
   },
-
   {
     path: 'register',
     loadComponent: () =>
@@ -39,9 +38,9 @@ export const routes: Routes = [
       title: 'Register Page',
     },
   },
-
   {
     path: ':store',
+    canActivate: [StoreNameGuard], //comprueba si el slug inicial es valido
     children: [
       // rutas PUBLIC
       {
@@ -58,7 +57,19 @@ export const routes: Routes = [
           }
         ]
       },
-  
+      {
+        path: 'app-shopify', //apps de shopify sin el layout general
+        loadChildren: () =>
+            import('./views/app-shopify/routes.app-shopify').then((m) => m.routes),
+      },
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./views/auth/login/login.component').then(
+            (m) => m.LoginComponent
+          ),
+      },
+
       // rutas PRIVADAS
       {
         path: '',
@@ -66,30 +77,17 @@ export const routes: Routes = [
           import('./layout/default-layout/default-layout.component').then(
             (m) => m.DefaultLayoutComponent
           ),
+        canActivateChild: [authGuard],
         children: [
-          {
-            path: 'login',
-            loadComponent: () =>
-              import('./views/auth/login/login.component').then(
-                (m) => m.LoginComponent
-              ),
-          },
           {
             path: 'dashboard',
             loadChildren: () =>
               import('./views/dashboard/routes').then((m) => m.routes),
-            // canActivate: [authGuard],
           },
-                    {
-          path: 'shopify',
-            loadChildren: () =>
-              import('./views/shopify/shopify.routes').then((m) => m.routes),
-            // canActivate: [authGuard],
-          }
         ]
       }
     ]
   },
-  
+
   { path: '**', redirectTo: '404' },
 ];
