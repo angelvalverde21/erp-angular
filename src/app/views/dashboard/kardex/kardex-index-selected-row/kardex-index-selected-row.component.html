@@ -4,13 +4,13 @@
     </td>
 
     <td class="text-center">
-        <img [src]="variant?.product?.image?.url_thumbnail" height="75px" alt="">
+        <img [src]="variant?.product?.image?.url_thumbnail" height="100px" style="border-radius: 5px;" alt="">
     </td>
 
     <td class="text-center">{{ variant?.product?.name }}</td>
 
     @for (option_value of variant.option_values; track option_value.id) {
-    <td class="text-center">{{ option_value.value }}</td>
+    <td class="text-center"><span class="badge bg-secondary px-3 py-1">{{ option_value.value }}</span></td>
     }
 
     <td style="width: 100px;" class="px-3">

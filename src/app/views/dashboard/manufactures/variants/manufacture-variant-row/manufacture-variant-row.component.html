@@ -9,14 +9,16 @@
     </td>
 
     @for (option_value of manufacture_variant.variant?.option_values; track option_value.id) {
-    <td class="text-center">{{ option_value.value }}</td>
+    <td class="text-center">
+        <span class="badge bg-secondary px-3 py-1">{{ option_value.value }}</span>
+    </td>
     }
 
     <td class="text-center">
 
         <a data-fancybox="gallery" [attr.data-caption]="`${ manufacture_variant?.quantity}`"
             [href]="manufacture_variant.variant?.product?.image?.url_medium">
-            <img [src]="manufacture_variant.variant?.product?.image?.url_thumbnail" class="me-2" height="45px" alt="">
+            <img [src]="manufacture_variant.variant?.product?.image?.url_thumbnail" style="border-radius: 5px;" class="me-2" height="60px" alt="">
         </a>
 
     </td>

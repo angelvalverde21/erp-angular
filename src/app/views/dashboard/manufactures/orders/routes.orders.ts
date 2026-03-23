@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./order-index-page/order-index-page.component').then((m) => m.OrderIndexPageComponent),
+    loadComponent: () => import('./manufacture-order-index-page/manufacture-order-index-page.component').then((m) => m.ManufactureOrderIndexPageComponent),
     data: {
       title: 'Todos',
     }
@@ -11,7 +11,7 @@ export const routes: Routes = [
 
   {
     path: 'create',
-    loadComponent: () => import('./order-create-page/order-create-page.component').then((m) => m.OrderCreatePageComponent),
+    loadComponent: () => import('./manufacture-order-create-page/manufacture-order-create-page.component').then((m) => m.ManufactureOrderCreatePageComponent),
     data: {
       title: 'Create',
     }
@@ -19,7 +19,7 @@ export const routes: Routes = [
 
   {
     path: ':order_id',
-    loadComponent: () => import('./order-edit-page/order-edit-page.component').then((m) => m.OrderEditPageComponent),
+    loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-edit-page.component').then((m) => m.ManufactureOrderEditPageComponent),
     data: {
       title: 'Ordenes de Compra',
     },

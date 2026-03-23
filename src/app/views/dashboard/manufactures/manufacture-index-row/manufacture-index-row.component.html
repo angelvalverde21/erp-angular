@@ -2,41 +2,88 @@
 <!-- <td class="text-center">
                     <fa-icon [icon]="faScissors"></fa-icon>
                 </td> -->
-
-<td class="text-center" style="width: 75px;">
-    @if(manufacture.type === 'production'){
-    <fa-icon [icon]="faGears" style="opacity: 0.5;"></fa-icon>
-    }@else{
-    <fa-icon [icon]="faBoxesStacked" style="opacity: 0.5;"></fa-icon>
-    }
+<td class="text-center" style="width: 50px;">
+    #000{{ manufacture.id }}
 </td>
 
-<td style="width: 100px;">
-    <span>{{ manufacture.type }}</span>
-</td>
+<!-- <td class="text-center" style="width: 75px;">
+
+    <h6 class="mb-0">
+        @if(manufacture.type === 'production'){
+        <span class="badge bg-primary px-3 py-1"><fa-icon [icon]="faGears" style="opacity: 0.5;" class="me-1"></fa-icon>
+            Produccion
+        </span>
+        }@else{
+        <span class="badge bg-success px-3 py-1">
+            <fa-icon [icon]="faBoxesStacked" style="opacity: 0.5;"
+                class="me-1"></fa-icon>
+            Orden
+            de Compra</span>
+        }
+    </h6>
+
+</td> -->
+
+
 <!-- <td class="text-center" style="width: 75px;">{{ manufacture.sum_products?? 0 }}</td> -->
 <td>
-    <div class="name">{{ manufacture.name }}</div>
+
+    <div class="date-main">{{ manufacture.name }}</div>
+    <div class="date-sub">{{ manufacture?.user?.name }}</div>
 </td>
 <!-- <td class="text-center">{{ manufacture.sum_purchases?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}
 </td> -->
 <!-- <td class="text-center">{{ (manufacture.sum_products > 0) ? manufacture.sum_purchases /
     manufacture.sum_products : 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>-->
-<td>
-    {{ manufacture?.user?.name }}
-</td>
-<td class="text-center">{{ manufacture.created_at | DateShopify }}</td>
-<td class="text-center" style="width: 75px;">
 
-    @if(manufacture.type === 'production'){
-    <app-button color="primary text-white" (click)="getManufactureReceptionId(manufacture)"
-        [icon]="faArrowRightArrowLeft"></app-button>
-    }@else{
-    <app-button color="success text-white" (click)="getManufactureReceptionId(manufacture)"
-        [icon]="faArrowRightArrowLeft"></app-button>
-    }
+
+<td class="text-center">
+    <h5><span class="badge bg-light text-dark border fw-semibold">{{ manufacture?.sum_products }}</span></h5>
+</td>
+<td class="text-center">
+    <h6>S/. 1500.36</h6>
+</td>
+<td class="text-center">
+    <h6 class="mb-0">
+        <span class="badge bg-success px-3 py-1">
+            <i class="fa-solid fa-circle-check me-2"></i>Completado
+        </span>
+    </h6>
+</td>
+<td class="text-center">
+    <div class="date-main">{{ manufacture.created_at | DateShopify }}</div>
+    <div class="date-sub">Act: {{ manufacture.updated_at | DateShopify }}</div>
 
 </td>
 <td class="text-center" style="width: 50px;">
-    <app-button color="outline-dark" (click)="getManufactureId(manufacture)" [icon]="faEdit"></app-button>
+    <div class="d-flex align-items-center gap-3 justify-content-center">
+        <div ngbDropdown class="d-inline-block">
+            <button type="button" class="btn btn-outline-dark btn-sm" id="dropdownBasic1" ngbDropdownToggle>
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                @if(manufacture.type === 'production'){
+                <button ngbDropdownItem class="btn-sm" (click)="getPurchases(manufacture)">
+                    <fa-icon [icon]="faMoneyBill1" class="me-2"></fa-icon> Compras
+                </button>
+                }
+                <button ngbDropdownItem class="btn-sm" (click)="getVariants(manufacture)">
+                    @if(manufacture.type === 'production'){
+                        <fa-icon [icon]="faScissors" class="me-2"></fa-icon>
+                        Corte
+                    }@else{
+                        <fa-icon [icon]="faBoxesStacked" class="me-2"></fa-icon>
+                    Orden
+                    }
+                </button>
+                <button ngbDropdownItem class="btn-sm" (click)="getReceptions(manufacture)">
+                    <fa-icon [icon]="faArrowRightArrowLeft" class="me-2"></fa-icon> Recepciones
+                </button>
+                <div class="dropdown-divider"></div>
+                <button ngbDropdownItem class="btn-sm">
+                    <fa-icon [icon]="faTrash" class="me-2 text-danger"></fa-icon>Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
 </td>

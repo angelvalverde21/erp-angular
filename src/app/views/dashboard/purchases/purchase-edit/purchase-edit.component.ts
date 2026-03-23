@@ -264,18 +264,6 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
     this.purchase_items.push(item);
   }
 
-  private normalizeSuppliers(suppliers: any[] = []): any[] {
-
-    const user = suppliers.map(s => ({
-      id: s.id,
-      name: s.user?.name
-    }));
-
-    console.log(user);
-    return user;
-
-  }
-
   private supplierInit() {
 
     this._supplier.index()
@@ -283,7 +271,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
       .subscribe((resp: any) => {
         //Da formato porque el json viene de la forma supplier.user.name 
 
-        this.suppliers = this.normalizeSuppliers(resp.data);
+        this.suppliers = resp.data;
         console.log(this.suppliers);
 
       });
