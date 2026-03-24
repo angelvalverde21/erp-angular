@@ -8,15 +8,18 @@ import { API, environment } from '../../environments/environment';
 export abstract class BaseCrudDashboardService {
 
   private _base = inject(BaseService);
-  baseUrl: string;
+  // baseUrl: string;
+  protected extraPath: string = '';
 
   constructor(protected http: HttpClient, public section: string) {
 
-    this.baseUrl = `${API.private}/${this._base.store}/dashboard/${this.section}`
     console.log(this.baseUrl);
 
   }
 
+  get baseUrl(): string {
+    return `${API.private}/${this._base.store}/dashboard/${this.section}${this.extraPath}`;
+  }
 
   // Generic method to get all items
   // index(): Observable<any[]> {

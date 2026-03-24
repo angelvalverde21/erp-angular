@@ -6,8 +6,7 @@
     <app-button-link [color]="'primary'" [path]="['../create']">+ Produccion</app-button-link>
 </app-head-page>
 
-<app-production-widget [summary]="summary"></app-production-widget>
-
+<app-production-widget [summary]="summary" [production_id]="production.id"></app-production-widget>
 
 <router-outlet></router-outlet>
 

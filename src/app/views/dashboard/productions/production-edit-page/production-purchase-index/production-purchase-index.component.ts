@@ -1,24 +1,19 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ManufactureProductionService } from '../../production.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { PurchaseIndexComponent } from '@dashboard/purchases/purchase-index/purchase-index.component';
-import { ProductionEditHeadComponent } from '../production-edit-head/production-edit-head.component';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
-import { AccordionComponent } from '@shared/components/accordion/accordion.component';
-import { AccordionItemComponent } from '@shared/components/accordion/accordion-item/accordion-item.component';
+import { ProductionService } from '../../production.service';
+import { ProductionPurchaseService } from './production.purchase.service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-production-purchase-index',
   imports: [
     PurchaseIndexComponent,
-    ProductionEditHeadComponent,
     LoadingComponent,
-    NgbAccordionModule,
-    AccordionComponent,
-    AccordionItemComponent
+    JsonPipe
   ],
   templateUrl: './production-purchase-index.component.html',
   styleUrl: './production-purchase-index.component.scss'
@@ -26,8 +21,8 @@ import { AccordionItemComponent } from '@shared/components/accordion/accordion-i
 export class ProductionPurchaseIndexComponent {
 
 
-  manufacture: any;
-  manufacture_id: string | null = null;
+  production: any;
+  production_id: number = 0;
   purchases: any;
   loading: boolean = false;
 
@@ -45,30 +40,25 @@ export class ProductionPurchaseIndexComponent {
   ];
 
   constructor(
-    private _manufactureProduction: ManufactureProductionService,
+    private _productionPurchase: ProductionPurchaseService,
     private route: ActivatedRoute
   ) {
 
     // this.route.params.subscribe(params => {
-    //   this.manufacture_id = params['production_id'];
+    //   this.production_id = params['production_id'];
     // });
 
     this.route.parent?.paramMap.subscribe(params => {
-      this.manufacture_id = params.get('production_id');
+      this.production_id = Number(params.get('production_id'));
 
     });
 
   }
 
-  @Input() production_id: number = 0;
-
   destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-
-
-
-    this.manufactureInit();
+    this.productionPurchaseInit();
   }
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -77,17 +67,18 @@ export class ProductionPurchaseIndexComponent {
 
   sum_purchases: number = 0;
 
-  manufactureInit() {
+  productionPurchaseInit() {
 
     this.loading = true;
 
-    this._manufactureProduction.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
+    this._productionPurchase.setProductionId(this.production_id!);
+
+    this._productionPurchase.index().pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
 
         console.log(resp);
-        this.manufacture = resp.data;
-        this.purchases = resp.data.purchases;
+        this.purchases = resp.data;
 
         this.loading = false;
 

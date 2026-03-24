@@ -6,13 +6,16 @@ import { LoadingComponent } from '@components/loading/loading.component';
 import Swal from 'sweetalert2';
 import { ProductionService } from '../production.service';
 import { ProductionWidgetComponent } from './production-widget/production-widget.component';
+import { HeadPageComponent } from '../../../shared/components/head-page/head-page.component';
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
 
 @Component({
   selector: 'app-production-edit-page',
   imports: [
     LoadingComponent,
+    HeadPageComponent,
+    ButtonLinkComponent,
     ProductionWidgetComponent,
     RouterModule
     // NgbDropdownModule
@@ -25,15 +28,15 @@ import { ProductionWidgetComponent } from './production-widget/production-widget
 export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
   loading: boolean = false;
-  manufacture: any = null;
-  manufacture_id: number = 0;
+  production: any = null;
+  production_id: number = 0;
   purchases: any;
   variants: any;
 
-
+  summary: any;
 
   modal: any;
-  manufacture_variants: any;
+  production_variants: any;
 
 
   constructor(
@@ -42,14 +45,14 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
   ) {
 
     this.route.params.subscribe(params => {
-      this.manufacture_id = params['production_id'];
+      this.production_id = params['production_id'];
     });
 
   }
 
   ngOnInit(): void {
 
-    this.manufactureInit();
+    this.productionInit();
 
   }
 
@@ -61,16 +64,16 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
   // };
 
   //usado
-  manufactureInit() {
+  productionInit() {
 
     this.loading = true;
 
-    this._production.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
+    this._production.get(this.production_id).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
 
         console.log(resp);
-        this.manufacture = resp.data;
+        this.production = resp.data;
 
         // this.summary = {
         //   cost: resp.data.purchase_total / resp.data.variants_sum_quantity ? resp.data.purchase_total / resp.data.variants_sum_quantity : 0,

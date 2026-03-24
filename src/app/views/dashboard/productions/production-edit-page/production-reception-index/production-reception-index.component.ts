@@ -2,20 +2,18 @@ import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@a
 import { Subject, takeUntil } from 'rxjs';
 import { KardexIndexComponent } from '@dashboard/kardex/kardex-index/kardex-index.component';
 import Swal from 'sweetalert2';
-import { ManufactureProductionService } from '../../production.service';
 import { ActivatedRoute } from '@angular/router';
 import { KardexService } from '@dashboard/kardex/kardex.service';
 import { ButtonAddComponent } from 'src/app/views/shared/components/buttons/button-add/button-add.component';
 import { faRightLeft, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { KardexRegisterInComponent } from 'src/app/views/dashboard/kardex/kardex-register-in/kardex-register-in.component';
-import { KardexRegisterOutComponent } from 'src/app/views/dashboard/kardex/kardex-register-out/kardex-register-out.component';
-import { KardexRegisterReInComponent } from 'src/app/views/dashboard/kardex/kardex-register-re-in/kardex-register-re-in.component';
+import { KardexRegisterInComponent } from '@dashboard/kardex/kardex-register-in/kardex-register-in.component';
+import { KardexRegisterOutComponent } from '@dashboard/kardex/kardex-register-out/kardex-register-out.component';
+import { KardexRegisterReInComponent } from '@dashboard/kardex/kardex-register-re-in/kardex-register-re-in.component';
 import { ButtonTrashComponent } from 'src/app/views/shared/components/buttons/button-trash/button-trash.component';
 import { LoadingComponent } from 'src/app/views/shared/components/loading/loading.component';
-import { ManufactureVariantService } from '../../../variants/manufactureVariant.service';
-import { ManufactureService } from '../../../manufacture.service';
+import { ProductionKardexService } from './production.kardex.service';
 
 @Component({
   selector: 'app-production-reception-index',
@@ -35,83 +33,48 @@ import { ManufactureService } from '../../../manufacture.service';
 })
 export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
 
-  manufacture_id: number = 0;
+  production_id: number = 0;
 
   faRightLeft = faRightLeft;
   faMinus = faMinus;
 
   constructor(
-    private _manufactureProduction: ManufactureProductionService,
-    private _manufactureVariant: ManufactureVariantService,
-    private _manufacture: ManufactureService,
     private route: ActivatedRoute,
     private _kardex: KardexService,
+    private _productionKardex: ProductionKardexService,
     config: NgbModalConfig,
     private modalService: NgbModal,
 
   ) {
 
     // this.route.params.subscribe(params => {
-    //   this.manufacture_id = params['production_id'];
+    //   this.production_id = params['production_id'];
     // });
     config.backdrop = 'static';
     config.keyboard = false;
 
     this.route.parent?.paramMap.subscribe(params => {
-      this.manufacture_id = Number(params.get('production_id'));
+      this.production_id = Number(params.get('production_id'));
 
     });
 
   }
   ngOnInit(): void {
-    this.manufactureInit();
   }
 
 
   kardexes: any[] = [];
 
-  manufacture: any;
+  production: any;
 
   loading: boolean = false;
 
   kardex_summary: any;
 
-  manufacture_variants: any[] = [];
+  production_variants: any[] = [];
   variants: any[] = [];
 
-  manufactureInit() {
 
-    this.loading = true;
-
-    this._manufacture.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-
-
-
-        // this.manufacture = resp.data;
-
-        this.kardexes = resp.data.kardexes;
-
-        // this.kardex_summary = this._kardex.calculate(this.kardexes);
-        this.manufacture_variants = resp.data.manufacture_variants;
-        this.variants = this.manufacture_variants.map((mv: any) => mv.variant);
-        console.log(resp.data);
-        
-        // this.variants = resp.data;
-
-        this.loading = false;
-
-        // this.calculeCost();
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema guardar. Inténtalo nuevamente.', 'error');
-        console.error(error);
-      },
-
-    });
-  }
 
 
   destroy$ = new Subject<void>();

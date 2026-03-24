@@ -1,44 +1,42 @@
 import { Component } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { ManufactureProductionService } from '../../production.service';
+import { ProductionService } from '../../production.service';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { ManufactureVariantIndexComponent } from '../../../variants/manufacture-variant-index/manufacture-variant-index.component';
-import { ManufactureVariantService } from '../../../variants/manufactureVariant.service';
+import { ProductionVariantService } from './production.variant.service';
 
 @Component({
   selector: 'app-production-variant-index',
   imports: [
     LoadingComponent,
-    ManufactureVariantIndexComponent
   ],
   templateUrl: './production-variant-index.component.html',
   styleUrl: './production-variant-index.component.scss'
 })
 export class ProductionVariantIndexComponent {
 
-  manufacture: any;
-  manufacture_id: number = 0;
+  production: any;
+  production_id: number = 0;
   purchases: any;
   loading: boolean = false;
 
   ngOnInit(): void {
-    this.manufactureInit();
+    this.productionInit();
   }
 
   constructor(
-    private _manufactureProduction: ManufactureProductionService,
-    private _manufactureVariant: ManufactureVariantService,
+    private _production: ProductionService,
+    private _productionVariant: ProductionVariantService,
     private route: ActivatedRoute
   ) {
 
     // this.route.params.subscribe(params => {
-    //   this.manufacture_id = params['production_id'];
+    //   this.production_id = params['production_id'];
     // });
 
     this.route.parent?.paramMap.subscribe(params => {
-      this.manufacture_id = Number(params.get('production_id'));
+      this.production_id = Number(params.get('production_id'));
 
     });
 
@@ -52,20 +50,20 @@ export class ProductionVariantIndexComponent {
   }
 
   sum_purchases: number = 0;
-  manufacture_variants: any;
+  production_variants: any;
   
-  manufactureInit() {
+  productionInit() {
 
     this.loading = true;
 
-    this._manufactureVariant.index(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
+    this._productionVariant.index(this.production_id).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
 
         console.log(resp);
-        this.manufacture = resp.data;
+        this.production = resp.data;
         this.purchases = resp.data.purchases;
-        this.manufacture_variants = resp.data;
+        this.production_variants = resp.data;
 
         this.loading = false;
 
@@ -90,7 +88,7 @@ export class ProductionVariantIndexComponent {
 
   sum_products: number = 0;
 
-  receiveSumManufactureVariant(sum_products: number) {
+  receiveSumProductionVariant(sum_products: number) {
 
     console.log("received total products:", sum_products);
 

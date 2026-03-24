@@ -28,7 +28,7 @@ export class ProductionWidgetComponent implements OnInit {
   faCalculator  = faCalculator;
   faRightLeft = faRightLeft;
 
-  @Input() manufacture_id: number = 0;
+  @Input() production_id: number = 0;
   @Input() summary: any = null;
 
   widgets: any[] = [];
@@ -59,6 +59,7 @@ export class ProductionWidgetComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
 
     // http://localhost:4200/sorelle/dashboard/manufactures/productions/1/purchases
 
