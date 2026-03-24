@@ -127,7 +127,7 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
   }
 
-  summary: SummaryPurchase = {
+  summary = {
     cost: 0,
     sum_products: 0,
     sum_purchases: 0,
@@ -146,12 +146,12 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
         console.log(resp);
         this.manufacture = resp.data;
 
-        this.summary = {
-          cost: resp.data.purchase_total / resp.data.variants_sum_quantity ? resp.data.purchase_total / resp.data.variants_sum_quantity : 0,
-          sum_products: resp.data.variants_sum_quantity,
-          sum_purchases: resp.data.purchase_total,
-          sum_reception: resp.data.kardexes_sum_quantity
-        }
+        // this.summary = {
+        //   cost: resp.data.purchase_total / resp.data.variants_sum_quantity ? resp.data.purchase_total / resp.data.variants_sum_quantity : 0,
+        //   sum_products: resp.data.variants_sum_quantity,
+        //   sum_purchases: resp.data.purchase_total,
+        //   sum_reception: resp.data.kardexes_sum_quantity
+        // }
 
         this.loading = false;
 

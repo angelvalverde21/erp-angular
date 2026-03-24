@@ -67,7 +67,7 @@ export class ProductionWidgetComponent implements OnInit {
       {
         title: 'Costo',
         subtitle: 'Por unidad',
-        value: (this.summary?.sum_products > 0 ? (this.summary?.sum_purchases / this.summary?.sum_products ? this.summary?.sum_purchases / this.summary?.sum_products : 0) : 0),
+        value: (this.summary?.sum_variants > 0 ? (this.summary?.sum_purchases / this.summary?.sum_variants ? this.summary?.sum_purchases / this.summary?.sum_variants : 0) : 0),
         link: ['./'],
         exact: true,
         icon: faBarcode,
@@ -84,7 +84,7 @@ export class ProductionWidgetComponent implements OnInit {
       {
         title: 'Corte Total',
         subtitle: 'Cortados',
-        value: this.summary?.sum_products ? this.summary?.sum_products : 0,
+        value: this.summary?.sum_variants ? this.summary?.sum_variants : 0,
         link: ['./variants'],
         icon: faCalculator,
         type: 'units'
@@ -92,7 +92,7 @@ export class ProductionWidgetComponent implements OnInit {
       {
         title: 'Recepción',
         subtitle: 'Recibidos',
-        value: this.summary?.sum_reception ? this.summary?.sum_reception : 0,
+        value: this.summary?.sum_kardexes ? this.summary?.sum_kardexes : 0,
         link: ['./kardexes'],
         icon: faRightLeft,
         type: 'units'

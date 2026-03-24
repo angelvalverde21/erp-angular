@@ -77,12 +77,14 @@ export class ProductionPurchaseIndexComponent {
 
       next: (resp: any) => {
 
+        console.log('-----------------------------------------------');
+        
         console.log(resp);
         this.purchases = resp.data;
 
         this.loading = false;
 
-        this.sum_purchases = resp.data.purchase_total ? resp.data.purchase_total : 0;
+        this.sum_purchases = resp.data.sum_purchases ? resp.data.sum_purchases : 0;
 
         // this.widget_summary = {
         //   cost: (resp.data.quantity_total > 0) ? resp.data.purchase_total / resp.data.quantity_total : 0,

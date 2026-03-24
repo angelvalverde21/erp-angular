@@ -9,6 +9,7 @@ import { ProductionWidgetComponent } from './production-widget/production-widget
 import { HeadPageComponent } from '../../../shared/components/head-page/head-page.component';
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
+import { SummaryPurchase } from '../../../../interfaces/summary.interface';
 
 @Component({
   selector: 'app-production-edit-page',
@@ -33,11 +34,10 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
   purchases: any;
   variants: any;
 
-  summary: any;
+  // summary: any;
 
   modal: any;
   production_variants: any;
-
 
   constructor(
     private route: ActivatedRoute,
@@ -56,12 +56,11 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
   }
 
-  // summary: SummaryPurchase = {
-  //   cost: 0,
-  //   sum_products: 0,
-  //   sum_purchases: 0,
-  //   sum_reception: 0
-  // };
+  summary: SummaryPurchase = {
+    sum_variants: 0,
+    sum_purchases: 0,
+    sum_kardexes: 0
+  };
 
   //usado
   productionInit() {
@@ -74,6 +73,12 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
         console.log(resp);
         this.production = resp.data;
+
+        this.summary = {
+          sum_variants: resp.data.variants,
+          sum_purchases: resp.data.sum_purchases,
+          sum_kardexes: resp.data.sum_kardexes
+        }
 
         // this.summary = {
         //   cost: resp.data.purchase_total / resp.data.variants_sum_quantity ? resp.data.purchase_total / resp.data.variants_sum_quantity : 0,
