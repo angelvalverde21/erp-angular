@@ -29,16 +29,18 @@
 
 </div>
 
-{{ variants | json }}
-
 <ng-template #ingreso let-modal>
     <div class="modal-header bg-success text-white">
         <h6 class="modal-title">+ Ingreso de productos</h6>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
+        @if(loadingKardex){
+        <app-loading></app-loading>
+        }@else{
         <app-kardex-register-in [variants]="variants" [kardexable_type]="'production'" [kardexable_id]="production_id"
             (emitKardexes)="receiveKardexes($event)"></app-kardex-register-in>
+        }
     </div>
 
 </ng-template>
@@ -48,9 +50,16 @@
         <h6 class="modal-title">+ Re Ingreso (Reparados)</h6>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
+
     <div class="modal-body">
+
+        @if(loadingKardex){
+        <app-loading></app-loading>
+        }@else{
         <app-kardex-register-re-in [variants]="variants" [kardexable_type]="'production'"
             [kardexable_id]="production_id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-re-in>
+        }
+
     </div>
 
 </ng-template>
@@ -61,9 +70,12 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <app-kardex-register-out [variants]="variants" [kardexable_type]="'production'"
-            [kardexable_id]="production_id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-out>
-
+        @if(loadingKardex){
+        <app-loading></app-loading>
+        }@else{
+        <app-kardex-register-out [variants]="variants" [kardexable_type]="'production'" [kardexable_id]="production_id"
+            (emitKardexes)="receiveKardexes($event)"></app-kardex-register-out>
+        }
     </div>
 
 </ng-template>

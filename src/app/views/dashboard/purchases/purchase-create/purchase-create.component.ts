@@ -238,22 +238,11 @@ export class PurchaseCreateComponent {
       .subscribe((resp: any) => {
         //Da formato porque el json viene de la forma supplier.user.name 
 
-        this.suppliers = this.normalizeSuppliers(resp.data);
+        this.suppliers = resp.data;
         console.log(this.suppliers);
 
       });
 
   }
 
-  private normalizeSuppliers(suppliers: any[] = []): any[] {
-
-    const user = suppliers.map(s => ({
-      id: s.id,
-      name: s.user?.name
-    }));
-
-    console.log(user);
-    return user;
-
-  }
 }

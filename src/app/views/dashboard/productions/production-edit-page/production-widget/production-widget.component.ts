@@ -93,7 +93,7 @@ export class ProductionWidgetComponent implements OnInit {
         title: 'Recepción',
         subtitle: 'Recibidos',
         value: this.summary?.sum_reception ? this.summary?.sum_reception : 0,
-        link: ['./receptions'],
+        link: ['./kardexes'],
         icon: faRightLeft,
         type: 'units'
       }

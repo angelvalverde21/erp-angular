@@ -18,7 +18,7 @@ import { ProductionVariantService } from '../production-variant-index/production
 import { JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-production-reception-index',
+  selector: 'app-production-kardex-index',
   imports: [
     KardexIndexComponent,
     ButtonAddComponent,
@@ -30,11 +30,11 @@ import { JsonPipe } from '@angular/common';
     LoadingComponent,
     JsonPipe
   ],
-  templateUrl: './production-reception-index.component.html',
-  styleUrl: './production-reception-index.component.scss',
+  templateUrl: './production-kardex-index.component.html',
+  styleUrl: './production-kardex-index.component.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
+export class ProductionKardexIndexComponent implements OnInit, OnDestroy {
 
   production_id: number = 0;
 
@@ -64,7 +64,7 @@ export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
 
   }
   ngOnInit(): void {
-    this.productionVariantsInit();
+    this.productionKardexesInit();
   }
 
 
@@ -80,14 +80,45 @@ export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
   variants: any[] = [];
 
 
-  productionVariantsInit(){
+  productionKardexesInit() {
 
     this.loading = true;
+
+    this._productionKardex.setProductionId(this.production_id);
+
+    this._productionKardex.index().pipe(takeUntil(this.destroy$)).subscribe({
+
+      next: (resp: any) => {
+        console.log(resp);
+
+        this.kardexes = resp.data;
+
+        console.log("Extracted variants:", this.variants);
+
+        this.loading = false;
+
+      },
+
+      error: (error: any) => {
+        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
+        console.error(error);
+      },
+
+    });
+
+  }
+
+
+  loadingKardex: boolean = false;
+
+  productionVariantsInit() {
+
+    this.loadingKardex = true;
 
     this._productionVariant.setProductionId(this.production_id);
 
     this._productionVariant.index().pipe(takeUntil(this.destroy$)).subscribe({
-    
+
       next: (resp: any) => {
         console.log(resp);
 
@@ -96,19 +127,16 @@ export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
         this.variants = production_variants.map((pv: any) => pv.variant);
 
         console.log("Extracted variants:", this.variants);
-        
-
-        this.loading = false;
+        this.loadingKardex = false;
       },
-    
       error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
+        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         console.error(error);
-      },
-    
+      }
     });
 
   }
+
 
   destroy$ = new Subject<void>();
 
@@ -143,6 +171,7 @@ export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
 
   openVerticallyCentered(content: TemplateRef<any>) {
 
+    this.productionVariantsInit();
 
     this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
   }

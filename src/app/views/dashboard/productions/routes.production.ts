@@ -60,6 +60,13 @@ export const routes: Routes = [
           import('./production-edit-page/production-reception-index/production-reception-index.component')
             .then(m => m.ProductionReceptionIndexComponent),
         data: { title: 'Producciones/Recepciones' }
+      },
+      {
+        path: 'kardexes',
+        loadComponent: () =>
+          import('./production-edit-page/production-kardex-index/production-kardex-index.component')
+            .then(m => m.ProductionKardexIndexComponent),
+        data: { title: 'Producciones/Kardexes' }
       }
 
     ]

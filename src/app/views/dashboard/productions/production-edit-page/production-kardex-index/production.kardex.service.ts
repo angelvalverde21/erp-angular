@@ -11,9 +11,7 @@ import { BaseCrudDashboardService } from '../../../base-crud-dashboard.service';
 })
 
 
-export class ProductionPurchaseService extends BaseCrudDashboardService {
-
-  // this.baseUrl = `${API.private}/${this._base.store}/dashboard/${this.section}`
+export class ProductionKardexService extends BaseCrudDashboardService {
 
   constructor(http: HttpClient) {
     super(http, 'productions'); // base inicial limpia
@@ -22,7 +20,7 @@ export class ProductionPurchaseService extends BaseCrudDashboardService {
   setProductionId(production_id: number | string) {
 
     // redefinir completamente el baseUrl (no concatenar sobre el anterior)
-    this.extraPath = `/${production_id}/purchases`;
+    this.extraPath = `/${production_id}/kardexes`;
   }
 }
 
