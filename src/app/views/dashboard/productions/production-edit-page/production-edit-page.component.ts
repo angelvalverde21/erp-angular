@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, effect } from '@angular/core';
 // import { HeadPageComponent } from '@components/head-page/head-page.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -46,6 +46,24 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
     this.route.params.subscribe(params => {
       this.production_id = params['production_id'];
+    });
+
+    effect(() => {
+
+      const event = this._production.summaryEvent();
+
+      if (!event) return;
+
+      this.summary = {
+        ...this.summary,
+        ...event,
+      }
+
+      console.log('Summary actualizado:', event);
+
+      console.log(this.summary);
+      
+      
     });
 
   }

@@ -39,16 +39,7 @@ export class KardexIndexComponent implements OnInit {
   ngOnInit(): void {
 
 
-    // Inicializar la lista de variantes de kardex
-    // this.balance = this.kardexes.reduce((acc, kardex) => acc + kardex.quantity * (kardex?.direction === 'in' ? 1 : -1), 0); //reduce, reduce el array a un numero;
-
-    // this.fallados = this.kardexes.reduce((acc, kardex) => acc + (kardex.comment === 'Fallado' ? kardex.quantity : 0), 0);
-
-    // this.reparados = this.kardexes.reduce((acc, kardex) => acc + (kardex.comment === 'Reparado' ? kardex.quantity : 0), 0);
-
-    // this.saldo = this.fallados - this.reparados;
-
-    this.kardex_summary = this._kardex.calculate(this.kardexes);
+    this.kardex_summary = this._kardex.summary(this.kardexes);
 
   }
 
@@ -56,8 +47,10 @@ export class KardexIndexComponent implements OnInit {
 
   ngOnChanges() {
 
-    this.kardex_summary = this._kardex.calculate(this.kardexes);
+    this.kardex_summary = this._kardex.summary(this.kardexes);
     this.emitKardexSummary.emit(this.kardex_summary);
+
+    
     // this.total_receptions = totals.total_receptions;
     // this.fallados = totals.fallados;
     // this.reparados = totals.reparados;

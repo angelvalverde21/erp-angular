@@ -166,7 +166,7 @@ export class ProductionReceptionPageComponent implements OnInit, OnDestroy {
 
         this.kardexes = resp.data.kardexes;
 
-        this.kardex_summary = this._kardex.calculate(this.kardexes);
+        this.kardex_summary = this._kardex.summary(this.kardexes);
 
         this.widget_summary = {
           cost: (resp.data.quantity_total > 0) ? resp.data.purchase_total / resp.data.quantity_total : 0,
@@ -251,7 +251,7 @@ export class ProductionReceptionPageComponent implements OnInit, OnDestroy {
 
     this.kardexes = [...this.kardexes, ...event];
 
-    this.kardex_summary = this._kardex.calculate(this.kardexes);
+    this.kardex_summary = this._kardex.summary(this.kardexes);
 
     Swal.close();
     this.closeModal();

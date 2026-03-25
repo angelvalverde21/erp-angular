@@ -11,6 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { VariantSearchComponent } from '../../../products/variants/variant-search/variant-search.component';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { ProductionService } from '../../production.service';
 
 @Component({
   selector: 'app-production-variant-index',
@@ -34,7 +35,7 @@ export class ProductionVariantIndexComponent implements OnInit {
   faInbox = faInbox;
 
   @Input() production_variants: any;
-  @Input() sum_products: number = 0;
+  @Input() sum_variants: number = 0;
   @Input() production_id: number = 0;
   @Input() text_button: string = 'Producto';
 
@@ -50,6 +51,7 @@ export class ProductionVariantIndexComponent implements OnInit {
   constructor(
     config: NgbModalConfig,
     private modalService: NgbModal,
+    private _production: ProductionService,
     private _productionVariant: ProductionVariantService,
     private route: ActivatedRoute
   ) {
@@ -64,7 +66,7 @@ export class ProductionVariantIndexComponent implements OnInit {
   }
 
 
-  productionVariantsInit(){
+  productionVariantsInit() {
 
     this.loading = true;
 
@@ -85,12 +87,17 @@ export class ProductionVariantIndexComponent implements OnInit {
 
   sumQuantity(): void {
 
-    this.sum_products = this.production_variants.reduce(
+    this.sum_variants = this.production_variants.reduce(
       (acc: number, mv: any) => acc + Number(mv.quantity ?? 0),
       0
     );
 
-    this.emitSumProductionVariant.emit(this.sum_products);
+    // this.emitSumProductionVariant.emit(this.sum_products);
+
+    //Este valor se envia por signals
+    this._production.setSummary({
+      sum_variants: this.sum_variants
+    });
 
   }
 
@@ -113,6 +120,8 @@ export class ProductionVariantIndexComponent implements OnInit {
     );
 
     this.sumQuantity();
+
+
 
     // this.emitSumProductionVariant.emit(this.total);
   }

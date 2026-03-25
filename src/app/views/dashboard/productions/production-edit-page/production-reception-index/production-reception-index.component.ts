@@ -131,7 +131,7 @@ export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
 
     this.kardexes = [...this.kardexes, ...event];
 
-    this.kardex_summary = this._kardex.calculate(this.kardexes);
+    this.kardex_summary = this._kardex.summary(this.kardexes);
   }
 
 
@@ -142,8 +142,6 @@ export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
   modal: any;
 
   openVerticallyCentered(content: TemplateRef<any>) {
-
-
     this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
   }
 

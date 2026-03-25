@@ -24,5 +24,9 @@ export class ProductionPurchaseService extends BaseCrudDashboardService {
     // redefinir completamente el baseUrl (no concatenar sobre el anterior)
     this.extraPath = `/${production_id}/purchases`;
   }
+
+
+  
+
 }
 

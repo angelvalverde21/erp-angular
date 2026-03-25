@@ -38,7 +38,7 @@ import { PurchaseIndexHeadComponent } from './purchase-index-head/purchase-index
 })
 export class PurchaseIndexComponent implements OnInit, OnDestroy {
 
-  
+
   faReceipt = faReceipt;
 
   @Input() purchases: any[] = [];
@@ -56,12 +56,13 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
   }
 
   @Output() emitSumPurchaseIndex = new EventEmitter<number>();
+  @Output() emitSumPurchases = new EventEmitter<number>();
 
   faEdit = faEdit;
   faCashRegister = faCashRegister;
   faBagShopping = faBagShopping;
-  faInbox = faInbox;  
-  
+  faInbox = faInbox;
+
   reListPurchases(id: any) {
     this.purchases = this.purchases.filter((purchase) => purchase.id !== id);
     // console.log('Purchase with ID', id, 'has been removed. Updated purchases:', this.purchases);
@@ -78,10 +79,11 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
 
   sumTotalAmount() {
 
-    this.sum_purchases = this.purchases.reduce(
-      (sum, purchase) => sum + Number(purchase.subtotal ?? 0),
-      0
-    );
+    console.log('Calculating total amount for purchases:', this.purchases);
+
+    this.sum_purchases = this.purchases.reduce((total, purchase) => {
+      return total + this.sum_purchase(purchase);
+    }, 0);
 
     this.emitSumPurchaseIndex.emit(this.sum_purchases);
 
@@ -89,6 +91,8 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.sumTotalAmount();
 
   }
 
@@ -120,9 +124,15 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
 
   receivePurchaseCreate(purchase: any) {
 
+    console.log('New Purchase Created on PurchaseIndexComponent', purchase);
+    
+
     this.purchases = [purchase, ...this.purchases];
     this.modal.close();
+    
     this.sumTotalAmount();
+
+    this.emitSumPurchases.emit(this.sum_purchases);
 
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { Router, RouterModule } from '@angular/router';
@@ -25,7 +25,7 @@ export class ProductionWidgetComponent implements OnInit {
 
   faBarcode = faBarcode;
   faBagShopping = faBagShopping;
-  faCalculator  = faCalculator;
+  faCalculator = faCalculator;
   faRightLeft = faRightLeft;
 
   @Input() production_id: number = 0;
@@ -58,10 +58,23 @@ export class ProductionWidgetComponent implements OnInit {
 
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['summary']) {
+      this.widgetsInit();
+    }
+  }
+
   ngOnInit(): void {
-    
+
 
     // http://localhost:4200/sorelle/dashboard/manufactures/productions/1/purchases
+
+    this.widgetsInit();
+  }
+
+
+
+  widgetsInit() {
 
     this.widgets = [
       {
@@ -76,7 +89,7 @@ export class ProductionWidgetComponent implements OnInit {
       {
         title: 'Compras',
         subtitle: 'Totales',
-        value: this.summary?.sum_purchases  ? this.summary?.sum_purchases : 0,
+        value: this.summary?.sum_purchases ? this.summary?.sum_purchases : 0,
         link: ['./purchases'],
         icon: faBagShopping,
         type: 'currency'
@@ -99,7 +112,5 @@ export class ProductionWidgetComponent implements OnInit {
       }
     ];
   }
-
-
 
 }

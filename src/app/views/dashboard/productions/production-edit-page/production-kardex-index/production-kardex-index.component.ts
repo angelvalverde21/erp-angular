@@ -16,6 +16,9 @@ import { LoadingComponent } from 'src/app/views/shared/components/loading/loadin
 import { ProductionKardexService } from './production.kardex.service';
 import { ProductionVariantService } from '../production-variant-index/production.variant.service';
 import { JsonPipe } from '@angular/common';
+import { ProductService } from '../../../products/product.service';
+import { ProductionService } from '../../production.service';
+import { KardexSummary } from '../../../../../interfaces/kardexSummary.interface';
 
 @Component({
   selector: 'app-production-kardex-index',
@@ -44,6 +47,7 @@ export class ProductionKardexIndexComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private _kardex: KardexService,
+    private _production: ProductionService,
     private _productionKardex: ProductionKardexService,
     private _productionVariant: ProductionVariantService,
     config: NgbModalConfig,
@@ -74,7 +78,7 @@ export class ProductionKardexIndexComponent implements OnInit, OnDestroy {
 
   loading: boolean = false;
 
-  kardex_summary: any;
+  kardex_summary: KardexSummary = {};
 
   production_variants: any[] = [];
   variants: any[] = [];
@@ -147,11 +151,16 @@ export class ProductionKardexIndexComponent implements OnInit, OnDestroy {
 
   }
 
-  receiveKardexSummary(kardex_summary: any) {
+  receiveKardexSummary(kardex_summary: KardexSummary) {
 
     console.log("Received kardex summary:", kardex_summary);
 
     this.kardex_summary = kardex_summary;
+
+        //Este valor se envia por signals
+    this._production.setSummary({
+      sum_kardexes: this.kardex_summary.reception ?? 0
+    });
 
   }
 
@@ -159,7 +168,7 @@ export class ProductionKardexIndexComponent implements OnInit, OnDestroy {
 
     this.kardexes = [...this.kardexes, ...event];
 
-    this.kardex_summary = this._kardex.calculate(this.kardexes);
+    this.kardex_summary = this._kardex.summary(this.kardexes);
   }
 
 

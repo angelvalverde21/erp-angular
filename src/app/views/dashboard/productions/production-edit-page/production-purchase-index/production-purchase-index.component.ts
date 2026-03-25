@@ -7,6 +7,7 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ProductionService } from '../../production.service';
 import { ProductionPurchaseService } from './production.purchase.service';
 import { JsonPipe } from '@angular/common';
+import { sum } from 'lodash-es';
 
 @Component({
   selector: 'app-production-purchase-index',
@@ -41,6 +42,7 @@ export class ProductionPurchaseIndexComponent {
 
   constructor(
     private _productionPurchase: ProductionPurchaseService,
+    private _production: ProductionService,
     private route: ActivatedRoute
   ) {
 
@@ -78,7 +80,7 @@ export class ProductionPurchaseIndexComponent {
       next: (resp: any) => {
 
         console.log('-----------------------------------------------');
-        
+
         console.log(resp);
         this.purchases = resp.data;
 
@@ -103,15 +105,26 @@ export class ProductionPurchaseIndexComponent {
     });
   }
 
-  receiveSumPurchaseIndex(sum_purchases: number) {
+  // receiveSumPurchaseIndex(sum_purchases: number) {
 
-    this.widget_summary = {
-      ...this.widget_summary,
-      sum_purchases: sum_purchases,
-      cost: sum_purchases / this.widget_summary.sum_products,
-    };
+  //   this.widget_summary = {
+  //     ...this.widget_summary,
+  //     sum_purchases: sum_purchases,
+  //     cost: sum_purchases / this.widget_summary.sum_products,
+  //   };
+
+  // }
+
+  receiveSumPurchases(sum_purchases: number) {
+
+    // this.purchases = [purchase, ...this.purchases];
+
+    console.log("receivePurchaseCreate on ProductionPurchaseIndexComponent");
+    
+    this._production.setSummary({
+      sum_purchases: sum_purchases
+    });
 
   }
-
 
 }

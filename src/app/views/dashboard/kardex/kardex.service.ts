@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 // import { BaseCrudService } from '../base-crud.service';
 import { Observable } from 'rxjs';
 import { BaseCrudDashboardService } from '../base-crud-dashboard.service';
+import { KardexSummary } from '../../../interfaces/kardexSummary.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class KardexService extends BaseCrudDashboardService {
     super(http, 'kardexes');
   }
 
-  calculate(kardexes: any[]) {
+  summary(kardexes: any[]): KardexSummary {
 
     const reception = kardexes.reduce(
       (acc, k) => acc + k.quantity * (k?.direction === 'in' ? 1 : -1),

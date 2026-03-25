@@ -135,7 +135,7 @@ export class ProductionReceptionIndexComponent implements OnInit, OnDestroy {
 
     this.kardexes = [...this.kardexes, ...event];
 
-    this.kardex_summary = this._kardex.calculate(this.kardexes);
+    this.kardex_summary = this._kardex.summary(this.kardexes);
   }
 
 
