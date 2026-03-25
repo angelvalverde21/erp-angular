@@ -15,7 +15,7 @@ import { environment } from '../../../../../environments/environment';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import { DateShopifyPipe } from '@shared/pipes/date-shopify.pipe';
 import { ButtonEditComponent } from '@shared/components/buttons/button-edit/button-edit.component';
-
+import { PaymentIndexComponent } from '../../../payments/payment-index/payment-index.component';
 
 @Component({
   selector: 'app-purchase-index-head',
@@ -30,7 +30,8 @@ import { ButtonEditComponent } from '@shared/components/buttons/button-edit/butt
     ButtonComponent,
     DateShopifyPipe,
     ButtonEditComponent,
-    NgbDropdownModule
+    NgbDropdownModule,
+    PaymentIndexComponent
   ],
   templateUrl: './purchase-index-head.component.html',
   styleUrl: './purchase-index-head.component.scss'

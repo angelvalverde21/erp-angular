@@ -38,10 +38,14 @@
 
 
 <td class="text-center">
-    <h5><span class="badge bg-light text-dark border fw-semibold">{{ production?.sum_products }}</span></h5>
+    <h6>{{ cost(production) | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+</td>
+
+<td class="text-center">
+    <h5><span class="badge bg-light text-dark border fw-semibold">{{ production?.sum_variants ?? 0 }}</span></h5>
 </td>
 <td class="text-center">
-    <h6>S/. 1500.36</h6>
+    <h6>{{ production?.sum_purchases ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
 </td>
 <td class="text-center">
     <h6 class="mb-0">

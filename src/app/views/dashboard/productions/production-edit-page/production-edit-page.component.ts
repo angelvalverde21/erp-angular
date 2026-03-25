@@ -93,7 +93,7 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
         this.production = resp.data;
 
         this.summary = {
-          sum_variants: resp.data.variants,
+          sum_variants: resp.data.sum_variants,
           sum_purchases: resp.data.sum_purchases,
           sum_kardexes: resp.data.sum_kardexes
         }

@@ -60,6 +60,9 @@ export class ProductionIndexRowComponent {
 
   }
 
+  cost(production: any){
+    return production.sum_variants > 0 ? (production.sum_purchases / production.sum_variants) : 0;
+  }
 
   link: any;
 

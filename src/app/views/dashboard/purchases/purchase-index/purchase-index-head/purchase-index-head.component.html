@@ -60,6 +60,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
+        <app-payment-index [paymentable_id]="purchase.id" paymentable_type="purchase"></app-payment-index>
     </div>
 
 </ng-template>
