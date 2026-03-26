@@ -10,6 +10,7 @@ import { HeadPageComponent } from '../../../shared/components/head-page/head-pag
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonLinkComponent } from '../../../shared/components/buttons/button-link/button-link.component';
 import { SummaryPurchase } from '../../../../interfaces/summary.interface';
+import { ProductionEditComponent } from '../production-edit/production-edit.component'
 
 @Component({
   selector: 'app-production-edit-page',
@@ -18,6 +19,7 @@ import { SummaryPurchase } from '../../../../interfaces/summary.interface';
     HeadPageComponent,
     ButtonLinkComponent,
     ProductionWidgetComponent,
+    ProductionEditComponent,
     RouterModule
     // NgbDropdownModule
   ],
