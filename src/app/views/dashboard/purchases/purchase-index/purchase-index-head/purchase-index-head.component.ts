@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, TemplateRef, ViewEncapsulation, } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation, } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { RouterModule } from '@angular/router';
@@ -16,6 +16,7 @@ import { ButtonComponent } from '@shared/components/buttons/button/button.compon
 import { DateShopifyPipe } from '@shared/pipes/date-shopify.pipe';
 import { ButtonEditComponent } from '@shared/components/buttons/button-edit/button-edit.component';
 import { PaymentIndexComponent } from '../../../payments/payment-index/payment-index.component';
+import { PaymentService } from '../../../payments/payment.service';
 
 @Component({
   selector: 'app-purchase-index-head',
@@ -36,7 +37,7 @@ import { PaymentIndexComponent } from '../../../payments/payment-index/payment-i
   templateUrl: './purchase-index-head.component.html',
   styleUrl: './purchase-index-head.component.scss'
 })
-export class PurchaseIndexHeadComponent {
+export class PurchaseIndexHeadComponent implements OnInit{
 
   @Input() purchase: any;
   @Input() purchaseable_type: string = "";
@@ -57,11 +58,20 @@ export class PurchaseIndexHeadComponent {
   constructor(
     config: NgbModalConfig,
     private modalService: NgbModal,
-    private _purchase: PurchaseService
+    private _purchase: PurchaseService,
+    private _payment: PaymentService
   ) {
     // customize default values of modals used by this component tree
     config.backdrop = 'static';
     config.keyboard = false;
+  }
+
+  payments: any[] = [];
+
+  ngOnInit(): void {
+    
+    this.payments = this.purchase?.payments;
+    console.log(this.payments);
   }
   // openVerticallyCentered(content: TemplateRef<any>) {
   //   this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
@@ -138,6 +148,5 @@ export class PurchaseIndexHeadComponent {
   openVerticallyCentered(content: TemplateRef<any>) {
     this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
   }
-
 
 }

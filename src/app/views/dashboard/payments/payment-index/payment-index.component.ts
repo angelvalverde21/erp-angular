@@ -24,7 +24,7 @@ export class PaymentIndexComponent {
   @Input() paymentable_type: string = "";
   @Input() paymentable_id: number = 0;
 
-  @Input() payments: any;
+  @Input() payments: any[] = [];
   faMoneyBill1 = faMoneyBill1;
   modal: any;
 
