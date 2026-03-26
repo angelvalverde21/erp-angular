@@ -5,12 +5,14 @@ import { Product } from 'src/app/interfaces/product.interface';
 import { BaseService } from 'src/app/views/base.service';
 import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/button-edit/button-edit.component';
 import { ButtonComponent } from 'src/app/views/shared/components/buttons/button/button.component';
+import { DateShopifyPipe } from '@shared/pipes/date-shopify.pipe';
 
 @Component({
   selector: 'app-product-index',
   imports: [
     ButtonComponent,
-    ButtonEditComponent
+    ButtonEditComponent,
+    DateShopifyPipe
   ],
   templateUrl: './product-index.component.html',
   styleUrl: './product-index.component.scss'

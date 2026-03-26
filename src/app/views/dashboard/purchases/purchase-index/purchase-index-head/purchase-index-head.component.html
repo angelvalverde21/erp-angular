@@ -22,7 +22,7 @@
                 <button ngbDropdownItem class="btn-sm" (click)="openVerticallyCentered(content)">
                     <i class="fas fa-edit me-2 text-success"></i>Editar
                 </button>
-                <button ngbDropdownItem class="btn-sm" (click)="openVerticallyCentered(payments)">
+                <button ngbDropdownItem class="btn-sm" (click)="openVerticallyCentered(showPayments)">
                     <i class="fas fa-circle-arrow-up me-2 text-secondary"></i>Boletas y Facturas
                 </button>
                 <button ngbDropdownItem class="btn-sm">
@@ -54,13 +54,13 @@
     </div>
 </ng-template>
 
-<ng-template #payments let-modal>
+<ng-template #showPayments let-modal>
     <div class="modal-header">
         <h6 class="modal-title">Boletas y facturas</h6>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <app-payment-index [paymentable_id]="purchase.id" paymentable_type="purchase"></app-payment-index>
+        <app-payment-index [payments]="payments" [paymentable_id]="purchase.id" paymentable_type="purchase"></app-payment-index>
     </div>
 
 </ng-template>
