@@ -8,7 +8,10 @@
             <!-- <th class="text-center" style="width: 200px;">Tipo</th> -->
             <th style="width: 400px;">Producto</th>
             <th class="text-center" style="width: 200px;">Costo Produccion</th>
-            <th class="text-center" style="width: 200px;">Total Producido</th>
+            <th class="text-center" style="width: 200px;">Total Producion</th>
+            <th class="text-center" style="width: 200px;">Total Recibidos</th>
+            <th class="text-center" style="width: 200px;">Progreso</th>
+            <th class="text-center" style="width: 200px;">Variantes</th>
             <th class="text-center" style="width: 200px;">Gasto Total</th>
             <th class="text-center">Estado</th>
             <th class="text-center" style="width: 300px;">Fecha</th>
@@ -21,7 +24,7 @@
 
         @for (production of productions; track production.id) {
 
-        <tr app-production-index-row [production]="production"
+        <tr app-production-index-row [production]="production" class="my-3"
         ></tr>
         }
 

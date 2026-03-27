@@ -95,8 +95,8 @@ export class ProductionWidgetComponent implements OnInit {
         type: 'currency'
       },
       {
-        title: 'Corte Total',
-        subtitle: 'Cortados',
+        title: 'Inventario',
+        subtitle: `${this.summary?.count_variants} Variantes`,
         value: this.summary?.sum_variants ? this.summary?.sum_variants : 0,
         link: ['./variants'],
         icon: faCalculator,

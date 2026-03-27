@@ -1,11 +1,15 @@
+.table tbody tr tr{
+  font-size: 1rem !important;
+}
+
 button[ngbDropdownToggle]::after {
   display: none !important;
 }
 
 .date-main {
-  font-weight: 600;
+  font-weight: 400;
   color: #344054;
-  font-size: 0.82rem;
+  font-size: 1rem;
 }
 .date-sub {
   color: #9ca3af;

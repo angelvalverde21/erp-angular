@@ -96,7 +96,8 @@ export class ProductionVariantIndexComponent implements OnInit {
 
     //Este valor se envia por signals
     this._production.setSummary({
-      sum_variants: this.sum_variants
+      sum_variants: this.sum_variants,
+      count_variants: this.production_variants.length
     });
 
   }
@@ -120,9 +121,6 @@ export class ProductionVariantIndexComponent implements OnInit {
     );
 
     this.sumQuantity();
-
-
-
     // this.emitSumProductionVariant.emit(this.total);
   }
 

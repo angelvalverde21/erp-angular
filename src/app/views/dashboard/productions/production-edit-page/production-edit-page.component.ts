@@ -78,6 +78,7 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
   summary: SummaryPurchase = {
     sum_variants: 0,
+    count_variants: 0,
     sum_purchases: 0,
     sum_kardexes: 0
   };
@@ -96,6 +97,7 @@ export class ProductionEditPageComponent implements OnInit, OnDestroy {
 
         this.summary = {
           sum_variants: resp.data.sum_variants,
+          count_variants: resp.data.count_variants,
           sum_purchases: resp.data.sum_purchases,
           sum_kardexes: resp.data.sum_kardexes
         }

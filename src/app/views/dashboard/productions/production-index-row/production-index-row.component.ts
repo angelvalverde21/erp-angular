@@ -8,6 +8,7 @@ import {
   faArrowRightArrowLeft, faTrash, faCartFlatbed,
   faMoneyBill1
 } from '@fortawesome/free-solid-svg-icons';
+import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
@@ -27,7 +28,8 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
     KardexRegisterInComponent,
     KardexRegisterOutComponent,
     NgbDropdownModule,
-    RouterModule
+    RouterModule,
+    NgbProgressbarModule
   ],
   templateUrl: './production-index-row.component.html',
   styleUrl: './production-index-row.component.scss'
@@ -37,7 +39,6 @@ export class ProductionIndexRowComponent {
   faScissors = faScissors;
   faTape = faTape;
   faEdit = faEdit;
-  faGears = faGears;
   faBoxesStacked = faBoxesStacked;
   faPlus = faPlus;
   faMinus = faMinus;
@@ -45,6 +46,7 @@ export class ProductionIndexRowComponent {
   faTrash = faTrash;
   faCartFlatbed = faCartFlatbed;
   faMoneyBill1 = faMoneyBill1;
+  faGears = faGears;
 
   @Input() production: any;
 
@@ -54,17 +56,28 @@ export class ProductionIndexRowComponent {
     private router: Router,
     private route: ActivatedRoute,
     private _base: BaseService
-  ) { 
+  ) {
 
     this.store = this._base.store;
 
   }
 
-  cost(production: any){
+  cost(production: any) {
     return production.sum_variants > 0 ? (production.sum_purchases / production.sum_variants) : 0;
   }
 
   link: any;
 
+  getProgress(production: any): number {
+    if (!production?.sum_variants || production.sum_variants <= 0) {
+      return 0;
+    }
+
+    const result =
+      (production.sum_variants - production.sum_kardexes) /
+      production.sum_variants;
+
+    return Math.round(result * 100); // porcentaje
+  }
 
 }

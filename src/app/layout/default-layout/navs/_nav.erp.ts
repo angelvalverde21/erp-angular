@@ -50,43 +50,43 @@ export const navErp: CustomNavData[] = [
                     routerLinkActiveOptions: { exact: true }
                 },
             },
-            {
-                name: 'Crear',
-                url: 'dashboard/productions/create', icon: 'nav-icon-bullet',
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                },
-            },
+            // {
+            //     name: 'Crear',
+            //     url: 'dashboard/productions/create', icon: 'nav-icon-bullet',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // },
         ],
         roles: ['master', 'ceo']
     },
 
     {
-        name: 'Fabricacion',
+        name: 'Ordenes de compra',
         url: 'dashboard/manufactures',
-        iconComponent: { name: 'cil-industry' },
+        icon: 'fas fa-briefcase',
         children: [
+            // {
+            //     name: 'Todos',
+            //     url: 'dashboard/manufactures',
+            //     icon: 'fa-solid fa-border-all',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // },
+            // {
+            //     name: 'Producciones',
+            //     url: 'dashboard/manufactures/productions',
+            //     icon: 'fas fa-gears',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: false }
+            //     },
+            // },
             {
                 name: 'Todos',
-                url: 'dashboard/manufactures',
-                icon: 'fa-solid fa-border-all',
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                },
-            },
-            {
-                name: 'Producciones',
-                url: 'dashboard/manufactures/productions',
-                icon: 'fas fa-gears',
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: false }
-                },
-            },
-            {
-                name: 'Ordenes de compra',
                 url: 'dashboard/manufactures/orders',
                 icon: 'fa-solid fa-boxes-stacked',
                 class: 'children-custom',
@@ -94,15 +94,15 @@ export const navErp: CustomNavData[] = [
                     routerLinkActiveOptions: { exact: false }
                 },
             },
-            {
-                name: 'Recepciones',
-                url: 'dashboard/manufactures/receptions',
-                iconComponent: { name: 'cil-swap-horizontal' },
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: false }
-                },
-            },
+            // {
+            //     name: 'Recepciones',
+            //     url: 'dashboard/manufactures/receptions',
+            //     iconComponent: { name: 'cil-swap-horizontal' },
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: false }
+            //     },
+            // },
         ],
         roles: ['master', 'ceo']
     },
