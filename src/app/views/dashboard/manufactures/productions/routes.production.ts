@@ -1,68 +1,66 @@
 import { Routes } from '@angular/router';
 
-export const  
-routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./production-index-page/production-index-page.component').then((m) => m.ProductionIndexPageComponent),
+    loadComponent: () => import('./manufacture-production-index-page/manufacture-production-index-page.component').then((m) => m.ManufactureProductionIndexPageComponent),
     data: {
       title: 'Todos',
+      name: 'dashboard.production.index', // 👈 nombre único
     }
   },
   {
     path: 'create',
-    loadComponent: () => import('./production-create-page/production-create-page.component').then((m) => m.ProductionCreatePageComponent),
+    loadComponent: () => import('./manufacture-production-create-page/manufacture-production-create-page.component').then((m) => m.ManufactureProductionCreatePageComponent),
     data: {
-      title: 'Create'
+      title: 'Create',
+      name: 'dashboard.production.create', // 👈 nombre único
     }
   },
-  // {
-  //   path: ':production_id/purchases',
-  //   loadComponent: () =>
-  //     import('./production-edit-page/production-purchase-index-page/production-purchase-index-page.component')
-  //       .then(m => m.ProductionPurchaseIndexPageComponent),
-  //   data: { title: 'Compras' }
-  // },
+  {
+    path: 'search',
+    loadComponent: () => import('./manufacture-production-search-page/manufacture-production-search-page.component').then((m) => m.ManufactureProductionSearchPageComponent),
+    data: {
+      title: 'Search',
+      name: 'dashboard.production.search', // 👈 nombre único
+    }
+  },
   {
     path: ':production_id',
-    loadComponent: () =>
-      import('./production-edit-page/production-edit-page.component')
-        .then(m => m.ProductionEditPageComponent),
+    loadComponent: () => import('./manufacture-production-edit-page/manufacture-production-edit-page.component').then((m) => m.ManufactureProductionEditPageComponent),
     data: {
-      title: 'Producciones',
+      title: 'Editar',
+      name: 'dashboard.production.edit', // 👈 nombre único
     },
     children: [
       {
         path: '',
         loadComponent: () =>
-          import('./production-edit-page/production-summary/production-summary.component')
-            .then(m => m.ProductionSummaryComponent),
-        data: { title: 'Producciones/Recepciones' }
+          import('./manufacture-production-edit-page/manufacture-production-edit/manufacture-production-edit.component').then(m => m.ManufactureProductionEditComponent),
+          data: { title: 'Producciones/calendar' }
       },
       {
         path: 'purchases',
         loadComponent: () =>
-          import('./production-edit-page/production-purchase-index/production-purchase-index.component')
-            .then(m => m.ProductionPurchaseIndexComponent),
+          import('./manufacture-production-edit-page/manufacture-production-purchase-index/manufacture-production-purchase-index.component')
+            .then(m => m.ManufactureProductionPurchaseIndexComponent),
         data: { title: 'Producciones/Compras' }
       },
       {
         path: 'variants',
         loadComponent: () =>
-          import('./production-edit-page/production-variant-index/production-variant-index.component')
-            .then(m => m.ProductionVariantIndexComponent),
+          import('./manufacture-production-edit-page/manufacture-production-variant-index/manufacture-production-variant-index.component')
+            .then(m => m.ManufactureProductionVariantIndexComponent),
         data: { title: 'Producciones/Variantes' }
       },
       {
-        path: 'receptions',
+        path: 'kardexes',
         loadComponent: () =>
-          import('./production-edit-page/production-reception-index/production-reception-index.component')
-            .then(m => m.ProductionReceptionIndexComponent),
-        data: { title: 'Producciones/Recepciones' }
+          import('./manufacture-production-edit-page/manufacture-production-kardex-index/manufacture-production-kardex-index.component')
+            .then(m => m.ManufactureProductionKardexIndexComponent),
+        data: { title: 'Producciones/Kardexes' }
       }
 
     ]
   },
-
-
 ];

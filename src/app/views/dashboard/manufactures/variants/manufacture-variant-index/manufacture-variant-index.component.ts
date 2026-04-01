@@ -6,9 +6,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faInbox } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
-import { ManufactureVariantService } from '../manufactureVariant.service';
 import { Subject, takeUntil } from 'rxjs';
 import { VariantSearchComponent } from '../../../products/variants/variant-search/variant-search.component';
+import { ManufactureVariantService } from '../../manufacture.variants.service';
 
 @Component({
   selector: 'app-manufacture-variant-index',
@@ -116,7 +116,10 @@ export class ManufactureVariantIndexComponent implements OnInit {
       }
     })
 
-    this._manufactureVariant.batch(this.manufacture_id, variantsIds).pipe(takeUntil(this.destroy$)).subscribe({
+
+    this._manufactureVariant.setManufactureId(this.manufacture_id);
+
+    this._manufactureVariant.batch(variantsIds).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         Swal.fire('Guardado', 'Las variantes han sido agregadas', 'success');

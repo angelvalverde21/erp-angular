@@ -26,9 +26,9 @@ export const routes: Routes = [
     path: 'productions',
     loadChildren: () =>
       import('./productions/routes.production').then((m) => m.routes),
-    data: {
-      title: 'Producciones',
-    }
+      data: {
+        title: 'Producciones',
+      }
   },
   {
     path: 'orders',

@@ -1,1 +1,10 @@
-<p>manufacture-production-create works!</p>
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+<app-manufacture-production-form [form]="form"></app-manufacture-production-form>
+
+<app-button-save (click)="createProduction()" color="dark" [spinner]="loading" [disabled]="disabledButton">Guardar
+    cambios</app-button-save>
+
+<!-- {{ form.value | json }} -->
+}

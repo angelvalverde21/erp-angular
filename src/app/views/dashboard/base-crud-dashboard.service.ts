@@ -29,6 +29,7 @@ export abstract class BaseCrudDashboardService {
   // }
 
   index(page: number = 1, status?: string): Observable<any[]> {
+    
     console.log(this.baseUrl);
 
     return this.http.get<any[]>(this.baseUrl, {

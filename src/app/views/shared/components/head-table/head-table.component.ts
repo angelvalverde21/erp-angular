@@ -12,7 +12,6 @@ import { CourierService } from '@dashboard/users/couriers/courier.service';
 import { ManufactureService } from '@dashboard/manufactures/manufacture.service';
 import { GatewayService } from '@dashboard/gateways/gateway.service';
 import { ManufactureOrderService } from '@dashboard/manufactures/orders/order.service';
-import { ManufactureProductionService } from '@dashboard/manufactures/productions/production.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { ProductService } from '@dashboard/products/product.service';
@@ -64,7 +63,6 @@ export class HeadTableComponent implements OnInit, OnDestroy {
     private _courier: CourierService,
     private _manufacture: ManufactureService,
     private _manufacture_order: ManufactureOrderService,
-    private _manufacture_production: ManufactureProductionService,
     private _shopify_product: ShopifyProductService,
     private _gateway: GatewayService,
     private _product: ProductService,
@@ -170,7 +168,6 @@ export class HeadTableComponent implements OnInit, OnDestroy {
       case 'shopify_product': return this._shopify_product;
       case 'gateway': return this._gateway;
       case 'manufacture_order': return this._manufacture_order;
-      case 'manufacture_production': return this._manufacture_production;
       case 'product': return this._product;
       default: return this._customer;
     }

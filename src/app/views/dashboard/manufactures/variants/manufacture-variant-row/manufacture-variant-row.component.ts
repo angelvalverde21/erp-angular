@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnDestroy, Output, OnInit, TemplateRef,
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
-import { ManufactureVariantService } from '../manufactureVariant.service';
 import Swal from 'sweetalert2';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -13,6 +12,7 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { Fancybox } from '@fancyapps/ui';
 import { ShopifyImageThumbnailPipe } from '@shared/pipes/shopify/shopify-image-thumbnail.pipe';
 import { ShopifyImageMediumPipe } from '@shared/pipes/shopify/shopify-image-medium.pipe';
+import { ManufactureVariantService } from '../../manufacture.variants.service';
 
 @Component({
   selector: 'tr[app-manufacture-variant-row]',
@@ -194,7 +194,9 @@ export class ManufactureVariantRowComponent implements OnDestroy, OnInit {
 
     this.loading = true;
 
-    this._manufactureVariantService.update(this.manufacture_variant.manufacture_id, this.manufacture_variant.id, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
+    this._manufactureVariantService.setManufactureId(this.manufacture_variant.manufacture_id);
+
+    this._manufactureVariantService.update(this.manufacture_variant.id, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         console.log(resp);

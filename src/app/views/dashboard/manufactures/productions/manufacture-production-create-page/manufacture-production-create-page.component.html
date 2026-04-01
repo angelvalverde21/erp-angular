@@ -1,1 +1,18 @@
-<p>manufacture-production-create-page works!</p>
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-head-page title="Empezar Produccion">
+    <!-- <app-button-link [path]="['./create']">Agregar production</app-button-link> -->
+    <app-button-back></app-button-back>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-body">
+        <app-manufacture-production-create (emitCreateProduction)="receiveProductionCreate($event)"></app-manufacture-production-create>
+    </div>
+
+</div>
+
+}
