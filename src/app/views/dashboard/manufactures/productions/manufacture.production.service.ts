@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -17,7 +17,12 @@ export class ManufactureProductionService extends BaseCrudDashboardService{
     super(http, 'manufactures/productions');
   }
 
+  // estado reactivo
+  summaryEvent = signal<any>(null);
 
+  setSummary(data: any) {
+    this.summaryEvent.set(data);
+  }
   // base_path(path: string[] = []){
   //   return ['inventories','manufactures',...path];
   // }

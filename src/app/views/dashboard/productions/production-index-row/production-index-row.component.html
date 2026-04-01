@@ -60,13 +60,13 @@
 <td class="text-center">
     <h6>{{ production?.sum_purchases ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
 </td>
-<td class="text-center">
+<!-- <td class="text-center">
     <h6 class="mb-0">
         <span class="badge bg-success px-3 py-1">
             <i class="fa-solid fa-circle-check me-2"></i>Completado
         </span>
     </h6>
-</td>
+</td> -->
 <td class="text-center">
     <div class="date-main">{{ production.created_at | DateShopify }}</div>
     <div class="date-sub">Act: {{ production.updated_at | DateShopify }}</div>
@@ -90,7 +90,7 @@
                     <fa-icon [icon]="faScissors" class="me-2"></fa-icon>
                     Inventario Inicial
                 </button>
-                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'productions', production.id, 'receptions']">
+                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'productions', production.id, 'kardexes']">
                     <fa-icon [icon]="faArrowRightArrowLeft" class="me-2"></fa-icon> Recepciones
                 </button>
                 <div class="dropdown-divider"></div>

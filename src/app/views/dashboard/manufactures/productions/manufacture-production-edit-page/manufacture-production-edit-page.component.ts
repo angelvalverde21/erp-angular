@@ -4,11 +4,12 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { LoadingComponent } from '@components/loading/loading.component';
 import Swal from 'sweetalert2';
-import { ProductionWidgetComponent } from './production-widget/production-widget.component';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { SummaryPurchase } from '@interfaces/summary.interface';
+import { ManufactureProductionService } from '../manufacture.production.service';
+import { ProductionWidgetComponent } from './production-widget/production-widget.component';
 import { ManufactureProductionEditComponent } from './manufacture-production-edit/manufacture-production-edit.component';
 
 @Component({
@@ -31,7 +32,7 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
 
   loading: boolean = false;
   production: any = null;
-  production_id: number = 0;
+  manufacture_id: number = 0;
   purchases: any;
   variants: any;
 
@@ -42,16 +43,16 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
 
   constructor(
     private route: ActivatedRoute,
-    private _production: ProductionService
+    private _manufactureProduction: ManufactureProductionService
   ) {
 
     this.route.params.subscribe(params => {
-      this.production_id = params['production_id'];
+      this.manufacture_id = Number(params['manufacture_id']);
     });
 
     effect(() => {
 
-      const event = this._production.summaryEvent();
+      const event = this._manufactureProduction.summaryEvent();
 
       if (!event) return;
 
@@ -87,7 +88,7 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
 
     this.loading = true;
 
-    this._production.get(this.production_id).pipe(takeUntil(this.destroy$)).subscribe({
+    this._manufactureProduction.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
 
