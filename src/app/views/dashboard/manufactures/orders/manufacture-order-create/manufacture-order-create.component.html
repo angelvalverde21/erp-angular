@@ -1,0 +1,11 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-manufacture-order-form [form]="form" [suppliers]="suppliers"></app-manufacture-order-form>
+
+<app-button-save (click)="createManufacture()" [spinner]="loading" [disabled]="disabledButton">Guardar
+    cambios</app-button-save>
+
+<!-- {{ form.value | json }} -->
+}

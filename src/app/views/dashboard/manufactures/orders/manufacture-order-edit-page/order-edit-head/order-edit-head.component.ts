@@ -1,11 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
-import { WidgetCostComponent } from '../../../shared/widgets/widget-cost/widget-cost.component';
-import { WidgetProductsComponent } from '../../../shared/widgets/widget-products/widget-products.component';
-import { WidgetPurchasesComponent } from '../../../shared/widgets/widget-purchases/widget-purchases.component';
-import { WidgetReceptionsComponent } from '../../../shared/widgets/widget-receptions/widget-receptions.component';
-import { ManufactureWidgetsComponent } from '../../../shared/manufacture-widgets/manufacture-widgets.component';
 import { Router, RouterModule } from '@angular/router';
 import { faBarcode, faBagShopping, faCalculator, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -17,11 +12,6 @@ import { BaseService } from '../../../../../base.service';
   imports: [
     HeadPageComponent,
     ButtonLinkComponent,
-    WidgetCostComponent,
-    WidgetProductsComponent,
-    WidgetPurchasesComponent,
-    WidgetReceptionsComponent,
-    ManufactureWidgetsComponent,
     RouterModule,
     FontAwesomeModule,
     CommonModule
@@ -92,7 +82,7 @@ export class OrderEditHeadComponent {
         title: 'Recepción',
         subtitle: 'Total',
         value: this.summary?.sum_reception ? this.summary?.sum_reception : 0,
-        link: ['./receptions'],
+        link: ['./kardexes'],
         icon: faRightLeft
       }
     ];

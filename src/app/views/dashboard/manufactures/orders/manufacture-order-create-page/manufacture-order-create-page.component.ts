@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
-import { ManufactureCreateComponent } from '../../manufacture-create/manufacture-create.component';
 import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { ManufactureOrderCreateComponent } from '../manufacture-order-create/manufacture-order-create.component';
 @Component({
   selector: 'app-manufacture-order-create-page',
   imports: [
-    ManufactureCreateComponent,
+    ManufactureOrderCreateComponent,
     ButtonBackComponent,
     HeadPageComponent,
     LoadingComponent

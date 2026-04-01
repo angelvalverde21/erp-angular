@@ -26,21 +26,21 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('../orders/order-edit-page/order-summary/order-summary.component').then((m) => m.OrderSummaryComponent),
+        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-edit/manufacture-order-edit.component').then((m) => m.ManufactureOrderEditComponent),
         data: {
-          title: 'Resumen',
+          title: 'Editar',
         }
       },
       {
         path: 'variants',
-        loadComponent: () => import('../orders/order-edit-page/order-variant-index/order-variant-index.component').then((m) => m.OrderVariantIndexComponent),
+        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-variant-index/manufacture-order-variant-index.component').then((m) => m.ManufactureOrderVariantIndexComponent),
         data: {
           title: 'Variantes',
         }
       },
       {
-        path: 'receptions',
-        loadComponent: () => import('../orders/order-edit-page/order-reception-index/order-reception-index.component').then((m) => m.OrderReceptionIndexComponent),
+        path: 'kardexes',
+        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-kardex-index/manufacture-order-kardex-index.component').then((m) => m.ManufactureOrderKardexIndexComponent),
         data: {
           title: 'Recepciones',
         }

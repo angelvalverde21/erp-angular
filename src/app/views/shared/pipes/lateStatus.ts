@@ -16,7 +16,7 @@ export class LateStatusPipe implements PipeTransform {
     checkInDate.setHours(parts[0], parts[1], parts[2]);
 
     const limit = new Date();
-    limit.setHours(10, 30, 0); // 10:30 con tolerancia
+    limit.setHours(10, 10, 0); // 10:15 con tolerancia
 
     return checkInDate.getTime() > limit.getTime();
   }

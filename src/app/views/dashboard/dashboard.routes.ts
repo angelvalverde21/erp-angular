@@ -12,7 +12,7 @@ export const routes: Routes = [
   {
     path: 'products',
     loadChildren: () =>
-      import('../../views/dashboard/products/routes.product').then(
+      import('./products/routes.product').then(
         (m) => m.routes
       ),
   },
@@ -20,7 +20,7 @@ export const routes: Routes = [
   {
     path: 'marketing',
     loadChildren: () =>
-      import('../../views/dashboard/marketing/routes.marketing').then(
+      import('./marketing/routes.marketing').then(
         (m) => m.routes
       ),
   },
@@ -28,7 +28,7 @@ export const routes: Routes = [
   {
     path: 'manufactures',
     loadChildren: () =>
-      import('../../views/dashboard/manufactures/routes.manufacture').then(
+      import('./manufactures/routes.manufacture').then(
         (m) => m.routes
       ),
   },
@@ -36,7 +36,7 @@ export const routes: Routes = [
   {
     path: 'productions',
     loadChildren: () =>
-      import('../../views/dashboard/productions/routes.production').then(
+      import('./productions/routes.production').then(
         (m) => m.routes
       ),
   },
@@ -44,7 +44,7 @@ export const routes: Routes = [
   {
     path: 'pettycashes',
     loadChildren: () =>
-      import('../../views/dashboard/petty-cashes/route.pettycash').then(
+      import('./petty-cashes/route.pettycash').then(
         (m) => m.routes
       ),
   },
@@ -52,7 +52,7 @@ export const routes: Routes = [
   {
     path: 'purchases',
     loadChildren: () =>
-      import('../../views/dashboard/purchases/routes.purchase').then(
+      import('./purchases/routes.purchase').then(
         (m) => m.routes
       ),
   },
@@ -60,44 +60,44 @@ export const routes: Routes = [
   {
     path: 'categories',
     loadChildren: () =>
-      import('../../views/dashboard/categories/routes.category').then(
+      import('./categories/routes.category').then(
         (m) => m.routes
       ),
   },
   {
     path: 'shopify',
     loadChildren: () =>
-      import('../../views/dashboard/shopify/shopify.routes').then((m) => m.routes),
+      import('./shopify/shopify.routes').then((m) => m.routes),
     // canActivate: [authGuard],
   },
   {
     path: 'mercadopago',
     loadChildren: () =>
-      import('../../views/dashboard/mercadopago/routes.mercadopago').then((m) => m.routes),
+      import('./mercadopago/routes.mercadopago').then((m) => m.routes),
     // canActivate: [authGuard],
   },
   {
     path: 'users',
     loadChildren: () =>
-      import('../../views/dashboard/users/routes.user').then((m) => m.routes),
+      import('./users/routes.user').then((m) => m.routes),
     // canActivate: [authGuard],
   },
   {
     path: 'couriers',
     loadChildren: () =>
-      import('../../views/dashboard/users/couriers/routes.courier').then((m) => m.routes),
+      import('./users/couriers/routes.courier').then((m) => m.routes),
     // canActivate: [authGuard],
   },
   {
     path: 'gateways',
     loadChildren: () =>
-      import('../../views/dashboard/gateways/routes.gateway').then((m) => m.routes),
+      import('./gateways/routes.gateway').then((m) => m.routes),
     // canActivate: [authGuard],
   },
   {
     path: 'attendances',
     loadChildren: () =>
-      import('../../views/dashboard/attendances/routes.attendance').then((m) => m.routes),
+      import('./attendances/routes.attendance').then((m) => m.routes),
     // canActivate: [authGuard],
   }
 ];

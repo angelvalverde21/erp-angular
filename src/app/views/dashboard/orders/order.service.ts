@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
+import { BaseCrudDashboardService } from '../base-crud-dashboard.service';
 
-import { BaseCrudService } from '../../base-crud.service';
-import { StoreService } from '../../../core/services/store.service';
 
 @Injectable({
   providedIn: 'root',
 })
 
-export class OrderService extends BaseCrudService{
+export class OrderService extends BaseCrudDashboardService{
 
   constructor(http: HttpClient) {
     super(http, 'orders');

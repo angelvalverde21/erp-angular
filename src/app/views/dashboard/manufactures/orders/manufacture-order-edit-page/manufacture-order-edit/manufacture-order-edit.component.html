@@ -1,1 +1,11 @@
-<p>manufacture-order-edit works!</p>
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-manufacture-order-form [form]="form" [suppliers]="suppliers"></app-manufacture-order-form>
+
+<app-button-save (click)="update()" [spinner]="loading" [disabled]="disabledButton">Guardar
+    cambios</app-button-save>
+
+<!-- {{ form.value | json }} -->
+}

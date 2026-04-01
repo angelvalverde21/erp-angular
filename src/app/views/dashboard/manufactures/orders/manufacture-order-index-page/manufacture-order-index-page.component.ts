@@ -1,23 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ManufactureIndexComponent } from '../../manufacture-index/manufacture-index.component';
 import { HeadPageComponent } from "@shared/components/head-page/head-page.component";
 import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
-import { UserHeadTableComponent } from '../../../users/shared/user-head-table/user-head-table.component';
 import { Subject, takeUntil } from 'rxjs';
-import { ManufactureOrderService } from '../order.service';
+import { ManufactureOrderService } from '../manufacture.order.service';
 import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
+import { ManufactureOrderIndexComponent } from '../manufacture-order-index/manufacture-order-index.component';
 
 @Component({
   selector: 'app-manufacture-order-index-page',
   imports: [
-    ManufactureIndexComponent,
     HeadPageComponent,
     ButtonBackComponent,
     LoadingComponent,
     ButtonLinkComponent,
-    UserHeadTableComponent,
+    ManufactureOrderIndexComponent
   ],
   templateUrl: './manufacture-order-index-page.component.html',
   styleUrl: './manufacture-order-index-page.component.scss'
@@ -49,7 +47,6 @@ export class ManufactureOrderIndexPageComponent implements OnInit, OnDestroy {
 
     this._manufactureOrder.index().pipe(takeUntil(this.destroy$)).subscribe({
     
-      
       next: (resp: any) => {
         console.log(resp);
         this.manufactures = resp.data;

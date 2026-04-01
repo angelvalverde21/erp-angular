@@ -36,6 +36,41 @@ export const navErp: CustomNavData[] = [
     //         { name: 'Proveedores', url: 'dashboard/productions/suppliers', icon: 'nav-icon-bullet' },
     //     ]
     // },
+    {
+        name: 'Manufacturas',
+        url: 'dashboard/manufactures',
+        icon: 'fa-solid fa-box-archive',
+        children: [
+            {
+                name: 'Todos',
+                url: 'dashboard/manufactures',
+                icon: 'fa-solid fa-border-all',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+            {
+                name: 'Producciones',
+                url: 'dashboard/manufactures/productions',
+                iconComponent: { name: 'cil-industry' },
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: false }
+                },
+            },
+            {
+                name: 'Ordenes de Compra',
+                url: 'dashboard/manufactures/orders',
+                icon: 'fas fa-briefcase',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: false }
+                },
+            },
+        ],
+        roles: ['master', 'ceo']
+    },
 
     {
         name: 'Produccion',

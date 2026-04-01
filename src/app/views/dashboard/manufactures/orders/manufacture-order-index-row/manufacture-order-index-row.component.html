@@ -1,0 +1,100 @@
+<!-- <td class="text-center py-3">#{{ manufacture.id }}</td> -->
+<!-- <td class="text-center">
+                    <fa-icon [icon]="faScissors"></fa-icon>
+                </td> -->
+<td class="text-center" style="width: 50px;">
+    #000{{ manufacture.id }}
+</td>
+
+<!-- <td class="text-center" style="width: 75px;">
+
+    <h6 class="mb-0">
+        @if(manufacture.type === 'manufacture'){
+        <span class="badge bg-primary px-3 py-1"><fa-icon [icon]="faGears" style="opacity: 0.5;" class="me-1"></fa-icon>
+            Produccion
+        </span>
+        }@else{
+        <span class="badge bg-success px-3 py-1">
+            <fa-icon [icon]="faBoxesStacked" style="opacity: 0.5;"
+                class="me-1"></fa-icon>
+            Orden
+            de Compra</span>
+        }
+    </h6>
+
+</td> -->
+
+
+<!-- <td class="text-center" style="width: 75px;">{{ manufacture.sum_products?? 0 }}</td> -->
+<td>
+
+    <div class="date-main">{{ manufacture.name }}</div>
+    <div class="date-sub">{{ manufacture?.user?.name }}</div>
+</td>
+<!-- <td class="text-center">{{ manufacture.sum_purchases?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}
+</td> -->
+<!-- <td class="text-center">{{ (manufacture.sum_products > 0) ? manufacture.sum_purchases /
+    manufacture.sum_products : 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>-->
+
+
+<td class="text-center">
+    <h6>{{ cost(manufacture) | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+</td>
+
+<td class="text-center">
+    <h5><span class="badge bg-light text-dark border fw-semibold">{{ manufacture?.sum_variants ?? 0 }}</span></h5>
+</td>
+
+<td class="text-center">
+    {{ manufacture?.sum_kardexes ?? 0 }}
+</td>
+
+<td class="text-center">
+    {{ manufacture?.count_variants ?? 0 }}
+</td>
+
+<td>
+    <ngb-progressbar [showValue]="true" [striped]="true" type="success" [value]="getProgress(manufacture)"/>
+</td>
+
+<td class="text-center">
+    <h6>{{ manufacture?.sum_purchases ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+</td>
+<td class="text-center">
+    <h6 class="mb-0">
+        <span class="badge bg-success px-3 py-1">
+            <i class="fa-solid fa-circle-check me-2"></i>Completado
+        </span>
+    </h6>
+</td>
+<td class="text-center">
+    <div class="date-main">{{ manufacture.created_at | DateShopify }}</div>
+    <div class="date-sub">Act: {{ manufacture.updated_at | DateShopify }}</div>
+
+</td>
+<td class="text-center" style="width: 50px;">
+    <div class="d-flex align-items-center gap-3 justify-content-center">
+        <div ngbDropdown class="d-inline-block">
+            <button type="button" class="btn btn-outline-dark btn-sm" id="dropdownBasic1" ngbDropdownToggle>
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'orders', manufacture.id]">
+                    <fa-icon [icon]="faGears" class="me-2"></fa-icon> Editar
+                </button>
+                <div class="dropdown-divider"></div>
+                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'orders', manufacture.id, 'variants']">
+                    <fa-icon [icon]="faScissors" class="me-2"></fa-icon>
+                    Inventario Inicial
+                </button>
+                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'orders', manufacture.id, 'receptions']">
+                    <fa-icon [icon]="faArrowRightArrowLeft" class="me-2"></fa-icon> Recepciones
+                </button>
+                <div class="dropdown-divider"></div>
+                <button ngbDropdownItem class="btn-sm">
+                    <fa-icon [icon]="faTrash" class="me-2 text-danger"></fa-icon>Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</td>
