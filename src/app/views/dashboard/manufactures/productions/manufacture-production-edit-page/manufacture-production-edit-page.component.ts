@@ -7,10 +7,11 @@ import Swal from 'sweetalert2';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
-import { SummaryPurchase } from '@interfaces/summary.interface';
 import { ManufactureProductionService } from '../manufacture.production.service';
 import { ProductionWidgetComponent } from './production-widget/production-widget.component';
 import { ManufactureProductionEditComponent } from './manufacture-production-edit/manufacture-production-edit.component';
+import { SummaryPurchase } from '@interfaces/summary.interface';
+import { ManufactureService } from '../../manufacture.service';
 
 @Component({
   selector: 'app-manufacture-production-edit-page',
@@ -36,23 +37,24 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
   purchases: any;
   variants: any;
 
-  // summary: any;
+  // summary: any;--------------------------------------*
 
   modal: any;
   production_variants: any;
 
   constructor(
     private route: ActivatedRoute,
+    private _manufacture: ManufactureService,
     private _manufactureProduction: ManufactureProductionService
   ) {
 
     this.route.params.subscribe(params => {
-      this.manufacture_id = Number(params['manufacture_id']);
+      this.manufacture_id = Number(params['production_id']);
     });
 
     effect(() => {
 
-      const event = this._manufactureProduction.summaryEvent();
+      const event = this._manufacture.summaryEvent();
 
       if (!event) return;
 
@@ -62,15 +64,14 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
       }
 
       console.log('Summary actualizado:', event);
-
       console.log(this.summary);
-      
-      
+
     });
 
   }
 
   ngOnInit(): void {
+
 
     this.productionInit();
 
@@ -88,7 +89,7 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
 
     this.loading = true;
 
-    this._manufactureProduction.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
+    this._manufacture.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
 

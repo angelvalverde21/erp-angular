@@ -3,9 +3,8 @@ import { ManufactureVariantIndexComponent } from '../../../variants/manufacture-
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { ManufactureOrderService } from '../../order.service';
 import { ActivatedRoute } from '@angular/router';
-import { ManufactureOrderVariantService } from './manufacture.order.variant.service';
+import { ManufactureVariantService } from '../../../manufacture.variants.service';
 
 @Component({
   selector: 'app-manufacture-order-variant-index',
@@ -24,7 +23,7 @@ export class ManufactureOrderVariantIndexComponent implements OnInit, OnDestroy 
   loading: boolean = false;
 
   constructor(
-    private _manufactureOrderVariantService: ManufactureOrderVariantService,
+    private _manufactureVariantService: ManufactureVariantService,
     private route: ActivatedRoute
   ) {
 
@@ -52,9 +51,9 @@ export class ManufactureOrderVariantIndexComponent implements OnInit, OnDestroy 
     this.loading = true;
         //seteamos el id de la orden de compra para que el servicio lo use en sus llamadas
 
-    this._manufactureOrderVariantService.setManufactureId(this.manufacture_id || 0);
+    this._manufactureVariantService.setManufactureId(this.manufacture_id || 0);
 
-    this._manufactureOrderVariantService.index().pipe(takeUntil(this.destroy$)).subscribe({
+    this._manufactureVariantService.index().pipe(takeUntil(this.destroy$)).subscribe({
     
       next: (resp: any) => {
         console.log(resp);

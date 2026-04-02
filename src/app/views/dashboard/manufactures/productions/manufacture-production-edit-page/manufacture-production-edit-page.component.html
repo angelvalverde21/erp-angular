@@ -6,11 +6,14 @@
     <app-button-link [color]="'primary'" [path]="['../create']">+ Produccion</app-button-link>
 </app-head-page>
 
-
-<app-manufacture-production-edit [production]="production"></app-manufacture-production-edit>
-
 <app-production-widget [summary]="summary" [production_id]="production.id"></app-production-widget>
 
-<router-outlet></router-outlet>
+<div class="card">
+
+    <div class="card-body">
+        <router-outlet></router-outlet>
+    </div>
+
+</div>
 
 }

@@ -11,6 +11,20 @@
     </div>
 
 
+    <div class="col-lg-6 col-12">
+        <app-input-group text="Fecha de entrega">
+            <input formControlName="manufacture_start" type="date" class="form-control" placeholder="Fecha de entrega" [class.is-invalid]="form.get('manufacture_start')?.invalid && form.get('manufacture_start')?.touched"
+                aria-label="delivery_date" aria-describedby="basic-delivery_date" />
+        </app-input-group>
+    </div>
+
+    <div class="col-lg-6 col-12">
+        <app-input-group text="Fecha de entrega">
+            <input formControlName="manufacture_end" type="date" class="form-control" placeholder="Fecha de entrega" [class.is-invalid]="form.get('manufacture_end')?.invalid && form.get('manufacture_end')?.touched"
+                aria-label="delivery_date" aria-describedby="basic-delivery_date" />
+        </app-input-group>
+    </div>
+
     <!-- <div class="col-lg-6 col-12">
         <app-input-group text="Presupuesto Aproximado" icontext="S/. ">
             <input type="number" twoDecimals class="form-control is-required" [ngClass]="isInvalid('budget') ? 'is-invalid' : '' "
@@ -31,15 +45,3 @@
 
 </div>
 
-
-<ng-template #newSupplier let-modal>
-
-    <div class="modal-header">
-        <h4 class="modal-title">Crear proveedor</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body pb-4">
-        <app-supplier-create (emitSupplierCreate)="supplierReceiveCreate($event)"></app-supplier-create>
-    </div>
-
-</ng-template>

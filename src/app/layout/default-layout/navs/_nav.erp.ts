@@ -72,75 +72,75 @@ export const navErp: CustomNavData[] = [
         roles: ['master', 'ceo']
     },
 
-    {
-        name: 'Produccion',
-        url: 'dashboard/productions',
-        iconComponent: { name: 'cil-industry' },
-        children: [
-            {
-                name: 'Todos',
-                url: 'dashboard/productions', icon: 'nav-icon-bullet',
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                },
-            },
-            // {
-            //     name: 'Crear',
-            //     url: 'dashboard/productions/create', icon: 'nav-icon-bullet',
-            //     class: 'children-custom',
-            //     linkProps: {
-            //         routerLinkActiveOptions: { exact: true }
-            //     },
-            // },
-        ],
-        roles: ['master', 'ceo']
-    },
+    // {
+    //     name: 'Produccion',
+    //     url: 'dashboard/productions',
+    //     iconComponent: { name: 'cil-industry' },
+    //     children: [
+    //         {
+    //             name: 'Todos',
+    //             url: 'dashboard/productions', icon: 'nav-icon-bullet',
+    //             class: 'children-custom',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             },
+    //         },
+    //         // {
+    //         //     name: 'Crear',
+    //         //     url: 'dashboard/productions/create', icon: 'nav-icon-bullet',
+    //         //     class: 'children-custom',
+    //         //     linkProps: {
+    //         //         routerLinkActiveOptions: { exact: true }
+    //         //     },
+    //         // },
+    //     ],
+    //     roles: ['master', 'ceo']
+    // },
 
-    {
-        name: 'Ordenes de compra',
-        url: 'dashboard/manufactures',
-        icon: 'fas fa-briefcase',
-        children: [
-            // {
-            //     name: 'Todos',
-            //     url: 'dashboard/manufactures',
-            //     icon: 'fa-solid fa-border-all',
-            //     class: 'children-custom',
-            //     linkProps: {
-            //         routerLinkActiveOptions: { exact: true }
-            //     },
-            // },
-            // {
-            //     name: 'Producciones',
-            //     url: 'dashboard/manufactures/productions',
-            //     icon: 'fas fa-gears',
-            //     class: 'children-custom',
-            //     linkProps: {
-            //         routerLinkActiveOptions: { exact: false }
-            //     },
-            // },
-            {
-                name: 'Todos',
-                url: 'dashboard/manufactures/orders',
-                icon: 'fa-solid fa-boxes-stacked',
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: false }
-                },
-            },
-            // {
-            //     name: 'Recepciones',
-            //     url: 'dashboard/manufactures/receptions',
-            //     iconComponent: { name: 'cil-swap-horizontal' },
-            //     class: 'children-custom',
-            //     linkProps: {
-            //         routerLinkActiveOptions: { exact: false }
-            //     },
-            // },
-        ],
-        roles: ['master', 'ceo']
-    },
+    // {
+    //     name: 'Ordenes de compra',
+    //     url: 'dashboard/manufactures',
+    //     icon: 'fas fa-briefcase',
+    //     children: [
+    //         // {
+    //         //     name: 'Todos',
+    //         //     url: 'dashboard/manufactures',
+    //         //     icon: 'fa-solid fa-border-all',
+    //         //     class: 'children-custom',
+    //         //     linkProps: {
+    //         //         routerLinkActiveOptions: { exact: true }
+    //         //     },
+    //         // },
+    //         // {
+    //         //     name: 'Producciones',
+    //         //     url: 'dashboard/manufactures/productions',
+    //         //     icon: 'fas fa-gears',
+    //         //     class: 'children-custom',
+    //         //     linkProps: {
+    //         //         routerLinkActiveOptions: { exact: false }
+    //         //     },
+    //         // },
+    //         {
+    //             name: 'Todos',
+    //             url: 'dashboard/manufactures/orders',
+    //             icon: 'fa-solid fa-boxes-stacked',
+    //             class: 'children-custom',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: false }
+    //             },
+    //         },
+    //         // {
+    //         //     name: 'Recepciones',
+    //         //     url: 'dashboard/manufactures/receptions',
+    //         //     iconComponent: { name: 'cil-swap-horizontal' },
+    //         //     class: 'children-custom',
+    //         //     linkProps: {
+    //         //         routerLinkActiveOptions: { exact: false }
+    //         //     },
+    //         // },
+    //     ],
+    //     roles: ['master', 'ceo']
+    // },
     // {
     //     name: 'Compras',
     //     url: 'dashboard/purchases',

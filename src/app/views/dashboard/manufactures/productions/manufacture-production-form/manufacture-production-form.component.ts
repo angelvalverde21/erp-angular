@@ -49,7 +49,7 @@ export class ManufactureProductionFormComponent {
 
   @Input({ required: true }) form!: FormGroup;
   @Input() type: string = 'production';
-  @Input() suppliers: any[] = [];
+
 
   isInvalid(value: string): boolean {
     if (
@@ -74,29 +74,6 @@ export class ManufactureProductionFormComponent {
     this.modal.close();
   }
 
-  supplierReceiveCreate(supplier: any) {
-
-    console.log('listado de suppliers en el componente padre', this.suppliers);
-    console.log('nuevo supplier', supplier);
-
-    const newSupplier = {
-      id: supplier.id,
-      name: supplier.user.name,
-    };
-
-    console.log('new supplier', newSupplier);
-
-
-    this.suppliers = [newSupplier, ...this.suppliers];
-
-    this.form.get('supplier_id')?.setValue(supplier.id);
-    // this.form.get('supplier_id')?.setValue(supplier.id);
-
-    if (supplier) {
-      this.modal.close();
-    }
-
-  }
 
 }
 

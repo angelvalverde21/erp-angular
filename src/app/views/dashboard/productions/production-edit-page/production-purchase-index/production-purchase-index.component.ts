@@ -7,7 +7,6 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ProductionService } from '../../production.service';
 import { ProductionPurchaseService } from './production.purchase.service';
 import { JsonPipe } from '@angular/common';
-import { sum } from 'lodash-es';
 
 @Component({
   selector: 'app-production-purchase-index',

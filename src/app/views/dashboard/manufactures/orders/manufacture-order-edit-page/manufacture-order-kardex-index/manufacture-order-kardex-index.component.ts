@@ -158,6 +158,8 @@ export class ManufactureOrderKardexIndexComponent {
     this.kardexes = [...this.kardexes, ...event];
 
     this.kardex_summary = this._kardex.summary(this.kardexes);
+
+    this.modal.close();
   }
 
 
