@@ -118,8 +118,10 @@ export class ManufactureProductionPurchaseIndexComponent {
   receiveSumPurchases(sum_purchases: number) {
 
     // this.purchases = [purchase, ...this.purchases];
+    console.log(sum_purchases);
+    
 
-    console.log("receivePurchaseCreate on ProductionPurchaseIndexComponent");
+    // console.log("receivePurchaseCreate on ProductionPurchaseIndexComponent");
     
     this._manufacture.setSummary({
       sum_purchases: sum_purchases

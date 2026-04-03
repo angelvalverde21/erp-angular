@@ -55,7 +55,7 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
     config.keyboard = false;
   }
 
-  @Output() emitSumPurchaseIndex = new EventEmitter<number>();
+  // @Output() emitSumPurchaseIndex = new EventEmitter<number>();
   @Output() emitSumPurchases = new EventEmitter<number>();
 
   faEdit = faEdit;
@@ -85,7 +85,7 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
       return total + this.sum_purchase(purchase);
     }, 0);
 
-    this.emitSumPurchaseIndex.emit(this.sum_purchases);
+    this.emitSumPurchases.emit(this.sum_purchases);
 
     // return sum;
   }

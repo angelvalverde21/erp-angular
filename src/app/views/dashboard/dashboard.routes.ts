@@ -33,13 +33,13 @@ export const routes: Routes = [
       ),
   },
 
-  {
-    path: 'productions',
-    loadChildren: () =>
-      import('./productions/routes.production').then(
-        (m) => m.routes
-      ),
-  },
+  // {
+  //   path: 'productions',
+  //   loadChildren: () =>
+  //     import('./productions/routes.production').then(
+  //       (m) => m.routes
+  //     ),
+  // },
 
   {
     path: 'pettycashes',
