@@ -35,9 +35,9 @@
 
             @for (manufacture_variant of manufacture_variants; let i = $index; track manufacture_variant.id) {
 
-            <tr>
+            <!-- <tr>
                 <td colspan="6">{{ manufacture_variant | json }}</td>
-            </tr>    
+            </tr>     -->
 
             <tr app-manufacture-production-variant-index-row [manufacture_variant]="manufacture_variant"
                 (emitDeleteProductionVariantId)="receiveDeleteProductionVariantId($event)"

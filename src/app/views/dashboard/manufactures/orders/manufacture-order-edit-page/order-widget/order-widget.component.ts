@@ -1,36 +1,36 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { Router, RouterModule } from '@angular/router';
 import { faBarcode, faBagShopping, faCalculator, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
-import { BaseService } from '../../../../../base.service';
+import { PenPipe } from '@shared/pipes/pen.pipe';
+import { BaseService } from 'src/app/views/base.service';
 
 @Component({
-  selector: 'app-order-edit-head',
+  selector: 'app-order-widget',
   imports: [
     HeadPageComponent,
     ButtonLinkComponent,
     RouterModule,
     FontAwesomeModule,
-    CommonModule
+    CommonModule,
+    PenPipe
   ],
-  templateUrl: './order-edit-head.component.html',
-  styleUrl: './order-edit-head.component.scss'
+  templateUrl: './order-widget.component.html',
+  styleUrl: './order-widget.component.scss'
 })
-export class OrderEditHeadComponent {
-
+export class OrderWidgetComponent implements OnInit {
 
   faBarcode = faBarcode;
   faBagShopping = faBagShopping;
   faCalculator = faCalculator;
   faRightLeft = faRightLeft;
 
-  @Input() manufacture_id: number = 0;
-  @Input() summary: any;
-  @Input() kardex: any;
-  @Input() widget: any;
+  @Input() order_id: number = 0;
+  @Input() summary: any = null;
+
   widgets: any[] = [];
 
   store: string | null = '';
@@ -58,36 +58,51 @@ export class OrderEditHeadComponent {
 
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['summary']) {
+      this.widgetsInit();
+    }
+  }
+
   ngOnInit(): void {
 
+
     // http://localhost:4200/sorelle/dashboard/manufactures/productions/1/purchases
+
+    this.widgetsInit();
+  }
+
+
+
+  widgetsInit() {
 
     this.widgets = [
       {
         title: 'Costo',
         subtitle: 'Por unidad',
-        value: 'S/. 0.00',
+        value: (this.summary?.sum_variants > 0 ? (this.summary?.sum_purchases / this.summary?.sum_variants ? this.summary?.sum_purchases / this.summary?.sum_variants : 0) : 0),
         link: ['./'],
         exact: true,
-        icon: faBarcode
+        icon: faBarcode,
+        type: 'currency'
       },
       {
-        title: 'Orden de compra',
-        subtitle: 'Total',
-        value: this.summary?.sum_products ? this.summary?.sum_products : 0,
+        title: 'Inventario Inicial',
+        subtitle: `${this.summary?.count_variants} Variantes`,
+        value: this.summary?.sum_variants ? this.summary?.sum_variants : 0,
         link: ['./variants'],
-        icon: faBagShopping
+        icon: faCalculator,
+        type: 'units'
       },
       {
         title: 'Recepción',
-        subtitle: 'Total',
-        value: this.summary?.sum_reception ? this.summary?.sum_reception : 0,
+        subtitle: 'Recibidos',
+        value: this.summary?.sum_kardexes ? this.summary?.sum_kardexes : 0,
         link: ['./kardexes'],
-        icon: faRightLeft
+        icon: faRightLeft,
+        type: 'units'
       }
     ];
   }
-
-
 
 }

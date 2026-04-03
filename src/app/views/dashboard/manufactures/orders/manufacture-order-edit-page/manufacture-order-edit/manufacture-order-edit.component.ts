@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, effect, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { ButtonSaveComponent } from '@shared/components/buttons/button-save/button-save.component';
@@ -38,10 +38,23 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
     private _manufactureOrder: ManufactureOrderService,
     private _manufacture: ManufactureService,
     private _supplier: SupplierService,
-     private route: ActivatedRoute
+    private route: ActivatedRoute
   ) {
     this.route.paramMap.subscribe(params => {
       this.manufacture_id = Number(params.get('order_id'));
+
+    });
+
+    //Escuchar cambios en la orden de compra para actualizar el formulario
+    effect(() => {
+      const event = this._manufacture.manufactureSingnalEvent();
+      if (!event) return;
+      this.form.patchValue({
+        name: event.name,
+        supplier_id: event.supplier_id,
+        manufacture_start: event.manufacture_start.split(' ')[0],
+        manufacture_end: event.manufacture_end.split(' ')[0],
+      });
 
     });
   }
@@ -73,55 +86,31 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.formInit();
+    this.suppliersInit();
     console.log(this.manufacture_id);
-    
-    this.manufactureInit();
+
   }
 
-  manufactureInit() {
-
-    //primero iniciamos los suppliers
+  suppliersInit(){
 
     this.loading = true;
 
-    this._supplier.index().pipe(
-
-      takeUntil(this.destroy$),
-
-      switchMap((resp: any) => {
-
-        //Primero cargamos los suppliers para el select...
+    this._supplier.index().pipe(takeUntil(this.destroy$)).subscribe({
+    
+      next: (resp: any) => {
         console.log(resp.data);
         this.suppliers = resp.data;
         console.log(this.manufacture_id);
-        return this._manufacture.get(this.manufacture_id);
-
-      })
-
-    ).subscribe({
-
-      next: (resp: any) => {
-
-        //...luego cargamos la manufactura para llenar el formulario
-        console.log(resp);
-        this.manufacture = resp.data;
         this.loading = false;
-
-        this.form.patchValue({
-          name: this.manufacture.name,
-          supplier_id: this.manufacture.supplier_id,
-          manufacture_start: this.manufacture.manufacture_start.split(' ')[0],
-          manufacture_end: this.manufacture.manufacture_end.split(' ')[0],
-        });
-
       },
-
+    
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al traer los datos.', 'error');
+        Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
         console.error(error);
       },
-
+    
     });
+
   }
 
   update() {
@@ -153,7 +142,14 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.disabledButton = false;
         this.emitUpdateManufacture.emit(this.manufacture);
-        Swal.close();
+        Swal.fire({
+          icon: 'success',
+          title: 'Correcto',
+          text: 'Datos guardados correctamente',
+          confirmButtonText: 'OK',
+          showConfirmButton: true
+        })
+        
       },
 
       error: (error: any) => {
@@ -166,6 +162,6 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  suppliers: any[] = [];  
+  suppliers: any[] = [];
 
 }

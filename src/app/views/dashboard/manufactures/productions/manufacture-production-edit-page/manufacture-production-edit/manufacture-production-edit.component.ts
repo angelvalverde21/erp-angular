@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
@@ -49,6 +49,17 @@ export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(params => {
       this.manufacture_id = Number(params.get('production_id'));
     });
+
+    effect(() => {
+      const event = this._manufacture.manufactureSingnalEvent();
+      if (!event) return;
+      this.form.patchValue({
+        name: event.name,
+        manufacture_start: event.manufacture_start.split(' ')[0],
+        manufacture_end: event.manufacture_end.split(' ')[0],
+      });
+
+    });
   }
 
   ngOnInit(): void {
@@ -57,33 +68,8 @@ export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
 
     this.formInit();
 
-    this.manufactureInit();
+    // this.manufactureInit();
 
-  }
-
-  manufactureInit() {
-
-    this.loading = true;
-
-    this._manufacture.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        console.log(resp);
-        this.production = resp.data;
-        this.form.patchValue({
-          name: this.production.name,
-          manufacture_start: this.production.manufacture_start?.split(' ')[0],
-          manufacture_end: this.production.manufacture_end?.split(' ')[0],
-        });
-        this.loading = false;
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
-        console.error(error);
-      },
-
-    });
   }
 
   formInit() {
@@ -97,7 +83,7 @@ export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
   update() {
 
     console.log("click ok");
-    
+
     console.log(this.form.value);
 
     if (!this.form.valid) {
@@ -105,13 +91,32 @@ export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
       return;
     }
 
+    Swal.fire({
+      title: 'Espere...',
+      html: 'Guardando cambios...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    })
+    
     this.disabledButton = true;
 
-    this._manufactureProduction.update(this.production.id, this.form.value)
+    this._manufactureProduction.update(this.manufacture_id, this.form.value)
+
       .pipe(takeUntil(this.destroy$))
       .subscribe({
 
         next: (resp: any) => {
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Correcto',
+            text: 'Datos guardados correctamente',
+            confirmButtonText: 'OK',
+            showConfirmButton: true
+          })
+          
           console.log(resp);
           this.disabledButton = false;
         },

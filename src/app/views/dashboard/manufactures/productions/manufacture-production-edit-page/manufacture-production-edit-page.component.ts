@@ -32,7 +32,7 @@ import { ManufactureService } from '../../manufacture.service';
 export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy {
 
   loading: boolean = false;
-  production: any = null;
+  manufacture: any = null;
   manufacture_id: number = 0;
   purchases: any;
   variants: any;
@@ -40,7 +40,7 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
   // summary: any;--------------------------------------*
 
   modal: any;
-  production_variants: any;
+  manufacture_variants: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -94,13 +94,14 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
       next: (resp: any) => {
 
         console.log(resp);
-        this.production = resp.data;
+        this.manufacture = resp.data;
+        this._manufacture.setManufacture(this.manufacture);
 
         this.summary = {
-          sum_variants: resp.data.sum_variants,
-          count_variants: resp.data.count_variants,
-          sum_purchases: resp.data.sum_purchases,
-          sum_kardexes: resp.data.sum_kardexes
+          sum_variants: this.manufacture.sum_variants,
+          count_variants: this.manufacture.count_variants,
+          sum_purchases: this.manufacture.sum_purchases,
+          sum_kardexes: this.manufacture.sum_kardexes
         }
 
         // this.summary = {

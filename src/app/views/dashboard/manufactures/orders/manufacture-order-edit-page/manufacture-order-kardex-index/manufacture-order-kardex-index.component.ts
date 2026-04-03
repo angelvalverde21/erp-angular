@@ -17,6 +17,7 @@ import { ManufactureOrderService } from '../../order.service';
 import { ManufactureKardexService } from '../../../manufacture.kardex.service';
 import { ManufactureVariantService } from '../../../manufacture.variants.service';
 import { JsonPipe } from '@angular/common';
+import { ManufactureService } from '../../../manufacture.service';
 
 @Component({
   selector: 'app-manufacture-order-kardex-index',
@@ -45,6 +46,7 @@ export class ManufactureOrderKardexIndexComponent {
     private _manufactureKardex: ManufactureKardexService,
     private _manufactureVariant: ManufactureVariantService,
     private route: ActivatedRoute,
+    private _manufacture: ManufactureService,
     private _kardex: KardexService,
     config: NgbModalConfig,
     private modalService: NgbModal,
@@ -151,13 +153,21 @@ export class ManufactureOrderKardexIndexComponent {
 
     this.kardex_summary = kardex_summary;
 
+    this._manufacture.setSummary({
+      sum_kardexes: this.kardex_summary.reception
+    });
+
   }
 
   receiveKardexes(event: any) {
 
     this.kardexes = [...this.kardexes, ...event];
 
-    this.kardex_summary = this._kardex.summary(this.kardexes);
+    // this.kardex_summary = this._kardex.summary(this.kardexes);
+
+    // console.log(event);
+    // console.log(this.kardex_summary);
+    
 
     this.modal.close();
   }

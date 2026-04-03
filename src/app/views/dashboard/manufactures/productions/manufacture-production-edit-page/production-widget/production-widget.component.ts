@@ -28,7 +28,7 @@ export class ProductionWidgetComponent implements OnInit {
   faCalculator = faCalculator;
   faRightLeft = faRightLeft;
 
-  @Input() production_id: number = 0;
+  // @Input() production_id: number = 0;
   @Input() summary: any = null;
 
   widgets: any[] = [];

@@ -5,6 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { ManufactureVariantService } from '../../../manufacture.variants.service';
+import { ManufactureService } from '../../../manufacture.service';
 
 @Component({
   selector: 'app-manufacture-order-variant-index',
@@ -24,6 +25,7 @@ export class ManufactureOrderVariantIndexComponent implements OnInit, OnDestroy 
 
   constructor(
     private _manufactureVariantService: ManufactureVariantService,
+    private _manufacture: ManufactureService,
     private route: ActivatedRoute
   ) {
 
@@ -32,7 +34,7 @@ export class ManufactureOrderVariantIndexComponent implements OnInit, OnDestroy 
     // });
 
     this.route.parent?.paramMap.subscribe(params => {
-      this.manufacture_id = Number(params.get('order_id'));      
+      this.manufacture_id = Number(params.get('order_id'));
     });
 
   }
@@ -46,26 +48,27 @@ export class ManufactureOrderVariantIndexComponent implements OnInit, OnDestroy 
   }
 
 
-  kardexesInit(){
+  kardexesInit() {
 
     this.loading = true;
-        //seteamos el id de la orden de compra para que el servicio lo use en sus llamadas
+    //seteamos el id de la orden de compra para que el servicio lo use en sus llamadas
 
     this._manufactureVariantService.setManufactureId(this.manufacture_id || 0);
 
     this._manufactureVariantService.index().pipe(takeUntil(this.destroy$)).subscribe({
-    
+
       next: (resp: any) => {
         console.log(resp);
         this.manufacture_variants = resp.data;
+        this.sumQuantity();
         this.loading = false;
       },
-    
+
       error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
+        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         console.error(error);
       },
-    
+
     });
   }
 
@@ -79,12 +82,37 @@ export class ManufactureOrderVariantIndexComponent implements OnInit, OnDestroy 
 
   }
 
-  sum_products: number = 0;
 
-  receiveSumManufactureVariant(sum_products: number) {
+  sumQuantity(): void {
 
-    this.sum_products = sum_products;
+    this.sum_variants = this.manufacture_variants.reduce(
+      (acc: number, mv: any) => acc + Number(mv.quantity ?? 0),
+      0
+    );
 
+    // this.emitSumProductionVariant.emit(this.sum_products);
+
+    //Este valor se envia por signals
+    this._manufacture.setSummary({
+      sum_variants: this.sum_variants,
+      count_variants: this.manufacture_variants.length
+    });
+
+  }
+
+
+  sum_variants: number = 0;
+
+  receiveSumManufactureVariant(sum_variants: number) {
+
+    this.sum_variants = sum_variants;
+
+    console.log('sum_variants', this.sum_variants);
+
+    this._manufacture.setSummary({
+      sum_variants: this.sum_variants,
+      count_variants: this.manufacture_variants.length
+    });
     // this.widget.progress = this.widget.quantity_received / this.widget.quantity_total * 100;
   }
 

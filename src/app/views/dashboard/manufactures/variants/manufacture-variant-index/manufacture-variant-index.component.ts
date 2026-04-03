@@ -31,7 +31,7 @@ export class ManufactureVariantIndexComponent implements OnInit {
   faInbox = faInbox;
 
   @Input() manufacture_variants: any;
-  @Input() sum_products: number = 0;
+  @Input() sum_variants: number = 0;
   @Input() manufacture_id: number = 0;
   @Input() text_button: string = 'Producto';
 
@@ -55,12 +55,12 @@ export class ManufactureVariantIndexComponent implements OnInit {
 
   sumQuantity(): void {
 
-    this.sum_products = this.manufacture_variants.reduce(
+    this.sum_variants = this.manufacture_variants.reduce(
       (acc: number, mv: any) => acc + Number(mv.quantity ?? 0),
       0
     );
 
-    this.emitSumManufactureVariant.emit(this.sum_products);
+    this.emitSumManufactureVariant.emit(this.sum_variants);
 
   }
 

@@ -25,9 +25,14 @@ export class ManufactureService extends BaseCrudDashboardService {
 
   // estado reactivo
   summaryEvent = signal<any>(null);
+  manufactureSingnalEvent = signal<any>(null);
 
   setSummary(data: any) {
     this.summaryEvent.set(data);
+  }
+
+  setManufacture(data: any) {
+    this.manufactureSingnalEvent.set(data);
   }
 
 }
