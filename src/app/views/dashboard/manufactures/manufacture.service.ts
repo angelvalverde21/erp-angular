@@ -32,6 +32,8 @@ export class ManufactureService extends BaseCrudDashboardService {
   }
 
   setManufacture(data: any) {
+    console.log(data);
+    
     this.manufactureSingnalEvent.set(data);
   }
 

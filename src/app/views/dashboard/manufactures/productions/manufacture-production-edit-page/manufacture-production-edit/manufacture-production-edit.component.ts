@@ -50,13 +50,18 @@ export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
       this.manufacture_id = Number(params.get('production_id'));
     });
 
+    this.formInit();
+
     effect(() => {
+
       const event = this._manufacture.manufactureSingnalEvent();
+      console.log(event);
       if (!event) return;
+
       this.form.patchValue({
         name: event.name,
-        manufacture_start: event.manufacture_start.split(' ')[0],
-        manufacture_end: event.manufacture_end.split(' ')[0],
+        manufacture_start: event.manufacture_start?.split(' ')[0],
+        manufacture_end: event.manufacture_end?.split(' ')[0],
       });
 
     });
@@ -66,7 +71,7 @@ export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
 
     console.log(this.manufacture_id);
 
-    this.formInit();
+
 
     // this.manufactureInit();
 
@@ -99,7 +104,7 @@ export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
         Swal.showLoading();
       }
     })
-    
+
     this.disabledButton = true;
 
     this._manufactureProduction.update(this.manufacture_id, this.form.value)
@@ -116,7 +121,7 @@ export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
             confirmButtonText: 'OK',
             showConfirmButton: true
           })
-          
+
           console.log(resp);
           this.disabledButton = false;
         },

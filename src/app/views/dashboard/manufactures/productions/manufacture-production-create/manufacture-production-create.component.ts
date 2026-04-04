@@ -35,7 +35,6 @@ export class ManufactureProductionCreateComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private _manufactureProduction: ManufactureProductionService,
-    private _supplier: SupplierService
   ) {
 
   }
@@ -46,6 +45,8 @@ export class ManufactureProductionCreateComponent implements OnInit, OnDestroy {
 
     this.form = this.fb.group({
       name: ['', Validators.required], //Nombre del proyecto, no del producto
+      manufacture_start: [today, Validators.required],
+      manufacture_end: [today, Validators.required],
       // quantity_total: ['', Validators.required],
     });
   }
