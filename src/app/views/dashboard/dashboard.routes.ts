@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -7,6 +8,14 @@ export const routes: Routes = [
     data: {
       title: `Dashboard`
     }
+  },
+
+  {
+    path: 'inventories',
+    loadChildren: () =>
+      import('./inventories/routes.inventory').then(
+        (m) => m.routes
+      ),
   },
 
   {

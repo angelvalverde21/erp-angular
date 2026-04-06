@@ -6,36 +6,41 @@ export const navErp: CustomNavData[] = [
         name: 'Erp',
         roles: ['ceo', 'master']
     },
-    // {
-    //     name: 'Orders',
-    //     url: 'orders',
-    //     iconComponent: { name: 'cil-cash' },
-    //     children: [
-    //         { name: 'Orders', url: 'orders', icon: 'nav-icon-bullet' },
-    //         { name: 'Clientes', url: 'orders/create', icon: 'nav-icon-bullet' },
-    //         { name: 'Cotizaciones', url: 'orders/quotes', icon: 'nav-icon-bullet' }
-    //     ]
-    // },
-    // {
-    //     name: 'Products',
-    //     url: 'dashboard/products',
-    //     iconComponent: { name: 'cil-industry' },
-    //     children: [
-    //         { name: 'Products', url: 'dashboard/products', icon: 'nav-icon-bullet' },
-    //         { name: 'Categorias', url: 'dashboard/categories', icon: 'nav-icon-bullet' },
-    //         { name: 'Inventario', url: 'dashboard/inventories', icon: 'nav-icon-bullet' }
-    //     ]
-    // }
-    // {
-    //     name: 'Produccion',
-    //     url: 'dashboard/productions',
-    //     iconComponent: { name: 'cil-industry' },
-    //     children: [
-    //         { name: 'Ordenes de Produccion', url: 'dashboard/productions/orders', icon: 'nav-icon-bullet' },
-    //         { name: 'Ordenes de compra', url: 'dashboard/productions/purchase/orders', icon: 'nav-icon-bullet' },
-    //         { name: 'Proveedores', url: 'dashboard/productions/suppliers', icon: 'nav-icon-bullet' },
-    //     ]
-    // },
+    {
+        name: 'Inventario',
+        url: 'dashboard/inventories',
+        icon: 'fa-solid fa-boxes-stacked',
+        children: [
+            { 
+                name: 'Productos', 
+                url: 'dashboard/inventories', 
+                icon: 'nav-icon-bullet',
+                class: 'children-custom', 
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }, 
+            },
+            { 
+                name: 'Codigo de barras', 
+                url: 'dashboard/inventories/barcode', 
+                icon: 'fa-solid fa-barcode',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }, 
+            },
+            { 
+                name: 'Iniciar', 
+                url: 'dashboard/inventories/create', 
+                icon: 'nav-icon-bullet',
+                class: 'children-custom', 
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }, 
+            },
+        ],
+        roles: ['ceo', 'master']
+    },
     {
         name: 'Manufacturas',
         url: 'dashboard/manufactures',
