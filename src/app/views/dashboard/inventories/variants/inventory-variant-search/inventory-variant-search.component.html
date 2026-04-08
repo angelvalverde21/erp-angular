@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+﻿<form [formGroup]="form">
 
     <div class="py-3">
         <app-input-group [icon]="faMagnifyingGlass" text="">
@@ -12,10 +12,10 @@
     }@else{
 
     @if(variants?.length > 0){
-            <app-variant-index [variants]="variants" (variantArraySelected)="receiveSelectedVariants($event)"
-                (emitVariantsSelected)="receiveVariantsSelected($event)"></app-variant-index>
+            <app-inventory-variant-index [variants]="variants" (inventoryVariantArraySelected)="receiveSelectedInventoryVariants($event)"
+                (emitInventoryVariantsSelected)="receiveInventoryVariantsSelected($event)"></app-inventory-variant-index>
 
-            <!-- <app-variant-index-selected [products]="products"></app-variant-index-selected> -->
+            <!-- <app-inventory-variant-index-selected [products]="products"></app-inventory-variant-index-selected> -->
 
             <app-button [color]="'dark'" mb="3" [disabled]="buttonDisabled" (click)="addVariants()">Agregar
                 Variantes</app-button>

@@ -76,8 +76,8 @@ export class HeadTableComponent implements OnInit, OnDestroy {
 
     this.form = this.fb.group({
       search: ['', Validators.required],
-      start_date: [this.today],
-      end_date: [this.today],
+      start_date: [null],
+      end_date: [null],
     });
 
   }

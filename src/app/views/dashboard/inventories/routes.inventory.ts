@@ -16,8 +16,8 @@ export const routes: Routes = [
     }
   },
   {
-    path: 'barcode',
-    loadComponent: () => import( './inventory-barcode-page/inventory-barcode-page.component' ).then((m) => m.InventoryBarcodePageComponent),
+    path: 'out',
+    loadComponent: () => import( './inventory-out-page/inventory-out-page.component' ).then((m) => m.InventoryOutPageComponent),
     data: {
       title: 'Create',
     }

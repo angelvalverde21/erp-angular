@@ -42,6 +42,13 @@ export const routes: Routes = [
       ),
   },
 
+  {
+    path: 'batches',
+    loadChildren: () =>
+      import('./batches/routes.batch').then(
+        (m) => m.routes
+      ),
+  },
   // {
   //   path: 'productions',
   //   loadChildren: () =>

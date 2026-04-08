@@ -1,0 +1,24 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<app-head-page title="Lotes" subtitle="Para inventario">
+    <app-button-link [path]="['./create']">Agregar Lote</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+
+    <div class="card-header">
+        Listado de lotes
+    </div>
+
+    <div class="card-body p-0">
+        <app-batch-index [batches]="batches"></app-batch-index>
+    </div>
+    <div class="card-footer" style="border-top: 0;">
+
+    </div>
+
+
+</div>
+}

@@ -6,37 +6,72 @@ export const navErp: CustomNavData[] = [
         name: 'Erp',
         roles: ['ceo', 'master']
     },
+    // {
+    //     name: 'Lotes',
+    //     url: 'dashboard/batches',
+    //     icon: 'fa-solid fa-boxes-stacked',
+    //     children: [
+    //         {
+    //             name: 'Todos',
+    //             url: 'dashboard/batches',
+    //             icon: 'nav-icon-bullet',
+    //             class: 'children-custom',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             },
+    //         },
+    //         {
+    //             name: 'Crear',
+    //             url: 'dashboard/batches/create',
+    //             icon: 'nav-icon-bullet',
+    //             class: 'children-custom',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             },
+    //         },
+    //     ],
+    //     roles: ['ceo', 'master']
+    // },
     {
         name: 'Inventario',
         url: 'dashboard/inventories',
         icon: 'fa-solid fa-boxes-stacked',
         children: [
-            { 
-                name: 'Productos', 
-                url: 'dashboard/inventories', 
+            // {
+            //     name: 'Codigo de barras',
+            //     url: 'dashboard/inventories/barcode',
+            //     icon: 'fa-solid fa-barcode',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // },
+            {
+                name: 'Productos',
+                url: 'dashboard/inventories',
                 icon: 'nav-icon-bullet',
-                class: 'children-custom', 
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }, 
-            },
-            { 
-                name: 'Codigo de barras', 
-                url: 'dashboard/inventories/barcode', 
-                icon: 'fa-solid fa-barcode',
                 class: 'children-custom',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
-                }, 
+                },
             },
-            { 
-                name: 'Iniciar', 
-                url: 'dashboard/inventories/create', 
+            {
+                name: 'Ingreso',
+                url: 'dashboard/inventories/create',
                 icon: 'nav-icon-bullet',
-                class: 'children-custom', 
+                class: 'children-custom',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
-                }, 
+                },
+            },
+            {
+                name: 'Salida',
+                url: 'dashboard/inventories/out',
+                icon: 'nav-icon-bullet',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
             },
         ],
         roles: ['ceo', 'master']
