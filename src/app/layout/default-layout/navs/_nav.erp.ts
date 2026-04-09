@@ -259,6 +259,12 @@ export const navErp: CustomNavData[] = [
                     routerLinkActiveOptions: { exact: true }
                 }
             },
+            {
+                name: 'Ingresos', url: '/dashboard/pettycashes/income', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
         ],
         roles: ['ceo', 'master']
     },
