@@ -260,7 +260,7 @@ export const navErp: CustomNavData[] = [
                 }
             },
             {
-                name: 'Ingresos', url: '/dashboard/pettycashes/income', icon: 'nav-icon-bullet',
+                name: 'Ingresos en Efectivo', url: '/dashboard/pettycashes/income', icon: 'nav-icon-bullet',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
                 }

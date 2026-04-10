@@ -8,24 +8,21 @@
     </div>
 
     @if(loading){
-    <app-loading></app-loading>
+        <app-loading></app-loading>
     }@else{
 
     @if(variants?.length > 0){
+
             <app-inventory-variant-index [variants]="variants" (inventoryVariantArraySelected)="receiveSelectedInventoryVariants($event)"
                 (emitInventoryVariantsSelected)="receiveInventoryVariantsSelected($event)"></app-inventory-variant-index>
 
             <!-- <app-inventory-variant-index-selected [products]="products"></app-inventory-variant-index-selected> -->
 
-            <app-button [color]="'dark'" mb="3" [disabled]="buttonDisabled" (click)="addVariants()">Agregar
-                Variantes</app-button>
         }@else{
+
             <app-void-index [title]="'No se encontraron variantes'" [subtitle]="'Comienza la busqueda'"></app-void-index>
+
         }
     }
-
-
-
-
 
 </form>

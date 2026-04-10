@@ -8,7 +8,6 @@ import { ProductService } from '../../../products/product.service';
 import Swal from 'sweetalert2';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import { VoidIndexComponent } from '@shared/components/void-index/void-index.component';
-import { InventoryVariantIndexSelectedComponent } from '../inventory-variant-index-selected/inventory-variant-index-selected.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 
 @Component({
@@ -20,7 +19,6 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
     ButtonComponent,
     ReactiveFormsModule,
     VoidIndexComponent,
-    InventoryVariantIndexSelectedComponent,
     LoadingComponent
   ],
   templateUrl: './inventory-variant-search.component.html',

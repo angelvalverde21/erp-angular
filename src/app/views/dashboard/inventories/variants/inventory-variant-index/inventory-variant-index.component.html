@@ -1,63 +1,71 @@
 ﻿<form [formGroup]="form">
 
-    <table class="table table-bordered">
-  
-      <tbody formArrayName="variantsForm">
-  
-        @for (group of variantsForm.controls; let i = $index; track i) {
-  
-          @let variant = variants[i];
-  
-          <tr [formGroupName]="i">
-  
-            <th class="text-center">
-              {{ variant.id }}
-            </th>
-  
-            <td class="text-center">
-              <fa-icon [icon]="faBarcode" class="me-2"></fa-icon>
-              {{ variant.sku }}
-            </td>
-  
-            <td class="text-center">
-              {{ variant.stock }}
-            </td>
-  
-            <td class="text-center">
-              <div class="d-flex justify-content-between align-items-center">
-                <img
-                  [src]="variant?.product?.image?.url_thumbnail"
-                  width="50">
-                <span>
-                  {{ variant?.product?.name }}
-                </span>
-              </div>
-            </td>
-  
-            @for (option of variant.variant_option_values; track option.id) {
-              <td class="text-center">
-                {{ option.option_value.value }}
-              </td>
+    <table class="table table-bordered mb-3">
+
+        <tbody formArrayName="variantsForm">
+
+            @for (group of variantsForm.controls; let i = $index; track i) {
+
+            @let variant = variants[i];
+
+            <tr [formGroupName]="i">
+
+                <th class="text-center">
+                    {{ variant.id }}
+                </th>
+
+                <td class="text-center">
+                    <fa-icon [icon]="faBarcode" class="me-2"></fa-icon>
+                    {{ variant.sku }}
+                </td>
+
+                <td class="text-center">
+                    {{ variant.stock }}
+                </td>
+
+                <td class="text-center">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <img [src]="variant?.product?.image?.url_thumbnail" width="50">
+                        <span>
+                            {{ variant?.product?.name }}
+                        </span>
+                    </div>
+                </td>
+
+                @for (option of variant.variant_option_values; track option.id) {
+                <td class="text-center align-middle">
+                    {{ option.option_value.value }}
+                </td>
+                }
+
+                <td style="width: 90px;" class="align-middle">
+                    <input style="font-weight: 700; font-size: 1.25rem;" type="number" class="form-control text-center"
+                        [ngClass]="[
+                    (variantsForm.at(i).get('quantity')?.value > 0)
+                    ? 'border-success text-success'
+                    : 'text-secondary'
+                ]" placeholder="0" formControlName="quantity" />
+                </td>
+
+
+            </tr>
+
             }
-  
-            <td style="width: 90px;">
-              <input
-                type="number"
-                class="form-control text-center"
-                placeholder="0"
-                formControlName="quantity">
 
-            </td>
-  
-  
-          </tr>
-  
-        }
-  
-      </tbody>
-  
+            <tr>
+                <td colspan="5" class="text-end fw-bold">Total: </td>
+                <td class="text-center fw-bold">
+                    {{ sum }}
+                </td>
+            </tr>
+
+        </tbody>
+
     </table>
-  
-  </form>
 
-  {{ form.value | json }}
+    <app-button [color]="'dark'" mb="3" [disabled]="!form.valid" (click)="updateStock()">Registrar inventario ({{ sum }})</app-button>
+
+</form>
+
+{{ form.value | json }}
+{{ form.valid | json }}

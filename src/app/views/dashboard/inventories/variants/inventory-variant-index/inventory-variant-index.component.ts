@@ -1,8 +1,9 @@
-﻿import { JsonPipe } from '@angular/common';
+﻿import { CommonModule, JsonPipe } from '@angular/common';
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 
 @Component({
   selector: 'app-inventory-variant-index',
@@ -10,7 +11,9 @@ import { faBarcode, faCheck } from '@fortawesome/free-solid-svg-icons';
   imports: [
     ReactiveFormsModule,
     FontAwesomeModule,
-    JsonPipe
+    JsonPipe,
+    CommonModule,
+    ButtonComponent
   ],
   templateUrl: './inventory-variant-index.component.html'
 })
@@ -23,10 +26,20 @@ export class InventoryVariantIndexComponent implements OnInit {
 
   form!: FormGroup;
 
+  sum: number = 0;
+
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+
+    this.sumQuantities();
+
     this.buildForm();
+
+    this.form.valueChanges.subscribe(value => {
+      this.sum = value.variantsForm.reduce((acc: number, variant: any) => acc + (variant.quantity || 0), 0);
+    });
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -35,13 +48,19 @@ export class InventoryVariantIndexComponent implements OnInit {
     }
   }
 
+  sumQuantities() {
+    this.sum = this.variants.reduce((acc, variant) => acc + (variant.quantity || 0), 0);
+    console.log('Initial sum of quantities:', this.sum);
+
+  }
+
   private buildForm() {
     this.form = this.fb.group({
       variantsForm: this.fb.array(
         this.variants.map(v =>
           this.fb.group({
             id: [v.id],              // 👈 guardamos id dentro del form
-            quantity: ['']
+            quantity: ["", Validators.required]
           })
         )
       )
@@ -61,5 +80,13 @@ export class InventoryVariantIndexComponent implements OnInit {
   //   const group = this.variantsForm.at(index);
   //   console.log('Variant selected:', group.value);
   // }
+
+  updateStock(){
+    const selectedVariants = this.variantsForm.controls
+      .map((group, index) => ({ index, ...group.value }))
+      .filter(variant => variant.quantity > 0);
+
+    console.log('Selected variants to update:', selectedVariants);
+  }
 
 }
