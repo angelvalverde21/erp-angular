@@ -28,6 +28,16 @@ export class InventoryCreateComponent implements OnDestroy {
 
   receiveSearchSelectedVariants(event: any) {
 
+    Swal.fire({
+      title: 'Espere...',
+      html: 'Ingresando inventario',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    })
+    
+
     console.log('Variantes seleccionadas:', event);
 
     this.loading = true;
