@@ -55,7 +55,7 @@ export class ButtonPrintBarcodeComponent implements OnInit, OnDestroy {
         Swal.close();
 
         // Limpia la URL después de unos segundos
-        setTimeout(() => window.URL.revokeObjectURL(url), 10000);
+        setTimeout(() => window.URL.revokeObjectURL(url), 100000);
 
       },
 
