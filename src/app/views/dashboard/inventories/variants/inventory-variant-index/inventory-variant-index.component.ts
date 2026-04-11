@@ -1,5 +1,5 @@
 ﻿import { CommonModule, JsonPipe } from '@angular/common';
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -20,6 +20,7 @@ import { ButtonComponent } from '@shared/components/buttons/button/button.compon
 export class InventoryVariantIndexComponent implements OnInit {
 
   @Input() variants: any[] = [];
+  @Output() emitInventoryVariantsSelected = new EventEmitter<any>();
 
   faBarcode = faBarcode;
   faCheck = faCheck;
@@ -59,7 +60,7 @@ export class InventoryVariantIndexComponent implements OnInit {
       variantsForm: this.fb.array(
         this.variants.map(v =>
           this.fb.group({
-            id: [v.id],              // 👈 guardamos id dentro del form
+            variant_id: [v.id],              // 👈 guardamos id dentro del form
             quantity: ["", Validators.required]
           })
         )
@@ -87,6 +88,9 @@ export class InventoryVariantIndexComponent implements OnInit {
       .filter(variant => variant.quantity > 0);
 
     console.log('Selected variants to update:', selectedVariants);
+
+    this.emitInventoryVariantsSelected.emit(selectedVariants);
+
   }
 
 }

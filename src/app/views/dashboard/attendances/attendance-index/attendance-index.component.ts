@@ -26,6 +26,17 @@ export class AttendanceIndexComponent {
   faCheck = faCheck;
   faCircleXmark = faCircleXmark;
 
-  @Input() attendances: any[] = []; 
+  private _attendances: any[] = [];
 
+  @Input()
+  set attendances(value: any[]) {
+    this._attendances = [...(value || [])].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  }
+
+  get attendances(): any[] {
+    return this._attendances;
+  }
+  
 }

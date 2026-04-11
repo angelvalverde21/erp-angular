@@ -29,7 +29,7 @@ export abstract class BaseCrudDashboardService {
   // }
 
   index(page: number = 1, status?: string): Observable<any[]> {
-    
+
     console.log(this.baseUrl);
 
     return this.http.get<any[]>(this.baseUrl, {
@@ -145,6 +145,16 @@ export abstract class BaseCrudDashboardService {
     console.log("imprimiendo url de upload");
     console.log(url);
     return this.http.post(`${url}`, data);
+  }
+
+
+  print(data: any) {
+    const url = `${this.baseUrl}/print`;
+    console.log("imprimiendo url de print");
+    console.log(url);
+    return this.http.post(url, data, {
+      responseType: 'blob'
+    });
   }
 
 }

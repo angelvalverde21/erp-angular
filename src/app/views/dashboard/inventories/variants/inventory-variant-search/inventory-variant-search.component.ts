@@ -138,6 +138,8 @@ export class InventoryVariantSearchComponent implements OnInit {
     // this.emitInventoryVariantsSelected.emit(inventoryVariantsSelected);
     console.log("Received variants selected:", inventoryVariantsSelected);
     this.inventoryVariantsSelected = inventoryVariantsSelected;
+    this.emitInventoryVariantsSelected.emit(inventoryVariantsSelected);
+
   }
 
 }

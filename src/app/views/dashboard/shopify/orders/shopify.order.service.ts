@@ -21,7 +21,6 @@ export class ShopifyOrderService extends BaseCrudDashboardService {
 
     return this.http.get(url, {
       responseType: 'blob', // Importante para descargar el archivo como blob
-
     });
   }
 

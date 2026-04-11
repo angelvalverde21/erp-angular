@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { ProductService } from '../product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 // import { UploadDropzoneComponent } from '@shared/upload-dropzone/upload-dropzone.component';
-import { faCircleCheck, faPalette, faPenToSquare, faPlus, faRulerCombined, faRulerVertical } from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faPalette, faPenToSquare, faPlus, faRulerCombined, faRulerVertical, faBarcode } from '@fortawesome/free-solid-svg-icons';
 import { ProductEditComponent } from '../product-edit/product-edit.component';
 import { Product } from '../../../../interfaces/product.interface';
 import { Resp } from '../../../../interfaces/response.interface';
@@ -31,6 +32,7 @@ import { OptionIndexComponent } from '../options/option-index/option-index.compo
 import { OptionValueCreateComponent } from '../options/OptionValues/option-value-create/option-value-create.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { VariantIndexComponent } from '../variants/variant-index/variant-index.component';
+import { BarcodeIndexComponent } from '../../barcodes/barcode-index/barcode-index.component';
 
 @Component({
   selector: 'app-product-edit-page',
@@ -52,10 +54,12 @@ import { VariantIndexComponent } from '../variants/variant-index/variant-index.c
     OptionIndexComponent,
     OptionValueCreateComponent,
     NgbAccordionModule,
-    VariantIndexComponent
+    VariantIndexComponent,
+    BarcodeIndexComponent
   ],
   templateUrl: './product-edit-page.component.html',
-  styleUrl: './product-edit-page.component.scss'
+  styleUrl: './product-edit-page.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 
 export class ProductEditPageComponent implements OnInit, OnDestroy {
@@ -67,14 +71,20 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
   faPenToSquare = faPenToSquare;
   faPalette = faPalette;
   faRulerCombined = faRulerCombined;
-  
+  faBarcode = faBarcode;
+
   constructor(
     private _product: ProductService,
     private route: ActivatedRoute,
     private router: Router,
     private _store: StoreService,
-    private _base: BaseService
+    private _base: BaseService,
+    config: NgbModalConfig,
+    private modalService: NgbModal,
   ) {
+
+    config.backdrop = 'static';
+    config.keyboard = false;
 
     this.route.params.subscribe(params => {
       this.product_id = params['product_id'];
@@ -205,4 +215,16 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  modal: any;
+
+  closeModal() {
+    this.modal.close();
+  }
+
+  openVerticallyCentered(content: TemplateRef<any>) {
+    this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
+  }
+
+
 }
+
