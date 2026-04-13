@@ -14,7 +14,7 @@ export class HeadPageComponent {
   faFileExport = faFileExport;
   
   @Input() title: string = ""; 
-  @Input() subtitle: string = "Gestión de la información"; 
+  @Input() subtitle: string = ""; 
   @Input() icon = faTag;
   @Input() export: boolean = true;
 
