@@ -2,9 +2,11 @@
 <app-loading></app-loading>
 }@else{
 
-<app-head-page title="Editar Produccion">
+<app-head-page title="Editar">
     <app-button-link [color]="'primary'" [path]="['../create']">+ Produccion</app-button-link>
 </app-head-page>
+
+<div class="alert alert-info">{{ manufacture?.name }}</div>
 
 <app-production-widget [summary]="summary"></app-production-widget>
 

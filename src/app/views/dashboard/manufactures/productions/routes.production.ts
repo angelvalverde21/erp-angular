@@ -5,7 +5,7 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./manufacture-production-index-page/manufacture-production-index-page.component').then((m) => m.ManufactureProductionIndexPageComponent),
     data: {
-      title: 'Todos',
+      title: 'Mostrando todas las producciones',
       name: 'dashboard.production.index', // 👈 nombre único
     }
   },
@@ -13,7 +13,7 @@ export const routes: Routes = [
     path: 'create',
     loadComponent: () => import('./manufacture-production-create-page/manufacture-production-create-page.component').then((m) => m.ManufactureProductionCreatePageComponent),
     data: {
-      title: 'Create',
+      title: 'Crear Producción',
       name: 'dashboard.production.create', // 👈 nombre único
     }
   },
@@ -37,28 +37,28 @@ export const routes: Routes = [
         path: '',
         loadComponent: () =>
           import('./manufacture-production-edit-page/manufacture-production-edit/manufacture-production-edit.component').then(m => m.ManufactureProductionEditComponent),
-          data: { title: 'Producciones/calendar' }
+          data: { title: 'Produccion en curso' }
       },
       {
         path: 'purchases',
         loadComponent: () =>
           import('./manufacture-production-edit-page/manufacture-production-purchase-index/manufacture-production-purchase-index.component')
             .then(m => m.ManufactureProductionPurchaseIndexComponent),
-        data: { title: 'Producciones/Compras' }
+        data: { title: 'Produccion/Compras' }
       },
       {
         path: 'variants',
         loadComponent: () =>
           import('./manufacture-production-edit-page/manufacture-production-variant-index/manufacture-production-variant-index.component')
             .then(m => m.ManufactureProductionVariantIndexComponent),
-        data: { title: 'Producciones/Variantes' }
+        data: { title: 'Produccion/Variantes' }
       },
       {
         path: 'kardexes',
         loadComponent: () =>
           import('./manufacture-production-edit-page/manufacture-production-kardex-index/manufacture-production-kardex-index.component')
             .then(m => m.ManufactureProductionKardexIndexComponent),
-        data: { title: 'Producciones/Kardexes' }
+        data: { title: 'Produccion/Kardexes' }
       }
 
     ]
