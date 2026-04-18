@@ -81,15 +81,15 @@ export const navErp: CustomNavData[] = [
         url: 'dashboard/manufactures',
         icon: 'fa-solid fa-box-archive',
         children: [
-            {
-                name: 'Todos',
-                url: 'dashboard/manufactures',
-                icon: 'fa-solid fa-border-all',
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                },
-            },
+            // {
+            //     name: 'Todos',
+            //     url: 'dashboard/manufactures',
+            //     icon: 'fa-solid fa-border-all',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // },
             {
                 name: 'Producciones',
                 url: 'dashboard/manufactures/productions',

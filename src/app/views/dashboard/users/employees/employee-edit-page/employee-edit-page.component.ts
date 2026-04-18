@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { EmployeeEditComponent } from '../employee-edit/employee-edit.component';
+import { EmployeeEditComponent } from './employee-edit/employee-edit.component';
 import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
 import { HeadPageComponent } from "@shared/components/head-page/head-page.component";
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { EmployeeService } from '../employee.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { RoleService } from '../../../roles/role.service';
 import { HeadTableComponent } from '@shared/components/head-table/head-table.component';
@@ -19,6 +19,7 @@ import { PenPipe } from '@shared/pipes/pen.pipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { AttendanceIndexComponent } from '../../../attendances/attendance-index/attendance-index.component';
+import { EmployeeWidgetComponent } from './employee-widget/employee-widget.component';
 
 @Component({
   selector: 'app-employee-edit-page',
@@ -35,7 +36,9 @@ import { AttendanceIndexComponent } from '../../../attendances/attendance-index/
     PenPipe,
     FontAwesomeModule,
     CommonModule,
-    AttendanceIndexComponent
+    AttendanceIndexComponent,
+    RouterModule,
+    EmployeeWidgetComponent
   ],
   templateUrl: './employee-edit-page.component.html',
   styleUrl: './employee-edit-page.component.scss',
@@ -48,6 +51,10 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   employee_id: number = 0
   employee: any;
+
+  summary = {
+    sum_payments: 0
+  };
 
   faCalculator = faCalculator;
   faChartLine = faChartLine;
@@ -66,6 +73,7 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
 
     config.backdrop = 'static';
     config.keyboard = false;
+    
   }
 
   modal: any;
@@ -80,6 +88,7 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
   orders: any[] = [];
 
   loadingOrders: boolean = false;
+  
 
   employeeInit() {
 
@@ -90,7 +99,8 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
       next: (resp: any) => {
         this.employee = resp.data;
         console.log(this.employee);
-        
+        this._employee.set(this.employee);
+        this.summary.sum_payments = this.employee.balance;
         this.is_sales = this.employee.user.roles.includes('sales');
         this.loading = false
       },

@@ -1,33 +1,35 @@
 <div class="bg-white py-3 d-flex justify-content-between align-items-center">
-    <span class="ms-3"><fa-icon [icon]="faMoneyBill1" class="me-2"></fa-icon> Transacciones</span>
-    <app-button-add (click)="openVerticallyCentered(content)" class="me-3">Agregar</app-button-add>
+    <span><fa-icon [icon]="faMoneyBill1" class="me-2"></fa-icon> Transacciones</span>
+    <app-button-add (click)="openVerticallyCentered(content)"></app-button-add>
 </div>
 
 <div class="table-responsive">
-    <table class="table table-striped table-bordered mb-0 align-middle">
-        <thead>
+
+    <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
             <tr>
                 <th class="text-center" scope="col">Codigo</th>
                 <th class="text-center" scope="col">Voucher</th>
-                <th class="text-center" scope="col">Monto</th>
                 <th class="text-center" scope="col">Metodo</th>
-                <th class="text-center" scope="col">Status</th>
+                <th class="text-center" scope="col">Tipo</th>
                 <th class="text-center" scope="col">Fecha</th>
                 <th class="text-center" scope="col"></th>
+                <th class="text-center" scope="col">Monto</th>
                 <th class="text-center" scope="col"></th>
             </tr>
         </thead>
         <tbody>
 
             @for (payment of payments; track payment.id) {
-            <tr app-payment-index-row [payment]="payment" [paymentable_type]="paymentable_type"
+            <tr app-payment-index-row [payment]="payment" [paymentable_type]="paymentable_type" [ngClass]="(payment.direction === 'in' ? 'bg-green' : '')"
                 [paymentable_id]="paymentable_id" (emitRemovePayment)="receiveRemovePayment($event)"></tr>
             }
 
             <tr>
+                <td colspan="4"></td>
+                <td class="text-end">Total</td>
+                <td class="text-center">{{ sum_payments }}</td>
                 <td colspan="2"></td>
-                <td class="text-center">Total</td>
-                <td colspan="5"></td>
             </tr>
 
         </tbody>
@@ -45,3 +47,4 @@
             (emitCreatePayment)="receiveCreatePayment($event)"></app-payment-create>
     </div>
 </ng-template>
+

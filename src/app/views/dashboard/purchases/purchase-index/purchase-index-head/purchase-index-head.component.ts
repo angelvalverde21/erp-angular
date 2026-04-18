@@ -70,8 +70,9 @@ export class PurchaseIndexHeadComponent implements OnInit{
 
   ngOnInit(): void {
     
-    this.payments = this.purchase?.payments;
+    this.payments = this.purchase?.payments ?? [];
     console.log(this.payments);
+
   }
   // openVerticallyCentered(content: TemplateRef<any>) {
   //   this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
@@ -149,4 +150,7 @@ export class PurchaseIndexHeadComponent implements OnInit{
     this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
   }
 
+  eliminar(purchase_id: number){
+    this.removePurchase(purchase_id);
+  }
 }

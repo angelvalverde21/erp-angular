@@ -4,6 +4,10 @@
 
 <app-order-widget [summary]="summary"></app-order-widget>
 
+<div class="alert alert-info mb-3" role="alert">
+    Entrega: {{ manufacture?.manufacture_end | dateToString }}
+</div>
+
 <div class="card">
 
     <div class="card-body">

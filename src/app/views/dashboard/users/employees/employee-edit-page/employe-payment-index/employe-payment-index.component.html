@@ -1,0 +1,7 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-payment-index [payments]="payments" [paymentable_id]="employee_id" [paymentable_type]="'employee'"></app-payment-index>
+
+}

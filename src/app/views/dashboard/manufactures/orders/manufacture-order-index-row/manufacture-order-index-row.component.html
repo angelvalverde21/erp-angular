@@ -27,7 +27,6 @@
 
 <!-- <td class="text-center" style="width: 75px;">{{ manufacture.sum_products?? 0 }}</td> -->
 <td>
-
     <div class="date-main">{{ manufacture.name }}</div>
     <div class="date-sub">{{ manufacture?.user?.name }}</div>
 </td>
@@ -53,25 +52,28 @@
     {{ manufacture?.count_variants ?? 0 }}
 </td>
 
-<td>
+<!-- <td>
     <ngb-progressbar [showValue]="true" [striped]="true" type="success" [value]="getProgress(manufacture)"/>
-</td>
+</td> -->
 
 <td class="text-center">
     <h6>{{ manufacture?.sum_purchases ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
 </td>
-<td class="text-center">
+
+<!-- <td class="text-center">
     <h6 class="mb-0">
         <span class="badge bg-success px-3 py-1">
             <i class="fa-solid fa-circle-check me-2"></i>Completado
         </span>
     </h6>
-</td>
+</td> -->
+
 <td class="text-center">
     <div class="date-main">{{ manufacture.created_at | DateShopify }}</div>
-    <div class="date-sub">Act: {{ manufacture.updated_at | DateShopify }}</div>
+    <!-- <div class="date-sub">Act: {{ manufacture.updated_at | DateShopify }}</div> -->
 
 </td>
+
 <td class="text-center" style="width: 50px;">
     <div class="d-flex align-items-center gap-3 justify-content-center">
         <div ngbDropdown class="d-inline-block">

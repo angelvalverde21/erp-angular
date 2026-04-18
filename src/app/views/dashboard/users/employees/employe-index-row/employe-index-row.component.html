@@ -1,1 +1,40 @@
-<p>employe-index-row works!</p>
+<!-- <tr (click)="getEmployeeId(employee.id)"> -->
+
+<td class="text-center">{{ employee.id }}</td>
+<td>{{ employee.user.name }}</td>
+<!-- <td>{{ user.category.name }}</td> -->
+<td>{{ employee.user.document_number }}</td>
+<td>{{ employee.salary }}</td>
+<td>
+    @if(employee.user.status){
+    <span class="badge text-bg-secondary text-white">Activo</span>
+    }@else{
+    <span class="badge text-bg-danger text-white">Bloqueado</span>
+    }
+</td>
+<td>
+
+    @for (rol of employee.user.roles; track rol.id) {
+    <span class="badge text-bg-success text-white me-1">{{ rol.title }}</span>
+    }
+
+</td>
+<td class="text-center">{{ (employee?.comission ?? 0) / 100 | percent }}</td>
+<td class="text-center">{{ employee?.created_at | DateShopify }}</td>
+<td class="text-center">
+    <div class="controls d-flex justify-content-center align-items-center">
+        <!-- <app-button-edit></app-button-edit> -->
+        <!-- <app-button [icon]="faTrash" separation="0" color="outline-dark"></app-button> -->
+        <div ngbDropdown class="d-inline-block">
+            <app-button-edit id="dropdownBasic1" ngbDropdownToggle></app-button-edit>
+            <!-- <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
+                <fa-icon [icon]="faEllipsis"></fa-icon>
+            </button> -->
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button ngbDropdownItem [routerLink]="['/', store, 'dashboard' , 'users', 'employees', employee.id]"><fa-icon [icon]="faUser" class="me-2"></fa-icon> Detalles</button>
+                <button ngbDropdownItem [routerLink]="['/', store, 'dashboard' , 'users', 'employees', employee.id, 'attendances']"><fa-icon [icon]="faIdBadge" class="me-2"></fa-icon> Asistencias</button>
+                <button ngbDropdownItem [routerLink]="['/', store, 'dashboard' , 'users', 'employees', employee.id, 'payments']"><fa-icon [icon]="faSackDollar" class="me-2"></fa-icon> Gastos</button>
+            </div>
+        </div>
+    </div>
+</td> 

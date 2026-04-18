@@ -1,6 +1,7 @@
 @if(loading){
 <app-loading></app-loading>
 }@else{
+
 <app-manufacture-variant-index [manufacture_id]="manufacture_id"
     (emitSumManufactureVariant)="receiveSumManufactureVariant($event)" [sum_variants]="sum_variants"
     [manufacture_variants]="manufacture_variants"></app-manufacture-variant-index>

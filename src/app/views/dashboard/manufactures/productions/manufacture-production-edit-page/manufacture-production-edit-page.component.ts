@@ -52,6 +52,8 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
       this.manufacture_id = Number(params['production_id']);
     });
 
+
+    //Escuchar cambios en el resumen de compras y actualizar el widget de resumen en consecuencia
     effect(() => {
 
       const event = this._manufacture.summaryEvent();

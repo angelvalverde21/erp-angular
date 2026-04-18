@@ -32,9 +32,9 @@ export class PettyCashCreateComponent {
   ngOnInit(): void {
 
     this.form = this.fb.group({
-      amount_assigned: [null, [Validators.required]],
+      // amount_assigned: [null, [Validators.required]],
       employee_id: [null, [Validators.required]],
-      gateway_id: [null, [Validators.required]],
+      // gateway_id: [null, [Validators.required]],
       // other form controls
     });
 

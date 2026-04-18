@@ -4,6 +4,7 @@
 
 }@else{
 
+
 <app-head-page title="Editar Empleado" [export]="false">
     @if(is_sales){
     <app-button (click)="openVerticallyCentered(content)" [icon]="faChartLine" color="success" colortext="white"
@@ -12,26 +13,13 @@
     <app-button-back></app-button-back>
 </app-head-page>
 
-<div class="card mb-3">
+<app-employee-widget [summary]="summary"></app-employee-widget>
 
-    <!-- {{ employee | json }} -->
-
-    <div class="card-body">
-        <app-employee-edit [employee]="employee" [roles]="roles"></app-employee-edit>
-    </div>
-
-</div>
 
 <div class="card">
 
-    <div class="card-header py-3 bg-secondary text-white">
-        Registro de asistencias: {{ employee.user.name | uppercase }}
-    </div>
-
     <div class="card-body">
-
-        <app-attendance-index [attendances]="employee.attendances"></app-attendance-index>
-
+        <router-outlet></router-outlet>
     </div>
 
 </div>

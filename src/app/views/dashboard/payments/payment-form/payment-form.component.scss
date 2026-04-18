@@ -1,0 +1,48 @@
+.input-big {
+  font-size: 2rem !important;
+  //   border: none !important;
+  box-shadow: none !important; /* 🔥 Bootstrap usa esto para el borde visual */
+  outline: none; /* evita borde al hacer focus */
+  font-weight: bold;
+  color: #757575;
+  //   padding: 0.5rem 0 !important; /* espacio vertical, sin horizontal */
+}
+
+/* Placeholder */
+.input-big::placeholder {
+  font-size: 2rem !important;
+
+  opacity: 0.6; /* opcional para que se vea más suave */
+}
+
+.input-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.prefix {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  color: #757575;
+  pointer-events: none;
+}
+
+.input-wrapper input {
+  padding-left: 55px; /* 👈 espacio justo para el S/. */
+}
+
+/* opcional: sin borde */
+.no-border {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+.form-select-sm {
+    padding-top: 0.42rem !important;
+    padding-bottom: 0.40rem !important;
+}

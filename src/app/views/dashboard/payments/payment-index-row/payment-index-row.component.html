@@ -1,9 +1,10 @@
 <td class="text-center">#{{ payment.id }}</td>
 <td class="text-center"><img [src]="payment?.images[0]?.url_thumbnail" alt="" height="50px"></td>
-<td class="text-center">{{ payment.amount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+
 <td class="text-center">{{ payment?.gateway?.name }}</td>
-<td class="text-center">{{ payment.status }}</td>
+<td class="text-center">{{ (payment.direction === 'in' ? 'Ingreso' : 'Salida') }}</td>
 <td class="text-center">{{ payment.date | DateShopify }}</td>
+<td class="text-center">{{ payment.amount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
 <td style="width: 50px;">
   <app-button (click)="openVerticallyCentered(content)" [icon]="faEdit" color="outline-dark" [me]="false"></app-button>
 </td>
@@ -11,8 +12,7 @@
   @if(removeLoading){
   <app-loading></app-loading>
   }@else{
-  <app-button [me]="false" [icon]="faTrash" colortext="white"
-    (click)="removePayment(payment.id)" color="danger">
+  <app-button [me]="false" [icon]="faTrash" colortext="white" (click)="removePayment(payment.id)" color="danger">
   </app-button>
   }
 </td>

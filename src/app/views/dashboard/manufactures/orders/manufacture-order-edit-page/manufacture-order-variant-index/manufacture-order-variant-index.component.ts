@@ -11,7 +11,8 @@ import { ManufactureService } from '../../../manufacture.service';
   selector: 'app-manufacture-order-variant-index',
   imports: [
     ManufactureVariantIndexComponent,
-    LoadingComponent
+    LoadingComponent,
+
   ],
   templateUrl: './manufacture-order-variant-index.component.html',
   styleUrl: './manufacture-order-variant-index.component.scss'

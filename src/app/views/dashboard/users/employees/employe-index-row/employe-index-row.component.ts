@@ -1,11 +1,45 @@
-import { Component } from '@angular/core';
+import { PercentPipe } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { RouterLink, RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faIdBadge, faSackDollar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { BaseService } from 'src/app/views/base.service';
+import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/button-edit/button-edit.component';
+import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
+import { StoreService } from 'src/app/views/stores/store.service';
 
 @Component({
-  selector: 'app-employe-index-row',
-  imports: [],
+  selector: 'tr[app-employe-index-row]',
+  imports: [
+    PercentPipe,
+    DateShopifyPipe,
+    NgbDropdownModule,
+    ButtonEditComponent,
+    FontAwesomeModule,
+    RouterModule
+  ],
   templateUrl: './employe-index-row.component.html',
   styleUrl: './employe-index-row.component.scss'
 })
-export class EmployeIndexRowComponent {
+export class EmployeIndexRowComponent implements OnInit{
+
+  faIdBadge = faIdBadge;
+  faSackDollar = faSackDollar;
+  faUser = faUser;
+
+  @Input() employee: any = {};
+
+  store: string = '';
+
+  constructor(
+    private _base: BaseService
+  ){
+
+    // console.log(this.store);
+    
+  }
+  ngOnInit(): void {
+    this.store = this._base.storeName || '';  }
 
 }

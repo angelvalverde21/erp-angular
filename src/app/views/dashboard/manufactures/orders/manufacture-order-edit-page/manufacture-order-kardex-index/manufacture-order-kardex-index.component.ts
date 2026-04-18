@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { KardexIndexComponent } from '@dashboard/kardex/kardex-index/kardex-index.component';
 import Swal from 'sweetalert2';
@@ -13,7 +13,6 @@ import { KardexRegisterOutComponent } from '@dashboard/kardex/kardex-register-ou
 import { KardexRegisterReInComponent } from '@dashboard/kardex/kardex-register-re-in/kardex-register-re-in.component';
 import { ButtonTrashComponent } from '@shared/components/buttons/button-trash/button-trash.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { ManufactureOrderService } from '../../order.service';
 import { ManufactureKardexService } from '../../../manufacture.kardex.service';
 import { ManufactureVariantService } from '../../../manufacture.variants.service';
 import { JsonPipe } from '@angular/common';
@@ -30,7 +29,7 @@ import { ManufactureService } from '../../../manufacture.service';
     KardexRegisterOutComponent,
     ButtonTrashComponent,
     LoadingComponent,
-    JsonPipe
+    JsonPipe,
   ],
   templateUrl: './manufacture-order-kardex-index.component.html',
   styleUrl: './manufacture-order-kardex-index.component.scss'

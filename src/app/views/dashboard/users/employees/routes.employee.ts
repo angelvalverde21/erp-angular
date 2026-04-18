@@ -23,6 +23,28 @@ export const routes: Routes = [
     data: {
       title: 'Editar',
       name: 'dashboard.user.edit', // 👈 nombre único
-    }
+    },
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./employee-edit-page/employee-edit/employee-edit.component').then(m => m.EmployeeEditComponent),
+        data: { title: 'Informacion de colaborador' }
+      },
+      {
+        path: 'attendances',
+        loadComponent: () =>
+          import('./employee-edit-page/employe-attendance-index/employe-attendance-index.component').then(m => m.EmployeAttendanceIndexComponent),
+        data: { title: 'Informacion de colaborador' }
+      },
+      {
+        path: 'payments',
+        loadComponent: () =>
+          import('./employee-edit-page/employe-payment-index/employe-payment-index.component').then(m => m.EmployePaymentIndexComponent),
+        data: { title: 'Informacion de colaborador' }
+      },
+    ]
   },
+
+
 ];

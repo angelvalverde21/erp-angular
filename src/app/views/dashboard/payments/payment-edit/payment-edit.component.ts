@@ -7,6 +7,9 @@ import { PaymentService } from '../payment.service';
 import Swal from 'sweetalert2';
 import { JsonPipe } from '@angular/common';
 import { ImageIndexComponent } from '../../images/image-index/image-index.component';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faReceipt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-payment-edit',
@@ -14,7 +17,9 @@ import { ImageIndexComponent } from '../../images/image-index/image-index.compon
     PaymentFormComponent,
     ButtonSaveComponent,
     JsonPipe,
-    ImageIndexComponent
+    ImageIndexComponent,
+    NgbAccordionModule,
+    FontAwesomeModule
   ],
   templateUrl: './payment-edit.component.html',
   styleUrl: './payment-edit.component.scss'
@@ -35,6 +40,8 @@ export class PaymentEditComponent {
 
   }
 
+  faReceipt = faReceipt;
+
   ngOnInit(): void {
     this.formInit();
 
@@ -48,6 +55,7 @@ export class PaymentEditComponent {
       gateway_id: [null, [Validators.required]],
       date: ['', [Validators.required]],
       direction: ['', [Validators.required]],
+      comment: [''],
       images: [[]],
       paymentable_type: [this.paymentable_type, [Validators.required]],
       paymentable_id: [this.paymentable_id, [Validators.required]],

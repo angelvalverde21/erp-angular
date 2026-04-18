@@ -53,8 +53,8 @@
                     </thead>
                     <tbody>
                         @for (item of purchase.items; track item.id) {
-                        <tr>
-                            <td class="text-center">{{ item.quantity }}</td>
+                        <tr class="align-middle">
+                            <td class="text-center py-3">{{ item.quantity }}</td>
                             <td class="text-center text-primary">{{ item.unit?.name }}</td>
                             <td>{{ item.name }}</td>
                             <td class="text-center">{{ item.price }}</td>
@@ -64,8 +64,8 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4" class="text-end text-muted fw-normal">Subtotal</td>
-                            <td class="text-center">{{ sum_purchase(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+                            <td colspan="4" class="text-end text-muted fw-normal py-3">Subtotal</td>
+                            <td class="text-center py-3">{{ sum_purchase(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
                         </tr>
                     </tfoot>
                 </table>

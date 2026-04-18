@@ -91,24 +91,24 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
 
   }
 
-  suppliersInit(){
+  suppliersInit() {
 
     this.loading = true;
 
     this._supplier.index().pipe(takeUntil(this.destroy$)).subscribe({
-    
+
       next: (resp: any) => {
         console.log(resp.data);
         this.suppliers = resp.data;
         console.log(this.manufacture_id);
         this.loading = false;
       },
-    
+
       error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
+        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         console.error(error);
       },
-    
+
     });
 
   }
@@ -149,7 +149,7 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
           confirmButtonText: 'OK',
           showConfirmButton: true
         })
-        
+
       },
 
       error: (error: any) => {

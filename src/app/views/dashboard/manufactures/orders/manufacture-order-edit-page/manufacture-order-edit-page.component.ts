@@ -8,13 +8,19 @@ import { OrderWidgetComponent } from './order-widget/order-widget.component';
 import { SupplierService } from '../../../users/suppliers/supplier.service';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
+import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
+import { CommonModule } from '@angular/common';
+import { DateToStringPipe } from 'src/app/views/shared/pipes/date-to-string.pipe';
 
 @Component({
   selector: 'app-manufacture-order-edit-page',
   imports: [
     LoadingComponent,
     RouterModule,
-    OrderWidgetComponent
+    OrderWidgetComponent,
+    DateShopifyPipe,
+    CommonModule,
+    DateToStringPipe
   ],
   templateUrl: './manufacture-order-edit-page.component.html',
   styleUrl: './manufacture-order-edit-page.component.scss'
@@ -111,6 +117,17 @@ export class ManufactureOrderEditPageComponent implements OnInit {
     this.destroy$.next();
     this.destroy$.complete();
 
+  }
+
+  formatearFecha(fecha: Date) {
+    const texto = new Intl.DateTimeFormat('es-PE', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    }).format(fecha);
+
+    return texto.replace(/^./, c => c.toUpperCase());
   }
 
 }

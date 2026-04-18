@@ -1,6 +1,24 @@
-<app-payment-form [form]="form"  [formCreate]="false"></app-payment-form>
+<app-payment-form [form]="form" [formCreate]="false"></app-payment-form>
 
-<app-image-index [images]="payment.images" [imageable_type]="'payment'" [imageable_id]="payment.id" (emitImagePreview)="receiveImage($event)"></app-image-index>
+<div ngbAccordion #accordion="ngbAccordion" class="mb-3">
+    <div ngbAccordionItem="first">
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton><fa-icon [icon]="faReceipt" class="me-2"></fa-icon>Recibos</button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+                <ng-template>
+
+                    <app-image-index [images]="payment.images" [imageable_type]="'payment'" [imageable_id]="payment.id"
+                        (emitImagePreview)="receiveImage($event)"></app-image-index>
+
+                </ng-template>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 
 <!-- {{ form.value | json }} -->
 <div class="mb-3">

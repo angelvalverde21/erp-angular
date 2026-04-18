@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { effect, inject, Injectable } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { API, environment } from '../../environments/environment';
@@ -155,6 +155,19 @@ export abstract class BaseCrudDashboardService {
     return this.http.post(url, data, {
       responseType: 'blob'
     });
+  }
+
+  /* signals events */
+
+  
+  // estado reactivo
+  receiveSignalEvent = signal<any>(null);
+
+  set(data: any) {
+
+    console.log(data);
+    this.receiveSignalEvent.set(data);
+  
   }
 
 }

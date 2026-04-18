@@ -12,7 +12,7 @@ import { JsonPipe } from '@angular/common';
   imports: [
     PaymentFormComponent,
     ButtonSaveComponent,
-    JsonPipe
+    JsonPipe,
   ],
   templateUrl: './payment-create.component.html',
   styleUrl: './payment-create.component.scss'
@@ -58,8 +58,9 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       amount: ['', [Validators.required]],
       date: [today, [Validators.required]],
-      direction: ['in', [Validators.required]],
+      direction: ['out', [Validators.required]],
       gateway_id: [null, [Validators.required]],
+      comment: [''],
       images: [[]],
       paymentable_type: [this.paymentable_type, [Validators.required]],
       paymentable_id: [this.paymentable_id, [Validators.required]],
@@ -99,7 +100,7 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
           data.append('images[]', file);
         });
         return;
-      } 
+      }
 
       //resto de campos normales
       if (value !== null && value !== undefined) {
