@@ -49,15 +49,14 @@
 
         </div>
 
-        <div ngbAccordion #accordion="ngbAccordion" class="mb-3">
-            <div ngbAccordionItem="first">
+        <div ngbAccordion #accordion="ngbAccordion">
+            <div ngbAccordionItem="second">
                 <h2 ngbAccordionHeader>
-                    <button ngbAccordionButton>+ Opciones</button>
+                    <button ngbAccordionButton><fa-icon [icon]="faReceipt" class="me-2"></fa-icon>Recibos</button>
                 </h2>
                 <div ngbAccordionCollapse>
                     <div ngbAccordionBody>
                         <ng-template>
-
 
                             <div class="col-12 col-md-12 col-lg-12">
                                 <app-input-group text="Fecha de pago">
@@ -73,26 +72,20 @@
                                     placeholder="Comentarios"></textarea>
                             </div>
 
-                        </ng-template>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @if(formCreate){
-
-        <div ngbAccordion #accordion="ngbAccordion">
-            <div ngbAccordionItem="second">
-                <h2 ngbAccordionHeader>
-                    <button ngbAccordionButton><fa-icon [icon]="faReceipt" class="me-2"></fa-icon>Recibos</button>
-                </h2>
-                <div ngbAccordionCollapse>
-                    <div ngbAccordionBody>
-                        <ng-template>
 
                             <div class="col-lg-12">
 
+                                @if(payment != null){
 
+                                <div class="alert alert-info">
+                                    <fa-icon [icon]="faReceipt" class="me-2"></fa-icon>Recibos
+                                </div>
+
+                                <app-image-index [images]="payment.images" [imageable_type]="'payment'"
+                                    [imageable_id]="payment.id"
+                                    (emitImagePreview)="receiveImage($event)"></app-image-index>
+
+                                }@else{
                                 <ngx-dropzone (change)="onSelect($event)" [multiple]="true" accept="image/*">
 
                                     <ngx-dropzone-label>
@@ -109,6 +102,7 @@
                                     }
                                 </ngx-dropzone>
 
+                                }
 
                             </div>
 
@@ -119,7 +113,7 @@
 
         </div>
 
-        }
+
 
 
     </div>

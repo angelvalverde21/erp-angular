@@ -1,7 +1,45 @@
+<app-head-table [type]="'employe_payment'" (emitSearchResult)="receiveSearchResult($event)"
+    (emitLoadingStatus)="receiveLoadingStatus($event)" [is_redirect]="false"></app-head-table>
+
 @if(loading){
-    <app-loading></app-loading>
+<app-loading></app-loading>
+
 }@else{
 
-<app-payment-index [payments]="payments" [paymentable_id]="employee_id" [paymentable_type]="'employee'"></app-payment-index>
+<div ngbAccordion [closeOthers]="true">
+    <div ngbAccordionItem [collapsed]="false">
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>Gastos Corrientes</button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody class="px-0 pb-3">
+                <ng-template>
 
+
+                    <app-payment-index [payments]="employee_payments" [paymentable_id]="employee_id"
+                        [paymentable_type]="'employee'"></app-payment-index>
+
+
+                </ng-template>
+            </div>
+        </div>
+    </div>
+
+    @if(user.roles.includes('production') || user.roles.includes('master') || user.roles.includes('ceo')){
+            <div ngbAccordionItem>
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>
+                Gastos de Compras
+            </button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody class="py-3 px-0">
+                <ng-template>
+                    <app-payment-read-index [payments]="purchases_payments"></app-payment-read-index>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    }
+</div>
 }

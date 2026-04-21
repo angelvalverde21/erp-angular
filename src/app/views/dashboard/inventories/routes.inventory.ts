@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import( './inventory-income-index-page/inventory-income-index-page.component' ).then((m) => m.InventoryIncomeIndexPageComponent),
+    loadComponent: () => import( './inventory-index-page/inventory-index-page.component' ).then((m) => m.InventoryIndexPageComponent),
     data: {
       title: 'Todos',
     }
@@ -16,14 +16,28 @@ export const routes: Routes = [
   //   }
   // },
   {
-    path: 'out',
-    loadComponent: () => import( './inventory-out-index-page/inventory-out-index-page.component' ).then((m) => m.InventoryOutIndexPageComponent),
+    path: 'income',
+    loadComponent: () => import( './inventory-income-index-page/inventory-income-index-page.component' ).then((m) => m.InventoryIncomeIndexPageComponent),
     data: {
-      title: 'Create',
+      title: 'Ingreso de inventario',
     }
   },
   {
-    path: ':inventory_id',
+    path: 'out',
+    loadComponent: () => import( './inventory-out-index-page/inventory-out-index-page.component' ).then((m) => m.InventoryOutIndexPageComponent),
+    data: {
+      title: 'Salida de inventario',
+    }
+  },
+  {
+    path: 'barcode',
+    loadComponent: () => import( './inventory-barcode-search-page/inventory-barcode-search-page.component' ).then((m) => m.InventoryBarcodeSearchPageComponent),
+    data: {
+      title: 'Buscar Barcode',
+    }
+  },
+  {
+    path: 'income/:inventory_id',
     loadComponent: () => import( './inventory-edit-page/inventory-edit-page.component' ).then((m) => m.InventoryEditPageComponent),
     data: {
       title: 'Editar',

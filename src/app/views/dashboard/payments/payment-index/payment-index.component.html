@@ -1,11 +1,14 @@
-<div class="bg-white py-3 d-flex justify-content-between align-items-center">
+<div class="bg-white px-3 pb-3 d-flex justify-content-between align-items-center">
     <span><fa-icon [icon]="faMoneyBill1" class="me-2"></fa-icon> Transacciones</span>
     <app-button-add (click)="openVerticallyCentered(content)"></app-button-add>
 </div>
 
+@if(payments.length === 0){
+<app-void-index></app-void-index>
+}@else{
 <div class="table-responsive">
 
-    <table class="table table-hover mb-0 align-middle">
+    <table class="table table-striped mb-0 align-middle">
         <thead class="table-light">
             <tr>
                 <th class="text-center" scope="col">Codigo</th>
@@ -13,28 +16,35 @@
                 <th class="text-center" scope="col">Metodo</th>
                 <th class="text-center" scope="col">Tipo</th>
                 <th class="text-center" scope="col">Fecha</th>
-                <th class="text-center" scope="col"></th>
                 <th class="text-center" scope="col">Monto</th>
+                <th class="text-center" scope="col">Detalle</th>
                 <th class="text-center" scope="col"></th>
             </tr>
         </thead>
         <tbody>
 
             @for (payment of payments; track payment.id) {
-            <tr app-payment-index-row [payment]="payment" [paymentable_type]="paymentable_type" [ngClass]="(payment.direction === 'in' ? 'bg-green' : '')"
+            <tr app-payment-index-row [payment]="payment" [paymentable_type]="paymentable_type"
                 [paymentable_id]="paymentable_id" (emitRemovePayment)="receiveRemovePayment($event)"></tr>
             }
 
             <tr>
                 <td colspan="4"></td>
-                <td class="text-end">Total</td>
-                <td class="text-center">{{ sum_payments }}</td>
+                <td class="text-end">
+                    <h5>Saldo</h5>
+                </td>
+                <td class="text-center">
+                    <h5>{{ sum_payments | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</h5>
+                </td>
                 <td colspan="2"></td>
             </tr>
 
         </tbody>
     </table>
 </div>
+
+
+}
 
 
 <ng-template #content let-modal>
@@ -47,4 +57,3 @@
             (emitCreatePayment)="receiveCreatePayment($event)"></app-payment-create>
     </div>
 </ng-template>
-

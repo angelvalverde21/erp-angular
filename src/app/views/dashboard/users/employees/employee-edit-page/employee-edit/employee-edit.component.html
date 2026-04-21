@@ -1,6 +1,14 @@
-<app-employee-form [form]="form" [roles]="roles"></app-employee-form>
-<!-- {{ form.value | json }} -->
+<div class="card">
 
 
-<app-user-controls-update type="employee" [formValue]="form.value"
-    [user_id]="employee.id"></app-user-controls-update>
+    <div class="card-body">
+
+        <app-employee-form [form]="form" [roles]="roles"></app-employee-form>
+        <!-- {{ form.value | json }} -->
+
+        <app-user-controls-update type="employee" [formValue]="form.value"
+            [user_id]="employee.id"></app-user-controls-update>
+
+    </div>
+
+</div>

@@ -1,6 +1,6 @@
 ﻿import { CommonModule, JsonPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
@@ -29,7 +29,7 @@ export class InventoryVariantIndexComponent implements OnInit {
 
   sum: number = 0;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
 
@@ -56,14 +56,25 @@ export class InventoryVariantIndexComponent implements OnInit {
   }
 
   private buildForm() {
+    // this.form = this.fb.group({
+    //   variantsForm: this.fb.array(
+    //     this.variants.map(v =>
+    //       this.fb.group({
+    //         variant_id: [v.id],              // 👈 guardamos id dentro del form
+    //         quantity: ["", Validators.required]
+    //       })
+    //     )
+    //   )
+    // });
+
     this.form = this.fb.group({
       variantsForm: this.fb.array(
-        this.variants.map(v =>
+        this.variants.map(v => 
           this.fb.group({
-            variant_id: [v.id],              // 👈 guardamos id dentro del form
-            quantity: ["", Validators.required]
-          })
-        )
+          variant_id: [v.id],
+          quantity: ["", [Validators.min(0)]] // Quitamos el required individual si no es obligatorio en todos
+        })),
+        { validators: this.atLeastOneHasValue() } // 👈 Agregamos el validador aquí
       )
     });
 
@@ -82,7 +93,7 @@ export class InventoryVariantIndexComponent implements OnInit {
   //   console.log('Variant selected:', group.value);
   // }
 
-  updateStock(){
+  updateStock() {
     const selectedVariants = this.variantsForm.controls
       .map((group, index) => ({ index, ...group.value }))
       .filter(variant => variant.quantity > 0);
@@ -90,6 +101,22 @@ export class InventoryVariantIndexComponent implements OnInit {
     console.log('Selected variants to update:', selectedVariants);
 
     this.emitInventoryVariantsSelected.emit(selectedVariants);
+
+  }
+
+  atLeastOneHasValue(): ValidatorFn {
+
+    return (control: AbstractControl): ValidationErrors | null => {
+      const formArray = control as FormArray;
+
+      // Verificamos si al menos un grupo tiene quantity > 0
+      const hasValue = formArray.controls.some(group => {
+        const quantity = group.get('quantity')?.value;
+        return quantity !== null && quantity !== '' && Number(quantity) > 0;
+      });
+
+      return hasValue ? null : { atLeastOneRequired: true };
+    };
 
   }
 

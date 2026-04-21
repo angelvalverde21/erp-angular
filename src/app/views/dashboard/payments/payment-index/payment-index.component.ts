@@ -7,6 +7,7 @@ import { PaymentCreateComponent } from '../payment-create/payment-create.compone
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMoneyBill1 } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
+import { VoidIndexComponent } from 'src/app/views/shared/components/void-index/void-index.component';
 
 @Component({
   selector: 'app-payment-index',
@@ -15,13 +16,14 @@ import { CommonModule } from '@angular/common';
     ButtonAddComponent,
     PaymentCreateComponent,
     FontAwesomeModule,
-    CommonModule
+    CommonModule,
+    VoidIndexComponent
   ],
   templateUrl: './payment-index.component.html',
   styleUrl: './payment-index.component.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class PaymentIndexComponent implements OnChanges{
+export class PaymentIndexComponent implements OnChanges {
 
   @Input() paymentable_type: string = "";
   @Input() paymentable_id: number = 0;
@@ -42,8 +44,21 @@ export class PaymentIndexComponent implements OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    
     if (changes['payments']) {
-      this.sum_payments = this.payments.reduce((acc, payment) => acc + Number(payment.amount), 0);
+      
+      // Asegurar que siempre sea un array
+      const paymentsArray = Array.isArray(this.payments) ? this.payments : [];
+      
+      // Normalizar la propiedad
+      this.payments = paymentsArray;
+      
+      console.log(this.payments);
+      // Calcular suma
+      this.sum_payments = paymentsArray.reduce(
+        (acc: number, payment: any) => acc + Number(payment?.amount * (payment?.direction === 'in' ? 1 : -1) || 0),
+        0
+      );
     }
   }
 

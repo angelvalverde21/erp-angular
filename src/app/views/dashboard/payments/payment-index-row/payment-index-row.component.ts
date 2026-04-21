@@ -1,14 +1,16 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faReceipt } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { DateShopifyPipe } from '../../../shared/pipes/date-shopify.pipe';
 import { PaymentEditComponent } from '../payment-edit/payment-edit.component';
 import { Subject, takeUntil } from 'rxjs';
 import { PaymentService } from '../payment.service';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PurchaseCardComponent } from '../../purchases/purchase-card/purchase-card.component';
+import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/button-edit/button-edit.component';
 @Component({
   selector: 'tr[app-payment-index-row]',
   imports: [
@@ -17,6 +19,10 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
     DateShopifyPipe,
     PaymentEditComponent,
     LoadingComponent,
+    FontAwesomeModule,
+    PurchaseCardComponent,
+    CommonModule,
+    ButtonEditComponent
   ],
   templateUrl: './payment-index-row.component.html',
   styleUrl: './payment-index-row.component.scss',
@@ -26,10 +32,12 @@ export class PaymentIndexRowComponent {
 
   faEdit = faEdit;
   faTrash = faTrash;
+  faReceipt = faReceipt;
 
   @Input() payment: any;
   @Input() paymentable_type: string = "";
   @Input() paymentable_id: number = 0;
+  @Input() edit: boolean = true;
 
   removeLoading: boolean = false;
 
@@ -50,13 +58,13 @@ export class PaymentIndexRowComponent {
   openVerticallyCentered(content: TemplateRef<any>) {
     this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
   }
-  
-  receiveUpdatePayment(event: any){
+
+  receiveUpdatePayment(event: any) {
     this.payment = event;
     this.modal.close();
   }
 
-  removePayment(payment_id: number = 0){
+  removePayment(payment_id: number = 0) {
 
     this.removeLoading = true;
     this._paymentService.destroy(payment_id).pipe(takeUntil(this.destroy$)).subscribe({
@@ -74,12 +82,16 @@ export class PaymentIndexRowComponent {
   }
 
   destroy$ = new Subject<void>();
-  
+
   ngOnDestroy(): void {
-  
+
     this.destroy$.next();
     this.destroy$.complete();
-  
+
+  }
+
+  closeModal() {
+    this.modal.close();
   }
 
 }

@@ -60,6 +60,12 @@ export class EmployeeEditComponent implements OnDestroy{
 
     });
 
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    if (!user.roles.includes('master') && !user.roles.includes('ceo')) {
+      this.form.disable();
+    }
+
   }
   // ngOnInit(): void {
 

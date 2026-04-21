@@ -2,7 +2,7 @@ import { PercentPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faIdBadge, faSackDollar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faIdBadge, faSackDollar, faUser, faCoins } from '@fortawesome/free-solid-svg-icons';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { BaseService } from 'src/app/views/base.service';
 import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/button-edit/button-edit.component';
@@ -27,6 +27,7 @@ export class EmployeIndexRowComponent implements OnInit{
   faIdBadge = faIdBadge;
   faSackDollar = faSackDollar;
   faUser = faUser;
+  faCoins = faCoins;
 
   @Input() employee: any = {};
 

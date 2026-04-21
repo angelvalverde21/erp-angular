@@ -38,11 +38,18 @@ export const routes: Routes = [
         data: { title: 'Informacion de colaborador' }
       },
       {
+        path: 'salaries',
+        loadComponent: () =>
+          import('./employee-edit-page/employee-salary-index/employee-salary-index.component').then(m => m.EmployeeSalaryIndexComponent),
+        data: { title: 'Informacion de colaborador' }
+      },
+      {
         path: 'payments',
         loadComponent: () =>
           import('./employee-edit-page/employe-payment-index/employe-payment-index.component').then(m => m.EmployePaymentIndexComponent),
         data: { title: 'Informacion de colaborador' }
       },
+
     ]
   },
 

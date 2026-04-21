@@ -2,10 +2,18 @@
 <app-loading></app-loading>
 }@else{
 
-<app-manufacture-production-form [form]="form"></app-manufacture-production-form>
+<div class="card">
 
-<app-button-save (click)="update()" [spinner]="disabledButton" [disabled]="disabledButton">Guardar
-    cambios</app-button-save>
 
+    <div class="card-body">
+
+        <app-manufacture-production-form [form]="form"></app-manufacture-production-form>
+
+        <app-button-save (click)="update()" [spinner]="disabledButton" [disabled]="disabledButton">Guardar
+            cambios</app-button-save>
+
+    </div>
+
+</div>
 <!-- {{ form.value | json }} -->
 }

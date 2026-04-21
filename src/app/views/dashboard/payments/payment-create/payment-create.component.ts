@@ -59,7 +59,7 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
       amount: ['', [Validators.required]],
       date: [today, [Validators.required]],
       direction: ['out', [Validators.required]],
-      gateway_id: [null, [Validators.required]],
+      gateway_id: [2, [Validators.required]],
       comment: [''],
       images: [[]],
       paymentable_type: [this.paymentable_type, [Validators.required]],
@@ -117,7 +117,13 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
     this._paymentService.store(data).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        Swal.fire('Guardado', 'EL pago ha sido guardado', 'success');
+        Swal.fire({
+          icon: "success",
+          title: "Guardado",
+          showConfirmButton: false,
+          timer: 1000
+        });
+        // Swal.close();
         console.log(resp);
         this.payment = resp.data;
         this.loading = false;

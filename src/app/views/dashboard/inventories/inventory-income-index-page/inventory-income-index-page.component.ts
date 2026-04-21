@@ -52,6 +52,8 @@ export class InventoryIncomeIndexPageComponent implements OnInit, OnDestroy {
 
       next: (resp: any) => {
         console.log(resp);
+
+        
         this.inventories = resp.data;
         this.loading = false;
       },

@@ -112,16 +112,16 @@ export class PaymentEditComponent {
 
   }
 
-  receiveImage(image: any) {
+  // receiveImage(image: any) {
 
-    console.log("imagen actualizada", image);
+  //   console.log("imagen actualizada", image);
 
-    this.payment.images = [image, ...this.payment.images];
-    this.emitUpdatePayment.emit(this.payment);
+  //   this.payment.images = [image, ...this.payment.images];
+  //   this.emitUpdatePayment.emit(this.payment);
 
-    console.log(this.payment);
+  //   console.log(this.payment);
     
 
-  }
+  // }
   
 }

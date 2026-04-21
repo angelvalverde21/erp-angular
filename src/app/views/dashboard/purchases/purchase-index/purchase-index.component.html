@@ -1,10 +1,10 @@
 <!-- ── HEADER ── -->
-<div class="card border-0 shadow-sm rounded-3 mb-4">
+<div class="card rounded-3 mb-4">
     <div class="card-body d-flex justify-content-between align-items-center py-3 px-4">
         <div class="d-flex align-items-center gap-2">
             <i class="fas fa-lock text-secondary"></i>
             <h6 class="mb-0 fw-bold">Compras </h6>
-            <span class="badge bg-light text-secondary rounded-pill px-3">({{
+            <span class="badge bg-light text-secondary rounded-pill px-3 py-2">({{
                 purchases?.length
                 }})</span>
         </div>
@@ -30,19 +30,19 @@
     @for (purchase of purchases; track purchase.id) {
 
     <div class="tl-item">
-        <div class="tl-icon"><i class="fas fa-cart-shopping"></i></div>
-        <div class="card tl-card">
+        <!-- <div class="tl-icon"><i class="fas fa-cart-shopping"></i></div> -->
+        <div class="card tl-card mb-3">
 
-            <div class="card-header">
-                
+            <div class="card-header bg-white py-3">
+
                 <app-purchase-index-head [purchase]="purchase" [purchaseable_type]="purchaseable_type"
-                [purchaseable_id]="purchaseable_id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
-                (emitRemovePurchase)="receiveRemovePurchase($event)"></app-purchase-index-head>
+                    [purchaseable_id]="purchaseable_id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
+                    (emitRemovePurchase)="receiveRemovePurchase($event)"></app-purchase-index-head>
             </div>
 
             <div class="card-body p-0">
                 <table class="table purchase-table mb-0">
-                    <thead>
+                    <thead class="table-light">
                         <tr>
                             <th class="text-center">Cantidad</th>
                             <th class="text-center">Unidad</th>
@@ -62,13 +62,15 @@
                         </tr>
                         }
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="4" class="text-end text-muted fw-normal py-3">Subtotal</td>
-                            <td class="text-center py-3">{{ sum_purchase(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
-                        </tr>
-                    </tfoot>
                 </table>
+            </div>
+
+            <div class="card-footer" style="border-top: 0;">
+                <h6 class="d-flex justify-content-end align-items-center gap-4">
+                    <span class="label-text">Sub Total</span>
+                    <span class="amount">{{ sum_purchase(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE'
+                        }}</span>
+                </h6>
             </div>
 
         </div>
@@ -77,10 +79,14 @@
 
 </div>
 
-<!-- ── TOTAL GENERAL ── -->
-<div class="total-bar d-flex justify-content-end align-items-center gap-4 mt-2">
-    <span class="label-text">Total General</span>
-    <span class="amount fs-5">{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</span>
+
+<div class="card rounded-3 bg-dark text-white">
+
+    <div class="card-body d-flex justify-content-end align-items-center gap-4">
+        <span class="label-text fs-5">Total General</span>
+        <span class="amount fs-5">{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</span>
+    </div>
+
 </div>
 
 }

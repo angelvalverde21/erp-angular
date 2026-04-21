@@ -7,8 +7,8 @@
   visible
 >
   <c-sidebar-header class="border-bottom">
-    <c-sidebar-brand [routerLink]="[]" class="d-flex justify-content-between align-items-center w-100">
-      <button class="btn btn-outline-light" style="font-size: 0.75rem;">{{ user.name }}</button>
+    <c-sidebar-brand class="d-flex justify-content-between align-items-center w-100">
+      <button class="btn btn-outline-light" style="font-size: 0.75rem;" [routerLink]="['/', store, 'dashboard', 'users', 'employees', user?.employee?.id]">{{ user.name }}</button>
       <span class="sidebar-brand-full">{{ user.roles[0] | uppercase }}</span>
       <!-- <span class="sidebar-brand-narrow">E</span> -->
       <!-- <svg [class]="{icon: false}" cIcon class="sidebar-brand-full" height="32" name="logo" title="CoreUI Logo"></svg> -->

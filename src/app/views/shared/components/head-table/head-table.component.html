@@ -1,5 +1,5 @@
 <form action="" [formGroup]="form">
-    <div class="controls d-flex justify-content-between align-items-between">
+    <div class="controls d-flex justify-content-between align-items-between mb-3">
 
         <!-- <div class="left d-flex d-flex align-items-center">
 
@@ -38,7 +38,7 @@
             <input type="date" class="form-control me-2" placeholder="date" formControlName="end_date" [min]="form.get('start_date')?.value" [max]="today"
                 aria-label="date" aria-describedby="basic-date" />
 
-                <app-button [icon]="faMagnifyingGlass" (click)="search()">Buscar</app-button>
+                <app-button color="outline-dark" [icon]="faMagnifyingGlass" (click)="search()">Buscar</app-button>
             <!-- <app-button [icon]="faFilter" color="outline-secondary" separation="0"></app-button> -->
              
         </div>

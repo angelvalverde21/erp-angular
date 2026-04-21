@@ -55,9 +55,18 @@ export const navErp: CustomNavData[] = [
             //         routerLinkActiveOptions: { exact: true }
             //     },
             // },
+            // {
+            //     name: 'Todos',
+            //     url: 'dashboard/inventories',
+            //     icon: 'nav-icon-bullet',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // },
             {
                 name: 'Ingresos',
-                url: 'dashboard/inventories',
+                url: 'dashboard/inventories/income',
                 icon: 'nav-icon-bullet',
                 class: 'children-custom',
                 linkProps: {
@@ -68,6 +77,15 @@ export const navErp: CustomNavData[] = [
                 name: 'Salidas',
                 url: 'dashboard/inventories/out',
                 icon: 'nav-icon-bullet',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+            {
+                name: 'Buscar Barcode',
+                url: 'dashboard/inventories/barcode',
+                icon: 'fa-solid fa-barcode',
                 class: 'children-custom',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
@@ -248,26 +266,26 @@ export const navErp: CustomNavData[] = [
         ],
         roles: ['master']
     },
-    {
-        name: 'Caja chica',
-        url: '/dashboard/pettycashes',
-        icon: 'fa-solid fa-comments-dollar',
-        children: [
-            {
-                name: 'Todos', url: '/dashboard/pettycashes', icon: 'nav-icon-bullet',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }
-            },
-            {
-                name: 'Ingresos en Efectivo', url: '/dashboard/pettycashes/income', icon: 'nav-icon-bullet',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }
-            },
-        ],
-        roles: ['ceo', 'master']
-    },
+    // {
+    //     name: 'Caja chica',
+    //     url: '/dashboard/pettycashes',
+    //     icon: 'fa-solid fa-comments-dollar',
+    //     children: [
+    //         {
+    //             name: 'Todos', url: '/dashboard/pettycashes', icon: 'nav-icon-bullet',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             }
+    //         },
+    //         {
+    //             name: 'Ingresos en Efectivo', url: '/dashboard/pettycashes/income', icon: 'nav-icon-bullet',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             }
+    //         },
+    //     ],
+    //     roles: ['ceo', 'master']
+    // },
     {
         title: true,
         name: 'Usuarios',

@@ -5,7 +5,7 @@
 }@else{
 
 
-<app-head-page title="Editar Empleado" [export]="false">
+<app-head-page [title]="`Colaborador: ${employee.user.name}`" [export]="false">
     @if(is_sales){
     <app-button (click)="openVerticallyCentered(content)" [icon]="faChartLine" color="success" colortext="white"
         class="me-2">Reporte</app-button>
@@ -16,13 +16,7 @@
 <app-employee-widget [summary]="summary"></app-employee-widget>
 
 
-<div class="card">
-
-    <div class="card-body">
-        <router-outlet></router-outlet>
-    </div>
-
-</div>
+<router-outlet></router-outlet>
 
 }
 

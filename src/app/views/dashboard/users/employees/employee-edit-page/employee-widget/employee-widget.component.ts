@@ -27,7 +27,7 @@ export class EmployeeWidgetComponent implements OnInit {
   faRightLeft = faRightLeft;
   faIdBadge = faIdBadge;
   faSackDollar = faSackDollar;
-
+  faBagShopping = faBagShopping;
   // @Input() employee_id: number = 0;
   @Input() summary: any = null;
 
@@ -95,12 +95,20 @@ export class EmployeeWidgetComponent implements OnInit {
         type: 'units'
       },
       {
-        title: 'Pagos y Gastos',
-        subtitle: `Saldo de gastos`,
+        title: 'Sueldos',
+        subtitle: `Quincenales`,
+        value: 0,
+        link: ['./salaries'],
+        icon: faSackDollar,
+        type: 'currency'
+      },
+      {
+        title: 'Gastos',
+        subtitle: `Saldo global`,
         value: this.summary?.sum_payments || 0,
         link: ['./payments'],
-        icon: faSackDollar,
-        type: 'units'
+        icon: faBagShopping,
+        type: 'currency'
       }
     ];
   }

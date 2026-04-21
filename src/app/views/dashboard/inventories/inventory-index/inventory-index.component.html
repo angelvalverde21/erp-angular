@@ -1,4 +1,7 @@
-<div class="table-responsive">
+@if(inventories.length === 0){
+    <app-void-index [title]="`No hay registros`"></app-void-index>
+}@else{
+    <div class="table-responsive">
 
     <table class="table table-hover table-striped mb-0 align-middle">
 
@@ -19,7 +22,9 @@
                 </tr>
             }
         </tbody>
-
+        
     </table>
 
 </div>
+}
+
