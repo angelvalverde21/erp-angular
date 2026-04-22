@@ -34,7 +34,7 @@ export const routes: Routes = [
       {
         path: 'attendances',
         loadComponent: () =>
-          import('./employee-edit-page/employe-attendance-index/employe-attendance-index.component').then(m => m.EmployeAttendanceIndexComponent),
+          import('./employee-edit-page/employee-attendance-index/employee-attendance-index.component').then(m => m.EmployeeAttendanceIndexComponent),
         data: { title: 'Informacion de colaborador' }
       },
       {

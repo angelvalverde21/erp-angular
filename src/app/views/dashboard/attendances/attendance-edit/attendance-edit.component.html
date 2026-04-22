@@ -1,0 +1,32 @@
+<form [formGroup]="form">
+
+    <div class="row">
+
+        <div class="col-12 col-md-12 col-lg-12">
+            <app-input-group text="Dia de Ingreso">
+                <input formControlName="date" [disabled]="true" type="text" class="form-control" placeholder="date"
+                    aria-label="date" aria-describedby="basic-date" /> </app-input-group>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-6">
+            <app-input-group text="Hora de Entrada">
+                <input formControlName="check_in" [class.is-invalid]="form.get('check_in')?.invalid && form.get('check_in')?.touched" type="time" class="form-control" placeholder="check_in"
+                    aria-label="check_in" aria-describedby="basic-check_in" /> </app-input-group>
+        </div>
+        <div class="col-12 col-md-6 col-lg-6">
+            <app-input-group text="Hora de Salida">
+                <input formControlName="check_out" [class.is-invalid]="form.get('check_out')?.invalid && form.get('check_out')?.touched" type="time" class="form-control" placeholder="check_out"
+                    aria-label="check_out" aria-describedby="basic-check_out" /> </app-input-group>
+        </div>
+
+        <div class="col-12 col-md-12 col-lg-12">
+            <label for="razon" class="mb-2">Razon del cambio</label>
+            <textarea formControlName="comment" id="razon" class="form-control mb-3"></textarea>
+        </div>
+
+    </div>
+
+    <app-button-save (click)="update()" [spinner]="loading">Guardar Cambios</app-button-save>
+
+
+</form>

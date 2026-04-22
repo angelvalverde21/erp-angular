@@ -1,1 +1,85 @@
-<p>attendance-index-row works!</p>
+<td class="text-center">
+  {{ attendance.date | date:'dd/MM/yyyy' }}
+</td>
+<td class="text-center">{{ attendance.employee?.user.name | uppercase }}</td>
+<td class="text-center">
+
+
+    @if (attendance.check_in | lateStatus) {
+    <span class="text-danger">{{ attendance.check_in }}</span>
+    } @else {
+
+    <!-- // Cumplio horario de entrada -->
+    <span class="text-success">{{ attendance.check_in }}</span>
+    }
+
+</td>
+<td class="text-center">{{ attendance.check_out }}</td>
+<td class="text-center">
+
+    <div class="d-flex justify-content-center align-items-center">
+
+        <!-- Cumplio las 8 Horas -->
+        @if (attendance.check_in | attendanceStatus:attendance.check_out) {
+        <span class="text-success">
+            {{ attendance.check_in | workedHours:attendance.check_out }}
+        </span>
+        } @else {
+        <span class="text-danger">
+            {{ attendance.check_in | workedHours:attendance.check_out }}
+        </span>
+        }
+    </div>
+
+</td>
+
+<td class="text-center">{{ attendance.date | dayOfWeek }}</td>
+<td class="text-center" style="width: 150px;">
+
+    {{ attendance.comment }}
+    <!-- @if(attendance.comment){
+    <button type="button" class="btn" placement="top"
+        [ngbTooltip]="attendance.comment ? attendance.comment : ''">
+        <i class="fa-regular fa-comment-dots" style="font-size: 1.25rem"></i>
+    </button>
+    }@else{
+
+    } -->
+
+</td>
+<td class="text-center">
+
+    @if(attendance.missing){
+    <fa-icon class="text-danger" style="font-size: 1rem;" [icon]="faCircleXmark"></fa-icon>
+    }@else{
+    <fa-icon class="text-success" style="font-size: 1rem;" [icon]="faCheck"></fa-icon>
+    }
+</td>
+
+<td>
+    <div ngbDropdown class="d-inline-block">
+        <button type="button" class="btn btn-outline-dark btn-sm" id="dropdownBasic1" ngbDropdownToggle>
+            <i class="fas fa-ellipsis-h"></i>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button ngbDropdownItem (click)="openVerticallyCentered(content, attendance)"><fa-icon class="me-2"
+                    [icon]="faEdit"></fa-icon>Editar</button>
+            <button ngbDropdownItem><fa-icon class="me-2" [icon]="faReceipt"></fa-icon>Documentos</button>
+        </div>
+    </div>
+</td>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Editar Asistencia</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body py-4">
+        <app-attendance-edit [attendance]="attendance"
+            (emitAttendanceUpdate)="receiveAttendanceUpdate($event)"></app-attendance-edit>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>

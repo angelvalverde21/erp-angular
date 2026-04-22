@@ -1,0 +1,13 @@
+.table-danger {
+    --cui-table-color: #080a0c;
+    --cui-table-bg: rgb(255, 242, 242);
+    --cui-table-border-color: rgb(201.44, 178.48, 178.88);
+    --cui-table-striped-bg: rgb(237.71, 210.07, 210.17);
+    --cui-table-striped-color: #080a0c;
+    --cui-table-active-bg: rgb(225.62, 199.54, 199.74);
+    --cui-table-active-color: #080a0c;
+    --cui-table-hover-bg: rgb(231.665, 204.805, 204.955);
+    --cui-table-hover-color: #080a0c;
+    color: var(--cui-table-color);
+    border-color: var(--cui-table-border-color);
+}

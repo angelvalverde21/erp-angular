@@ -15,7 +15,8 @@ import { ManufactureOrderService } from '@dashboard/manufactures/orders/order.se
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { ProductService } from '@dashboard/products/product.service';
-import { EmployeePaymentService } from 'src/app/views/dashboard/users/employees/employee-edit-page/employe-payment-index/employe.payment.service';
+import { EmployeePaymentService } from '@dashboard/users/employees/employee-edit-page/employe-payment-index/employe.payment.service';
+import { EmployeeAttendanceService } from '@dashboard/users/employees/employee-edit-page/employee-attendance-index/employee.attendance.service';
 
 @Component({
   selector: 'app-head-table',
@@ -45,6 +46,7 @@ export class HeadTableComponent implements OnInit, OnDestroy {
     | 'manufacture_production'
     | 'manufacture_order'
     | 'manufacture'
+    | 'employee_attendance'
     | 'employe_payment'
     = 'customer';
 
@@ -69,7 +71,8 @@ export class HeadTableComponent implements OnInit, OnDestroy {
     private _shopify_product: ShopifyProductService,
     private _gateway: GatewayService,
     private _product: ProductService,
-    private _employe_payment: EmployeePaymentService,
+    private _employee_payment: EmployeePaymentService,
+    private _employee_attendance: EmployeeAttendanceService,
     private fb: FormBuilder
   ) { }
 
@@ -175,7 +178,8 @@ export class HeadTableComponent implements OnInit, OnDestroy {
       case 'gateway': return this._gateway;
       case 'manufacture_order': return this._manufacture_order;
       case 'product': return this._product;
-      case 'employe_payment': return this._employe_payment;
+      case 'employe_payment': return this._employee_payment;
+      case 'employee_attendance': return this._employee_attendance;
       default: return this._customer;
     }
   }

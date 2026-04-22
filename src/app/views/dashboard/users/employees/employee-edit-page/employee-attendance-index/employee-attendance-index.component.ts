@@ -1,21 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AttendanceIndexComponent } from 'src/app/views/dashboard/attendances/attendance-index/attendance-index.component';
-import { EmployeeAttendanceService } from './employe.attendace.service';
+import { EmployeeAttendanceService } from './employee.attendance.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { LoadingComponent } from 'src/app/views/shared/components/loading/loading.component';
+import { HeadTableComponent } from 'src/app/views/shared/components/head-table/head-table.component';
 
 @Component({
-  selector: 'app-employe-attendance-index',
+  selector: 'app-employee-attendance-index',
   imports: [
     AttendanceIndexComponent,
-    LoadingComponent
+    LoadingComponent,
+    HeadTableComponent
   ],
-  templateUrl: './employe-attendance-index.component.html',
-  styleUrl: './employe-attendance-index.component.scss'
+  templateUrl: './employee-attendance-index.component.html',
+  styleUrl: './employee-attendance-index.component.scss'
 })
-export class EmployeAttendanceIndexComponent implements OnInit, OnDestroy {
+export class EmployeeAttendanceIndexComponent implements OnInit, OnDestroy {
 
   employe_id: number = 0;
   loading: boolean = false;
@@ -70,6 +72,11 @@ export class EmployeAttendanceIndexComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   
+  }
+
+  receiveAttendances(attendances: any[]) {
+
+    this.attendances = attendances; 
   }
 
 

@@ -20,10 +20,10 @@ export class EmployeeAttendanceService extends BaseCrudDashboardService {
     super(http, 'employees'); // base inicial limpia
   }
 
-  setId(employe_id: number) {
+  setId(employee_id: number) {
 
     // redefinir completamente el baseUrl (no concatenar sobre el anterior)
-    this.extraPath = `/${employe_id}/attendances`;
+    this.extraPath = `/${employee_id}/attendances`;
   }
 
 }

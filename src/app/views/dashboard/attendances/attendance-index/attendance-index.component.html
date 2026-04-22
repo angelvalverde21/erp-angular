@@ -1,91 +1,40 @@
 <div class="table-responsive">
 
-    <table class="table table-hover table-striped mb-0 align-middle">
+    <table class="table table-hover mb-0 align-middle">
 
         <thead class="table-light">
             <tr>
-                <th scope="col" class="text-center">#</th>
+                <th scope="col" class="text-center">Fecha</th>
                 <th scope="col" class="text-center">Nombre</th>
                 <th scope="col" class="text-center">Entrada</th>
                 <th scope="col" class="text-center">Salida</th>
                 <th scope="col" class="text-center">Horas</th>
-                <th scope="col" class="text-center">Fecha</th>
                 <th scope="col" class="text-center">Dia</th>
+                <th scope="col" class="text-center">Observ.</th>
                 <th scope="col" class="text-center">Asistencia</th>
+                <th scope="col" class="text-center"></th>
             </tr>
         </thead>
 
         <tbody>
-            @for (attendance of attendances; track attendance.id) {
 
-            @if(attendance.missing){
-            <tr class="table-danger">
-                <td class="text-center">{{ attendance.id }}</td>
-                <td class="text-center">{{ attendance.employee?.user.name | uppercase }}</td>
-
-                <td class="text-center">{{ attendance.check_in }}</td>
-                <td class="text-center">{{ attendance.check_out }}</td>
-                <td></td>
-                <td class="text-center">{{ attendance.date }}</td>
-                <td class="text-center">{{ attendance.date | dayOfWeek }}</td>
-                <td class="text-center text-danger"><fa-icon style="font-size: 1rem;" [icon]="faCircleXmark"></fa-icon>
-                </td>
-            </tr>
-            }@else{
+            @for (attendance of attendances; track attendance.date) {
+                @if(attendance.missing){
+                <tr class="table-danger" app-attendance-index-row [attendance]="attendance"></tr>
+                }@else{
+                <tr app-attendance-index-row [attendance]="attendance"></tr>
+                }
+            }
             <tr>
-                <td class="text-center">{{ attendance.id }}</td>
-                <td class="text-center">{{ attendance.employee?.user.name | uppercase }}</td>
+                <td colspan="4"></td>
                 <td class="text-center">
-
-
-                    @if (attendance.check_in | lateStatus) {
-                    <span class="text-danger">{{ attendance.check_in }}</span>
-                    } @else {
-
-                    <!-- // Cumplio horario de entrada -->
-                    <span class="text-success">{{ attendance.check_in }}</span>
-                    }
-
+                    <h6>{{ formatSeconds(getTotalSeconds(attendances)) }}</h6>
                 </td>
-                <td class="text-center">{{ attendance.check_out }}</td>
-                <td class="text-center">
-                    <div class="d-flex justify-content-center align-items-center">
-
-                        <!-- Cumplio las 8 Horas -->
-                        @if (attendance.check_in | attendanceStatus:attendance.check_out) {
-                        <span class="text-success">
-                            {{ attendance.check_in | workedHours:attendance.check_out }}
-                        </span>
-                        } @else {
-                        <span class="text-danger">
-                            {{ attendance.check_in | workedHours:attendance.check_out }}
-                        </span>
-                        }
-                    </div>
-                </td>
-                <td class="text-center">{{ attendance.date }}</td>
-                <td class="text-center">{{ attendance.date | dayOfWeek }}</td>
-                <td class="text-center text-success">
-                    <fa-icon style="font-size: 1rem;" [icon]="faCheck"></fa-icon>
-                </td>
+                <td colspan="5"></td>
             </tr>
-            }
-
-
-
-            }
 
         </tbody>
 
     </table>
 
 </div>
-
-                <!-- <td class="text-center" [ngClass]="{
-                                                    'text-success': !(attendance.check_in | lateStatus) && (attendance.check_in | attendanceStatus:attendance.check_out),
-                                                    'text-warning': !(!(attendance.check_in | lateStatus) && (attendance.check_in | attendanceStatus:attendance.check_out))
-                                                    }">
-
-                    <fa-icon style="font-size: 1rem;" [icon]="faCheck"></fa-icon>
- 
-                </td> -->
