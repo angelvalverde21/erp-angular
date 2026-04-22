@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="search()" class="mb-3">
+    <app-input-group [icon]="faBarcode" text="Buscar por código de barras">
+        <input formControlName="barcode" type="text" class="form-control" placeholder="barcode" aria-label="barcode" aria-describedby="basic-barcode" />
+    </app-input-group>
+    <button class="btn btn-dark w-100"><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Buscar</button>
+</form>
+
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+    @if(kardexes.length > 0){
+        <app-kardex-index [kardexes]="kardexes"></app-kardex-index>
+    }
+}
+
+    <!-- <div class="mb-3">
+        <label for="barcode" class="form-label">Barcode</label>
+        <input type="text" id="barcode" formControlName="barcode" class="form-control">
+    </div> -->

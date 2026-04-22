@@ -65,6 +65,15 @@ export const navErp: CustomNavData[] = [
             //     },
             // },
             {
+                name: 'Lotes',
+                url: 'dashboard/inventories/batches',
+                icon: 'fa-solid fa-cart-flatbed',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+            {
                 name: 'Ingresos',
                 url: 'dashboard/inventories/income',
                 icon: 'nav-icon-bullet',
@@ -77,6 +86,15 @@ export const navErp: CustomNavData[] = [
                 name: 'Salidas',
                 url: 'dashboard/inventories/out',
                 icon: 'nav-icon-bullet',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+            {
+                name: 'Traslados',
+                url: 'dashboard/inventories/movements',
+                icon: 'fa-solid fa-right-left',
                 class: 'children-custom',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }

@@ -49,7 +49,7 @@ export const navConfig: CustomNavData[] = [
     {
         name: 'Asistencias',
         url: 'dashboard/attendances',
-        iconComponent: { name: 'cil-truck' },
+        icon: 'fa-solid fa-user-clock',
         children: [
             {
                 name: 'Todos', url: 'dashboard/attendances', icon: 'nav-icon-bullet',
@@ -59,6 +59,26 @@ export const navConfig: CustomNavData[] = [
             },
             {
                 name: 'Subir', url: 'dashboard/attendances/upload', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+        ],
+        roles: ['master', 'ceo']
+    },
+    {
+        name: 'Locaciones',
+        url: 'dashboard/locations',
+        icon: 'fa-solid fa-house',
+        children: [
+            {
+                name: 'Todos', url: 'dashboard/locations', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+            {
+                name: 'Crear', url: 'dashboard/locations/create', icon: 'nav-icon-bullet',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
                 }

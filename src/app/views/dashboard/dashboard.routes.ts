@@ -35,6 +35,14 @@ export const routes: Routes = [
   },
 
   {
+    path: 'locations',
+    loadChildren: () =>
+      import('./locations/routes.location').then(
+        (m) => m.routes
+      ),
+  },
+
+  {
     path: 'manufactures',
     loadChildren: () =>
       import('./manufactures/routes.manufacture').then(

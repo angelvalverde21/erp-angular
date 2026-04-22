@@ -1,0 +1,34 @@
+.locations-container {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.loading {
+  padding: 10px;
+}
+
+.tree {
+  list-style: none;
+  padding-left: 0;
+}
+
+.tree ul {
+  list-style: none;
+  padding-left: 20px;
+  border-left: 1px dashed #ccc;
+  margin-left: 10px;
+}
+
+.node {
+  padding: 4px 0;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.meta {
+  color: #777;
+  font-size: 12px;
+  margin-left: 5px;
+}

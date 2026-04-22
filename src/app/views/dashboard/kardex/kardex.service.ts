@@ -18,6 +18,13 @@ export class KardexService extends BaseCrudDashboardService {
     super(http, 'kardexes');
   }
 
+    // Generic method to get a single item by ID
+  getVariants(variant_id: number | string | null): Observable<any> {
+    const url = `${this.baseUrl}/variants/${variant_id}`;
+    console.log(url);
+    return this.http.get(`${url}`);
+  }
+
   summary(kardexes: any[]): KardexSummary {
 
     const reception = kardexes.reduce(

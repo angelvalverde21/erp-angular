@@ -2,9 +2,9 @@
 <!-- <td class="text-center">
                     <fa-icon [icon]="faScissors"></fa-icon>
                 </td> -->
-<td class="text-center" style="width: 50px;">
+<th class="text-center" style="width: 50px;">
     #000{{ production.id }}
-</td>
+</th>
 
 <!-- <td class="text-center" style="width: 75px;">
 
@@ -53,25 +53,27 @@
     {{ production?.count_variants ?? 0 }}
 </td>
 
-<td>
+<!-- <td>
     <ngb-progressbar [showValue]="true" [striped]="true" type="success" [value]="getProgress(production)"/>
-</td>
+</td> -->
 
 <td class="text-center">
     <h6>{{ production?.sum_purchases ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
 </td>
-<td class="text-center">
+<!-- <td class="text-center">
     <h6 class="mb-0">
         <span class="badge bg-success px-3 py-1">
             <i class="fa-solid fa-circle-check me-2"></i>Completado
         </span>
     </h6>
-</td>
+</td> -->
+
 <td class="text-center">
-    <div class="date-main">{{ production.created_at | DateShopify }}</div>
-    <div class="date-sub">Act: {{ production.updated_at | DateShopify }}</div>
+    <!-- <div class="date-main">{{ production.created_at | DateShopify }}</div> -->
+    <div class="date-sub">{{ production.updated_at | DateShopify }}</div>
 
 </td>
+
 <td class="text-center" style="width: 50px;">
     <div class="d-flex align-items-center gap-3 justify-content-center">
         <div ngbDropdown class="d-inline-block">

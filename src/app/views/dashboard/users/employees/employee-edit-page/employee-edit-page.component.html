@@ -4,7 +4,6 @@
 
 }@else{
 
-
 <app-head-page [title]="`Colaborador: ${employee.user.name}`" [export]="false">
     @if(is_sales){
     <app-button (click)="openVerticallyCentered(content)" [icon]="faChartLine" color="success" colortext="white"
@@ -15,11 +14,9 @@
 
 <app-employee-widget [summary]="summary"></app-employee-widget>
 
-
 <router-outlet></router-outlet>
 
 }
-
 
 <ng-template #content let-modal>
     <div class="modal-header">
