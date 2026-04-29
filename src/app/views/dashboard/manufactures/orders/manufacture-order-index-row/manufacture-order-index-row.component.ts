@@ -6,7 +6,7 @@ import {
   faScissors, faTape, faEdit,
   faGears, faBoxesStacked, faPlus, faMinus,
   faArrowRightArrowLeft, faTrash, faCartFlatbed,
-  faMoneyBill1
+  faMoneyBill1, faSackDollar
 } from '@fortawesome/free-solid-svg-icons';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
@@ -45,6 +45,7 @@ export class ManufactureOrderIndexRowComponent {
   faCartFlatbed = faCartFlatbed;
   faMoneyBill1 = faMoneyBill1;
   faGears = faGears;
+  faSackDollar = faSackDollar;
 
   @Input() manufacture: any;
 

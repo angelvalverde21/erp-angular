@@ -5,19 +5,18 @@
         </div>
     </td>
     <td>
-        
+
         <a data-fancybox="gallery" [attr.data-caption]="`${ product?.title}`"
             [href]="product?.image | shopifyImageMedium">
-            <img [src]="product?.image | shopifyImageThumbnail" class="me-2" height="45px"
-                alt="">
+            <img [src]="product?.image | shopifyImageThumbnail" class="me-2" height="45px" alt="">
         </a>
 
     </td>
     @for (price_key of price_keys; track $index) {
     <td>
 
-        <input [formControlName]="price_key" [attr.disabled]="loading ? true : null" type="text"
-            (blur)="savePrice()" twoDecimals class="form-control text-center" placeholder="0.00" aria-label="price"
+        <input [formControlName]="price_key" [attr.disabled]="loading ? true : null" type="text" (blur)="savePrice()"
+            twoDecimals class="form-control text-center" placeholder="0.00" aria-label="price"
             aria-describedby="basic-price" />
 
     </td>
@@ -28,14 +27,25 @@
     </td> -->
     <td class="text-center">
 
-        
+
 
         @if(loading){
         <app-loading></app-loading>
         }@else{
-        <button class="btn" [ngClass]="sync_status ? 'btn-secondary' : 'btn-outline-dark'"  (click)="setSyncStatus()">
+
+        @if(sync_status){
+        <button class="btn btn-dark" (click)="setSyncStatus()"
+            ngbTooltip="Quite para no sincronizar este producto con Shopify" placement="top">
             <fa-icon [icon]="faCheck"></fa-icon>
         </button>
+        }@else{
+        <button class="btn btn-outline-dark" (click)="setSyncStatus()"
+            ngbTooltip="Marque para sincronizar este producto con Shopify" placement="top">
+            <fa-icon [icon]="faCheck"></fa-icon>
+        </button>
+        }
+
+
         }
 
     </td>

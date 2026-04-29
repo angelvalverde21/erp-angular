@@ -2,11 +2,12 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { Router, RouterModule } from '@angular/router';
-import { faBarcode, faBagShopping, faCalculator, faRightLeft } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode, faBagShopping, faCalculator, faRightLeft, faSackDollar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { PenPipe } from '@shared/pipes/pen.pipe';
 import { BaseService } from 'src/app/views/base.service';
+
 
 @Component({
   selector: 'app-order-widget',
@@ -27,6 +28,7 @@ export class OrderWidgetComponent implements OnInit {
   faBagShopping = faBagShopping;
   faCalculator = faCalculator;
   faRightLeft = faRightLeft;
+  faSackDollar = faSackDollar;
 
   @Input() order_id: number = 0;
   @Input() summary: any = null;
@@ -93,6 +95,14 @@ export class OrderWidgetComponent implements OnInit {
         link: ['./variants'],
         icon: faCalculator,
         type: 'units'
+      },
+      {
+        title: 'Pagos',
+        subtitle: `${this.summary?.count_payments} Pagos`,
+        value: this.summary?.sum_payments ? this.summary?.sum_payments : 0,
+        link: ['./payments'],
+        icon: faSackDollar,
+        type: 'currency'
       },
       {
         title: 'Recepción',

@@ -89,6 +89,10 @@
                     <fa-icon [icon]="faScissors" class="me-2"></fa-icon>
                     Inventario Inicial
                 </button>
+                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'orders', manufacture.id, 'payments']">
+                    <fa-icon [icon]="faSackDollar" class="me-2"></fa-icon>
+                    Pagos
+                </button>
                 <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'orders', manufacture.id, 'receptions']">
                     <fa-icon [icon]="faArrowRightArrowLeft" class="me-2"></fa-icon> Recepciones
                 </button>

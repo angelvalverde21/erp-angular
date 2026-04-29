@@ -5,7 +5,7 @@
     <app-button-link [path]="['./create']">Agregar Cliente</app-button-link>
 </app-head-page> -->
 
-<app-head-table [type]="'shopify_product'"  (emitParams)="receiveParams($event)"></app-head-table>
+<app-head-table [type]="'shopify_product'" [is_redirect]="false" (emitSearchResult)="receiveSearchResult($event)"></app-head-table>
 
 <div class="card mb-3">
 
@@ -17,8 +17,9 @@
 
     <div class="card-body p-0">
 
+        <app-shopify-product-price-index [products]="products" [head]="true"/>
+        
         @if(products != undefined && products.length > 0){
-        <app-shopify-product-price-index [products]="products"></app-shopify-product-price-index>
         }@else{
         <p class="p-4">No se cuenta con registro de productos </p>
         }

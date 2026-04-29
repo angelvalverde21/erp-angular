@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AttendanceIndexRowComponent } from '../attendance-index-row/attendance-index-row.component';
 
 
@@ -10,10 +10,28 @@ import { AttendanceIndexRowComponent } from '../attendance-index-row/attendance-
   templateUrl: './attendance-index.component.html',
   styleUrl: './attendance-index.component.scss'
 })
-export class AttendanceIndexComponent {
+export class AttendanceIndexComponent implements OnChanges {
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['attendances']) {
+    this.calculateHours(this.getTotalSeconds());
+    }
+  }
+
+
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes['attendances']) {
+  //     this.emitHoursMinuts.emit(this.hoursMinuts);
+  //     this.emitHoursDecimal.emit(this.hoursDecimal);
+  //   }
+  // }
 
 
   private _attendances: any[] = [];
+
+  @Output() emitHoursMinuts = new EventEmitter<any>();
+  @Output() emitHoursDecimal = new EventEmitter<any>();
+
 
   @Input()
 
@@ -57,17 +75,36 @@ export class AttendanceIndexComponent {
     return diff;
   }
 
-  getTotalSeconds(attendances: any[]): number {
-    return attendances.reduce((total, att) => {
+  getTotalSeconds(): number {
+    return this.attendances.reduce((total, att) => {
       return total + this.calculateWorkedSeconds(att.check_in, att.check_out);
     }, 0);
   }
 
-  formatSeconds(seconds: number): string {
+  minutsToDecimal(minutos: number): number {
+    return parseFloat((minutos / 60).toFixed(2));
+  }
+
+  hoursMinuts: string = "";
+  hoursDecimal: number = 0;
+
+  calculateHours(seconds: number) {
+
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
 
-    return `${h}h ${m}m`;
+    this.hoursMinuts = `${h}h ${m}m`;
+    this.hoursDecimal = h + this.minutsToDecimal(m);
+
+    console.log(this.hoursMinuts);
+    console.log(this.hoursDecimal);
+
+    this.emitHoursMinuts.emit(this.hoursMinuts);
+    this.emitHoursDecimal.emit(this.hoursDecimal);
+
+    // return this.hoursMinuts;
   }
+
+
 
 }

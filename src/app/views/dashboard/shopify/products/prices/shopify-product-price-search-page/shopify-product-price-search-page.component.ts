@@ -6,13 +6,13 @@ import { LoadingComponent } from '../../../../../shared/components/loading/loadi
 import { ShopifyProductIndexComponent } from '../../shopify-product-index/shopify-product-index.component';
 import { ProductHeadTableComponent } from '../../shared/product-head-table/product-head-table.component';
 import { ShopifyProductPriceIndexComponent } from '../shopify-product-price-index/shopify-product-price-index.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { PaginatorComponent } from 'src/app/views/dashboard/shared/paginator/paginator.component';
 import { UserHeadTableComponent } from "src/app/views/dashboard/users/shared/user-head-table/user-head-table.component";
 import { HeadTableComponent } from 'src/app/views/shared/components/head-table/head-table.component';
 
 @Component({
-  selector: 'app-shopify-product-price-index-page',
+  selector: 'app-shopify-product-price-search-page',
   imports: [
     LoadingComponent,
     ShopifyProductIndexComponent,
@@ -22,10 +22,12 @@ import { HeadTableComponent } from 'src/app/views/shared/components/head-table/h
     UserHeadTableComponent,
     HeadTableComponent
   ],
-  templateUrl: './shopify-product-price-index-page.component.html',
-  styleUrl: './shopify-product-price-index-page.component.scss'
+  templateUrl: './shopify-product-price-search-page.component.html',
+  styleUrl: './shopify-product-price-search-page.component.scss'
 })
-export class ShopifyProductPriceIndexPageComponent {
+export class ShopifyProductPriceSearchPageComponent {
+
+  params: any = {};
 
   destroy$ = new Subject<void>();
   products: any[] = [];
@@ -35,13 +37,15 @@ export class ShopifyProductPriceIndexPageComponent {
 
   constructor(
     private _shopify_product: ShopifyProductService,
-    private route: ActivatedRoute,
-    private router: Router
+    private route: ActivatedRoute
   ) {
-
+    this.route.queryParams.subscribe(params => {
+      this.params = params;
+    });
   }
 
   ngOnInit(): void {
+
     this.route.queryParams
       .pipe(takeUntil(this.destroy$))
       .subscribe(params => {
@@ -53,12 +57,11 @@ export class ShopifyProductPriceIndexPageComponent {
       });
   }
 
-
   productInit(page: number = 1, status: string = "") {
 
     this.loading = true;
 
-    this._shopify_product.index(page, status).pipe(takeUntil(this.destroy$)).subscribe({
+    this._shopify_product.search(this.params).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         console.log(resp);
@@ -88,21 +91,11 @@ export class ShopifyProductPriceIndexPageComponent {
 
   }
 
-  // receiveSearchResult(products: any) {
-  //   console.log(products);
+  receiveSearchResult(products: any) {
+    console.log(products);
 
-  //   // this.products = $event.data;
-  //   this.links = [];
-  //   this.products = products
-  // }
-
-
-  receiveParams($event: any) {
-    this.router.navigate(['search'], {
-      relativeTo: this.route,
-      queryParams: $event  // 👈 Angular convierte cada propiedad del objeto en un query param
-    }).then(() => {
-      console.log('Nueva URL:', this.router.url);
-    });
+    // this.products = $event.data;
+    this.links = [];
+    this.products = products
   }
 }

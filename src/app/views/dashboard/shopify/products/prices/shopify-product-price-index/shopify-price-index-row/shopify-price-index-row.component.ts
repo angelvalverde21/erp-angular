@@ -1,5 +1,5 @@
 import { CommonModule, JsonPipe } from '@angular/common';
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Product } from 'src/app/interfaces/product.interface';
 import { ShopifyImageThumbnailPipe } from '@shared/pipes/shopify/shopify-image-thumbnail.pipe';
@@ -15,6 +15,7 @@ import { Fancybox } from '@fancyapps/ui';
 import { ShopifyImageLargePipe } from '@shared/pipes/shopify/shopify-image-large.pipe';
 import { ShopifyImageMediumPipe } from '@shared/pipes/shopify/shopify-image-medium.pipe';
 import { DateShopifyPipe } from '@shared/pipes/date-shopify.pipe';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'tr[app-shopify-price-index-row]',
@@ -29,18 +30,23 @@ import { DateShopifyPipe } from '@shared/pipes/date-shopify.pipe';
     FontAwesomeModule,
     LoadingComponent,
     DateShopifyPipe,
-    CommonModule
+    CommonModule,
+    NgbTooltipModule
   ],
   templateUrl: './shopify-price-index-row.component.html',
   styleUrl: './shopify-price-index-row.component.scss'
 })
-export class ShopifyPriceIndexRowComponent implements OnInit, OnDestroy {
+export class ShopifyPriceIndexRowComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() product: any;
-  @Input() price_keys: any;
+  @Input() head: boolean = false;
+  // @Input() price_keys: any;
   faCheck = faCheck;
   faSync = faSync;
   faSave = faSave;
+  
+
+  @Input() price_keys: string[] = []; 
 
   form!: FormGroup
 
@@ -55,10 +61,23 @@ export class ShopifyPriceIndexRowComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private _shopifyProduct: ShopifyProductService,
-    private elRef: ElementRef
+    private elRef: ElementRef,
+    private cdr: ChangeDetectorRef
   ) {
 
   }
+
+  ngOnChanges() {
+    
+    this.cdr.markForCheck();
+    console.log("hola ngOnChanges", this.product);
+
+    if(this.head){
+      this.formInit();
+    }
+
+  }
+
   ngOnInit(): void {
 
     this.sync_status = this.product.sync_status;
@@ -83,29 +102,28 @@ export class ShopifyPriceIndexRowComponent implements OnInit, OnDestroy {
 
   formInit(): void {
 
-
     this.variant = this.product.variants[0];
 
-    this.form = this.fb.group({
-      price_etiqueta: [''],
-      price_oferta: [''],
-      price_sale: [''],
-      price_feria: [''],
-      price_wholesaler: [''],
-      price_live: [''],
-      price_blackfriday: ['']
+    // Crear el form dinámicamente
+    const group: any = {};
+    this.price_keys.forEach(field => {
+      group[field] = [''];
     });
 
-    this.form.patchValue({
-      price_etiqueta: this.variant.price_etiqueta,
-      price_oferta: this.variant.price_oferta,
-      price_sale: this.variant.price_sale,
-      price_feria: this.variant.price_feria,
-      price_wholesaler: this.variant.price_wholesaler,
-      price_live: this.variant.price_live,
-      price_blackfriday: this.variant.price_blackfriday
+    this.form = this.fb.group(group);
+
+    this.loadPrices();
+
+  }
+
+  loadPrices(){
+    // Patch dinámico desde variant
+    const values: any = {};
+    this.price_keys.forEach(field => {
+      values[field] = this.variant?.[field];
     });
 
+    this.form.patchValue(values);
   }
 
   getSavePrice() {
@@ -137,7 +155,7 @@ export class ShopifyPriceIndexRowComponent implements OnInit, OnDestroy {
     });
   }
 
-  syncProductPrices(){
+  syncProductPrices() {
 
 
   }
@@ -153,7 +171,7 @@ export class ShopifyPriceIndexRowComponent implements OnInit, OnDestroy {
     Fancybox.close();
   }
 
-  setSyncStatus(){
+  setSyncStatus() {
 
     this.sync_status = !this.sync_status;
     console.log(this.sync_status);
@@ -161,7 +179,7 @@ export class ShopifyPriceIndexRowComponent implements OnInit, OnDestroy {
     this._shopifyProduct.updateProductSyncStatus(this.product.id, this.sync_status).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        
+
         console.log(resp);
 
         this.sync_status = resp.data.sync_status;

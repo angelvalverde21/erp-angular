@@ -144,12 +144,12 @@ export class ManufactureProductionVariantIndexRowComponent implements OnDestroy,
 
     this.form = this.fb.group({
       quantity: [''],
-      price: [''],
+      price: ['0'],
     });
 
     this.form.patchValue({
       quantity: this.manufacture_variant.quantity,
-      price: this.manufacture_variant.price
+      price: this.manufacture_variant.price ?? 0
     });
 
 

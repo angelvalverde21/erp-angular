@@ -39,6 +39,13 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'payments',
+        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-payment-index/manufacture-order-payment-index.component').then((m) => m.ManufactureOrderPaymentIndexComponent),
+        data: {
+          title: 'Pagos realizados',
+        }
+      },
+      {
         path: 'kardexes',
         loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-kardex-index/manufacture-order-kardex-index.component').then((m) => m.ManufactureOrderKardexIndexComponent),
         data: {

@@ -19,4 +19,13 @@ export const routes: Routes = [
     },
     
   },
+  {
+    path: 'prices/search',
+    loadComponent: () => import('./prices/shopify-product-price-search-page/shopify-product-price-search-page.component').then((m) => m.ShopifyProductPriceSearchPageComponent),
+    data: {
+      title: 'Lista de precios',
+      // name: 'shopify.order.index', // 👈 nombre único
+    },
+    
+  },
 ];

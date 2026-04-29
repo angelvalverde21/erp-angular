@@ -68,6 +68,7 @@ export class ManufactureOrderEditPageComponent implements OnInit {
     });
 
   }
+  
   ngOnInit(): void {
     this.manufactureInit();
   }
@@ -94,7 +95,9 @@ export class ManufactureOrderEditPageComponent implements OnInit {
         this.summary = {
           sum_variants: this.manufacture.sum_variants,
           sum_kardexes: this.manufacture.sum_kardexes,
+          sum_payments: this.manufacture.sum_payments,
           count_variants: this.manufacture.count_variants,
+          count_payments: this.manufacture.count_payments,
         };
 
 
