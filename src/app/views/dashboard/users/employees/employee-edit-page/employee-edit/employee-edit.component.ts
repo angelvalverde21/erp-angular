@@ -22,7 +22,7 @@ import { EmployeeService } from '../../employee.service';
   templateUrl: './employee-edit.component.html',
   styleUrl: './employee-edit.component.scss'
 })
-export class EmployeeEditComponent implements OnDestroy{
+export class EmployeeEditComponent implements OnDestroy {
 
   disabledButton: boolean = false;
   loadingIcon: boolean = false;
@@ -55,6 +55,7 @@ export class EmployeeEditComponent implements OnDestroy{
         tag_sales: this.employee.tag_sales,
         roles: this.employee.user.roles,               // ya es array ['produccion','compras']
         salary: this.employee?.salary,    //aquí se anida el salario
+        type: this.employee?.type,    //aquí se anida el tipo
         comission: this.employee?.comission
       });
 
@@ -106,6 +107,7 @@ export class EmployeeEditComponent implements OnDestroy{
       status: ['', [Validators.required]],
       roles: ['', [Validators.required]],
       salary: ['', [Validators.required]],
+      type: ['fulltime', [Validators.required]],
       tag_sales: [''],
       comission: [''],
     });
