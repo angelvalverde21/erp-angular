@@ -44,7 +44,6 @@ export class ShopifyPriceIndexRowComponent implements OnInit, OnDestroy, OnChang
   faCheck = faCheck;
   faSync = faSync;
   faSave = faSave;
-  
 
   @Input() price_keys: string[] = []; 
 

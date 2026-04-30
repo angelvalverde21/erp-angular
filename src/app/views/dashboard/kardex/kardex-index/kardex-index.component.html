@@ -26,7 +26,8 @@
                         [ngClass]="(kardex.direction == 'in') ? (kardex.comment === 'Reparado' ? 'table-warning' : 'table-success') : 'table-danger'">
                         <th class="text-center" scope="row">{{ kardex.variant.sku }}</th>
                         <td class="text-center">
-                            <img [src]="kardex?.variant?.product?.image?.url_thumbnail" height="50px">
+                            <app-image-shopify [image]="kardex?.variant?.product?.image"></app-image-shopify>
+                            <!-- <img [src]="kardex?.variant?.product?.image?.url_thumbnail" height="50px"> -->
                         </td>
                         <td>{{ kardex?.variant?.product?.name }}</td>
                         @for (option_value of kardex.variant.option_values; track option_value.id) {

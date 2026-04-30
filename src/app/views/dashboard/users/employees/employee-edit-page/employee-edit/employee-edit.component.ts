@@ -41,7 +41,7 @@ export class EmployeeEditComponent implements OnDestroy {
 
     effect(() => {
 
-      this.employee = this._employee.receiveSignalEvent();
+      this.employee = this._employee.receiveSignal();
       console.log(this.employee);
       if (!this.employee) return;
 

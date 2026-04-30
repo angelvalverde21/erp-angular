@@ -5,14 +5,14 @@
         </div>
     </td>
     <td>
-
         <a data-fancybox="gallery" [attr.data-caption]="`${ product?.title}`"
             [href]="product?.image | shopifyImageMedium">
             <img [src]="product?.image | shopifyImageThumbnail" class="me-2" height="45px" alt="">
         </a>
-
     </td>
+
     @for (price_key of price_keys; track $index) {
+
     <td>
 
         <input [formControlName]="price_key" [attr.disabled]="loading ? true : null" type="text" (blur)="savePrice()"
@@ -20,6 +20,7 @@
             aria-describedby="basic-price" />
 
     </td>
+    
     }
     <!-- <td class="text-center">{{ form.value | json }}</td> -->
     <!-- <td class="text-center">
