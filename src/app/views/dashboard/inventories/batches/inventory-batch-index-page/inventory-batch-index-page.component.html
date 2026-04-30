@@ -5,6 +5,8 @@
     <app-button-add (click)="openVerticallyCentered(content)"></app-button-add>
 </app-head-page>
 
+<app-head-table></app-head-table>
+
 <div class="card">
 
     <div class="card-header py-3">
@@ -13,7 +15,8 @@
 
     <div class="card-body p-0">
 
-        <app-inventory-batch-index [inventories]="inventories" (sumQuantityEmit)="receiveSumQuantity($event)"></app-inventory-batch-index>
+        <app-inventory-batch-index [inventories]="inventories"
+            (sumQuantityEmit)="receiveSumQuantity($event)"></app-inventory-batch-index>
 
     </div>
 

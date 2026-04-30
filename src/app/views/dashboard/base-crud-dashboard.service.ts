@@ -169,5 +169,15 @@ export abstract class BaseCrudDashboardService {
     this.receiveSignalEvent.set(data);
   
   }
+  
+  // estado reactivo
+  receiveSignal = signal<any>(null);
+
+  setSignal(data: any) {
+
+    console.log(data);
+    this.receiveSignal.set(data);
+  
+  }
 
 }

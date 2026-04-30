@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AttendanceIndexComponent } from 'src/app/views/dashboard/attendances/attendance-index/attendance-index.component';
 import { EmployeeAttendanceService } from './employee.attendance.service';
@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { LoadingComponent } from 'src/app/views/shared/components/loading/loading.component';
 import { HeadTableComponent } from 'src/app/views/shared/components/head-table/head-table.component';
 import { CommonModule } from '@angular/common';
+import { EmployeeService } from '../../employee.service';
 
 @Component({
   selector: 'app-employee-attendance-index',
@@ -25,9 +26,12 @@ export class EmployeeAttendanceIndexComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   attendances: any[] = [];
 
+  employee: any;
+
   constructor(
     private route: ActivatedRoute,
-    private _employeeAttendance: EmployeeAttendanceService
+    private _employeeAttendance: EmployeeAttendanceService,
+    private _employee: EmployeeService
   ) {
 
     this.route.parent?.params.subscribe(params => {
@@ -35,6 +39,14 @@ export class EmployeeAttendanceIndexComponent implements OnInit, OnDestroy {
       this.employe_id = Number(params['employee_id']);
       this._employeeAttendance.setId(this.employe_id);
 
+    });
+
+    effect(() => {
+
+      const event = this._employee.receiveSignal();
+      if (!event) return;
+    
+      this.employee = event;
     });
 
   }

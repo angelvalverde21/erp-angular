@@ -10,6 +10,7 @@ import { LoadingComponent } from 'src/app/views/shared/components/loading/loadin
 import { InventoryCreateComponent } from '../../inventory-create/inventory-create.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InventoryBatchIndexComponent } from '../inventory-batch-index/inventory-batch-index.component';
+import { HeadTableComponent } from '@shared/components/head-table/head-table.component';
 
 @Component({
   selector: 'app-inventory-batch-index-page',
@@ -19,7 +20,8 @@ import { InventoryBatchIndexComponent } from '../inventory-batch-index/inventory
     InventoryBatchIndexComponent,
     ButtonAddComponent,
     LoadingComponent,
-    InventoryCreateComponent
+    InventoryCreateComponent,
+    HeadTableComponent
   ],
   templateUrl: './inventory-batch-index-page.component.html',
   styleUrl: './inventory-batch-index-page.component.scss',

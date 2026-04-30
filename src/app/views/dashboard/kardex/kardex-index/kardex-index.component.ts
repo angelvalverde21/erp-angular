@@ -4,6 +4,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode } from '@fortawesome/free-solid-svg-icons';
 import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
 import { KardexService } from '../kardex.service';
+import { ImageShopifyComponent } from '../../../shared/components/image-shopify/image-shopify.component';
 
 @Component({
   selector: 'app-kardex-index',
@@ -11,7 +12,8 @@ import { KardexService } from '../kardex.service';
     JsonPipe,
     FontAwesomeModule,
     CommonModule,
-    DateShopifyPipe
+    DateShopifyPipe,
+    ImageShopifyComponent
   ],
   templateUrl: './kardex-index.component.html',
   styleUrl: './kardex-index.component.scss'
