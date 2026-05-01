@@ -1,11 +1,14 @@
 import { Component, effect, OnDestroy, OnInit } from '@angular/core';
 import { EmployeeService } from '../../employee.service';
 import { CommonModule } from '@angular/common';
-
+import { HeadTableComponent } from '@shared/components/head-table/head-table.component'
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-employee-salary-index',
   imports: [
-    CommonModule
+    CommonModule,
+    HeadTableComponent,
+    NgbAccordionModule
   ],
   templateUrl: './employee-salary-index.component.html',
   styleUrl: './employee-salary-index.component.scss'
@@ -42,7 +45,10 @@ export class EmployeeSalaryIndexComponent implements OnInit, OnDestroy {
 
   }
 
-
+  receive(event: any) {
+    console.log(event);
+    
+  }
 
 
 }

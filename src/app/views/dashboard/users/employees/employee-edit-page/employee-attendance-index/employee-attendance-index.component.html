@@ -25,49 +25,6 @@
 </div>
 
 
-<div class="card mb-3">
-
-    <div class="card-header py-3">
-        Detalles de pago
-    </div>
-
-    <div class="card-body">
-
-        <ul class="list-group list-group-flush">
-
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Sueldo Base (fulltime)</span>
-                <h6>S/. 565</h6>
-            </li>
-
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Horas Laborados</span>
-                <h6>{{ hoursMinuts }}</h6>
-            </li>
-
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Pago por hora (S/. 565/78h)</span>
-                <h6>{{ 7.24 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
-            </li>
-
-            <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Comisiones de venta ({{ employee?.comission }})</span>
-                <h6>{{ 7.24 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
-            </li> -->
-
-        </ul>
-
-    </div>
-
-    <div class="card-footer bg-dark text-white py-3 d-flex justify-content-between align-items-center">
-        <span>Total a Pagar (Partime)</span>
-        <h3>{{ 7.24 * hoursDecimal | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h3>
-    </div>
-
-</div>
-
-<p>El total a pagar se calcula tomando como base el pago por hora x las horas laboradas</p>
-
 <!-- <div class="card mb-3">
 
     <div class="card-header py-3">

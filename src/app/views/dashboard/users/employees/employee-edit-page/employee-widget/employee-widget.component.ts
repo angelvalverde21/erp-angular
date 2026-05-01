@@ -95,7 +95,7 @@ export class EmployeeWidgetComponent implements OnInit {
         type: 'units'
       },
       {
-        title: 'Sueldos',
+        title: 'Pagos',
         subtitle: `Quincenales`,
         value: 0,
         link: ['./salaries'],
