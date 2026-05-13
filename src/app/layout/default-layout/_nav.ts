@@ -1,6 +1,6 @@
 import { navErp } from './navs/_nav.erp';
 import { navShopify } from './navs/_nav.shopify';
-import { navMercadoPago } from './navs/_nav.mercadopago';
+import { navPasarelas } from './navs/_nav.pasarelas';
 import { CustomNavData } from '../../interfaces/nav.interface';
 import { navConfig } from './navs/_nav.config';
 import { navReport } from './navs/_nav.report';
@@ -21,7 +21,7 @@ export const navItems: CustomNavData[] = buildNav([
   ...navMarketing,
   ...navConfig,
   ...navShopify,
-  ...navMercadoPago,
+  ...navPasarelas,
   ...navReport,
   {
     title: true,

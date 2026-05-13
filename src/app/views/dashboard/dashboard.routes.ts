@@ -95,9 +95,15 @@ export const routes: Routes = [
     // canActivate: [authGuard],
   },
   {
-    path: 'mercadopago',
+    path: 'pasarelas',
     loadChildren: () =>
       import('./mercadopago/routes.mercadopago').then((m) => m.routes),
+    // canActivate: [authGuard],
+  },
+  {
+    path: 'yapes',
+    loadChildren: () =>
+      import('./yapes/routes.yape').then((m) => m.routes),
     // canActivate: [authGuard],
   },
   {

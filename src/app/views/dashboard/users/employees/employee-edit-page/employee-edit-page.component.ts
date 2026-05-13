@@ -98,7 +98,7 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
 
       next: (resp: any) => {
         this.employee = resp.data;
-        console.log(this.employee);
+        console.log(resp);
         this._employee.setSignal(this.employee);
         this.summary.sum_payments = this.employee.balance;
         this.is_sales = this.employee.user.roles.includes('sales');

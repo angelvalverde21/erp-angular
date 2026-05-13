@@ -11,7 +11,7 @@ import { faClipboardUser, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-attendance-index-page',
@@ -31,6 +31,11 @@ export class AttendanceIndexPageComponent implements OnInit, OnDestroy {
 
   form!: FormGroup;
   file!: File;
+
+  /* progreso de carga */
+  progress = 0;
+  uploading = false;
+  /* fin de progreso de carga */
 
   constructor(
     config: NgbModalConfig,
@@ -111,27 +116,50 @@ export class AttendanceIndexPageComponent implements OnInit, OnDestroy {
 
   submit() {
 
-    if (this.form.invalid) return;
+    if (this.form.invalid || !this.file) return;
 
     const formData = new FormData();
-
     formData.append('file', this.file);
 
-    this._attendance.upload(formData).pipe(takeUntil(this.destroy$)).subscribe({
+    this.uploading = true;
+    this.progress = 0;
 
-      next: (resp: any) => {
-        Swal.fire('Guardado', 'El archivo ha subido correctamente', 'success');
-        console.log(resp);
-        this.loading = false;
-      },
-    
-      error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al subir el archivo. Inténtalo nuevamente.','error');
-        console.error(error);
-      },
-    
-    });
+    this._attendance.upload(formData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
 
+        next: (event: any) => {
+
+          // 📊 Progreso real
+          if (event.type === HttpEventType.UploadProgress && event.total) {
+            this.progress = Math.round((100 * event.loaded) / event.total);
+          }
+
+          // ✅ Respuesta final
+          if (event.type === HttpEventType.Response) {
+            this.uploading = false;
+            this.progress = 100;
+
+            Swal.fire('Guardado', 'El archivo ha subido correctamente', 'success');
+            this.closeModal();
+
+            console.log(event.body);
+          }
+        },
+
+        error: (error: any) => {
+          this.uploading = false;
+
+          Swal.fire(
+            'Error',
+            'Ocurrió un problema al subir el archivo. Inténtalo nuevamente.',
+            'error'
+          );
+
+          console.error(error);
+        }
+
+      });
   }
 
 }

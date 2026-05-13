@@ -28,7 +28,7 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">Modal title</h4>
+        <h5 class="modal-title">Archivo de asistencia</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
@@ -39,11 +39,21 @@
             <div class="modal-body">
 
                 <div class="mb-3">
-                    <label class="form-label">CSV File</label>
+                    <label class="form-label">Subir Archivo CSV</label>
 
                     <input type="file" class="form-control" accept=".csv" (change)="onFileChange($event)">
 
                 </div>
+
+                <!-- Barra de progreso -->
+                @if(uploading){
+                <div class="progress mt-3">
+                    <div class="progress-bar" role="progressbar" [style.width.%]="progress"
+                        [attr.aria-valuenow]="progress" aria-valuemin="0" aria-valuemax="100">
+                        {{ progress }}%
+                    </div>
+                </div>
+                }
 
             </div>
 
@@ -52,8 +62,8 @@
                     Cancel
                 </button>
 
-                <button type="submit" class="btn btn-dark" [disabled]="form.invalid">
-                    Upload
+                <button type="submit" class="btn btn-dark" [disabled]="form.invalid || uploading">
+                    {{ uploading ? 'Subiendo...' : 'Upload' }}
                 </button>
             </div>
 

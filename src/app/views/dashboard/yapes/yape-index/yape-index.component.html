@@ -1,0 +1,29 @@
+<div class="table-responsive">
+
+    <table class="table table-hover table-striped mb-0 align-middle">
+
+        <thead class="table-light">
+            <tr>
+                <th scope="col" class="text-center"></th>
+                <th scope="col" class="text-center">#</th>
+                <th scope="col" class="text-center">Monto</th>
+                <th scope="col" class="text-center">Detalles</th>
+                <th scope="col" class="text-center" style="width: 75px;">Fecha</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (yape of yapes; track yape.id) {
+                <tr>
+                    <td><img src="assets/images/logo-yape.png" height="" alt=""></td>
+                    <td>{{ yape?.reference_code }}</td>
+                    <td><h6>{{ yape.amount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</h6></td>
+                    <td>{{ yape.comment }}</td>
+                    <td>{{ yape.created_at | DateShopify }}</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>

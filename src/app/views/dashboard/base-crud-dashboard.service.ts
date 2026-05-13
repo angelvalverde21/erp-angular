@@ -144,7 +144,10 @@ export abstract class BaseCrudDashboardService {
     const url = `${this.baseUrl}/upload`;
     console.log("imprimiendo url de upload");
     console.log(url);
-    return this.http.post(`${url}`, data);
+    return this.http.post(`${url}`, data, {
+      reportProgress: true,
+      observe: 'events'
+    });
   }
 
 
@@ -159,7 +162,7 @@ export abstract class BaseCrudDashboardService {
 
   /* signals events */
 
-  
+
   // estado reactivo
   receiveSignalEvent = signal<any>(null);
 
@@ -167,9 +170,9 @@ export abstract class BaseCrudDashboardService {
 
     console.log(data);
     this.receiveSignalEvent.set(data);
-  
+
   }
-  
+
   // estado reactivo
   receiveSignal = signal<any>(null);
 
@@ -177,7 +180,7 @@ export abstract class BaseCrudDashboardService {
 
     console.log(data);
     this.receiveSignal.set(data);
-  
+
   }
 
 }
