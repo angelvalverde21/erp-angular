@@ -1,0 +1,42 @@
+<div class="table-responsive">
+
+    <table class="table table-hover table-striped mb-0 align-middle">
+
+        <thead class="table-light">
+            <tr>
+                <th scope="col" class="text-center">Tipo</th>
+                <th scope="col" class="text-center">Dia</th>
+                <th scope="col">Entrada</th>
+                <th scope="col" class="text-center">Salida</th>
+                <th scope="col" class="text-center">Permitir Horas Extras</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (schedule of schedules; let i = index; track i) {
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>
+
+<!-- 
+$table->enum('work_type', ['home_office', 'onsite'])->default('onsite');
+
+            $table->tinyInteger('day_of_week')->unsigned()->nullable(); //
+            $table->time('start_time')->default('09:00:00')->nullable();
+            $table->time('end_time')->default('19:00:00');
+
+            //Dias de la semana
+
+            //PERMITIR HORAS EXTRAS
+            $table->boolean('allow_extra_hours')->default(false); 
+            -->

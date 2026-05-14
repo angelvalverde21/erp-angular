@@ -18,7 +18,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { JsonPipe } from '@angular/common';
 import { IdentitySelectedComponent } from '../../../identities/identity-selected/identity-selected.component';
-
+import { ButtonSwitchComponent } from '../../../../shared/components/buttons/button-switch/button-switch.component';
 @Component({
   selector: 'app-employee-form',
   imports: [
@@ -28,7 +28,8 @@ import { IdentitySelectedComponent } from '../../../identities/identity-selected
     FontAwesomeModule,
     NgSelectModule,
     JsonPipe,
-    IdentitySelectedComponent
+    IdentitySelectedComponent,
+    ButtonSwitchComponent
   ],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss'

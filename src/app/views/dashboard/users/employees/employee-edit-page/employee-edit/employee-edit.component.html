@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card mb-3">
 
 
     <div class="card-body">
@@ -9,6 +9,21 @@
         <app-user-controls-update type="employee" [formValue]="form.value"
             [user_id]="employee.id"></app-user-controls-update>
 
+    </div>
+
+</div>
+
+<app-head-page title="Dias de trabajo" [export]="false">
+    <app-button-link [path]="['./create']">Agregar </app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-body p-0">
+
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
     </div>
 
 </div>

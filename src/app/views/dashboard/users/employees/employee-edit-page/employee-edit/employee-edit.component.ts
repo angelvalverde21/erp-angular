@@ -8,7 +8,8 @@ import { JsonPipe } from '@angular/common';
 import { HeadTableComponent } from 'src/app/views/shared/components/head-table/head-table.component';
 import { UserControlsUpdateComponent } from '../../../shared/user-controls-update/user-controls-update.component';
 import { EmployeeService } from '../../employee.service';
-
+import { HeadPageComponent } from 'src/app/views/shared/components/head-page/head-page.component';
+import { ButtonLinkComponent } from 'src/app/views/shared/components/buttons/button-link/button-link.component';
 
 @Component({
   selector: 'app-employee-edit',
@@ -17,7 +18,9 @@ import { EmployeeService } from '../../employee.service';
     ButtonComponent,
     UserControlsUpdateComponent,
     JsonPipe,
-    HeadTableComponent
+    HeadTableComponent,
+    HeadPageComponent,
+    ButtonLinkComponent
   ],
   templateUrl: './employee-edit.component.html',
   styleUrl: './employee-edit.component.scss'
@@ -56,7 +59,10 @@ export class EmployeeEditComponent implements OnDestroy {
         roles: this.employee.user.roles,               // ya es array ['produccion','compras']
         salary: this.employee?.salary,    //aquí se anida el salario
         type: this.employee?.type,    //aquí se anida el tipo
-        comission: this.employee?.comission
+        comission: this.employee?.comission,
+        work_time_start: this.employee?.work_time_start,
+        work_time_end: this.employee?.work_time_end,
+        auto_close_end_time: this.employee?.auto_close_end_time,
       });
 
     });
@@ -98,6 +104,7 @@ export class EmployeeEditComponent implements OnDestroy {
   }
 
   private formInit(): void {
+
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required]],
@@ -108,9 +115,13 @@ export class EmployeeEditComponent implements OnDestroy {
       roles: ['', [Validators.required]],
       salary: ['', [Validators.required]],
       type: ['fulltime', [Validators.required]],
+      work_time_start: ['', [Validators.required]],
+      work_time_end: ['', [Validators.required]],
+      auto_close_end_time: ['', [Validators.required]],
       tag_sales: [''],
       comission: [''],
     });
+
   }
 
 
