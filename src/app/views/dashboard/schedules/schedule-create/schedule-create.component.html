@@ -1,5 +1,5 @@
 <app-schedule-form [form]="form"></app-schedule-form>
 
-{{ form.value | json }}
+<!-- {{ form.value | json }} -->
 
-<app-button-save (click)="create()">Guardar Cambios</app-button-save>
+<app-button-save [spinner]="loading" [disabled]="loading" [class] (click)="create()">Guardar Cambios</app-button-save>

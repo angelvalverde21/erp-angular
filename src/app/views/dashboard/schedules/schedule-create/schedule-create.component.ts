@@ -1,9 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; //Colocar esto arriba en los imports
 import { ScheduleFormComponent } from '../schedule-form/schedule-form.component';
 import { ButtonSaveComponent } from 'src/app/views/shared/components/buttons/button-save/button-save.component';
 import { JsonPipe } from '@angular/common';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { EmployeeScheduleService } from '@dashboard/users/employees/employee-edit-page/employee-schedule-index/employe.schedule.service';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-schedule-create',
@@ -16,24 +20,30 @@ import { Subject } from 'rxjs';
   templateUrl: './schedule-create.component.html',
   styleUrl: './schedule-create.component.scss'
 })
-export class ScheduleCreateComponent implements OnInit, OnDestroy{
+export class ScheduleCreateComponent implements OnInit, OnDestroy {
 
-  
+  @Input() employee_id: number = 0;
+
+  @Output() emitCreateSchedule = new EventEmitter<any>();
+
+  schedule = {};
+
   constructor(
-  private fb: FormBuilder,
-  private _schedule: ScheduleService
-  ){}
-  
+    private fb: FormBuilder,
+    private _employeeSchedule: EmployeeScheduleService
+  ) { }
+
   form!: FormGroup;
 
-  formInit(){ 
+  formInit() {
 
     this.form = this.fb.group({
       work_type: ["onsite", Validators.required],
-      start_time: ["09:00", Validators.required],
-      end_time: ["17:00", Validators.required],
+      start_time: ["10:00", Validators.required],
+      end_time: ["19:00", Validators.required],
       day_of_week: ["1", Validators.required],
-      allow_extra_hours: [1, Validators.required],
+      allow_extra_hours: [0, Validators.required],
+      comments: [""],
     });
 
   }
@@ -45,36 +55,53 @@ export class ScheduleCreateComponent implements OnInit, OnDestroy{
   formValid(value: boolean) {
 
   }
-  
-  create(){
+
+  loading: boolean = false;
+
+  create() {
+
+    console.log(this.form.value);
 
     this.loading = true;
 
-    this._scheduleService.create(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
+    this._employeeSchedule.setId(this.employee_id);
+
+    this._employeeSchedule.store(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Guardado',
+          text: 'El registro ha sido creado',
+          timer: 1500,          // 1.5 segundos
+          showConfirmButton: false
+        });
+        
         console.log(resp);
-        this.s = resp.data;
+
+        this.schedule = resp.data;
         this.loading = false;
+        console.log("respuesta recibida del servidor");
+        this.emitCreateSchedule.emit(this.schedule);
       },
-    
+
       error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
+        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         console.error(error);
       },
-    
+
     });
 
   }
 
   destroy$ = new Subject<void>();
-  
+
   ngOnDestroy(): void {
-  
+
     this.destroy$.next();
     this.destroy$.complete();
-  
+
   }
 
 }

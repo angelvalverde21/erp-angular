@@ -1,42 +1,46 @@
-<div class="table-responsive">
-
-    <table class="table table-hover table-striped mb-0 align-middle">
-
-        <thead class="table-light">
-            <tr>
-                <th scope="col" class="text-center">Tipo</th>
-                <th scope="col" class="text-center">Dia</th>
-                <th scope="col">Entrada</th>
-                <th scope="col" class="text-center">Salida</th>
-                <th scope="col" class="text-center">Permitir Horas Extras</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @for (schedule of schedules; track schedule.id) {
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            }
-        </tbody>
-
-    </table>
-
+<div class="bg-white px-3 pb-3 d-flex justify-content-between align-items-center">
+    <span><fa-icon [icon]="faClock" class="me-2"></fa-icon> Transacciones</span>
+    <app-button-add (click)="openVerticallyCentered(content)"></app-button-add>
 </div>
 
-<!-- 
-$table->enum('work_type', ['home_office', 'onsite'])->default('onsite');
+@if(schedules.length === 0){
+<app-void-index></app-void-index>
+}@else{
 
-            $table->tinyInteger('day_of_week')->unsigned()->nullable(); //
-            $table->time('start_time')->default('09:00:00')->nullable();
-            $table->time('end_time')->default('19:00:00');
+<div class="table-responsive">
 
-            //Dias de la semana
+    <table class="table table-striped mb-0 align-middle">
+        <thead class="table-light">
+            <tr>
+                <th class="text-center" scope="col">#</th>
+                <th class="text-center" scope="col">Tipo</th>
+                <th class="text-center" scope="col">Dia</th>
+                <th class="text-center" scope="col">Entrada</th>
+                <th class="text-center" scope="col">Salida</th>
+                <th class="text-center" scope="col">Horas Extras</th>
+                <th class="text-center" scope="col">Comentarios</th>
+                <th class="text-center" scope="col" style="width: 50px;">Editar</th>
+            </tr>
+        </thead>
+        <tbody>
 
-            //PERMITIR HORAS EXTRAS
-            $table->boolean('allow_extra_hours')->default(false); 
-            -->
+            @for (schedule of schedules; track schedule.id) {
+            <tr [employee_id]="employee_id" app-schedule-index-row [schedule]="schedule" (emitRemoveschedule)="receiveRemoveschedule($event)"></tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+}
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title">Registrar Pago</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-schedule-create [employee_id]="employee_id"
+            (emitCreateSchedule)="receiveCreateSchedule($event)"></app-schedule-create>
+    </div>
+</ng-template>

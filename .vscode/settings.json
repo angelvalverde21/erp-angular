@@ -25,7 +25,15 @@
             "envManager": "ms-python.python:venv",
             "packageManager": "ms-python.python:pip"
         }
-    ]
+    ],
+
+    "editor.tabCompletion": "on",
+    "editor.snippetSuggestions": "top",
+    "editor.suggest.showSnippets": true,
+    "editor.suggestSelection": "first",
+
+    "codeium.enableCodeLens": false,
+    // "codeium.enableInlineCodeActions": false
 }
 
 // {

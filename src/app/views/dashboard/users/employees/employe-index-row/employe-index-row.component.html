@@ -33,6 +33,7 @@
             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                 <button ngbDropdownItem [routerLink]="['/', store, 'dashboard' , 'users', 'employees', employee.id]"><fa-icon [icon]="faUser" class="me-2"></fa-icon> Detalles</button>
                 <!-- <div class="dropdown-divider"></div> -->
+                <button ngbDropdownItem [routerLink]="['/', store, 'dashboard' , 'users', 'employees', employee.id, 'schedules']"><fa-icon [icon]="faClock" class="me-2"></fa-icon> Horarios</button>
                 <button ngbDropdownItem [routerLink]="['/', store, 'dashboard' , 'users', 'employees', employee.id, 'attendances']"><fa-icon [icon]="faIdBadge" class="me-2"></fa-icon> Asistencias</button>
                 <!-- <div class="dropdown-divider"></div> -->
                 <button ngbDropdownItem [routerLink]="['/', store, 'dashboard' , 'users', 'employees', employee.id, 'salaries']"><fa-icon [icon]="faCoins" class="me-2"></fa-icon> Salarios</button>

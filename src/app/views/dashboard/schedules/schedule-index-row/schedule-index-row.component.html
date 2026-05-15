@@ -1,1 +1,23 @@
-<p>schedule-index-row works!</p>
+<td class="text-center">{{ schedule.id }}</td>
+<td class="text-center">{{ schedule.work_type }}</td>
+<td class="text-center">{{ schedule.day_of_week | dayOfWeek }}</td>
+<td class="text-center">{{ schedule.start_time }}</td>
+<td class="text-center">{{ schedule.end_time }}</td>
+<td class="text-center">{{ schedule.allow_extra_hours ? 'Si' : 'No' }}</td>
+<td class="text-center">{{ schedule.comments }}</td>
+<td>
+    <app-button-edit (click)="openVerticallyCentered(content)"></app-button-edit>
+</td>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Editar</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-schedule-edit [employee_id]="employee_id" [schedule]="schedule" (emitUpdatedSchedule)="receiveUpdatedSchedule($event)"></app-schedule-edit>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>

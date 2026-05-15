@@ -47,37 +47,39 @@ export class EmployeeAttendanceIndexComponent implements OnInit, OnDestroy {
       if (!event) return;
     
       this.employee = event;
+
+      this.attendances = this.employee.attendances;
     });
 
   }
 
   ngOnInit(): void {
 
-    this.attendacesInit();
+    // this.attendacesInit();
 
   }
 
-  attendacesInit() {
+  // attendacesInit() {
 
-    this.loading = true;
+  //   this.loading = true;
 
-    this._employeeAttendance.index().pipe(takeUntil(this.destroy$)).subscribe({
+  //   this._employeeAttendance.index().pipe(takeUntil(this.destroy$)).subscribe({
 
-      next: (resp: any) => {
-        console.log(resp);
-        this.attendances = resp.data;
-        this.loading = false;
-      },
+  //     next: (resp: any) => {
+  //       console.log(resp);
+  //       this.attendances = resp.data;
+  //       this.loading = false;
+  //     },
 
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al traer los datos. Inténtalo nuevamente.', 'error');
-        console.error(error);
-      },
+  //     error: (error: any) => {
+  //       Swal.fire('Error', 'Ocurrió un problema al traer los datos. Inténtalo nuevamente.', 'error');
+  //       console.error(error);
+  //     },
 
-    });
+  //   });
 
 
-  }
+  // }
 
   destroy$ = new Subject<void>();
 

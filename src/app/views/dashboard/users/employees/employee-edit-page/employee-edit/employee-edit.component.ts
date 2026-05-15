@@ -14,6 +14,7 @@ import { ButtonLinkComponent } from 'src/app/views/shared/components/buttons/but
 import { ScheduleIndexComponent } from '@dashboard/schedules/schedule-index/schedule-index.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ScheduleCreateComponent } from '../../../../schedules/schedule-create/schedule-create.component';
+import { EmployeeScheduleIndexComponent } from '../employee-schedule-index/employee-schedule-index.component';
 
 
 @Component({
@@ -27,7 +28,8 @@ import { ScheduleCreateComponent } from '../../../../schedules/schedule-create/s
     HeadPageComponent,
     ButtonLinkComponent,
     ScheduleIndexComponent,
-    ScheduleCreateComponent
+    ScheduleCreateComponent,
+    EmployeeScheduleIndexComponent
   ],
   templateUrl: './employee-edit.component.html',
   styleUrl: './employee-edit.component.scss',
@@ -39,6 +41,8 @@ export class EmployeeEditComponent implements OnDestroy {
   loadingIcon: boolean = false;
   form!: FormGroup;
   @Input() employee!: any;
+
+  schedules: any[] = [];
 
   @Input() roles: any;
   faSave = faSave;
@@ -58,6 +62,9 @@ export class EmployeeEditComponent implements OnDestroy {
     effect(() => {
 
       this.employee = this._employee.receiveSignal();
+
+      this.schedules = this.employee.schedules;
+
       console.log(this.employee);
       if (!this.employee) return;
 

@@ -88,37 +88,6 @@
                     placeholder="Etiqueta ventas" aria-label="tag ventas" aria-describedby="basic-name" />
             </app-input-group>
         </div>
-
-        <div class="col-lg-4">
-            <app-input-group text="Hora de entrada">
-                <input formControlName="work_time_start" type="time" class="form-control"
-                    [class.is-invalid]="form.get('work_time_start')?.invalid && form.get('work_time_start')?.touched"
-                    placeholder="Hora de entrada" aria-label="Hora de entrada" aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
-        <div class="col-lg-4">
-            <app-input-group text="Hora de salida">
-                <input formControlName="work_time_end" type="time" class="form-control"
-                    [class.is-invalid]="form.get('work_time_end')?.invalid && form.get('work_time_end')?.touched"
-                    placeholder="Hora de salida" aria-label="Hora de salida" aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
-        <div class="col-lg-4">
-            
-            <label for="type" class="mb-2">Permitir Horas Extras</label>
-
-            <select class="form-select" formControlName="auto_close_end_time" aria-label="Default select example"
-                [class.is-invalid]="form.get('auto_close_end_time')?.invalid && form.get('auto_close_end_time')?.touched">
-
-                <option value="1">Si</option>
-                <option value="0">No</option>
-
-            </select>
-
-        </div>
-
         <!-- <div class="col-lg-4">
                     <app-input-group text="Slug" [icon]="faIdBadge">
                         <input formControlName="slug" type="text" class="form-control" placeholder="Slug"

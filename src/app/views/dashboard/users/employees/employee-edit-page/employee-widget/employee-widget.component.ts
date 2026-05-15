@@ -2,7 +2,7 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { Router, RouterModule } from '@angular/router';
-import { faBarcode, faBagShopping, faCalculator, faRightLeft, faIdBadge, faSackDollar } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode, faBagShopping, faCalculator, faRightLeft, faIdBadge, faSackDollar, faClock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { PenPipe } from '@shared/pipes/pen.pipe';
@@ -28,6 +28,7 @@ export class EmployeeWidgetComponent implements OnInit {
   faIdBadge = faIdBadge;
   faSackDollar = faSackDollar;
   faBagShopping = faBagShopping;
+  faClock = faClock;
   // @Input() employee_id: number = 0;
   @Input() summary: any = null;
 
@@ -87,6 +88,14 @@ export class EmployeeWidgetComponent implements OnInit {
         type: 'currency'
       },
       {
+        title: 'Horarios',
+        subtitle: `Minutos`,
+        value: this.summary?.sum_payments || 0,
+        link: ['./schedules'],
+        icon: faClock,
+        type: 'units'
+      },
+      {
         title: 'Asistencias',
         subtitle: 'Faltas',
         value: 0,
@@ -109,7 +118,8 @@ export class EmployeeWidgetComponent implements OnInit {
         link: ['./payments'],
         icon: faBagShopping,
         type: 'currency'
-      }
+      },
+
     ];
   }
 
