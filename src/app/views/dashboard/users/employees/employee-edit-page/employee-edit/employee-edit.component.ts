@@ -1,4 +1,4 @@
-import { Component, effect, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, Input, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { EmployeeFormComponent } from '../../employee-form/employee-form.component';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -10,6 +10,11 @@ import { UserControlsUpdateComponent } from '../../../shared/user-controls-updat
 import { EmployeeService } from '../../employee.service';
 import { HeadPageComponent } from 'src/app/views/shared/components/head-page/head-page.component';
 import { ButtonLinkComponent } from 'src/app/views/shared/components/buttons/button-link/button-link.component';
+// import { ScheduleIndexComponent } from '@dashboard/schedules/schedule-index/schedule-index.component';
+import { ScheduleIndexComponent } from '@dashboard/schedules/schedule-index/schedule-index.component';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { ScheduleCreateComponent } from '../../../../schedules/schedule-create/schedule-create.component';
+
 
 @Component({
   selector: 'app-employee-edit',
@@ -20,10 +25,13 @@ import { ButtonLinkComponent } from 'src/app/views/shared/components/buttons/but
     JsonPipe,
     HeadTableComponent,
     HeadPageComponent,
-    ButtonLinkComponent
+    ButtonLinkComponent,
+    ScheduleIndexComponent,
+    ScheduleCreateComponent
   ],
   templateUrl: './employee-edit.component.html',
-  styleUrl: './employee-edit.component.scss'
+  styleUrl: './employee-edit.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class EmployeeEditComponent implements OnDestroy {
 
@@ -37,8 +45,13 @@ export class EmployeeEditComponent implements OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private _employee: EmployeeService
+    private _employee: EmployeeService,
+    config: NgbModalConfig,
+    private modalService: NgbModal,
   ) {
+
+    config.backdrop = 'static';
+    config.keyboard = false;
 
     this.formInit();
 
@@ -124,5 +137,16 @@ export class EmployeeEditComponent implements OnDestroy {
 
   }
 
+  modal: any;
+
+  openVerticallyCentered(content: TemplateRef<any>) {
+    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
+  }
+
+  closeModal() {
+    this.modal.close();
+  }
 
 }
+
+

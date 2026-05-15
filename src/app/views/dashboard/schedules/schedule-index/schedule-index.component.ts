@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-schedule-index',
@@ -7,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrl: './schedule-index.component.scss'
 })
 export class ScheduleIndexComponent {
+
+
+  @Input() schedules: any[] = []; 
 
 }

@@ -14,16 +14,29 @@
 </div>
 
 <app-head-page title="Dias de trabajo" [export]="false">
-    <app-button-link [path]="['./create']">Agregar </app-button-link>
+    <app-button-link (click)="openVerticallyCentered(content)">Agregar Registro</app-button-link>
 </app-head-page>
 
 <div class="card">
 
     <div class="card-body p-0">
-
+        <app-schedule-index></app-schedule-index>
     </div>
 
     <div class="card-footer text-end" style="border-top: 0;">
     </div>
 
 </div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Agregar registro</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"> </button>
+    </div>
+    <div class="modal-body">
+        <app-schedule-create></app-schedule-create>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"> Close </button>
+    </div>
+</ng-template>
