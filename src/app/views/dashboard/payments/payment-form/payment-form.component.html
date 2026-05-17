@@ -17,7 +17,13 @@
 
         </div>
 
-        <div class="col-12 col-md-6 col-lg-6">
+        <div class="col-12 col-md-12 col-lg-12">
+            <!-- <label class="mb-2">Comentarios</label> -->
+            <textarea formControlName="comment" class="form-control mb-3" placeholder="Detalles"></textarea>
+        </div>
+
+
+        <div class="col-6 col-md-6 col-lg-6">
             <label for="Metodo de pago" class="mb-2">Metodo de pago</label>
 
             <app-gateway-selected formControlName="gateway_id"
@@ -33,7 +39,7 @@
 
         </div>
 
-        <div class="col-12 col-md-6 col-lg-6">
+        <div class="col-6 col-md-6 col-lg-6">
 
             <label for="" class="mb-2">Tipo de movimiento</label>
 
@@ -49,6 +55,14 @@
 
         </div>
 
+        <div class="col-12 col-md-12 col-lg-12">
+            <app-input-group text="Fecha de pago">
+                <input formControlName="date" type="date" class="form-control"
+                    [class.is-invalid]="form.get('date')?.invalid && form.get('date')?.touched" placeholder=""
+                    aria-label="fecha" aria-describedby="basic-fecha" />
+            </app-input-group>
+        </div>
+
         <div ngbAccordion #accordion="ngbAccordion">
             <div ngbAccordionItem="second">
                 <h2 ngbAccordionHeader>
@@ -58,27 +72,12 @@
                     <div ngbAccordionBody>
                         <ng-template>
 
-                            <div class="col-12 col-md-12 col-lg-12">
-                                <app-input-group text="Fecha de pago">
-                                    <input formControlName="date" type="date" class="form-control"
-                                        [class.is-invalid]="form.get('date')?.invalid && form.get('date')?.touched"
-                                        placeholder="" aria-label="fecha" aria-describedby="basic-fecha" />
-                                </app-input-group>
-                            </div>
-
-                            <div class="col-12 col-md-12 col-lg-12">
-                                <label class="mb-2">Comentarios</label>
-                                <textarea formControlName="comment" class="form-control mb-3"
-                                    placeholder="Comentarios"></textarea>
-                            </div>
-
-
                             <div class="col-lg-12">
 
                                 @if(payment != null){
 
                                 <div class="alert alert-info">
-                                    <fa-icon [icon]="faReceipt" class="me-2"></fa-icon>Recibos
+                                    <fa-icon [icon]="faReceipt" class="me-2"></fa-icon>Comprobantes
                                 </div>
 
                                 <app-image-index [images]="payment.images" [imageable_type]="'payment'"

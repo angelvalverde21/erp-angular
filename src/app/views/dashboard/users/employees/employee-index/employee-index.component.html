@@ -9,7 +9,10 @@
                 <th>Status</th>
                 <th>Roles</th>
                 <th class="text-center">Comision</th>
-                <th class="text-center">Fecha de ingreso</th>
+                <th>Minutos</th>
+                <th>Sueldo</th>
+
+                <!-- <th class="text-center">Fecha de ingreso</th> -->
                 <th class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -21,6 +24,14 @@
 
                 <tr app-employe-index-row [employee]="employee"></tr>
             }
+
+            <tr>
+                <td colspan="7"></td>
+                <td></td>
+                <td>S/. </td>
+                <td></td>
+
+            </tr>
 
         </tbody>
     </table>

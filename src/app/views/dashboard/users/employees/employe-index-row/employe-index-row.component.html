@@ -20,7 +20,9 @@
 
 </td>
 <td class="text-center">{{ (employee?.comission ?? 0) / 100 | percent }}</td>
-<td class="text-center">{{ employee?.created_at | DateShopify }}</td>
+<!-- <td class="text-center">{{ employee?.created_at | DateShopify }}</td> -->
+ <td>{{ employee.total_minutes }}</td>
+ <td style="width: 80px;">{{ employee.total_minutes * factor | pen }}</td>
 <td class="text-center">
     <div class="controls d-flex justify-content-center align-items-center">
         <!-- <app-button-edit></app-button-edit> -->
