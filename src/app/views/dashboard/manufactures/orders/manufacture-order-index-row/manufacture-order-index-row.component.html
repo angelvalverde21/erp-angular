@@ -27,8 +27,8 @@
 
 <!-- <td class="text-center" style="width: 75px;">{{ manufacture.sum_products?? 0 }}</td> -->
 <td>
-    <div class="date-main">{{ manufacture.name }}</div>
-    <div class="date-sub">{{ manufacture?.user?.name }}</div>
+    <a [routerLink]="link_base" routerLinkActive="router-link-active">{{ manufacture.name }}</a>
+    <!-- <div class="date-sub">{{ manufacture?.user?.name }}</div> -->
 </td>
 <!-- <td class="text-center">{{ manufacture.sum_purchases?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}
 </td> -->
@@ -36,19 +36,19 @@
     manufacture.sum_products : 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>-->
 
 
-<td class="text-center">
+<td class="text-center d-none d-xl-table-cell">
     <h6>{{ cost(manufacture) | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
 </td>
 
 <td class="text-center">
-    <h5><span class="badge bg-light text-dark border fw-semibold">{{ manufacture?.sum_variants ?? 0 }}</span></h5>
+    {{ manufacture?.sum_variants ?? 0 }}
 </td>
 
-<td class="text-center">
+<td class="text-center d-none d-lg-table-cell">
     {{ manufacture?.sum_kardexes ?? 0 }}
 </td>
 
-<td class="text-center">
+<td class="text-center d-none d-xl-table-cell">
     {{ manufacture?.count_variants ?? 0 }}
 </td>
 
@@ -57,7 +57,7 @@
 </td> -->
 
 <td class="text-center">
-    <h6>{{ manufacture?.sum_purchases ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+    {{ manufacture?.sum_purchases ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}
 </td>
 
 <!-- <td class="text-center">
@@ -68,7 +68,7 @@
     </h6>
 </td> -->
 
-<td class="text-center">
+<td class="text-center d-none d-xl-table-cell">
     <div class="date-main">{{ manufacture.created_at | DateShopify }}</div>
     <!-- <div class="date-sub">Act: {{ manufacture.updated_at | DateShopify }}</div> -->
 
@@ -76,31 +76,6 @@
 
 <td class="text-center" style="width: 50px;">
     <div class="d-flex align-items-center gap-3 justify-content-center">
-        <div ngbDropdown class="d-inline-block">
-            <button type="button" class="btn btn-outline-dark btn-sm" id="dropdownBasic1" ngbDropdownToggle>
-                <i class="fas fa-ellipsis-h"></i>
-            </button>
-            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'orders', manufacture.id]">
-                    <fa-icon [icon]="faGears" class="me-2"></fa-icon> Editar
-                </button>
-                <div class="dropdown-divider"></div>
-                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'orders', manufacture.id, 'variants']">
-                    <fa-icon [icon]="faScissors" class="me-2"></fa-icon>
-                    Inventario Inicial
-                </button>
-                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'orders', manufacture.id, 'payments']">
-                    <fa-icon [icon]="faSackDollar" class="me-2"></fa-icon>
-                    Pagos
-                </button>
-                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'orders', manufacture.id, 'receptions']">
-                    <fa-icon [icon]="faArrowRightArrowLeft" class="me-2"></fa-icon> Recepciones
-                </button>
-                <div class="dropdown-divider"></div>
-                <button ngbDropdownItem class="btn-sm">
-                    <fa-icon [icon]="faTrash" class="me-2 text-danger"></fa-icon>Eliminar
-                </button>
-            </div>
-        </div>
+        <app-button-menu [menus]="menus"></app-button-menu>
     </div>
 </td>

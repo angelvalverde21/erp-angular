@@ -1,0 +1,35 @@
+<form action="" [formGroup]="form">
+
+    <div class="controls">
+
+        <!-- Filtros -->
+
+        @if(show_date){
+        <div class="controls__filters">
+
+            <input type="date" class="form-control" formControlName="start_date" [max]="form.get('end_date')?.value" />
+
+            <input type="date" class="form-control" formControlName="end_date" [min]="form.get('start_date')?.value"
+                [max]="today" />
+
+        </div>
+        }
+
+        <!-- Buscador -->
+        @if (box_search) {
+        <div class="controls__search">
+
+            @if (showSearch) {
+            <input type="text" class="form-control" formControlName="search" placeholder="Buscar"
+                (blur)="fnHideSearch()" (keydown.enter)="search()" />
+            } @else {
+            <app-button [icon]="faMagnifyingGlass" color="outline-secondary" separation="0" (click)="fnShowSearch()">
+                Buscar
+            </app-button>
+            }
+        </div>
+        }
+
+    </div>
+
+</form>

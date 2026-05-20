@@ -13,6 +13,7 @@ import { Product } from '../../../../interfaces/product.interface';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { HeadTableComponent } from '@shared/components/head-table/head-table.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HeadSearchComponent } from 'src/app/views/shared/components/head-search/head-search.component';
 
 @Component({
   selector: 'app-product-index-page',
@@ -23,7 +24,8 @@ import { ActivatedRoute, Router } from '@angular/router';
     ButtonLinkComponent,
     HeadPageComponent,
     LoadingComponent,
-    HeadTableComponent
+    HeadTableComponent,
+    HeadSearchComponent
   ],
 
   templateUrl: './product-index-page.component.html',

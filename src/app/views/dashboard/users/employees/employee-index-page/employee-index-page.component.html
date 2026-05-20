@@ -1,15 +1,16 @@
 @if(loading){
 <app-loading></app-loading>
 }@else{
-<app-head-page title="Empleados">
-    <app-button-link [path]="['./create']">+ A&ntilde;adir Empleado</app-button-link>
+
+<app-head-page title="Empleados" [export]="false">
+    <app-button-link [path]="['./create']">+ A&ntilde;adir</app-button-link>
 </app-head-page>
 
 <div class="card">
 
     <div class="card-header py-3">
 
-        <app-head-table (emitSearchResult)="receiveSearchResult($event)" type="employee"></app-head-table>
+        <app-head-table [show_date]="false" [is_redirect]="false" (emitSearchResult)="receiveSearchResult($event)" type="employee"></app-head-table>
 
     </div>
 
@@ -21,7 +22,6 @@
             <p class="p-4">No se cuenta con registro de empleados   </p>
         }
 
-
     </div>
 
     <div class="card-footer text-end" style="border-top: 0;">
@@ -29,7 +29,5 @@
     </div>
 
 </div>
-
-
 
 }

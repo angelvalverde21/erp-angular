@@ -1,16 +1,19 @@
 <form action="" [formGroup]="form">
 
-    <div class="controls mb-3">
+    <div class="controls">
 
         <!-- Filtros -->
+
+        @if(show_date){
         <div class="controls__filters">
 
             <input type="date" class="form-control" formControlName="start_date" [max]="form.get('end_date')?.value" />
 
             <input type="date" class="form-control" formControlName="end_date" [min]="form.get('start_date')?.value"
                 [max]="today" />
-                
+
         </div>
+        }
 
         <!-- Buscador -->
         @if (box_search) {
@@ -24,7 +27,6 @@
                 Buscar
             </app-button>
             }
-
         </div>
         }
 

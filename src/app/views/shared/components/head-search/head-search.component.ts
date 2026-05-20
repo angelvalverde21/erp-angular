@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { debounceTime, distinctUntilChanged, filter, Subject, switchMap, takeUntil } from 'rxjs';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { CustomerService } from '@dashboard/users/customers/customer.service';
 // import { CustomerService } from '@dashboard/users/customers/customer.service';
 import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
@@ -17,18 +17,19 @@ import { JsonPipe } from '@angular/common';
 import { ProductService } from '@dashboard/products/product.service';
 import { EmployeePaymentService } from '@dashboard/users/employees/employee-edit-page/employe-payment-index/employe.payment.service';
 import { EmployeeAttendanceService } from '@dashboard/users/employees/employee-edit-page/employee-attendance-index/employee.attendance.service';
+import { ManufactureProductionService } from 'src/app/views/dashboard/manufactures/productions/manufacture.production.service';
 
 @Component({
-  selector: 'app-head-table',
+  selector: 'app-head-search',
   imports: [
     ButtonComponent,
     ReactiveFormsModule,
     JsonPipe
   ],
-  templateUrl: './head-table.component.html',
-  styleUrl: './head-table.component.scss'
+  templateUrl: './head-search.component.html',
+  styleUrl: './head-search.component.scss'
 })
-export class HeadTableComponent implements OnInit, OnDestroy {
+export class HeadSearchComponent implements OnInit, OnDestroy {
 
   showSearch: boolean = false;
   faMagnifyingGlass = faMagnifyingGlass;
@@ -53,7 +54,7 @@ export class HeadTableComponent implements OnInit, OnDestroy {
   @Input() button_active: boolean = true;
   @Input() is_redirect: boolean = true;
   @Input() box_search: boolean = true;
-  @Input() show_date: boolean = true;
+  @Input() show_date: boolean = false;
   @Output() emitSearchResult = new EventEmitter<any>();
   @Output() emitLoadingStatus = new EventEmitter<boolean>();
   @Output() emitParams = new EventEmitter<{}>();
@@ -70,6 +71,7 @@ export class HeadTableComponent implements OnInit, OnDestroy {
     private _courier: CourierService,
     private _manufacture: ManufactureService,
     private _manufacture_order: ManufactureOrderService,
+    private _manufacture_production: ManufactureProductionService,
     private _shopify_product: ShopifyProductService,
     private _gateway: GatewayService,
     private _product: ProductService,
@@ -181,6 +183,7 @@ export class HeadTableComponent implements OnInit, OnDestroy {
       case 'shopify_product': return this._shopify_product;
       case 'gateway': return this._gateway;
       case 'manufacture_order': return this._manufacture_order;
+      case 'manufacture_production': return this._manufacture_production;
       case 'product': return this._product;
       case 'employe_payment': return this._employee_payment;
       case 'employee_attendance': return this._employee_attendance;

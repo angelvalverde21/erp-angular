@@ -9,6 +9,7 @@ import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/but
 import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
 import { StoreService } from 'src/app/views/stores/store.service';
 import { PenPipe } from '@shared/pipes/pen.pipe'
+import { ButtonMenuComponent } from "src/app/views/shared/components/buttons/button-menu/button-menu.component";
 @Component({
   selector: 'tr[app-employe-index-row]',
   imports: [
@@ -18,7 +19,8 @@ import { PenPipe } from '@shared/pipes/pen.pipe'
     ButtonEditComponent,
     FontAwesomeModule,
     RouterModule,
-    PenPipe
+    PenPipe,
+    ButtonMenuComponent
   ],
   templateUrl: './employe-index-row.component.html',
   styleUrl: './employe-index-row.component.scss'
@@ -38,6 +40,8 @@ export class EmployeIndexRowComponent implements OnInit {
 
   store: string = '';
 
+  menus: any[] = [];
+
   constructor(
     private _base: BaseService
   ) {
@@ -46,9 +50,40 @@ export class EmployeIndexRowComponent implements OnInit {
 
   }
   ngOnInit(): void {
+    
     this.store = this._base.storeName || '';
     this.factor = this.employee.salary / this.minuts_base;
 
+    this.menus = [
+      {
+        label: 'Detalles',
+        icon: this.faUser,
+        routerLink: ['/', this.store, 'dashboard', 'users', 'employees', this.employee.id]
+      },
+      {
+        label: 'Horarios',
+        icon: this.faClock,
+        routerLink: ['/', this.store, 'dashboard', 'users', 'employees', this.employee.id, 'schedules']
+      },
+      {
+        label: 'Asistencias',
+        icon: this.faIdBadge,
+        routerLink: ['/', this.store, 'dashboard', 'users', 'employees', this.employee.id, 'attendances']
+      },
+      {
+        label: 'Salarios',
+        icon: this.faCoins,
+        routerLink: ['/', this.store, 'dashboard', 'users', 'employees', this.employee.id, 'salaries']
+      },
+      {
+        label: 'Gastos',
+        icon: this.faSackDollar,
+        routerLink: ['/', this.store, 'dashboard', 'users', 'employees', this.employee.id, 'payments']
+      }
+    ];
+
   }
+
+
 
 }

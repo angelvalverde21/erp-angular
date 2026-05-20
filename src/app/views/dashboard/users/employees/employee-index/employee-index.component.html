@@ -1,14 +1,14 @@
-<div class="table-responsive">
-    <table class="table table-hover table-striped mb-0 align-middle">
+<div>
+    <table class="table table-hover mb-0 align-middle">
         <thead class="table-light">
             <tr>
                 <th class="text-center">#</th>
-                <th>Nombre</th>
-                <th>DNI</th>
-                <th>Sueldo</th>
-                <th>Status</th>
-                <th>Roles</th>
-                <th class="text-center">Comision</th>
+                <th style="width: 125px;">Nombre</th>
+                <th class="d-none d-md-table-cell">DNI</th>
+                <th style="width: 125px;" class="d-none d-md-table-cell">Sueldo</th>
+                <th class="d-none d-md-table-cell">Status</th>
+                <th class="d-none d-md-table-cell">Roles</th>
+                <th class="text-center d-none d-md-table-cell">Comision</th>
                 <th>Minutos</th>
                 <th>Sueldo</th>
 
@@ -25,13 +25,13 @@
                 <tr app-employe-index-row [employee]="employee"></tr>
             }
 
-            <tr>
+            <!-- <tr>
                 <td colspan="7"></td>
                 <td></td>
                 <td>S/. </td>
                 <td></td>
 
-            </tr>
+            </tr> -->
 
         </tbody>
     </table>

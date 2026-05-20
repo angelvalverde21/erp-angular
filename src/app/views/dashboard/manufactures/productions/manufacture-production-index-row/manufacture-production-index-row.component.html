@@ -3,7 +3,7 @@
                     <fa-icon [icon]="faScissors"></fa-icon>
                 </td> -->
 <th class="text-center" style="width: 50px;">
-    #000{{ production.id }}
+    #{{ production.id }}
 </th>
 
 <!-- <td class="text-center" style="width: 75px;">
@@ -27,9 +27,7 @@
 
 <!-- <td class="text-center" style="width: 75px;">{{ production.sum_products?? 0 }}</td> -->
 <td>
-
-    <div class="date-main">{{ production.name }}</div>
-    <div class="date-sub">{{ production?.user?.name }}</div>
+    <a [routerLink]="link_base" routerLinkActive="router-link-active">{{ production.name }}</a>
 </td>
 <!-- <td class="text-center">{{ production.sum_purchases?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}
 </td> -->
@@ -37,19 +35,19 @@
     production.sum_products : 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>-->
 
 
-<td class="text-center">
+<td class="text-center d-none d-xl-table-cell">
     <h6>{{ cost(production) | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
 </td>
 
 <td class="text-center">
-    <h5><span class="badge bg-light text-dark border fw-semibold">{{ production?.sum_variants ?? 0 }}</span></h5>
+    {{ production?.sum_variants ?? 0 }}
 </td>
 
-<td class="text-center">
+<td class="text-center d-none d-xl-table-cell">
     {{ production?.sum_kardexes ?? 0 }}
 </td>
 
-<td class="text-center">
+<td class="text-center d-none d-xl-table-cell">
     {{ production?.count_variants ?? 0 }}
 </td>
 
@@ -57,7 +55,8 @@
     <ngb-progressbar [showValue]="true" [striped]="true" type="success" [value]="getProgress(production)"/>
 </td> -->
 
-<td class="text-center">
+<!-- 7 -->
+<td class="text-center d-none d-xl-table-cell">
     <h6>{{ production?.sum_purchases ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
 </td>
 <!-- <td class="text-center">
@@ -68,38 +67,12 @@
     </h6>
 </td> -->
 
-<td class="text-center">
+<td class="text-center d-none d-lg-table-cell">
     <!-- <div class="date-main">{{ production.created_at | DateShopify }}</div> -->
     <div class="date-sub">{{ production.updated_at | DateShopify }}</div>
 
 </td>
 
 <td class="text-center" style="width: 50px;">
-    <div class="d-flex align-items-center gap-3 justify-content-center">
-        <div ngbDropdown class="d-inline-block">
-            <button type="button" class="btn btn-outline-dark btn-sm" id="dropdownBasic1" ngbDropdownToggle>
-                <i class="fas fa-ellipsis-h"></i>
-            </button>
-            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'productions', production.id]">
-                    <fa-icon [icon]="faGears" class="me-2"></fa-icon> Editar
-                </button>
-                <div class="dropdown-divider"></div>
-                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'productions', production.id, 'purchases']">
-                    <fa-icon [icon]="faMoneyBill1" class="me-2"></fa-icon> Compras
-                </button>
-                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'productions', production.id, 'variants']">
-                    <fa-icon [icon]="faScissors" class="me-2"></fa-icon>
-                    Inventario Inicial
-                </button>
-                <button ngbDropdownItem class="btn-sm" [routerLink]="['/', store, 'dashboard', 'manufactures', 'productions', production.id, 'kardexes']">
-                    <fa-icon [icon]="faArrowRightArrowLeft" class="me-2"></fa-icon> Recepciones
-                </button>
-                <div class="dropdown-divider"></div>
-                <button ngbDropdownItem class="btn-sm">
-                    <fa-icon [icon]="faTrash" class="me-2 text-danger"></fa-icon>Eliminar
-                </button>
-            </div>
-        </div>
-    </div>
+    <app-button-menu [menus]="menus"></app-button-menu>
 </td>

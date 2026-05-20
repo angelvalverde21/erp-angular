@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoadingComponent } from "../../loading/loading.component";
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEdit, faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faEllipsis, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-button-edit',

@@ -16,6 +16,6 @@ export class HeadPageComponent {
   @Input() title: string = ""; 
   @Input() subtitle: string = ""; 
   @Input() icon = faTag;
-  @Input() export: boolean = true;
+  @Input() export: boolean = false;
 
 }
