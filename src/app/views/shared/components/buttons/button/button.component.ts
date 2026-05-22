@@ -17,12 +17,14 @@ export class ButtonComponent {
 
   @Input() color: string = "dark"; 
   @Input() separation: string = "2"; 
+  @Input() mb: string = "0"; 
   @Input() colortext: string = ""; 
   @Input() size: string = 'sm';
   @Input() icon: any; 
   @Input() disabled: boolean = false;
   @Input() spinner: boolean = false;
   @Input() me: boolean = true; //margin end
+
   
 
   @Output() action = new EventEmitter<void>();

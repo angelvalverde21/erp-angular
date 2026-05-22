@@ -65,27 +65,18 @@ export const navErp: CustomNavData[] = [
             //     },
             // },
             {
+                name: 'Buscar Barcode',
+                url: 'dashboard/inventories/barcode',
+                icon: 'fa-solid fa-barcode',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+            {
                 name: 'Lotes',
                 url: 'dashboard/inventories/batches',
                 icon: 'fa-solid fa-cart-flatbed',
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                },
-            },
-            {
-                name: 'Ingresos',
-                url: 'dashboard/inventories/income',
-                icon: 'nav-icon-bullet',
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                },
-            },
-            {
-                name: 'Salidas',
-                url: 'dashboard/inventories/out',
-                icon: 'nav-icon-bullet',
                 class: 'children-custom',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
@@ -100,15 +91,24 @@ export const navErp: CustomNavData[] = [
                     routerLinkActiveOptions: { exact: true }
                 },
             },
-            {
-                name: 'Buscar Barcode',
-                url: 'dashboard/inventories/barcode',
-                icon: 'fa-solid fa-barcode',
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                },
-            },
+            // {
+            //     name: 'Ingresos',
+            //     url: 'dashboard/inventories/income',
+            //     icon: 'nav-icon-bullet',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // },
+            // {
+            //     name: 'Salidas',
+            //     url: 'dashboard/inventories/out',
+            //     icon: 'nav-icon-bullet',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // }
         ],
         roles: ['ceo', 'master']
     },

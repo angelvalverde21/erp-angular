@@ -1,19 +1,43 @@
 <form [formGroup]="form" (ngSubmit)="search()" class="mb-3">
+
     <app-input-group [icon]="faBarcode" text="Buscar por código de barras">
-        <input formControlName="barcode" type="text" class="form-control" placeholder="barcode" aria-label="barcode" aria-describedby="basic-barcode" />
+        <input formControlName="barcode" type="text" class="form-control" placeholder="barcode" aria-label="barcode"
+            aria-describedby="basic-barcode" />
     </app-input-group>
-    <button class="btn btn-dark w-100"><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Buscar</button>
+
+    <!-- <button class="btn btn-dark w-100"><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Buscar</button> -->
+
+    <!-- <app-button-print-barcode></app-button-print-barcode> -->
+
 </form>
 
 @if(loading){
-    <app-loading></app-loading>
+<app-loading></app-loading>
 }@else{
-    @if(kardexes.length > 0){
-        <app-kardex-index [kardexes]="kardexes"></app-kardex-index>
-    }
+@if(kardexes.length > 0){
+
+<app-button mb="3" [icon]="faBarcode" [me]="true" (click)="openVerticallyCentered(content)"> Imprimir</app-button>
+
+<app-kardex-index [kardexes]="kardexes"></app-kardex-index>
+
 }
 
-    <!-- <div class="mb-3">
+}
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Modal title</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-barcode-index [variants]="variants"></app-barcode-index>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+
+<!-- <div class="mb-3">
         <label for="barcode" class="form-label">Barcode</label>
         <input type="text" id="barcode" formControlName="barcode" class="form-control">
     </div> -->

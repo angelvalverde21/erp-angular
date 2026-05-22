@@ -69,7 +69,7 @@ export class ManufactureOrderIndexRowComponent implements OnInit {
   link_base: string[] = [];
 
   ngOnInit() {
-        
+
     this.store = this._base.storeName ?? '';
 
     this.link_base = ['/', this.store, 'dashboard', 'manufactures', 'orders', this.manufacture.id];
@@ -82,7 +82,7 @@ export class ManufactureOrderIndexRowComponent implements OnInit {
         divider: true
       },
       {
-        label: 'Inventario Inicial',
+        label: 'Pedido Inicial',
         icon: this.faScissors,
         routerLink: [...this.link_base, 'variants']
       },
@@ -97,6 +97,10 @@ export class ManufactureOrderIndexRowComponent implements OnInit {
         routerLink: [...this.link_base, 'receptions']
       }
     ];
+  }
+
+  get variantLink() {
+    return [...this.link_base, 'variants'];
   }
 
   cost(manufacture: any) {

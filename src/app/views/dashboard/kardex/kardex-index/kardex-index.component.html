@@ -29,7 +29,7 @@
                             <app-image-shopify [image]="kardex?.variant?.product?.image"></app-image-shopify>
                             <!-- <img [src]="kardex?.variant?.product?.image?.url_thumbnail" height="50px"> -->
                         </td>
-                        <td>{{ kardex?.variant?.product?.name }}</td>
+                        <td><a [routerLink]="['/', store, 'dashboard', 'products', kardex?.variant?.product?.id]">{{ kardex?.variant?.product?.name }}</a></td>
                         @for (option_value of kardex.variant.option_values; track option_value.id) {
                         <td class="text-center">{{ option_value.value }}</td>
                         }

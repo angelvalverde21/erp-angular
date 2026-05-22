@@ -2,7 +2,7 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { Router, RouterModule } from '@angular/router';
-import { faBarcode, faBagShopping, faCalculator, faRightLeft, faSackDollar } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode, faBagShopping, faCalculator, faRightLeft, faSackDollar, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { PenPipe } from '@shared/pipes/pen.pipe';
@@ -29,6 +29,7 @@ export class OrderWidgetComponent implements OnInit {
   faCalculator = faCalculator;
   faRightLeft = faRightLeft;
   faSackDollar = faSackDollar;
+  faCalendar = faCalendar;
 
   @Input() order_id: number = 0;
   @Input() summary: any = null;
@@ -80,16 +81,16 @@ export class OrderWidgetComponent implements OnInit {
 
     this.widgets = [
       {
-        title: 'Costo',
-        subtitle: 'Por unidad',
-        value: (this.summary?.sum_variants > 0 ? (this.summary?.sum_purchases / this.summary?.sum_variants ? this.summary?.sum_purchases / this.summary?.sum_variants : 0) : 0),
+        title: 'Inicio',
+        subtitle: '',
+        value: `${this.summary?.created_at}`,
         link: ['./'],
         exact: true,
-        icon: faBarcode,
-        type: 'currency'
+        icon: faCalendar,
+        type: 'date'
       },
       {
-        title: 'Inventario Inicial',
+        title: 'Pedido Inicial',
         subtitle: `${this.summary?.count_variants} Variantes`,
         value: this.summary?.sum_variants ? this.summary?.sum_variants : 0,
         link: ['./variants'],

@@ -106,8 +106,13 @@ export class ManufactureProductionIndexRowComponent implements OnInit {
         routerLink: [...this.link_base, 'kardexes']
       }
     ];
+
   }
 
+  get variantLink() {
+    return [...this.link_base, 'variants'];
+  }
+  
   cost(production: any) {
     return production.sum_variants > 0 ? (production.sum_purchases / production.sum_variants) : 0;
   }
