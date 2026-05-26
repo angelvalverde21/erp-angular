@@ -12,6 +12,8 @@
             <input type="date" class="form-control" formControlName="end_date" [min]="form.get('start_date')?.value"
                 [max]="today" />
 
+            
+
         </div>
         }
 
@@ -28,7 +30,12 @@
             </app-button>
             }
         </div>
+        }@else{
+            <!-- <app-button color="dark" [icon]="faMagnifyingGlass" (click)="search()">Buscar</app-button> -->
         }
+
+
+
 
     </div>
 

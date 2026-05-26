@@ -1,0 +1,43 @@
+.controls {
+  display: grid;
+  // gap: 1rem;
+  grid-template-columns: 1fr; /* Mobile default */
+}
+
+/* Dates: 50% / 50% en xs y sm */
+.controls__filters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+/* Elementos pequenos para movil) */
+@media (max-width: 576px) {
+  /* Buscador mobile */
+  .controls__search {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .controls__filters {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Elementos grandes para pantallas */
+@media (min-width: 576px) {
+  .controls {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .controls__search {
+    width: 100%;
+    justify-self: end;
+  }
+
+  .controls__search input {
+    max-width: 100%;
+  }
+}
+

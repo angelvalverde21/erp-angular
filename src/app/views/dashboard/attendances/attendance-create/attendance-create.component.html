@@ -4,7 +4,7 @@
 
         <div class="col-12 col-md-12 col-lg-12">
             <app-input-group text="Dia de Ingreso">
-                <input formControlName="date" [disabled]="true" type="text" class="form-control" placeholder="date"
+                <input formControlName="date" type="date" class="form-control" placeholder="date"
                     aria-label="date" aria-describedby="basic-date" /> </app-input-group>
         </div>
 
@@ -26,7 +26,8 @@
 
     </div>
 
-    <app-button-save (click)="createOrUpdate()" [spinner]="loading">Guardar Cambios</app-button-save>
+    <app-button-save (click)="create()" [spinner]="loading">Crear Asistencia</app-button-save>
 
+    {{ form.value | json }}
 
 </form>

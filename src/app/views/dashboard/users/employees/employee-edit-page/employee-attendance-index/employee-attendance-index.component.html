@@ -2,17 +2,21 @@
 <app-loading></app-loading>
 }@else{
 
-<app-head-table type="employee_attendance" [is_redirect]="false"
-    (emitSearchResult)="receiveAttendances($event)"></app-head-table>
+<!-- <app-head-search type="employee_attendance" [is_redirect]="false"
+    (emitSearchResult)="receiveAttendances($event)"></app-head-search> -->
 
 <div class="card mb-3">
 
-    <div class="card-header">
-        Asistencias
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <app-head-search type="employee_attendance" [box_search]="false" [show_date]="true" [is_redirect]="false"
+            (emitSearchResult)="receiveAttendances($event)"></app-head-search>
+
+        <app-button-add (click)="openVerticallyCentered(content)"></app-button-add>
     </div>
 
     <div class="card-body p-0">
-        <app-attendance-index [attendances]="attendances" (emitHoursMinuts)="receiveHoursMinuts($event)" (emitHoursDecimal)="receiveHoursDecimal($event)"></app-attendance-index>
+        <app-attendance-index [attendances]="attendances" (emitHoursMinuts)="receiveHoursMinuts($event)"
+            (emitHoursDecimal)="receiveHoursDecimal($event)"></app-attendance-index>
     </div>
 
     <div class="card-footer" style="border-top: 0;">
@@ -23,6 +27,19 @@
     </div>
 
 </div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title">Agregar asistencia</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-attendance-create [employee_id]="employee_id" (emitAttendanceCreate)="receiveAttendanceCreate($event)"></app-attendance-create>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
 
 
 <!-- <div class="card mb-3">

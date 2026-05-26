@@ -26,11 +26,11 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">Modal title</h4>
+        <h4 class="modal-title">Imprimir</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <app-barcode-index [variants]="variants"></app-barcode-index>
+        <app-barcode-index [variants]="variants" (emitPrintStatus)="receivePrintStatus($event)"></app-barcode-index>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>

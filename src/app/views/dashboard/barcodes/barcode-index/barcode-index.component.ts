@@ -1,5 +1,5 @@
 import { CommonModule, JsonPipe } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode } from '@fortawesome/free-solid-svg-icons';
@@ -23,6 +23,9 @@ import { Subject } from 'rxjs';
 })
 export class BarcodeIndexComponent implements OnInit, OnDestroy {
 
+
+  @Output() emitPrintStatus = new EventEmitter<boolean>();
+  
 
   faBarcode = faBarcode;
 
@@ -120,6 +123,8 @@ export class BarcodeIndexComponent implements OnInit, OnDestroy {
 
           // 👇 Abre el PDF en otra pestaña sin exponer tu API
           window.open(url, '_blank');
+
+          this.emitPrintStatus.emit(true);
 
           Swal.close();
 
