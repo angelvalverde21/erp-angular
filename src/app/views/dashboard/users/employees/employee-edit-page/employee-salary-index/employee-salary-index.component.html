@@ -1,4 +1,11 @@
-<app-head-table type="employee_attendance" [is_redirect]="false" (emitSearchResult)="receive($event)"></app-head-table>
+<div class="card mb-3">
+
+    <div class="card-body">
+        <app-head-table type="employee_attendance" [is_redirect]="false"
+            (emitSearchResult)="receive($event)"></app-head-table>
+    </div>
+
+</div>
 
 <div ngbAccordion [closeOthers]="true">
     <div ngbAccordionItem>

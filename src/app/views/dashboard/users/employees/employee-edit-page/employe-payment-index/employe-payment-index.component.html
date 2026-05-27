@@ -3,10 +3,20 @@
 
 }@else{
 
-<app-head-table [type]="'employe_payment'" (emitSearchResult)="receiveSearchResult($event)"
-    (emitLoadingStatus)="receiveLoadingStatus($event)" [is_redirect]="false"></app-head-table>
+
+<div class="card mb-3">
+
+
+    <div class="card-body">
+        <app-head-table [type]="'employe_payment'" (emitSearchResult)="receiveSearchResult($event)"
+            (emitLoadingStatus)="receiveLoadingStatus($event)" [is_redirect]="false"></app-head-table>
+
+    </div>
+
+</div>
 
 <div ngbAccordion [closeOthers]="true">
+
     <div ngbAccordionItem [collapsed]="false">
         <h2 ngbAccordionHeader>
             <button ngbAccordionButton>Gastos Corrientes</button>
@@ -23,6 +33,7 @@
                 </ng-template>
             </div>
         </div>
+
     </div>
 
     @if(user.roles.includes('production') || user.roles.includes('master') || user.roles.includes('ceo')){

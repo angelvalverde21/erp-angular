@@ -1,0 +1,29 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-head-page title="Pedidos en efectivo">
+
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3">
+        <!-- <app-head-search (emitSearchResult)="receiveSearchResult($event)" type="" /> -->
+    </div>
+
+    <div class="card-body p-0">
+        @if(orders.length > 0){
+            <app-shopify-order-cash-index [orders]="orders" />
+        }@else{
+            <p class="p-4">No se cuenta con registro de s</p>
+        }
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ orders.length }}</small>
+    </div>
+
+</div>
+
+}

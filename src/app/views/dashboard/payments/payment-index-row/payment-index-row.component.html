@@ -1,6 +1,7 @@
 <td class="text-center">#{{ payment.id }}</td>
 <!-- <td class="text-center"><img [src]="payment?.images[0]?.url_thumbnail" alt="" height="50px"></td> -->
 
+<td class="text-center">{{ payment?.comment }}</td>
 <td class="text-center">{{ payment?.gateway?.name }}</td>
 <!-- <td class="text-center">{{ (payment.direction === 'in' ? 'Ingreso' : 'Salida') }}</td> -->
 <td class="text-center">{{ payment.created_at | DateShopify }}</td>

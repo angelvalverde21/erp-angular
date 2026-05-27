@@ -20,6 +20,11 @@ export const navShopify: CustomNavData[] = [
         name: 'Pedidos', url: 'dashboard/shopify/orders', icon: 'nav-icon-bullet', linkProps: {
           routerLinkActiveOptions: { exact: true }
         }
+      },
+      {
+        name: 'Tienda', url: 'dashboard/shopify/cash', icon: 'nav-icon-bullet', linkProps: {
+          routerLinkActiveOptions: { exact: true }
+        }
       }
     ],
     // roles: ['ventas', 'despacho']

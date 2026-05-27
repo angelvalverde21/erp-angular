@@ -26,6 +26,14 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'cash',
+    loadComponent: () => import('./shopify-order-cash-page/shopify-order-cash-page.component').then((m) => m.ShopifyOrderCashPageComponent),
+    data: {
+      title: 'Pedidos efectivo',
+      // name: 'shopify.order.index', // 👈 nombre único
+    },
+  },
+  {
     path: 'create',
     loadComponent: () => import('./shopify-order-create-page/shopify-order-create-page.component').then((m) => m.ShopifyOrderCreatePageComponent),
     data: {
