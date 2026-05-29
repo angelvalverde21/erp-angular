@@ -10,6 +10,7 @@
         class="me-2">Reporte</app-button>
     }
     <app-button-back></app-button-back>
+
 </app-head-page>
 
 <app-employee-widget [summary]="summary"></app-employee-widget>
@@ -25,7 +26,7 @@
     </div>
     <div class="modal-body">
 
-        <app-head-table (emitParams)="receiveParams($event)" [box_search]="false"></app-head-table>
+        <app-head-search [show_date]="true" (emitParams)="receiveParams($event)" [box_search]="false"></app-head-search>
 
         @if(loadingOrders){
         <app-loading></app-loading>

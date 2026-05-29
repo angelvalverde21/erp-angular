@@ -20,6 +20,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { AttendanceIndexComponent } from '../../../attendances/attendance-index/attendance-index.component';
 import { EmployeeWidgetComponent } from './employee-widget/employee-widget.component';
+import { HeadSearchComponent } from '../../../../shared/components/head-search/head-search.component';
 
 @Component({
   selector: 'app-employee-edit-page',
@@ -38,7 +39,8 @@ import { EmployeeWidgetComponent } from './employee-widget/employee-widget.compo
     CommonModule,
     AttendanceIndexComponent,
     RouterModule,
-    EmployeeWidgetComponent
+    EmployeeWidgetComponent,
+    HeadSearchComponent
   ],
   templateUrl: './employee-edit-page.component.html',
   styleUrl: './employee-edit-page.component.scss',

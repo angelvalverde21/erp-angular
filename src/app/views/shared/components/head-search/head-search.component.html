@@ -23,13 +23,20 @@
             <input type="text" class="form-control" formControlName="search" placeholder="Buscar"
                 (blur)="fnHideSearch()" (keydown.enter)="search()" />
             } @else {
-            <app-button [icon]="faMagnifyingGlass" color="outline-secondary" separation="0" (click)="fnShowSearch()">
-                Buscar
-            </app-button>
+
             }
         </div>
         }
 
+        <app-button [icon]="faMagnifyingGlass" color="outline-secondary" separation="0" (click)="search()">
+            Buscar
+        </app-button>
+        <!-- <app-button [icon]="faMagnifyingGlass" color="outline-secondary" separation="0" (click)="fnShowSearch()">
+            Buscar
+        </app-button> -->
+
     </div>
+
+    {{ form.valid }}
 
 </form>

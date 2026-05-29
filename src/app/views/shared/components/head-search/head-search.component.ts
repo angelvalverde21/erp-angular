@@ -83,12 +83,10 @@ export class HeadSearchComponent implements OnInit, OnDestroy {
   today = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
 
   formInit() {
-
-
     this.form = this.fb.group({
-      search: ['', Validators.required],
-      start_date: [null],
-      end_date: [null],
+      search: [''],
+      start_date: ['', Validators.required],
+      end_date: ['', Validators.required],
     });
 
   }
@@ -122,16 +120,19 @@ export class HeadSearchComponent implements OnInit, OnDestroy {
 
     this.formInit();
 
-    this.form.valueChanges
-      .pipe(
-        debounceTime(500),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(resp => {
-        console.log(resp);
-        
-        this.search();
-      });
+
+    // this.form.valueChanges
+    //   .pipe(
+    //     debounceTime(500),
+    //     takeUntil(this.destroy$)
+    //   )
+    //   .subscribe(resp => {
+    //     console.log(resp);
+    //     if (this.form.valid) {
+    //       console.log("form validoo");
+    //       this.search();
+    //     }
+    //   });
 
   }
 
@@ -140,22 +141,22 @@ export class HeadSearchComponent implements OnInit, OnDestroy {
   search() {
 
     console.log(this.form.value);
-    
+
 
     if (this.is_redirect) {
 
       console.log("is_redirect");
       this.emitParams.emit(this.form.value);
-      
+
     } else {
-      
+
       this.emitLoadingStatus.emit(true);
-      
+
       this.getService().search(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
 
         next: (resp: any) => {
           console.log(resp);
-          
+
           this.emitSearchResult.emit(resp?.data ?? []);
           this.loading = false;
         },
