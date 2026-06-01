@@ -11,10 +11,7 @@ import { Product } from '../../../../interfaces/product.interface';
 import { Resp } from '../../../../interfaces/response.interface';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Category } from '../../../../interfaces/category.interface';
-import { SizeCreateComponent } from '../../sizes/size-create/size-create.component';
-import { GalleryComponent } from '../../../shared/components/gallery/gallery.component';
 import { Size } from '../../../../interfaces/size.interface';
-import { ColorIndexComponent } from '../../colors/color-index/color-index.component';
 import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
 import { ButtonBackComponent } from '../../../shared/components/buttons/button-back/button-back.component';
 import { HeadPageComponent } from "../../../shared/components/head-page/head-page.component";
@@ -22,14 +19,9 @@ import { Brand } from '../../../../interfaces/brand.interface';
 import { StoreService } from '../../../stores/store.service';
 import { BaseService } from '../../../base.service';
 import Swal from 'sweetalert2';
-import { SizeIndexComponent } from '../../sizes/size-index/size-index.component';
-import { ColorCreateComponent } from '../../colors/color-create/color-create.component';
 import { Color } from '../../colors/color.interface';
-import { OptionValueIndexComponent } from '../options/OptionValues/option-value-index/option-value-index.component';
-import { AttributeIndexComponent } from '../attributes/attribute-index/attribute-index.component';
 import { JsonPipe } from '@angular/common';
 import { OptionIndexComponent } from '../options/option-index/option-index.component';
-import { OptionValueCreateComponent } from '../options/OptionValues/option-value-create/option-value-create.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { VariantIndexComponent } from '../variants/variant-index/variant-index.component';
 import { BarcodeIndexComponent } from '../../barcodes/barcode-index/barcode-index.component';
@@ -40,19 +32,11 @@ import { BarcodeIndexComponent } from '../../barcodes/barcode-index/barcode-inde
     LoadingComponent,
     ProductEditComponent,
     FontAwesomeModule,
-    GalleryComponent,
-    SizeCreateComponent,
-    ColorIndexComponent,
     ButtonComponent,
     ButtonBackComponent,
     HeadPageComponent,
-    SizeIndexComponent,
-    ColorCreateComponent,
-    OptionValueIndexComponent,
-    AttributeIndexComponent,
     JsonPipe,
     OptionIndexComponent,
-    OptionValueCreateComponent,
     NgbAccordionModule,
     VariantIndexComponent,
     BarcodeIndexComponent

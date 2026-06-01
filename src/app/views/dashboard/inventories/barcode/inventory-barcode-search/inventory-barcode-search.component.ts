@@ -96,7 +96,7 @@ export class InventoryBarcodeSearchComponent implements OnInit {
           this.variants = this.variant ? [this.variant] : [];
 
           console.log(this.variant);
-          
+
 
           this.loading = false;
         },
@@ -108,6 +108,12 @@ export class InventoryBarcodeSearchComponent implements OnInit {
 
       });
 
+    }
+  }
+
+  receivePrintStatus(status: boolean) {
+    if (status) {
+      this.closeModal();
     }
   }
 

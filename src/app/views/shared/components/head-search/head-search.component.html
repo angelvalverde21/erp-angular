@@ -1,41 +1,36 @@
 <form action="" [formGroup]="form">
 
-    <div class="controls">
+    <div class="content d-flex justify-content-between align-items-center">
 
-        <!-- Filtros -->
-
-        @if(show_date){
-        <div class="controls__filters">
-
-            <input type="date" class="form-control" formControlName="start_date" [max]="form.get('end_date')?.value" />
-
+        <div class="dates d-flex justify-content-between align-items-center">
+            <input type="date" class="form-control me-2" formControlName="start_date" [max]="form.get('end_date')?.value" />
             <input type="date" class="form-control" formControlName="end_date" [min]="form.get('start_date')?.value"
                 [max]="today" />
-
         </div>
-        }
 
-        <!-- Buscador -->
-        @if (box_search) {
+        <div class="controls d-flex justify-content-between align-items-center">
+            <input type="text" class="form-control me-2" formControlName="search" placeholder="Buscar"
+                (blur)="fnHideSearch()" (keydown.enter)="search()" />
+            <app-button color="dark" [icon]="faMagnifyingGlass" (click)="search()">Buscar</app-button>
+        </div>
+
+    </div>
+
+    <!-- Buscador -->
+    <!-- @if (box_search) {
         <div class="controls__search">
 
             @if (showSearch) {
-            <input type="text" class="form-control" formControlName="search" placeholder="Buscar"
-                (blur)="fnHideSearch()" (keydown.enter)="search()" />
+
             } @else {
 
             }
         </div>
-        }
+        }@else{
 
-        <app-button [icon]="faMagnifyingGlass" color="outline-secondary" separation="0" (click)="search()">
-            Buscar
-        </app-button>
-        <!-- <app-button [icon]="faMagnifyingGlass" color="outline-secondary" separation="0" (click)="fnShowSearch()">
-            Buscar
-        </app-button> -->
+        } -->
 
-    </div>
+
 
     {{ form.valid }}
 

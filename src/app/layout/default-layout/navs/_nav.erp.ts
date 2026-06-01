@@ -267,22 +267,8 @@ export const navErp: CustomNavData[] = [
                     routerLinkActiveOptions: { exact: true }
                 }
             },
-            {
-                name: 'Colecciones',
-                url: 'dashboard/collections',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }
-            },
-            {
-                name: 'Inventario',
-                url: 'dashboard/products/inventory',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }
-            },
         ],
-        roles: ['master']
+        roles: ['master', 'packing']
     },
     // {
     //     name: 'Caja chica',

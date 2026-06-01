@@ -5,9 +5,11 @@
         
 </div> -->
 
-<app-loading *ngIf="loading"></app-loading>
+@if(loading){
 
-<ul class="list-group" *ngIf="!loading">
+<app-loading></app-loading>
+}@else{
+<ul class="list-group mb-3">
 
     <li class="list-group-item p-0" *ngFor="let image of images">
 
@@ -15,3 +17,4 @@
 
     </li>
 </ul>
+}

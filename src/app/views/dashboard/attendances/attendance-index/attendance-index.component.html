@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="">
 
     <table class="table table-hover mb-0 align-middle">
 
@@ -19,11 +19,7 @@
         <tbody>
 
             @for (attendance of attendances; track attendance.date) {
-                @if(attendance.missing){
-                <tr class="table-danger" app-attendance-index-row [attendance]="attendance"></tr>
-                }@else{
-                <tr app-attendance-index-row [attendance]="attendance"></tr>
-                }
+                <tr app-attendance-index-row [attendance]="attendance" [class.table-danger]="attendance.missing"> </tr>
             }
             <tr>
                 <td colspan="4"></td>

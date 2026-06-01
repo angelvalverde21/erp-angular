@@ -18,7 +18,7 @@ export const navItems: CustomNavData[] = buildNav([
   // ✅ Combina los módulos aquí
   // ...navInventory,
   ...navErp,
-  ...navMarketing,
+  // ...navMarketing,
   ...navConfig,
   ...navShopify,
   ...navPasarelas,

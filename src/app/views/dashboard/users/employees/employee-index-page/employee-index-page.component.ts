@@ -10,6 +10,7 @@ import { HeadPageComponent } from "../../../../shared/components/head-page/head-
 import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { UserHeadTableComponent } from '../../shared/user-head-table/user-head-table.component';
 import { HeadTableComponent } from 'src/app/views/shared/components/head-table/head-table.component';
+import { HeadSearchComponent } from 'src/app/views/shared/components/head-search/head-search.component';
 
 @Component({
   selector: 'app-employee-index-page',
@@ -20,7 +21,9 @@ import { HeadTableComponent } from 'src/app/views/shared/components/head-table/h
     LoadingComponent,
     HeadPageComponent,
     UserHeadTableComponent,
-    HeadTableComponent
+    HeadTableComponent,
+    HeadSearchComponent
+    
   ],
   templateUrl: './employee-index-page.component.html',
   styleUrl: './employee-index-page.component.scss'

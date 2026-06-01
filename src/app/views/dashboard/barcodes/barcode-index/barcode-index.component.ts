@@ -1,5 +1,5 @@
 import { CommonModule, JsonPipe } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode } from '@fortawesome/free-solid-svg-icons';
@@ -8,6 +8,7 @@ import { BarcodeService } from '../barcode.service';
 import Swal from 'sweetalert2';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { atLeastOneQuantityValidator } from '../../../shared/validators/quantity.validator';
 
 @Component({
   selector: 'app-barcode-index',
@@ -22,6 +23,9 @@ import { Subject } from 'rxjs';
   styleUrl: './barcode-index.component.scss'
 })
 export class BarcodeIndexComponent implements OnInit, OnDestroy {
+
+
+  @Output() emitPrintStatus = new EventEmitter<boolean>();
 
 
   faBarcode = faBarcode;
@@ -70,11 +74,12 @@ export class BarcodeIndexComponent implements OnInit, OnDestroy {
       variantsForm: this.fb.array(
         this.variants.map(v =>
           this.fb.group({
-            id: [v.id],              // 👈 guardamos id dentro del form
-            sku: [v.sku],            // 👈 guardamos sku dentro del form
-            quantity: ["", Validators.required]
+            id: [v.id],
+            sku: [v.sku],
+            quantity: [""]
           })
-        )
+        ),
+        { validators: atLeastOneQuantityValidator() }
       )
     });
 
@@ -110,31 +115,33 @@ export class BarcodeIndexComponent implements OnInit, OnDestroy {
         Swal.showLoading();
       }
     })
-    
+
 
     this._barcode.print(selectedVariants).pipe(takeUntil(this.destroy$)).subscribe({
 
-        next: (response: Blob) => {
-          const blob = new Blob([response], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
+      next: (response: Blob) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
 
-          // 👇 Abre el PDF en otra pestaña sin exponer tu API
-          window.open(url, '_blank');
+        // 👇 Abre el PDF en otra pestaña sin exponer tu API
+        window.open(url, '_blank');
 
-          Swal.close();
+        this.emitPrintStatus.emit(true);
 
-          // Limpia la URL después de unos segundos
-          setTimeout(() => window.URL.revokeObjectURL(url), 10000);
+        Swal.close();
 
-        },
+        // Limpia la URL después de unos segundos
+        setTimeout(() => window.URL.revokeObjectURL(url), 10000);
 
-        error: (error: any) => {
-          Swal.fire('Error', 'Ocurrió un problema al generar el PDF.', 'error');
-          console.error(error);
-          this.loading = false;
-        },
+      },
 
-      });
+      error: (error: any) => {
+        Swal.fire('Error', 'Ocurrió un problema al generar el PDF.', 'error');
+        console.error(error);
+        this.loading = false;
+      },
+
+    });
 
   }
 
