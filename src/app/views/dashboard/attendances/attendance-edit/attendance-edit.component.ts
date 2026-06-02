@@ -62,6 +62,9 @@ export class AttendanceEditComponent implements OnInit {
       return;
     }
 
+    console.log("createOrUpdate");
+    
+
     if (this.attendance?.id === null) {
       this.create();
     }else{

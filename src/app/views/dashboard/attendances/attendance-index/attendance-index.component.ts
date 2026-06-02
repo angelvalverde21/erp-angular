@@ -10,12 +10,33 @@ import { AttendanceIndexRowComponent } from '../attendance-index-row/attendance-
   templateUrl: './attendance-index.component.html',
   styleUrl: './attendance-index.component.scss'
 })
-export class AttendanceIndexComponent implements OnChanges {
-  
+export class AttendanceIndexComponent implements OnChanges, OnInit {
+
+  sum_minutes_ideal: number = 0;
+  sum_minutes_worked: number = 0;
+  sum_minutes_break: number = 0;
+
   ngOnChanges(changes: SimpleChanges): void {
+
     if (changes['attendances']) {
-    this.calculateHours(this.getTotalSeconds());
+      this.calculateHours(this.getTotalSeconds());
+
+      this.sum_minutes_ideal = 0;
+      this.sum_minutes_worked = 0;
+      this.sum_minutes_break = 0;
+
+      this.attendances.forEach((attendance: any) => {
+        this.sum_minutes_ideal += 480;
+        this.sum_minutes_break += 60;
+        this.sum_minutes_worked += Number(attendance.minutes);
+      });
+
+      this.sum_minutes_worked = this.sum_minutes_worked - this.sum_minutes_break;
+
+      console.log(this.sum);
+
     }
+
   }
 
 
@@ -105,6 +126,15 @@ export class AttendanceIndexComponent implements OnChanges {
     // return this.hoursMinuts;
   }
 
+  //nueva forma de calculo
+
+  sum: number = 0;
+
+  ngOnInit(): void {
+
+
+
+  }
 
 
 }

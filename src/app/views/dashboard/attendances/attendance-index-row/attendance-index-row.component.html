@@ -1,5 +1,7 @@
+<td class="text-center">{{ attendance.date | dayOfWeek }}</td>
+
 <td class="text-center">
-  {{ attendance.date | date:'dd/MM/yyyy' }}
+    {{ attendance.date | date:'dd/MM/yyyy' }}
 </td>
 <td class="text-center">{{ attendance.employee?.user.name | uppercase }}</td>
 <td class="text-center">
@@ -14,26 +16,40 @@
     }
 
 </td>
+
 <td class="text-center">{{ attendance.check_out }}</td>
+
+
 <td class="text-center">
 
-    <div class="d-flex justify-content-center align-items-center">
+    @if(attendance.missing === true){
 
-        <!-- Cumplio las 8 Horas -->
-        @if (attendance.check_in | attendanceStatus:attendance.check_out) {
-        <span class="text-success">
-            {{ attendance.check_in | workedHours:attendance.check_out }}
-        </span>
-        } @else {
-        <span class="text-danger">
-            {{ attendance.check_in | workedHours:attendance.check_out }}
-        </span>
-        }
-    </div>
+    }@else{
+    -60m
+    }
 
 </td>
 
-<td class="text-center">{{ attendance.date | dayOfWeek }}</td>
+<td class="text-center">
+
+    @if(attendance.minutes - 60 >= 0){
+    @if(attendance.minutes - 60 < 480){ 
+        <span class="text-danger">
+        {{ attendance.minutes - 60 }}m
+        </span>
+        }@else{
+        <span class="text-success">
+            {{ attendance.minutes - 60 }}m
+        </span>
+        }
+    }
+
+
+
+</td>
+
+<td class="text-center">480m</td>
+
 <td class="text-center" style="width: 150px;">
 
     {{ attendance.comment }}

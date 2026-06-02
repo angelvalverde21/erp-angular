@@ -50,7 +50,6 @@ export class AttendanceIndexRowComponent {
 
   }
 
-
   faCircleCheck = faCircleCheck;
   faCheck = faCheck;
   faCircleXmark = faCircleXmark;
@@ -68,6 +67,8 @@ export class AttendanceIndexRowComponent {
     this.attendance = { ...this.attendance, ...attendance };
     this.closeModal();
   }
+
+
 
 }
 

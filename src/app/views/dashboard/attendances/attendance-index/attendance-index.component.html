@@ -4,28 +4,35 @@
 
         <thead class="table-light">
             <tr>
+                <th scope="col" class="text-center">Dia</th>
                 <th scope="col" class="text-center">Fecha</th>
                 <th scope="col" class="text-center">Nombre</th>
                 <th scope="col" class="text-center">Entrada</th>
                 <th scope="col" class="text-center">Salida</th>
-                <th scope="col" class="text-center">Horas</th>
-                <th scope="col" class="text-center">Dia</th>
+                <!-- <th scope="col" class="text-center">Horas</th> -->
+                <th scope="col" class="text-center">Almuerzo</th>
+                <th scope="col" class="text-center">Minutos Laborados</th>
+                <th scope="col" class="text-center">Minutos Ideales</th>
                 <th scope="col" class="text-center">Observ.</th>
                 <th scope="col" class="text-center">Asistencia</th>
                 <th scope="col" class="text-center"></th>
+                <th scope="col" class="text-center"></th>
+
             </tr>
         </thead>
 
         <tbody>
 
-            @for (attendance of attendances; track attendance.date) {
+            @for (attendance of attendances; track $index) {
                 <tr app-attendance-index-row [attendance]="attendance" [class.table-danger]="attendance.missing"> </tr>
             }
             <tr>
-                <td colspan="4"></td>
+                <td colspan="5"></td>
+                <td class="text-center">{{ sum_minutes_break }}m</td>
                 <td class="text-center">
-                    <h6>{{ hoursMinuts }}</h6>
+                    <h6>{{ sum_minutes_worked }}m</h6>
                 </td>
+                <td class="text-center">{{ sum_minutes_ideal }}m</td>
                 <td colspan="5"></td>
             </tr>
 
