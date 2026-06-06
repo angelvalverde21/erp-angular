@@ -94,7 +94,7 @@ export class ManufactureOrderIndexRowComponent implements OnInit {
       {
         label: 'Recepciones',
         icon: this.faArrowRightArrowLeft,
-        routerLink: [...this.link_base, 'receptions']
+        routerLink: [...this.link_base, 'kardexes']
       }
     ];
   }
