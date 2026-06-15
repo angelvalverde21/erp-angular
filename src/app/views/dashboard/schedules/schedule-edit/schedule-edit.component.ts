@@ -19,12 +19,12 @@ import { JsonPipe } from '@angular/common';
   templateUrl: './schedule-edit.component.html',
   styleUrl: './schedule-edit.component.scss'
 })
-export class ScheduleEditComponent implements OnInit, OnDestroy{
+export class ScheduleEditComponent implements OnInit, OnDestroy {
 
-  @Input() employee_id: number = 0; 
-  @Input() schedule: any; 
+  @Input() employee_id: number = 0;
+  @Input() schedule: any;
   @Output() emitUpdatedSchedule = new EventEmitter<number>();
-  
+
 
   constructor(
     private fb: FormBuilder,
@@ -54,14 +54,14 @@ export class ScheduleEditComponent implements OnInit, OnDestroy{
 
   loading: boolean = false;
 
-  update(){
+  update() {
 
     this.loading = true;
 
     this._employeeSchedule.setId(this.employee_id)
 
     this._employeeSchedule.update(this.schedule.id, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
-    
+
       next: (resp: any) => {
         Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         console.log(resp);
@@ -69,23 +69,24 @@ export class ScheduleEditComponent implements OnInit, OnDestroy{
         this.loading = false;
         this.emitUpdatedSchedule.emit(this.schedule)
       },
-    
+
       error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
+        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
+        this.loading = false;
         console.error(error);
       },
-    
+
     });
 
   }
 
   destroy$ = new Subject<void>();
-  
+
   ngOnDestroy(): void {
-  
+
     this.destroy$.next();
     this.destroy$.complete();
-  
+
   }
 
 

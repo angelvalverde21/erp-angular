@@ -1,7 +1,9 @@
 <!-- <tr (click)="getEmployeeId(employee.id)"> -->
 
 <td class="text-center">{{ employee.id }}</td>
-<td>{{ employee.user.name }}</td>
+<td>
+    <a href="" [routerLink]="firstLink">{{ employee.user.name }}</a>
+</td>
 <!-- <td>{{ user.category.name }}</td> -->
 <td class="d-none d-md-table-cell">{{ employee.user.document_number }}</td>
 <td class="d-none d-md-table-cell">{{ employee.salary }}</td>

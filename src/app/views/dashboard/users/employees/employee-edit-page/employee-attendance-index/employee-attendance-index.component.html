@@ -15,7 +15,7 @@
     </div>
 
     <div class="card-body p-0">
-        <app-attendance-index [attendances]="attendances" (emitHoursMinuts)="receiveHoursMinuts($event)"
+        <app-attendance-index [attendances]="attendances" [employee]="employee" (emitHoursMinuts)="receiveHoursMinuts($event)"
             (emitHoursDecimal)="receiveHoursDecimal($event)"></app-attendance-index>
     </div>
 

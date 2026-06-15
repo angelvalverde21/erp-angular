@@ -85,5 +85,9 @@ export class EmployeIndexRowComponent implements OnInit {
   }
 
 
+  get firstLink(){
+    return this.menus[0].routerLink;
+  }
+
 
 }

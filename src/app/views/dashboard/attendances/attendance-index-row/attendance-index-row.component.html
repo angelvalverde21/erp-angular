@@ -3,7 +3,25 @@
 <td class="text-center">
     {{ attendance.date | date:'dd/MM/yyyy' }}
 </td>
-<td class="text-center">{{ attendance.employee?.user.name | uppercase }}</td>
+<td class="text-center">{{ attendance.employee_name | uppercase }} {{ attendance.missing_text }}</td>
+
+@switch (attendance.missing_text) {
+
+@case ('REMOTO') {
+    <td colspan="4" class="text-center" style="letter-spacing: 10px">REMOTO</td>
+}
+
+@case ('DESCANZO') {
+    <td colspan="4" class="text-center" style="letter-spacing: 10px">DESCANZO</td>
+}
+
+@case ('FALTO') {
+
+<td colspan="4" class="text-center" style="letter-spacing: 10px">FALTO</td>
+}
+
+@default {
+
 <td class="text-center">
 
 
@@ -25,7 +43,7 @@
     @if(attendance.missing === true){
 
     }@else{
-    -60m
+    -1h 00m
     }
 
 </td>
@@ -33,22 +51,27 @@
 <td class="text-center">
 
     @if(attendance.minutes - 60 >= 0){
-    @if(attendance.minutes - 60 < 480){ 
-        <span class="text-danger">
-        {{ attendance.minutes - 60 }}m
+    @if(attendance.minutes - 60 < 480){ <span class="text-danger">
+        {{ attendance.minutes - 60 | minutesToHours }}m
         </span>
         }@else{
         <span class="text-success">
-            {{ attendance.minutes - 60 }}m
+            {{ attendance.minutes - 60 | minutesToHours }}m
         </span>
         }
-    }
-
-
+        }
 
 </td>
 
-<td class="text-center">480m</td>
+
+<!-- <td class="text-center">8h 00m</td> -->
+}
+
+}
+
+
+<td class="text-center">{{ attendance?.salary_extra | pen }}</td>
+
 
 <td class="text-center" style="width: 150px;">
 
@@ -64,14 +87,14 @@
 
 </td>
 
-<td class="text-center">
+<!-- <td class="text-center">
 
     @if(attendance.missing){
     <fa-icon class="text-danger" style="font-size: 1rem;" [icon]="faCircleXmark"></fa-icon>
     }@else{
     <fa-icon class="text-success" style="font-size: 1rem;" [icon]="faCheck"></fa-icon>
     }
-</td>
+</td> -->
 
 <td>
     <div ngbDropdown class="d-inline-block">

@@ -11,11 +11,12 @@
                 <th scope="col" class="text-center">Salida</th>
                 <!-- <th scope="col" class="text-center">Horas</th> -->
                 <th scope="col" class="text-center">Almuerzo</th>
-                <th scope="col" class="text-center">Minutos Laborados</th>
-                <th scope="col" class="text-center">Minutos Ideales</th>
+                <th scope="col" class="text-center">Horas Laborados</th>
+                <!-- <th scope="col" class="text-center">Horas Ideales</th> -->
+                <th scope="col" class="text-center">Pago Extra</th>
                 <th scope="col" class="text-center">Observ.</th>
-                <th scope="col" class="text-center">Asistencia</th>
-                <th scope="col" class="text-center"></th>
+                <!-- <th scope="col" class="text-center">Asistencia</th>/ -->
+                <!-- <th scope="col" class="text-center"></th> -->
                 <th scope="col" class="text-center"></th>
 
             </tr>
@@ -28,13 +29,22 @@
             }
             <tr>
                 <td colspan="5"></td>
-                <td class="text-center">{{ sum_minutes_break }}m</td>
+                <td class="text-center">{{ sum_minutes_break | minutesToHours }}</td>
                 <td class="text-center">
-                    <h6>{{ sum_minutes_worked }}m</h6>
+                    <h6>{{ sum_minutes_worked | minutesToHours }}</h6>
                 </td>
-                <td class="text-center">{{ sum_minutes_ideal }}m</td>
+                <!-- <td class="text-center">{{ sum_minutes_ideal | minutesToHours }}</td> -->
+                <td class="text-center">{{ sum_salary_extra | pen }}</td>
+                <!-- <td class="text-center">{{ employee.salary/2 + sum_salary_extra | pen }}</td> -->
                 <td colspan="5"></td>
             </tr>
+
+            <tr>
+                <td colspan="14" class="text-center">
+                    <h4 class="py-3"><span class="text-secondary">{{ employee?.salary/2 | pen }} {{ sum_salary_extra | pen }}</span> = {{ employee?.salary/2 + sum_salary_extra | pen }}</h4>
+                </td>
+            </tr>
+
 
         </tbody>
 

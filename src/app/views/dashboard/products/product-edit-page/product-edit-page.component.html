@@ -17,7 +17,7 @@
 
 
     <div class="row">
-      <div class="col-lg-7">
+      <div class="col-lg-12">
         <div class="card mb-3">
 
           <!-- {{ product | json }} -->
@@ -45,13 +45,14 @@
 
       </div>
 
-      <div class="col-lg-5">
+      <div class="col-lg-12">
 
-        <app-head-page title="Agregue Bloque de Opciones">
+        <app-head-page title="Agregar Opciones">
         </app-head-page>
 
         <div class="card mb-3">
           <div class="card-body">
+
             <app-option-index [options_init]="product.options_init" [options]="product.options"
               [product_id]="product.id"></app-option-index>
           </div>

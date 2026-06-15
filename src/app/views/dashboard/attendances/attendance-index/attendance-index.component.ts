@@ -1,34 +1,44 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AttendanceIndexRowComponent } from '../attendance-index-row/attendance-index-row.component';
-
-
+import { MinutesToHoursPipe } from '@shared/pipes/minutesToHours.pipe'
+import { PenPipe } from '@shared/pipes/pen.pipe'
 @Component({
   selector: 'app-attendance-index',
   imports: [
-    AttendanceIndexRowComponent
+    AttendanceIndexRowComponent,
+    MinutesToHoursPipe,
+    PenPipe
   ],
   templateUrl: './attendance-index.component.html',
   styleUrl: './attendance-index.component.scss'
 })
 export class AttendanceIndexComponent implements OnChanges, OnInit {
 
+
+  @Input() employee: any 
+
   sum_minutes_ideal: number = 0;
   sum_minutes_worked: number = 0;
   sum_minutes_break: number = 0;
+  sum_salary_extra: number = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
 
     if (changes['attendances']) {
-      this.calculateHours(this.getTotalSeconds());
+      // this.calculateHours(this.getTotalSeconds());
 
       this.sum_minutes_ideal = 0;
       this.sum_minutes_worked = 0;
       this.sum_minutes_break = 0;
+      this.sum_salary_extra = 0;
 
       this.attendances.forEach((attendance: any) => {
+
         this.sum_minutes_ideal += 480;
         this.sum_minutes_break += 60;
         this.sum_minutes_worked += Number(attendance.minutes);
+        this.sum_salary_extra += Number(attendance.salary_extra);
+
       });
 
       this.sum_minutes_worked = this.sum_minutes_worked - this.sum_minutes_break;
@@ -66,65 +76,7 @@ export class AttendanceIndexComponent implements OnChanges, OnInit {
     return this._attendances;
   }
 
-  calculateWorkedSeconds(checkIn: string | null, checkOut: string | null): number {
-    if (!checkIn || !checkOut) return 0;
 
-    const inParts = checkIn.split(':');
-    const outParts = checkOut.split(':');
-
-    if (inParts.length < 2 || outParts.length < 2) return 0;
-
-    const inH = Number(inParts[0]);
-    const inM = Number(inParts[1]);
-    const inS = Number(inParts[2] || 0);
-
-    const outH = Number(outParts[0]);
-    const outM = Number(outParts[1]);
-    const outS = Number(outParts[2] || 0);
-
-    // 🚨 validación anti-NaN
-    if ([inH, inM, inS, outH, outM, outS].some(isNaN)) return 0;
-
-    const inSec = inH * 3600 + inM * 60 + inS;
-    const outSec = outH * 3600 + outM * 60 + outS;
-
-    let diff = outSec - inSec;
-
-    // soporte turno nocturno
-    if (diff < 0) diff += 24 * 3600;
-
-    return diff;
-  }
-
-  getTotalSeconds(): number {
-    return this.attendances.reduce((total, att) => {
-      return total + this.calculateWorkedSeconds(att.check_in, att.check_out);
-    }, 0);
-  }
-
-  minutsToDecimal(minutos: number): number {
-    return parseFloat((minutos / 60).toFixed(2));
-  }
-
-  hoursMinuts: string = "";
-  hoursDecimal: number = 0;
-
-  calculateHours(seconds: number) {
-
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-
-    this.hoursMinuts = `${h}h ${m}m`;
-    this.hoursDecimal = h + this.minutsToDecimal(m);
-
-    console.log(this.hoursMinuts);
-    console.log(this.hoursDecimal);
-
-    this.emitHoursMinuts.emit(this.hoursMinuts);
-    this.emitHoursDecimal.emit(this.hoursDecimal);
-
-    // return this.hoursMinuts;
-  }
 
   //nueva forma de calculo
 

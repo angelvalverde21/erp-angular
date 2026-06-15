@@ -65,6 +65,7 @@ export class EmployeeAttendanceIndexComponent implements OnInit, OnDestroy {
       this.employee = event;
 
       this.attendances = this.employee.attendances;
+      
     });
 
   }

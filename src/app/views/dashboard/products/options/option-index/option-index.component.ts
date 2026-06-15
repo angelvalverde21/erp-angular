@@ -23,6 +23,8 @@ export class OptionIndexComponent implements OnInit {
   @Input() product_id: number = 0;
   @Input() options: any;
 
+  options_complete: boolean = false;
+
   ngOnInit(): void {
 
     this.options.forEach((option:any) => {
@@ -38,6 +40,10 @@ export class OptionIndexComponent implements OnInit {
 
   removeOptionInit(option: any) {
     this.options_init = this.options_init.filter((o: any) => o.name !== option.name);
+  }
+
+  checkOptionsComplete(){
+
   }
 
 }
