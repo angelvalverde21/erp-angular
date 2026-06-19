@@ -191,3 +191,11 @@ a{
   text-decoration: none;
   color: inherit;
 }
+
+.fancybox__container {
+    z-index: 99999 !important;
+}
+
+// .fancybox-overlay, .fancybox-bg {
+//   z-index: 9998 !important;
+// }

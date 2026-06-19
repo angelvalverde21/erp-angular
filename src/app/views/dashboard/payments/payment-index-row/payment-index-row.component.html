@@ -1,5 +1,7 @@
 <td class="text-center">#{{ payment.id }}</td>
-<!-- <td class="text-center"><img [src]="payment?.images[0]?.url_thumbnail" alt="" height="50px"></td> -->
+<td class="text-center">
+  <app-image-preview [image]="payment?.images[0]"></app-image-preview>
+</td>
 
 <td class="text-center">{{ payment?.comment }}</td>
 <td class="text-center">{{ payment?.gateway?.name }}</td>

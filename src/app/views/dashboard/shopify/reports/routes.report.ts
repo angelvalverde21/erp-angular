@@ -17,6 +17,14 @@ export const routes: Routes = [
     }
   },
   {
+    path: 'sales',
+    loadComponent: () => import('./report-sales-page/report-sales-page.component').then((m) => m.ReportSalesPageComponent),
+    data: {
+      title: 'Todos',
+      name: 'report.products.top', // 👈 nombre único
+    }
+  },
+  {
     path: 'all',
     loadComponent: () => import('./report-month-all/report-month-all.component').then((m) => m.ReportMonthAllComponent),
     data: {

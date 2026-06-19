@@ -34,7 +34,7 @@ export const navShopify: CustomNavData[] = [
     url: 'dashboard/shopify/products',
     iconComponent: { name: 'cil-cash' },
     children: [
-      { name: 'Productos', url: 'dashboard/shopify/products/all', icon: 'nav-icon-bullet' },
+      { name: 'Productos', url: 'dashboard/shopify/products', icon: 'nav-icon-bullet' },
       { name: 'Precios Masivos', url: 'dashboard/shopify/products/prices', icon: 'nav-icon-bullet', roles: ['master', 'ceo'] }
     ],
     // roles: ['ventas', 'despacho']
