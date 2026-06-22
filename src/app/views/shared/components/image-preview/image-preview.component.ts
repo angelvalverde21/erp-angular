@@ -40,5 +40,9 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
     Fancybox.close();
   }
 
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/images/placeholder.png';
+  }
 
 }

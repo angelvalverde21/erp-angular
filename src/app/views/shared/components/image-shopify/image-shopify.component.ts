@@ -39,4 +39,10 @@ export class ImageShopifyComponent implements OnInit, OnDestroy {
 
   @Input() title: string = '';
 
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/images/placeholder.png';
+  }
+
 }

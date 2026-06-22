@@ -4,6 +4,7 @@ import { faBarcode, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '@buttons/button/button.component';
 import { Form, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
+import { ImagePreviewComponent } from 'src/app/views/shared/components/image-preview/image-preview.component';
 
 @Component({
   selector: 'tr[app-kardex-index-selected-row]',
@@ -11,7 +12,8 @@ import { JsonPipe } from '@angular/common';
     FontAwesomeModule,
     ButtonComponent,
     ReactiveFormsModule,
-    JsonPipe
+    JsonPipe,
+    ImagePreviewComponent
   ],
   templateUrl: './kardex-index-selected-row.component.html',
   styleUrl: './kardex-index-selected-row.component.scss'

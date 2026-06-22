@@ -1,3 +1,4 @@
 <a data-fancybox="gallery" [attr.data-caption]="`${ title}`" [href]="image?.url_thumbnail">
-    <img [src]="image?.url_medium" class="me-2" height="45px" alt="">
+    <img [src]="image?.url_medium || 'assets/images/300x300.svg'" (error)="onImageError($event)" class="me-2"
+        height="45" alt="">
 </a>

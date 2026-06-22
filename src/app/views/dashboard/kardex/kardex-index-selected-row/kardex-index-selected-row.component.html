@@ -4,7 +4,8 @@
     </td>
 
     <td class="text-center">
-        <img [src]="variant?.product?.image?.url_thumbnail" height="100px" style="border-radius: 5px;" alt="">
+        <app-image-preview [image]="variant?.product?.image"></app-image-preview>
+        <!-- <img [src]="variant?.product?.image?.url_thumbnail" height="100px" style="border-radius: 5px;" alt=""> -->
     </td>
 
     <td class="text-center">{{ variant?.product?.name }}</td>

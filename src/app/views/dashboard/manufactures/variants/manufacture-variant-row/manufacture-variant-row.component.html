@@ -8,6 +8,10 @@
         </app-input-group>
     </td>
 
+    <td class="text-center">
+        {{ stock_received }}
+    </td>
+
     @for (option_value of manufacture_variant.variant?.option_values; track option_value.id) {
     <td class="text-center">
         <span class="badge bg-secondary px-3 py-1">{{ option_value.value }}</span>
@@ -16,10 +20,12 @@
 
     <td class="text-center">
 
+        <app-image-preview [image]="manufacture_variant.variant?.product?.image" [title]="manufacture_variant?.quantity"></app-image-preview>
+<!-- 
         <a data-fancybox="gallery" [attr.data-caption]="`${ manufacture_variant?.quantity}`"
             [href]="manufacture_variant.variant?.product?.image?.url_medium">
             <img [src]="manufacture_variant.variant?.product?.image?.url_thumbnail" style="border-radius: 5px;" class="me-2" height="60px" alt="">
-        </a>
+        </a> -->
 
     </td>
     <td>{{ manufacture_variant.variant?.product?.name }}</td>
