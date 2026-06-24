@@ -76,7 +76,7 @@ export class ManufactureOrderIndexRowComponent implements OnInit {
 
     this.menus = [
       {
-        label: 'Detalles',
+        label: 'Resumen',
         icon: this.faGears,
         routerLink: this.link_base,
         divider: true
@@ -100,7 +100,7 @@ export class ManufactureOrderIndexRowComponent implements OnInit {
   }
 
   get variantLink() {
-    return [...this.link_base, 'variants'];
+    return [...this.link_base];
   }
 
   cost(manufacture: any) {
