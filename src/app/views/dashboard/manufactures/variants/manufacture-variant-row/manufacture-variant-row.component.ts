@@ -122,16 +122,7 @@ export class ManufactureVariantRowComponent implements OnDestroy, OnInit {
     // Aquí puedes agregar la lógica para eliminar el variante del manufacture_variants
   }
 
-  get stock_received() { //avance de stock 
 
-    const manufacture_kardexes = this.manufacture_variant.variant.manufacture_kardexes;
-
-    const sum = manufacture_kardexes.reduce((acc:number, item:any) => {
-      return acc + (Number(item.quantity) || 0);
-    }, 0);
-
-    return sum;
-  }
 
   editManufactureVariant(content: TemplateRef<any>, manufacture_variant_id: number, manufacture_id: number) {
     this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
@@ -206,6 +197,7 @@ export class ManufactureVariantRowComponent implements OnDestroy, OnInit {
       next: (resp: any) => {
         console.log(resp);
         this.loading = false;
+        // this.manufacture_variant = resp.data;
         this.emitUpdatedQuantity.emit(resp.data); //emite el manufacture_variant actualizado
       },
 

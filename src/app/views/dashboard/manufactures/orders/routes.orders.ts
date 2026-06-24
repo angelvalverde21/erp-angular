@@ -26,9 +26,9 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-edit/manufacture-order-edit.component').then((m) => m.ManufactureOrderEditComponent),
+        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-resumen/manufacture-order-resumen.component').then((m) => m.ManufactureOrderResumenComponent),
         data: {
-          title: 'Editar',
+          title: 'Resumen',
         }
       },
       {

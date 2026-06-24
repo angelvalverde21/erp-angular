@@ -1,0 +1,61 @@
+<div class="table-responsive">
+
+    <table class="table table-striped table-bordered mb-0 align-middle">
+
+        <thead class="table-light">
+            <tr>
+                <td class="text-center">Cantidad</td>
+                <td class="text-center">Avance</td>
+                <td class="text-center">Variante</td>
+                <td class="">Descripcion</td>
+                <td class="text-center">Precio</td>
+                <td class="text-center">Total</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (variant of variants; track variant.id) {
+            <tr>
+                <td class="text-center">{{ variant.pivot.quantity }}</td>
+                <td class="text-center">
+                    {{ stock_received(variant.manufacture_kardexes) }}
+                </td>
+                <td><app-image-preview [image]="variant.product?.image"></app-image-preview></td>
+                <td>{{ variant.product.name }}</td>
+                <td class="text-center">{{ variant.pivot.price | pen }}</td>
+                <td class="text-center">{{ subTotalPrice(variant) | pen }}</td>
+            </tr>
+            }
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-center">Total</td>
+                <td class="text-center">{{ totalPrice() | pen }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-center">a cuenta</td>
+                <td class="text-center">
+                    <!-- <a [routerLink]="['/routePath']" routerLinkActive="router-link-active" ></a> -->
+                     {{ sum_payments | pen }}
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-center">Deuda</td>
+                <td class="text-center"><h6>{{ totalPrice() - sum_payments | pen }}</h6></td>
+            </tr>
+        </tbody>
+
+    </table>
+
+</div>

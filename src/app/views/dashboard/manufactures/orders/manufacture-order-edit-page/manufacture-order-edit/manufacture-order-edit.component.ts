@@ -18,7 +18,7 @@ import { ManufactureService } from '@dashboard/manufactures/manufacture.service'
     JsonPipe,
     ButtonSaveComponent,
     LoadingComponent,
-    ManufactureOrderFormComponent
+    ManufactureOrderFormComponent,
   ],
   templateUrl: './manufacture-order-edit.component.html',
   styleUrl: './manufacture-order-edit.component.scss'
@@ -32,6 +32,7 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   disabledButton: boolean = false;
   manufacture_id: number = 0;
+
 
   constructor(
     private fb: FormBuilder,

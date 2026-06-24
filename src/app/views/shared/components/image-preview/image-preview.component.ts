@@ -42,7 +42,7 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
 
   onImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
-    img.src = 'assets/images/placeholder.png';
+    img.src = 'assets/images/300x300.svg';
   }
 
 }
