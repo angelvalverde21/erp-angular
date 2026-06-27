@@ -33,6 +33,8 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
   disabledButton: boolean = false;
   manufacture_id: number = 0;
 
+  @Input() manufacture_order: any;
+  // @Input() suppliers: any; 
 
   constructor(
     private fb: FormBuilder,
@@ -47,17 +49,12 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
     });
 
     //Escuchar cambios en la orden de compra para actualizar el formulario
-    effect(() => {
-      const event = this._manufacture.manufactureSingnalEvent();
-      if (!event) return;
-      this.form.patchValue({
-        name: event.name,
-        supplier_id: event.supplier_id,
-        manufacture_start: event.manufacture_start.split(' ')[0],
-        manufacture_end: event.manufacture_end.split(' ')[0],
-      });
+    // effect(() => {
+    //   const event = this._manufacture.manufactureSingnalEvent();
+    //   if (!event) return;
 
-    });
+
+    // });
   }
 
   formInit() {
@@ -86,8 +83,19 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    // console.log(this.manufacture_order);
     this.formInit();
     this.suppliersInit();
+    
+    this.form.patchValue({
+      name: this.manufacture_order.name,
+      supplier_id: this.manufacture_order.supplier_id,
+      manufacture_start: this.manufacture_order.manufacture_start.split(' ')[0],
+      manufacture_end: this.manufacture_order.manufacture_end.split(' ')[0],
+    });
+
+
+
     console.log(this.manufacture_id);
 
   }

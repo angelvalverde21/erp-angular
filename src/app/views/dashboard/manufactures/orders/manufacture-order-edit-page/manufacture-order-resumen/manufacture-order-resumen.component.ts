@@ -10,7 +10,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ManufactureService } from '@dashboard/manufactures/manufacture.service';
 import { ImagePreviewComponent } from '@shared/components/image-preview/image-preview.component';
 import { PenPipe } from '@shared/pipes/pen.pipe';
-
+import { ManufactureOrderEditComponent } from '../manufacture-order-edit/manufacture-order-edit.component';
 @Component({
   selector: 'app-manufacture-order-resumen',
   imports: [
@@ -20,7 +20,8 @@ import { PenPipe } from '@shared/pipes/pen.pipe';
     ManufactureOrderFormComponent,
     ImagePreviewComponent,
     PenPipe,
-    RouterModule
+    RouterModule,
+    ManufactureOrderEditComponent
 ],
   templateUrl: './manufacture-order-resumen.component.html',
   styleUrl: './manufacture-order-resumen.component.scss'
@@ -34,6 +35,8 @@ export class ManufactureOrderResumenComponent implements OnInit, OnDestroy {
   manufacture_id: number = 0;
   variants: any[] = [];
   payments: any[] = [];
+
+  manufacture_order: any;
 
   constructor(
     private _manufactureOrder: ManufactureOrderService,
@@ -50,6 +53,11 @@ export class ManufactureOrderResumenComponent implements OnInit, OnDestroy {
       const event = this._manufacture.manufactureSingnalEvent();
       if (!event) return;
 
+      this.manufacture_order = event;
+
+      console.log(event);
+      console.log(this.manufacture_order);
+      
       this.variants = event.variants;
       this.payments = event.payments;
 
