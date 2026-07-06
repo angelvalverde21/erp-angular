@@ -2,6 +2,7 @@
     <table class="table table-bordered mb-0 align-middle">
         <thead>
             <tr class="table-secondary">
+                <!-- <th scope="col" class="text-center">ID</th> -->
                 <th scope="col" class="text-center"><fa-icon [icon]="faBarcode"></fa-icon></th>
                 <th scope="col"></th>
                 <th scope="col">Nombre</th>
@@ -14,35 +15,66 @@
         </thead>
         <tbody>
 
-            @if(kardexes.length == 0){
+            @if(kardexGroups.length == 0){
             <tr>
-                <td colspan="8" class="text-center py-3">
+                <td colspan="9" class="text-center py-3">
                     <p class="mt-3">No hay registros</p>
                 </td>
             </tr>
             }@else{
-            @for (kardex of kardexes; track kardex.id) {
-                    <tr
-                        [ngClass]="(kardex.direction == 'in') ? (kardex.comment === 'Reparado' ? 'table-warning' : 'table-success') : 'table-danger'">
-                        <th class="text-center" scope="row">{{ kardex.variant.sku }}</th>
-                        <td class="text-center">
-                            <app-image-shopify [image]="kardex?.variant?.product?.image"></app-image-shopify>
-                            <!-- <img [src]="kardex?.variant?.product?.image?.url_thumbnail" height="50px"> -->
-                        </td>
-                        <td><a [routerLink]="['/', store, 'dashboard', 'products', kardex?.variant?.product?.id]">{{ kardex?.variant?.product?.name }}</a></td>
-                        @for (option_value of kardex.variant.option_values; track option_value.id) {
-                        <td class="text-center">{{ option_value.value }}</td>
-                        }
-                        <td>{{ kardex?.comment }}</td>
-                        <td class="text-center">{{ (kardex?.direction == 'in') ? 'Ingreso' : 'Salida' }}</td>
-                        <td class="text-center">{{ kardex?.created_at | DateShopify }}</td>
-                        <td class="text-center">{{ (kardex?.direction == 'in') ? '' : '-' }}{{ kardex?.quantity }}</td>
 
+                @for (group of kardexGroups; track group.date; let i = $index; let count = $count) {
+                    
+                    <tr class="table-light">
+                        <td colspan="9" class="text-center">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>Evento {{ count - i }}</strong>
+                                <span>{{ group.date }}</span>
+                            </div>
+                        </td>
                     </tr>
+
+                    @for (kardex of group.items; track kardex.id) {
+
+                        <tr
+                            [ngClass]="(kardex.direction == 'in') ? (kardex.comment === 'Reparado' ? 'table-warning' : 'table-success') : 'table-danger'">
+                            <!-- <td class="text-center" scope="row">{{ kardex.id }}</td> -->
+                            <td class="text-center" scope="row">
+                                <div class="d-flex justify-content-between align-items-center"><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> <span>{{ kardex.variant.id }}</span></div>
+                            </td>
+                            <td class="text-center">
+                                <app-image-shopify [image]="kardex?.variant?.product?.image"></app-image-shopify>
+                                <!-- <img [src]="kardex?.variant?.product?.image?.url_thumbnail" height="50px"> -->
+                            </td>
+                            <td class="text-center">{{ (kardex?.direction == 'in') ? '' : '-' }}{{ kardex?.quantity }}</td>
+                            <td>
+                                <a [routerLink]="['/', store, 'dashboard', 'products', kardex?.variant?.product?.id]">{{ kardex?.variant?.product?.name }}</a>
+                            </td>
+                            @for (option_value of kardex.variant.option_values; track option_value.id) {
+                            <td class="text-center">{{ option_value.value }}</td>
+                            }
+                            <td>{{ kardex?.comment }}</td>
+                            <!-- <td class="text-center">{{ (kardex?.direction == 'in') ? 'Ingreso' : 'Salida' }}</td> -->
+                            <td class="text-center"></td>
+                            <td class="text-center">{{ kardex?.created_at | DateShopify }}</td>
+
+
+                        </tr>
+
+                    }
+                        <tr>
+                            <td colspan="7"></td>
+                            <td class="text-end me-2">Total</td>
+                            <td class="text-center bg-success text-white">{{ sum_group_quantity(group) }}</td>
+                        </tr>
+                        <tr style="border: transparent">
+                            <td colspan="9"></td>
+                        </tr>
                 }
             }
+
             <tr>
-                <td colspan="6"></td>
+                <td colspan="7"></td>
                 <td class="text-end">
                     <h6 class="mt-3">{{ text_balance }}</h6>
                 </td>

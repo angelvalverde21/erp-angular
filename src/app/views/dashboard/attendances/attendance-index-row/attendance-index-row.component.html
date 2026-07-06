@@ -3,6 +3,7 @@
 <td class="text-center">
     {{ attendance.date | date:'dd/MM/yyyy' }}
 </td>
+
 <td class="text-center">{{ attendance.employee_name | uppercase }}</td>
 
 @switch (attendance.missing_text) {
@@ -43,24 +44,23 @@
     @if(attendance.missing === true){
 
     }@else{
+
+    <!-- En employe partime no se descuenta la hora de almuerzo, en employe fulltime si se descuenta la hora de almuerzo. -->
+    @if(attendance.employee_work_type == "partime"){
+
+    }@else{
     -1h 00m
+    }
+
     }
 
 </td>
 
 <td class="text-center">
 
-    @if(attendance.minutes - 60 >= 0){
-    @if(attendance.minutes - 60 < 480){ <span class="text-danger">
-        {{ attendance.minutes - 60 | minutesToHours }}
-        </span>
-        }@else{
-        <span class="text-success">
-            {{ attendance.minutes - 60 | minutesToHours }}
-        </span>
-        }
-        }
-
+    <span [class]="getMinutesClass(attendance)">
+        {{ getWorkedMinutes(attendance) | minutesToHours }}
+    </span>
 </td>
 
 

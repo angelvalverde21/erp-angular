@@ -76,5 +76,19 @@ export class AttendanceIndexRowComponent {
     return ((Number(this.attendance.salary_day) * Number(this.attendance.minutes - 60)) / 480).toFixed(2);
   }
 
+  getWorkedMinutes(attendance: any): number {
+    if (attendance.minutes - 60 >= 0 && attendance.employee_work_type !== 'partime') {
+      return attendance.minutes - 60;
+    }
+
+    return attendance.minutes;
+  }
+
+  getMinutesClass(attendance: any): string {
+    const minutes = this.getWorkedMinutes(attendance);
+
+    return minutes < 480 ? 'text-danger' : 'text-success';
+  }
+
 }
 

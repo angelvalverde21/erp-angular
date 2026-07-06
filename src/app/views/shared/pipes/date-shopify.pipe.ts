@@ -1,52 +1,37 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { formatDate } from '@angular/common';
+
+interface FechaServidor {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+}
 
 @Pipe({
   name: 'DateShopify'
 })
 export class DateShopifyPipe implements PipeTransform {
 
+  private readonly timeZone = 'America/Lima';
+
   transform(value: string | Date | null | undefined): string {
     if (!value) return '';
 
-    let fecha: Date;
+    const fecha = this.parseFechaServidor(value);
 
-    if (value instanceof Date) {
-      fecha = value;
-
-    } else if (typeof value === 'string') {
-
-      // 🔹 Normalizamos formato
-      const limpio = value.replace('T', ' ').replace('Z', '');
-
-      const partes = limpio.split(' ');
-
-      if (partes.length < 2) return '';
-
-      const [datePart, timePart] = partes;
-
-      const [year, month, day] = datePart.split('-').map(Number);
-      const [hour, minute, second] = timePart.split(':').map(Number);
-
-      fecha = new Date(year, month - 1, day, hour, minute, second);
-    } else {
-      return '';
-    }
+    if (!fecha) return '';
 
     const ahora = new Date();
     const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
-    const fechaSoloDia = new Date(
-      fecha.getFullYear(),
-      fecha.getMonth(),
-      fecha.getDate()
-    );
-
+    const fechaSoloDia = new Date(fecha.year, fecha.month - 1, fecha.day);
     const diffMs = hoy.getTime() - fechaSoloDia.getTime();
     const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    const horaMin = formatDate(fecha, 'HH:mm', 'es-PE');
-    const nombreDia = fecha.toLocaleDateString('es-PE', { weekday: 'long' });
-    const nombreMes = fecha.toLocaleDateString('es-PE', { month: 'short' });
+    const fechaDate = new Date(fecha.year, fecha.month - 1, fecha.day);
+    const horaMin = `${this.dosDigitos(fecha.hour)}:${this.dosDigitos(fecha.minute)}`;
+    const nombreDia = fechaDate.toLocaleDateString('es-PE', { weekday: 'long' });
+    const nombreMes = fechaDate.toLocaleDateString('es-PE', { month: 'short' });
 
     if (diffDias === 0) {
       return `Hoy a las ${horaMin}`;
@@ -55,8 +40,65 @@ export class DateShopifyPipe implements PipeTransform {
     } else if (diffDias > 1 && diffDias <= 7) {
       return `${this.capitalizar(nombreDia)} a las ${horaMin}`;
     } else {
-      return `${fecha.getDate()} ${nombreMes} a las ${horaMin}`;
+      return `${fecha.day} ${nombreMes} a las ${horaMin}`;
     }
+  }
+
+  private parseFechaServidor(value: string | Date): FechaServidor | null {
+    if (value instanceof Date) {
+      return this.parseFechaConZona(value);
+    }
+
+    if (this.tieneZonaHoraria(value)) {
+      return this.parseFechaConZona(new Date(value));
+    }
+
+    const match = value.match(
+      /^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2})(?::\d{2}(?:\.\d+)?)?)?/
+    );
+
+    if (!match) return null;
+
+    return {
+      year: Number(match[1]),
+      month: Number(match[2]),
+      day: Number(match[3]),
+      hour: Number(match[4] ?? 0),
+      minute: Number(match[5] ?? 0)
+    };
+  }
+
+  private tieneZonaHoraria(value: string): boolean {
+    return /(?:Z|[+-]\d{2}:?\d{2})$/i.test(value);
+  }
+
+  private parseFechaConZona(value: Date): FechaServidor | null {
+    if (Number.isNaN(value.getTime())) return null;
+
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: this.timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }).formatToParts(value);
+
+    const getPart = (type: Intl.DateTimeFormatPartTypes) =>
+      Number(parts.find((part) => part.type === type)?.value);
+
+    return {
+      year: getPart('year'),
+      month: getPart('month'),
+      day: getPart('day'),
+      hour: getPart('hour'),
+      minute: getPart('minute')
+    };
+  }
+
+  private dosDigitos(valor: number): string {
+    return valor.toString().padStart(2, '0');
   }
 
   private capitalizar(texto: string): string {

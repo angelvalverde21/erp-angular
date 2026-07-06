@@ -33,7 +33,7 @@ export class KardexIndexComponent implements OnInit {
   saldo: number = 0
 
   @Input() kardexes: any[] = [];
-  @Input() text_balance: string = 'Balance'; 
+  @Input() text_balance: string = 'Balance';
 
   constructor(
     private _kardex: KardexService,
@@ -48,7 +48,7 @@ export class KardexIndexComponent implements OnInit {
 
     this.store = this._base.store!;
 
-    this.kardex_summary = this._kardex.summary(this.kardexes);
+    this.kardex_summary = this._kardex.summary(this.kardexesFlat);
 
   }
 
@@ -56,10 +56,10 @@ export class KardexIndexComponent implements OnInit {
 
   ngOnChanges() {
 
-    this.kardex_summary = this._kardex.summary(this.kardexes);
+    this.kardex_summary = this._kardex.summary(this.kardexesFlat);
     this.emitKardexSummary.emit(this.kardex_summary);
 
-    
+
     // this.total_receptions = totals.total_receptions;
     // this.fallados = totals.fallados;
     // this.reparados = totals.reparados;
@@ -67,4 +67,50 @@ export class KardexIndexComponent implements OnInit {
 
   }
 
+  get kardexGroups(): any[] {
+    if (this.kardexes.length === 0) return [];
+
+    if (Array.isArray(this.kardexes[0]?.items)) {
+      return this.kardexes;
+    }
+
+    return this.kardexes.reduce((groups: any[], kardex: any) => {
+      const date = this.fechaGrupo(kardex?.created_at);
+      const group = groups.find((item) => item.date === date);
+
+      if (group) {
+        group.items.push(kardex);
+      } else {
+        groups.push({ date, items: [kardex] });
+      }
+
+      return groups;
+    }, []);
+  }
+
+  get kardexesFlat(): any[] {
+    return this.kardexGroups.flatMap((group) => group.items);
+  }
+
+  private fechaGrupo(value: string | null | undefined): string {
+    if (!value) return '';
+
+    return value.split('T')[0].split(' ')[0];
+  }
+
+  sum_group_quantity(group: any): number {
+    return group.items.reduce((acc: number, item: any) => {
+      const quantity = Number(item.quantity) || 0;
+
+      if (item.direction === 'in') {
+        return acc + quantity;
+      }
+
+      if (item.direction === 'out') {
+        return acc - quantity;
+      }
+
+      return acc;
+    }, 0);
+  }
 }

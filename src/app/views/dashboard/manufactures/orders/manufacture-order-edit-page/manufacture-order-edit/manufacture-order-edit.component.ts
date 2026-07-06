@@ -86,7 +86,7 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
     // console.log(this.manufacture_order);
     this.formInit();
     this.suppliersInit();
-    
+
     this.form.patchValue({
       name: this.manufacture_order.name,
       supplier_id: this.manufacture_order.supplier_id,
@@ -155,8 +155,8 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
           icon: 'success',
           title: 'Correcto',
           text: 'Datos guardados correctamente',
-          confirmButtonText: 'OK',
-          showConfirmButton: true
+          showConfirmButton: false,
+          timer: 500
         })
 
       },

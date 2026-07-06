@@ -5,7 +5,7 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./manufacture-production-index-page/manufacture-production-index-page.component').then((m) => m.ManufactureProductionIndexPageComponent),
     data: {
-      title: 'Mostrando todas las producciones',
+      title: 'Producciones',
       name: 'dashboard.production.index', // 👈 nombre único
     }
   },
@@ -44,21 +44,21 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./manufacture-production-edit-page/manufacture-production-purchase-index/manufacture-production-purchase-index.component')
             .then(m => m.ManufactureProductionPurchaseIndexComponent),
-        data: { title: 'Produccion/Compras' }
+        data: { title: 'Produccion/compras' }
       },
       {
         path: 'variants',
         loadComponent: () =>
           import('./manufacture-production-edit-page/manufacture-production-variant-index/manufacture-production-variant-index.component')
             .then(m => m.ManufactureProductionVariantIndexComponent),
-        data: { title: 'Produccion/Variantes' }
+        data: { title: 'Produccion/inventario (Variantes)' }
       },
       {
         path: 'kardexes',
         loadComponent: () =>
           import('./manufacture-production-edit-page/manufacture-production-kardex-index/manufacture-production-kardex-index.component')
             .then(m => m.ManufactureProductionKardexIndexComponent),
-        data: { title: 'Produccion/Kardexes' }
+        data: { title: 'Produccion/recepcion (kardex)' }
       }
 
     ]

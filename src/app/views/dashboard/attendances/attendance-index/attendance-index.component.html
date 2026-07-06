@@ -29,7 +29,13 @@
             }
             <tr>
                 <td colspan="5"></td>
-                <td class="text-center">{{ sum_minutes_break | minutesToHours }}</td>
+                <td class="text-center">
+                    @if(employee.type == "partime"){
+                        
+                    }@else{
+                        {{ sum_minutes_break | minutesToHours }}
+                    }
+                </td>
                 <td class="text-center">
                     <h6>{{ sum_minutes_worked | minutesToHours }}</h6>
                 </td>
