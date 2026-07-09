@@ -32,10 +32,9 @@ import { ManufactureService } from '../../../manufacture.service';
     JsonPipe,
   ],
   templateUrl: './manufacture-order-kardex-index.component.html',
-  styleUrl: './manufacture-order-kardex-index.component.scss'
+  styleUrl: './manufacture-order-kardex-index.component.scss',
 })
 export class ManufactureOrderKardexIndexComponent {
-
   manufacture_id: number = 0;
   manufacture_variants: any[] = [];
   faRightLeft = faRightLeft;
@@ -50,21 +49,28 @@ export class ManufactureOrderKardexIndexComponent {
     config: NgbModalConfig,
     private modalService: NgbModal,
   ) {
-
     // this.route.params.subscribe(params => {
     //   this.manufacture_id = params['production_id'];
     // });
     config.backdrop = 'static';
     config.keyboard = false;
 
-    this.route.parent?.paramMap.subscribe(params => {
+    this.route.parent?.paramMap.subscribe((params) => {
       this.manufacture_id = Number(params.get('order_id'));
-
     });
-
   }
-  ngOnInit(): void {
 
+  group_kardexes: any;
+
+  manufacture: any;
+
+  loading: boolean = false;
+
+  kardex_summary: any;
+
+  variants: any[] = [];
+
+  ngOnInit(): void {
     // this._manufactureKardex.setManufactureId(this.manufacture_id);
 
     // this._manufactureKardex.index().pipe(takeUntil(this.destroy$)).subscribe({
@@ -82,95 +88,76 @@ export class ManufactureOrderKardexIndexComponent {
 
     // });
 
-
     // ------------------------------------------------------------------------------- //
 
     this._manufactureKardex.setManufactureId(this.manufacture_id);
 
+    ((this.loading = true),
+      this._manufactureKardex
+        .index()
+        .pipe(
+          takeUntil(this.destroy$),
+          switchMap((resp: any) => {
+            console.log(resp);
 
-    this.loading = true,
+            this.group_kardexes = resp.data;
 
-      this._manufactureKardex.index().pipe(takeUntil(this.destroy$), switchMap((resp: any) => {
+            this._manufactureVariant.setManufactureId(this.manufacture_id);
 
-          console.log(resp);
+            return this._manufactureVariant.index();
+          }),
+        )
+        .subscribe({
+          next: (resp: any) => {
+            console.log('Orders del empleado:');
+            console.log(resp);
+            this.manufacture_variants = resp.data;
 
-          this.kardexes = resp.data;
+            this.variants = this.manufacture_variants.map(
+              (mv: any) => mv.variant,
+            );
 
-          this._manufactureVariant.setManufactureId(this.manufacture_id);
+            this.loading = false;
+          },
 
-          return this._manufactureVariant.index();
-
-        })
-
-      ).subscribe({
-
-        next: (resp: any) => {
-
-          console.log('Orders del empleado:');
-          console.log(resp);
-          this.manufacture_variants = resp.data;
-
-          this.variants = this.manufacture_variants.map((mv: any) => mv.variant);
-
-          this.loading = false;
-
-        },
-
-        error: (error: any) => {
-          Swal.fire('Error', 'Ocurrió un problema al traer los datos del empleado.', 'error');
-          console.error(error);
-        },
-
-      });
-
+          error: (error: any) => {
+            Swal.fire(
+              'Error',
+              'Ocurrió un problema al traer los datos del empleado.',
+              'error',
+            );
+            console.error(error);
+          },
+        }));
   }
-
-
-  kardexes: any[] = [];
-
-  manufacture: any;
-
-  loading: boolean = false;
-
-  kardex_summary: any;
-
-  variants: any[] = [];
-
 
   destroy$ = new Subject<void>();
 
   ngOnDestroy(): void {
-
     this.destroy$.next();
     this.destroy$.complete();
-
   }
 
   receiveKardexSummary(kardex_summary: any) {
-
-    console.log("Received kardex summary:", kardex_summary);
+    console.log('Received kardex summary:', kardex_summary);
 
     this.kardex_summary = kardex_summary;
 
     this._manufacture.setSummary({
-      sum_kardexes: this.kardex_summary.reception
+      // sum_kardexes: this.kardex_summary.reception
     });
-
   }
 
   receiveKardexes(event: any) {
-
-    this.kardexes = [...this.kardexes, ...event];
+    this.group_kardexes = [...this.group_kardexes, ...event];
 
     // this.kardex_summary = this._kardex.summary(this.kardexes);
 
     // console.log(event);
     // console.log(this.kardex_summary);
-    
 
     this.modal.close();
   }
-
 
   closeModal() {
     this.modal.close();
@@ -179,8 +166,9 @@ export class ManufactureOrderKardexIndexComponent {
   modal: any;
 
   openVerticallyCentered(content: TemplateRef<any>) {
-    this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
+    this.modal = this.modalService.open(content, {
+      centered: true,
+      size: 'xl',
+    });
   }
-
-
 }

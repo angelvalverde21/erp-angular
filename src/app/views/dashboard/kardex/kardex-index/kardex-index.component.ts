@@ -16,55 +16,47 @@ import { BaseService } from 'src/app/views/base.service';
     CommonModule,
     DateShopifyPipe,
     ImageShopifyComponent,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './kardex-index.component.html',
-  styleUrl: './kardex-index.component.scss'
+  styleUrl: './kardex-index.component.scss',
 })
 export class KardexIndexComponent implements OnInit {
-
   faBarcode = faBarcode;
   total_receptions: number = 0;
 
   @Output() emitKardexSummary = new EventEmitter<any>();
 
   fallados: number = 0;
-  reparados: number = 0
-  saldo: number = 0
+  reparados: number = 0;
+  saldo: number = 0;
 
   @Input() kardexes: any[] = [];
   @Input() text_balance: string = 'Balance';
 
   constructor(
     private _kardex: KardexService,
-    private _base: BaseService
-  ) {
+    private _base: BaseService,
+  ) {}
 
-  }
-
-  store: string = "";
+  store: string = '';
 
   ngOnInit(): void {
-
     this.store = this._base.store!;
 
     this.kardex_summary = this._kardex.summary(this.kardexesFlat);
-
   }
 
   kardex_summary: any = null;
 
   ngOnChanges() {
-
     this.kardex_summary = this._kardex.summary(this.kardexesFlat);
     this.emitKardexSummary.emit(this.kardex_summary);
-
 
     // this.total_receptions = totals.total_receptions;
     // this.fallados = totals.fallados;
     // this.reparados = totals.reparados;
     // this.saldo = totals.saldo;
-
   }
 
   get kardexGroups(): any[] {
