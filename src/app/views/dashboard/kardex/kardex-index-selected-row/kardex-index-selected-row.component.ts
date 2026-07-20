@@ -2,7 +2,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '@buttons/button/button.component';
-import { Form, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Form,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { ImagePreviewComponent } from 'src/app/views/shared/components/image-preview/image-preview.component';
 
@@ -13,69 +19,57 @@ import { ImagePreviewComponent } from 'src/app/views/shared/components/image-pre
     ButtonComponent,
     ReactiveFormsModule,
     JsonPipe,
-    ImagePreviewComponent
+    ImagePreviewComponent,
   ],
   templateUrl: './kardex-index-selected-row.component.html',
-  styleUrl: './kardex-index-selected-row.component.scss'
+  styleUrl: './kardex-index-selected-row.component.scss',
 })
 export class KardexIndexSelectedRowComponent implements OnInit {
-
   faBarcode = faBarcode;
   faCheck = faCheck;
   @Input() variant: any;
   @Input() color_check: string = 'success';
-
+  @Input() comments: string[] = [];
 
   form!: FormGroup;
 
   @Output() emitVariantKardex = new EventEmitter<any>();
 
-  constructor(
-    private fb: FormBuilder
-  ) {
+  constructor(private fb: FormBuilder) {}
 
-  }
-
-  comments: string[] = [];
+  // comments: string[] = [];
   comment: string = '';
 
   ngOnInit(): void {
-
-
     switch (this.color_check) {
-      case "danger":
-        this.comment = "Fallado";
+      case 'danger':
+        this.comment = 'Fallado';
         break;
-      case "success":
-        this.comment = "Recepcion";
+      case 'success':
+        this.comment = 'Recepcion';
         break;
-      case "warning":
-        this.comment = "Reparado";
+      case 'warning':
+        this.comment = 'Reparado';
         break;
-    
+
       default:
-        this.comment = "No determinado";
+        this.comment = 'No determinado';
         break;
     }
 
     this.formInit();
 
-    this.form.valueChanges.subscribe(value => {
+    this.form.valueChanges.subscribe((value) => {
       console.log(value);
       this.emitVariantKardex.emit(value);
     });
-
   }
 
-
   formInit() {
-
     this.form = this.fb.group({
       variant_id: [this.variant.id, Validators.required],
       quantity: ['', [Validators.required, Validators.min(1)]],
-      comment: [this.comment, Validators.required]
+      comment: [this.comment, Validators.required],
     });
-
   }
-
 }

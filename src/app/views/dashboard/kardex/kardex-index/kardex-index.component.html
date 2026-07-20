@@ -29,7 +29,7 @@
               <td class="text-center" scope="row">
                 <div class="d-flex justify-content-center align-items-center me-2">
                   <fa-icon [icon]="faBarcode" class="me-2"></fa-icon>
-                  <span>{{ kardex.variant.id }}</span>
+                  <span>{{ kardex?.variant?.id }}</span>
                 </div>
               </td>
               <td class="text-center">
@@ -40,9 +40,11 @@
               <td>
                 <a [routerLink]="['/', store, 'dashboard', 'products', kardex?.variant?.product?.id]">{{ kardex?.variant?.product?.name }}</a>
                 <p>
-                  @for (option_value of kardex.variant.option_values; track option_value.id) {
-                    {{ option_value.value }}
-                  }
+                  <strong>
+                    @for (option_value of kardex?.variant.option_values; track option_value.id) {
+                      {{ option_value?.value }}
+                    }
+                  </strong>
                 </p>
               </td>
 
