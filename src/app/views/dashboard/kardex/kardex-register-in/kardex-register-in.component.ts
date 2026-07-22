@@ -8,7 +8,6 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-kardex-register-in',
   imports: [
-
     KardexIndexSelectedComponent,
     ButtonComponent
   ],

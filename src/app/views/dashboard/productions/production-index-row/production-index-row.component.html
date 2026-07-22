@@ -1,0 +1,78 @@
+<!-- <td class="text-center py-3">#{{ production.id }}</td> -->
+<!-- <td class="text-center">
+                    <fa-icon [icon]="faScissors"></fa-icon>
+                </td> -->
+<th class="text-center" style="width: 50px;">
+    #{{ production.id }}
+</th>
+
+<!-- <td class="text-center" style="width: 75px;">
+
+    <h6 class="mb-0">
+        @if(production.type === 'production'){
+        <span class="badge bg-primary px-3 py-1"><fa-icon [icon]="faGears" style="opacity: 0.5;" class="me-1"></fa-icon>
+            Produccion
+        </span>
+        }@else{
+        <span class="badge bg-success px-3 py-1">
+            <fa-icon [icon]="faBoxesStacked" style="opacity: 0.5;"
+                class="me-1"></fa-icon>
+            Orden
+            de Compra</span>
+        }
+    </h6>
+
+</td> -->
+
+
+<!-- <td class="text-center" style="width: 75px;">{{ production.sum_products?? 0 }}</td> -->
+<td>
+    <a [routerLink]="variantLink" routerLinkActive="router-link-active">{{ production.name }}</a>
+</td>
+<!-- <td class="text-center">{{ production.sum_purchases?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}
+</td> -->
+<!-- <td class="text-center">{{ (production.sum_products > 0) ? production.sum_purchases /
+    production.sum_products : 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>-->
+
+
+<td class="text-center d-none d-xl-table-cell">
+    <h6>{{ cost(production) | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+</td>
+
+<td class="text-center">
+    {{ production?.sum_variants ?? 0 }}
+</td>
+
+<td class="text-center d-none d-xl-table-cell">
+    {{ production?.sum_kardexes ?? 0 }}
+</td>
+
+<td class="text-center d-none d-xl-table-cell">
+    {{ production?.count_variants ?? 0 }}
+</td>
+
+<!-- <td>
+    <ngb-progressbar [showValue]="true" [striped]="true" type="success" [value]="getProgress(production)"/>
+</td> -->
+
+<!-- 7 -->
+<td class="text-center d-none d-xl-table-cell">
+    <h6>{{ production?.sum_purchases ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+</td>
+<!-- <td class="text-center">
+    <h6 class="mb-0">
+        <span class="badge bg-success px-3 py-1">
+            <i class="fa-solid fa-circle-check me-2"></i>Completado
+        </span>
+    </h6>
+</td> -->
+
+<td class="text-center d-none d-lg-table-cell">
+    <!-- <div class="date-main">{{ production.created_at | DateShopify }}</div> -->
+    <div class="date-sub">{{ production.updated_at | DateShopify }}</div>
+
+</td>
+
+<td class="text-center" style="width: 50px;">
+    <app-button-menu [menus]="menus"></app-button-menu>
+</td>

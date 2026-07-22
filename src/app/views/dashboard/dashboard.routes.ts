@@ -41,6 +41,13 @@ export const routes: Routes = [
         (m) => m.routes
       ),
   },
+  {
+    path: 'acquires',
+    loadChildren: () =>
+      import('./acquires/routes.acquire').then(
+        (m) => m.routes
+      ),
+  },
 
   {
     path: 'manufactures',

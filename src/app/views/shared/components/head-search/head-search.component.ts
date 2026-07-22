@@ -49,6 +49,7 @@ export class HeadSearchComponent implements OnInit, OnDestroy {
     | 'manufacture'
     | 'employee_attendance'
     | 'employe_payment'
+    | 'acquire'
     = 'customer';
 
   @Input() button_active: boolean = true;

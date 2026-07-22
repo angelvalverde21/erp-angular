@@ -1,0 +1,12 @@
+a{
+    text-decoration: none;
+}
+
+.widget-manufacture {
+  background: #6c757d;
+  transition: 0.2s;
+}
+
+a.active .widget-manufacture {
+  background: #0d6efd;
+}

@@ -1,0 +1,10 @@
+@if(loading) {
+
+<app-loading></app-loading>
+
+}@else{
+
+<app-purchase-index [purchases]="purchases" [sum_purchases]="sum_purchases"
+    (emitSumPurchases)="receiveSumPurchases($event)" purchaseable_type="manufacture"
+    [purchaseable_id]="manufacture_id"></app-purchase-index>
+}
