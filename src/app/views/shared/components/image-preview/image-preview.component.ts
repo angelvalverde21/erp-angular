@@ -20,6 +20,7 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
   @Input() image: any; //es un array de url
 
   @Input() title: string = '';
+  @Input() height: number = 45;
 
   constructor(
     private elRef: ElementRef,

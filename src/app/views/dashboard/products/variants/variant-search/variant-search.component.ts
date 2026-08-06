@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { InputGroupComponent } from '@shared/components/form/input-group/input-group.component';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { VariantIndexComponent } from '../variant-index/variant-index.component';
@@ -10,6 +10,7 @@ import { ButtonComponent } from '@shared/components/buttons/button/button.compon
 import { VoidIndexComponent } from '@shared/components/void-index/void-index.component';
 import { VariantIndexSelectedComponent } from '../variant-index-selected/variant-index-selected.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { VariantIndexFormComponent } from '../variant-index-form/variant-index-form.component';
 
 @Component({
   selector: 'app-variant-search',
@@ -21,7 +22,8 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
     ReactiveFormsModule,
     VoidIndexComponent,
     VariantIndexSelectedComponent,
-    LoadingComponent
+    LoadingComponent,
+    VariantIndexFormComponent,
   ],
   templateUrl: './variant-search.component.html',
   styleUrl: './variant-search.component.scss'
@@ -33,6 +35,10 @@ export class VariantSearchComponent implements OnInit {
   variants: any;
   @Output() emitVariantsSelected = new EventEmitter<any[]>();
 
+  @Input() type_form: boolean = false; //indica que el tipo de listado que desplegara sera del tipo formulario para que el cliente pueda seleccionar la cantidad de cada variante que desea agregar al lote, en lugar de solo seleccionar las variantes.
+
+  @Input() title: string = 'Buscar Variantes';
+  
   buttonDisabled: boolean = true;
 
   form!: FormGroup;
@@ -57,9 +63,14 @@ export class VariantSearchComponent implements OnInit {
     //   .subscribe(value => {
     //     this.getSearch(value);
     //   });
+
     this.form.get('search')?.valueChanges.pipe(debounceTime(300)).subscribe(value => {
+
       this.getSearch();
+
     });
+    
+
   }
 
   faMagnifyingGlass = faMagnifyingGlass;

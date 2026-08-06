@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { VariantSearchComponent } from '../../products/variants/variant-search/variant-search.component';
 import { BatchService } from './../batch.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-batch-create',
   imports: [
-    VariantSearchComponent
+    VariantSearchComponent,
   ],
   templateUrl: './batch-create.component.html',
   styleUrl: './batch-create.component.scss'
@@ -16,7 +16,8 @@ export class BatchCreateComponent {
 
 
   @Output() emitBatchCreate = new EventEmitter<any>();
-
+  @Input() type: string = ''; 
+  @Input() title: string = 'Registrar lotes'; 
 
 
   loading: boolean = false;

@@ -1,25 +1,39 @@
+<app-button-add (click)="openVerticallyCentered(content)" [text_default]="false">Registar Productos</app-button-add>
+
 <div class="table-responsive">
+  <table class="table table-hover table-striped mb-0 align-middle">
+    <thead class="table-light">
+      <tr>
+        <th class="text-center">#Cod</th>
+        <th class="text-center" style="width: 200px">Qty</th>
+        <th style="width: 400px">Producto</th>
+        <th class="text-center d-none d-lg-table-cell" style="width: 200px">Sub Total</th>
+        <th class="text-center d-none d-xl-table-cell" style="width: 300px">Total</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </thead>
 
-    <table class="table table-hover table-striped mb-0 align-middle">
-
-        <thead class="table-light">
-            <tr>
-                <th scope="col" class="text-center">#</th>
-                <th scope="col">Name</th>
-                <th scope="col" class="text-center">Qty</th>
-            </tr>
-        </thead>
-
-        <tbody formArrayName="variants">
-            @for (batch of batches; track batch.id) {
-                <tr [routerLink]="[batch.id]" class="cursor-pointer">
-                    <td class="text-center">{{ batch.id }}</td>
-                    <td>{{ batch.name }}</td>
-                    <td class="text-center"></td>
-                </tr>
-            }
-        </tbody>
-
-    </table>
-
+    <tbody formArrayName="variants">
+      @for (batch of batches; track batch.id) {
+        <tr [routerLink]="[batch.id]" class="cursor-pointer">
+          <td class="text-center">{{ batch.id }}</td>
+          <td>{{ batch.name }}</td>
+          <td class="text-center"></td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{ title }}</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <app-batch-create (emitBatchCreate)="receiveBatchCreate($event)" type="acquire" [title]="title"></app-batch-create>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>

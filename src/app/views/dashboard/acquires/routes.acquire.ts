@@ -32,10 +32,10 @@ export const routes: Routes = [
         }
       },
       {
-        path: 'batches/summary',
-        loadComponent: () => import('./acquire-edit-page/acquire-batch-summary/acquire-batch-summary.component').then((m) => m.AcquireBatchSummaryComponent),
+        path: 'batches',
+        loadComponent: () => import('./acquire-edit-page/acquire-batch-index-page/acquire-batch-index-page.component').then((m) => m.AcquireBatchIndexPageComponent),
         data: {
-          title: 'acquire/batches/summary',
+          title: 'acquire/batches',
         }
       },
       // {

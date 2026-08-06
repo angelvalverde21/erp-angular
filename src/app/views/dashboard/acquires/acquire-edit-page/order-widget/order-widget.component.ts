@@ -93,7 +93,7 @@ export class OrderWidgetComponent implements OnInit {
         title: 'Pedido Inicial',
         subtitle: `${this.summary?.count_variants} Variantes`,
         value: this.summary?.sum_variants ? this.summary?.sum_variants : 0,
-        link: ['./batches/summary'],
+        link: ['./batches'],
         icon: faCalculator,
         type: 'units'
       },

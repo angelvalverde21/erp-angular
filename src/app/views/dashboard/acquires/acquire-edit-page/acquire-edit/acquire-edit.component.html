@@ -1,11 +1,20 @@
-@if(loading){
-    <app-loading></app-loading>
-}@else{
+@if (loading) {
 
-<app-acquire-form [form]="form" [suppliers]="suppliers"></app-acquire-form>
+  <app-loading></app-loading>
 
-<app-button-save (click)="update()" [spinner]="loading" [disabled]="disabledButton">Guardar
-    cambios</app-button-save>
+} @else {
 
-<!-- {{ form.value | json }} -->
+  <div class="card">
+
+    <div class="card-body">
+
+      <app-acquire-form [form]="form" [suppliers]="suppliers"></app-acquire-form>
+
+      <app-button-save (click)="update()" [spinner]="loading" [disabled]="disabledButton">Guardar cambios</app-button-save>
+      
+    </div>
+
+  </div>
+
+  <!-- {{ form.value | json }} -->
 }
