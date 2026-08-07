@@ -56,7 +56,8 @@ export class VariantIndexFormComponent implements OnInit, OnDestroy {
     // Inicializar el formulario con todos los campos
     this.form = this.fb.group({
       comment: ['', [Validators.maxLength(500)]], // Campo de comentario
-      delivery_date: [this.getDefaultDeliveryDate(), [Validators.required]], // Campo de fecha de entrega
+      date_start: [this.getDateToday(), [Validators.required]], // Campo de fecha de entrega
+      date_end: [this.getDateToday(), [Validators.required]], // Campo de fecha de entrega
       variants: this.fb.array(
         [],
         [this.atLeastOneValidVariantValidator.bind(this)],
@@ -119,10 +120,10 @@ export class VariantIndexFormComponent implements OnInit, OnDestroy {
 
     this.form.statusChanges.pipe(distinctUntilChanged()).subscribe((status) => {
       if (status === 'VALID') {
-        console.log('✅ Formulario válido');
+        console.log('Formulario válido');
         this.onFormValid();
       } else {
-        console.log('❌ Formulario inválido');
+        console.log('Formulario inválido');
         this.onFormInvalid();
       }
     });
@@ -158,6 +159,11 @@ export class VariantIndexFormComponent implements OnInit, OnDestroy {
     return date.toISOString().split('T')[0];
   }
 
+  getDateToday(): string {
+    const date = new Date();
+    return date.toISOString().split('T')[0];
+  }
+
   initializeComponent() {
     if (this.variants && this.variants.length > 0) {
       this.initializeFormArray();
@@ -182,9 +188,17 @@ export class VariantIndexFormComponent implements OnInit, OnDestroy {
     });
 
     // Escuchar cambios en el formulario completo
-    const formSubscription = this.form.valueChanges.subscribe((values) => {
-      this.formValuesChanged.emit(values);
+    const formSubscription = this.form.valueChanges.subscribe(() => {
+      this.formValuesChanged.emit({
+        values: this.form.getRawValue(),
+        valid: this.form.valid,
+        errors: this.form.errors,
+        dirty: this.form.dirty,
+        touched: this.form.touched,
+        status: this.form.status,
+      });
     });
+
     this.subscriptions.push(formSubscription);
   }
 

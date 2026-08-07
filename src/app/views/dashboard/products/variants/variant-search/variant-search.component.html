@@ -10,7 +10,7 @@
   } @else {
     @if (variants?.length > 0) {
       @if (type_form) {
-        <app-variant-index-form [variants]="variants" (variantArraySelected)="receiveSelectedVariants($event)" (emitVariantsSelected)="receiveVariantsSelected($event)"></app-variant-index-form>
+        <app-variant-index-form [variants]="variants" (formValuesChanged)="receiveValues($event)"></app-variant-index-form>
       } @else {
         <app-variant-index [variants]="variants" (variantArraySelected)="receiveSelectedVariants($event)" (emitVariantsSelected)="receiveVariantsSelected($event)"></app-variant-index>
       }

@@ -153,4 +153,10 @@ export class VariantSearchComponent implements OnInit {
     this.variantsSelected = variantsSelected;
   }
 
+
+  receiveValues(values: any){
+    console.log(values);
+    
+  }
+
 }
