@@ -5,9 +5,9 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { Subject, takeUntil } from 'rxjs';
 import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
-import { AcquireIndexComponent } from '../acquire-index/acquire-index.component';
+import { AcquireIndexComponent } from '../../acquire-index/acquire-index.component';
 import { HeadSearchComponent } from 'src/app/views/shared/components/head-search/head-search.component';
-import { AcquireService } from '../acquire.service';
+import { AcquireService } from '../../acquire.service';
 
 @Component({
   selector: 'app-acquire-index-page',

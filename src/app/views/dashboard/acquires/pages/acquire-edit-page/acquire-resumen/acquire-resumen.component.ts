@@ -4,12 +4,12 @@ import { ButtonSaveComponent } from '@shared/components/buttons/button-save/butt
 import Swal from 'sweetalert2';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { AcquireFormComponent } from '../../acquire-form/acquire-form.component';
+import { AcquireFormComponent } from '../../../acquire-form/acquire-form.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ImagePreviewComponent } from '@shared/components/image-preview/image-preview.component';
 import { PenPipe } from '@shared/pipes/pen.pipe';
 import { AcquireEditComponent } from '../acquire-edit/acquire-edit.component';
-import { AcquireService } from '../../acquire.service';
+import { AcquireService } from '../../../acquire.service';
 
 @Component({
   selector: 'app-acquire-resumen',

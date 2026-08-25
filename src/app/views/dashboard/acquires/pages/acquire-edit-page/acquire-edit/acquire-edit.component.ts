@@ -6,9 +6,9 @@ import Swal from 'sweetalert2';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { SupplierService } from '@dashboard/users/suppliers/supplier.service';
-import { AcquireFormComponent } from '../../acquire-form/acquire-form.component';
+import { AcquireFormComponent } from '../../../acquire-form/acquire-form.component';
 import { ActivatedRoute } from '@angular/router';
-import { AcquireService } from '../../acquire.service';
+import { AcquireService } from '../../../acquire.service';
 
 @Component({
   selector: 'app-acquire-edit',

@@ -3,7 +3,7 @@ import { ButtonBackComponent } from '@shared/components/buttons/button-back/butt
 import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AcquireCreateComponent } from '../acquire-create/acquire-create.component';
+import { AcquireCreateComponent } from '../../acquire-create/acquire-create.component';
 
 @Component({
   selector: 'app-acquire-create-page',

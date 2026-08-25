@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BatchIndexComponent } from '../../../batches/batch-index/batch-index.component';
+import { BatchIndexComponent } from '../../../../batches/batch-index/batch-index.component';
 
 @Component({
   selector: 'app-acquire-batch-index-page',

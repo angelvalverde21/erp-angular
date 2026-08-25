@@ -14,11 +14,9 @@ import Swal from 'sweetalert2';
 })
 export class BatchCreateComponent {
 
-
   @Output() emitBatchCreate = new EventEmitter<any>();
   @Input() type: string = ''; 
   @Input() title: string = 'Registrar lotes'; 
-
 
   loading: boolean = false;
   batchs: any[] = [];

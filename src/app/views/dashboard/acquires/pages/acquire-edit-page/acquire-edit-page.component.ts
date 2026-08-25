@@ -1,10 +1,10 @@
 import { Component, effect, OnInit } from '@angular/core';
-import { AcquireService } from '../acquire.service';
+import { AcquireService } from '../../acquire.service';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SummaryPurchase } from '@interfaces/summary.interface';
 import { OrderWidgetComponent } from './order-widget/order-widget.component';
-import { SupplierService } from '../../users/suppliers/supplier.service';
+import { SupplierService } from '../../../users/suppliers/supplier.service';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
@@ -45,14 +45,13 @@ export class AcquireEditPageComponent implements OnInit {
   ) {
 
     this.route.params.subscribe(params => {
-      
-      
       this.acquire_id = params['acquire_id'];
     });
 
 
     console.log(this.acquire_id);
 
+    //escucha los cambios en el summary de la compra y actualiza el summary local
     effect(() => {
 
       const event = this._acquire.summaryEvent();

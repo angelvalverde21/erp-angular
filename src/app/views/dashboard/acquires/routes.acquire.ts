@@ -3,40 +3,61 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./acquire-index-page/acquire-index-page.component').then((m) => m.AcquireIndexPageComponent),
+    loadComponent: () => import('./pages/acquire-index-page/acquire-index-page.component').then((m) => m.AcquireIndexPageComponent),
     data: {
       title: 'Ordenes de Compra',
-    }
+    },
   },
 
   {
     path: 'create',
-    loadComponent: () => import('./acquire-create-page/acquire-create-page.component').then((m) => m.AcquireCreatePageComponent),
+    loadComponent: () => import('./pages/acquire-create-page/acquire-create-page.component').then((m) => m.AcquireCreatePageComponent),
     data: {
       title: 'Create',
-    }
+    },
   },
 
   {
     path: ':acquire_id',
-    loadComponent: () => import('./acquire-edit-page/acquire-edit-page.component').then((m) => m.AcquireEditPageComponent),
+    loadComponent: () => import('./pages/acquire-edit-page/acquire-edit-page.component').then((m) => m.AcquireEditPageComponent),
     data: {
       title: 'Ordenes de Compra',
     },
     children: [
       {
         path: '',
-        loadComponent: () => import('./acquire-edit-page/acquire-resumen/acquire-resumen.component').then((m) => m.AcquireResumenComponent),
+        loadComponent: () => import('./pages/acquire-edit-page/acquire-resumen/acquire-resumen.component').then((m) => m.AcquireResumenComponent),
         data: {
           title: 'Ordenes de Compra',
-        }
+        },
       },
       {
         path: 'batches',
-        loadComponent: () => import('./acquire-edit-page/acquire-batch-index-page/acquire-batch-index-page.component').then((m) => m.AcquireBatchIndexPageComponent),
+        loadComponent: () => import('./pages/acquire-edit-page/acquire-batch-index-page/acquire-batch-index-page.component').then((m) => m.AcquireBatchIndexPageComponent),
         data: {
           title: 'acquire/batches',
-        }
+        },
+      },
+      {
+        path: 'variants',
+        loadComponent: () => import('./pages/acquire-variant-index-page/acquire-variant-index-page.component').then((m) => m.AcquireVariantIndexPageComponent),
+        data: {
+          title: 'acquire/variants',
+        },
+      },
+      {
+        path: 'payments',
+        loadComponent: () => import('./pages/acquire-payment-index-page/acquire-payment-index-page.component').then((m) => m.AcquirePaymentIndexPageComponent),
+        data: {
+          title: 'acquire/payments',
+        },
+      },
+      {
+        path: 'kardexes',
+        loadComponent: () => import('./pages/acquire-kardex-index-page/acquire-kardex-index-page.component').then((m) => m.AcquireKardexIndexPageComponent),
+        data: {
+          title: 'acquire/kardexes',
+        },
       },
       // {
       //   path: 'variants',
@@ -59,6 +80,6 @@ export const routes: Routes = [
       //     title: 'acquire/recepciones',
       //   }
       // },
-    ]
+    ],
   },
 ];
