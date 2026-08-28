@@ -268,7 +268,7 @@ export const navErp: CustomNavData[] = [
                 }
             },
         ],
-        roles: ['master', 'packing']
+        roles: ['ceo','master', 'packing']
     },
     // {
     //     name: 'Caja chica',

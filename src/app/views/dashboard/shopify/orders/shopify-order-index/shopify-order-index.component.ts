@@ -3,12 +3,14 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTruck, faPrint, faEdit, faComment } from '@fortawesome/free-solid-svg-icons';
 import { faShopify } from '@fortawesome/free-brands-svg-icons';
-import { IconOrigenComponent } from './icon-origen/icon-origen.component';
+import { IconOrigenComponent } from './shopify-order-index-row/icon-origen/icon-origen.component';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { DateShopifyPipe } from '../../../../shared/pipes/date-shopify.pipe'
 import { Fancybox } from '@fancyapps/ui';
 import { ButtonPdfComponent } from '../../../../shared/components/buttons/button-pdf/button-pdf.component';
 import { faCommentDots } from '@fortawesome/free-regular-svg-icons';
+import { ShopifyOrderIndexRowComponent } from './shopify-order-index-row/shopify-order-index-row.component';
+
 // faCommentDots
 @Component({
   selector: 'app-shopify-order-index',
@@ -20,7 +22,8 @@ import { faCommentDots } from '@fortawesome/free-regular-svg-icons';
     CommonModule,
     NgbAccordionModule,
     DateShopifyPipe,
-    ButtonPdfComponent
+    ButtonPdfComponent,
+    ShopifyOrderIndexRowComponent
   ],
   templateUrl: './shopify-order-index.component.html',
   styleUrl: './shopify-order-index.component.scss'
