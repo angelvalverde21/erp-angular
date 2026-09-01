@@ -1,0 +1,63 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<app-head-page title="Ingresos Semanales en efectivo">
+    <app-button-back></app-button-back>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3 bg-dark text-white">
+        Reporte de ingresos en efectivos desde el 1 de Enero
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover table-striped mb-0 align-middle">
+
+                                
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col" class="text-center">Semana</th>
+                        <th scope="col" class="text-center">Inicio</th>
+                        <th scope="col">Final</th>
+                        <th scope="col" class="text-center">Sub total</th>
+                    </tr>
+                </thead>
+
+                <tbody formArrayName="variants">
+                    @for (year of years; track $index) {
+                    <!-- <tr>
+                        <td colspan="5">{{ year.year }}</td>
+                    </tr> -->
+
+                    @for (week of year.weeks; track $index) {
+                    <tr>
+                        <td class="text-center">{{ week.week_number }}</td>
+                        <td class="text-center">{{ week.start }}</td>
+                        <td class="text-center">{{ week.end }}</td>
+                        <td class="text-center" [ngClass]="[week.total > 0 ? 'fw-bold' : '']">{{ week.total | pen }}</td>
+                    </tr>
+                    }
+                    }
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-center"><h4>{{ total | pen  }}</h4></td>
+                    </tr>
+                </tfoot>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+}

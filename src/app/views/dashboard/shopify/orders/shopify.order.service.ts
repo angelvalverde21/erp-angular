@@ -21,7 +21,6 @@ export class ShopifyOrderService extends BaseCrudDashboardService {
 
     return this.http.get(url, {
       responseType: 'blob', // Importante para descargar el archivo como blob
-
     });
   }
 
@@ -36,6 +35,14 @@ export class ShopifyOrderService extends BaseCrudDashboardService {
 
   prepared(cursor?: string) {
     return this.http.get<any[]>(`${this.baseUrl}/prepared`, {
+      params: {
+        ...(cursor && { cursor })
+      }
+    });
+  }
+
+  cash(cursor?: string) {
+    return this.http.get<any[]>(`${this.baseUrl}/cash`, {
       params: {
         ...(cursor && { cursor })
       }

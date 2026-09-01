@@ -85,7 +85,7 @@ export class OrderReceptionIndexComponent {
 
         this.kardexes = resp.data.kardexes;
 
-        this.kardex_summary = this._kardex.calculate(this.kardexes);
+        this.kardex_summary = this._kardex.summary(this.kardexes);
         this.manufacture_variants = resp.data.manufacture_variants;
         this.variants = this.manufacture_variants.map((mv: any) => mv.variant);
 
@@ -124,7 +124,7 @@ export class OrderReceptionIndexComponent {
 
     this.kardexes = [...this.kardexes, ...event];
 
-    this.kardex_summary = this._kardex.calculate(this.kardexes);
+    this.kardex_summary = this._kardex.summary(this.kardexes);
   }
 
 

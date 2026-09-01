@@ -11,7 +11,8 @@ import { ManufactureIndexRowComponent } from '../manufacture-index-row/manufactu
 @Component({
   selector: 'app-manufacture-index',
   imports: [
-    ManufactureIndexRowComponent
+    ManufactureIndexRowComponent,
+    CommonModule
   ],
   templateUrl: './manufacture-index.component.html',
   styleUrl: './manufacture-index.component.scss'

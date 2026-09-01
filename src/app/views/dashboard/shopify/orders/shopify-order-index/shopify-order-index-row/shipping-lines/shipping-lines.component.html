@@ -1,0 +1,7 @@
+<ul class="list-group list-group-flush">
+  @for (shippingLine of shippingLines; track $index) {
+    <li class="list-group-item">
+        {{ shippingLine.title | uppercase }}
+    </li>
+  }
+</ul>

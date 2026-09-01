@@ -7,71 +7,138 @@ export const navErp: CustomNavData[] = [
         roles: ['ceo', 'master']
     },
     // {
-    //     name: 'Orders',
-    //     url: 'orders',
-    //     iconComponent: { name: 'cil-cash' },
+    //     name: 'Lotes',
+    //     url: 'dashboard/batches',
+    //     icon: 'fa-solid fa-boxes-stacked',
     //     children: [
-    //         { name: 'Orders', url: 'orders', icon: 'nav-icon-bullet' },
-    //         { name: 'Clientes', url: 'orders/create', icon: 'nav-icon-bullet' },
-    //         { name: 'Cotizaciones', url: 'orders/quotes', icon: 'nav-icon-bullet' }
-    //     ]
-    // },
-    // {
-    //     name: 'Products',
-    //     url: 'dashboard/products',
-    //     iconComponent: { name: 'cil-industry' },
-    //     children: [
-    //         { name: 'Products', url: 'dashboard/products', icon: 'nav-icon-bullet' },
-    //         { name: 'Categorias', url: 'dashboard/categories', icon: 'nav-icon-bullet' },
-    //         { name: 'Inventario', url: 'dashboard/inventories', icon: 'nav-icon-bullet' }
-    //     ]
-    // }
-    // {
-    //     name: 'Produccion',
-    //     url: 'dashboard/productions',
-    //     iconComponent: { name: 'cil-industry' },
-    //     children: [
-    //         { name: 'Ordenes de Produccion', url: 'dashboard/productions/orders', icon: 'nav-icon-bullet' },
-    //         { name: 'Ordenes de compra', url: 'dashboard/productions/purchase/orders', icon: 'nav-icon-bullet' },
-    //         { name: 'Proveedores', url: 'dashboard/productions/suppliers', icon: 'nav-icon-bullet' },
-    //     ]
+    //         {
+    //             name: 'Todos',
+    //             url: 'dashboard/batches',
+    //             icon: 'nav-icon-bullet',
+    //             class: 'children-custom',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             },
+    //         },
+    //         {
+    //             name: 'Crear',
+    //             url: 'dashboard/batches/create',
+    //             icon: 'nav-icon-bullet',
+    //             class: 'children-custom',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             },
+    //         },
+    //     ],
+    //     roles: ['ceo', 'master']
     // },
     {
-        name: 'Fabricacion',
-        url: 'dashboard/manufactures',
-        iconComponent: { name: 'cil-industry' },
+        name: 'Inventario',
+        url: 'dashboard/inventories',
+        icon: 'fa-solid fa-boxes-stacked',
         children: [
+            // {
+            //     name: 'Codigo de barras',
+            //     url: 'dashboard/inventories/barcode',
+            //     icon: 'fa-solid fa-barcode',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // },
+            // {
+            //     name: 'Productos',
+            //     url: 'dashboard/inventories',
+            //     icon: 'nav-icon-bullet',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // },
+            // {
+            //     name: 'Todos',
+            //     url: 'dashboard/inventories',
+            //     icon: 'nav-icon-bullet',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // },
             {
-                name: 'Todos',
-                url: 'dashboard/manufactures',
-                icon: 'fa-solid fa-border-all',
+                name: 'Buscar Barcode',
+                url: 'dashboard/inventories/barcode',
+                icon: 'fa-solid fa-barcode',
                 class: 'children-custom',
                 linkProps: {
                     routerLinkActiveOptions: { exact: true }
                 },
             },
             {
+                name: 'Lotes',
+                url: 'dashboard/inventories/batches',
+                icon: 'fa-solid fa-cart-flatbed',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+            {
+                name: 'Traslados',
+                url: 'dashboard/inventories/movements',
+                icon: 'fa-solid fa-right-left',
+                class: 'children-custom',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                },
+            },
+            // {
+            //     name: 'Ingresos',
+            //     url: 'dashboard/inventories/income',
+            //     icon: 'nav-icon-bullet',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // },
+            // {
+            //     name: 'Salidas',
+            //     url: 'dashboard/inventories/out',
+            //     icon: 'nav-icon-bullet',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // }
+        ],
+        roles: ['ceo', 'master']
+    },
+    {
+        name: 'Manufacturas',
+        url: 'dashboard/manufactures',
+        icon: 'fa-solid fa-box-archive',
+        children: [
+            // {
+            //     name: 'Todos',
+            //     url: 'dashboard/manufactures',
+            //     icon: 'fa-solid fa-border-all',
+            //     class: 'children-custom',
+            //     linkProps: {
+            //         routerLinkActiveOptions: { exact: true }
+            //     },
+            // },
+            {
                 name: 'Producciones',
                 url: 'dashboard/manufactures/productions',
-                icon: 'fas fa-gears',
+                iconComponent: { name: 'cil-industry' },
                 class: 'children-custom',
                 linkProps: {
                     routerLinkActiveOptions: { exact: false }
                 },
             },
             {
-                name: 'Ordenes de compra',
+                name: 'Ordenes de Compra',
                 url: 'dashboard/manufactures/orders',
-                icon: 'fa-solid fa-boxes-stacked',
-                class: 'children-custom',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: false }
-                },
-            },
-            {
-                name: 'Recepciones',
-                url: 'dashboard/manufactures/receptions',
-                iconComponent: { name: 'cil-swap-horizontal' },
+                icon: 'fas fa-briefcase',
                 class: 'children-custom',
                 linkProps: {
                     routerLinkActiveOptions: { exact: false }
@@ -80,6 +147,76 @@ export const navErp: CustomNavData[] = [
         ],
         roles: ['master', 'ceo']
     },
+
+    // {
+    //     name: 'Produccion',
+    //     url: 'dashboard/productions',
+    //     iconComponent: { name: 'cil-industry' },
+    //     children: [
+    //         {
+    //             name: 'Todos',
+    //             url: 'dashboard/productions', icon: 'nav-icon-bullet',
+    //             class: 'children-custom',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             },
+    //         },
+    //         // {
+    //         //     name: 'Crear',
+    //         //     url: 'dashboard/productions/create', icon: 'nav-icon-bullet',
+    //         //     class: 'children-custom',
+    //         //     linkProps: {
+    //         //         routerLinkActiveOptions: { exact: true }
+    //         //     },
+    //         // },
+    //     ],
+    //     roles: ['master', 'ceo']
+    // },
+
+    // {
+    //     name: 'Ordenes de compra',
+    //     url: 'dashboard/manufactures',
+    //     icon: 'fas fa-briefcase',
+    //     children: [
+    //         // {
+    //         //     name: 'Todos',
+    //         //     url: 'dashboard/manufactures',
+    //         //     icon: 'fa-solid fa-border-all',
+    //         //     class: 'children-custom',
+    //         //     linkProps: {
+    //         //         routerLinkActiveOptions: { exact: true }
+    //         //     },
+    //         // },
+    //         // {
+    //         //     name: 'Producciones',
+    //         //     url: 'dashboard/manufactures/productions',
+    //         //     icon: 'fas fa-gears',
+    //         //     class: 'children-custom',
+    //         //     linkProps: {
+    //         //         routerLinkActiveOptions: { exact: false }
+    //         //     },
+    //         // },
+    //         {
+    //             name: 'Todos',
+    //             url: 'dashboard/manufactures/orders',
+    //             icon: 'fa-solid fa-boxes-stacked',
+    //             class: 'children-custom',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: false }
+    //             },
+    //         },
+    //         // {
+    //         //     name: 'Recepciones',
+    //         //     url: 'dashboard/manufactures/receptions',
+    //         //     iconComponent: { name: 'cil-swap-horizontal' },
+    //         //     class: 'children-custom',
+    //         //     linkProps: {
+    //         //         routerLinkActiveOptions: { exact: false }
+    //         //     },
+    //         // },
+    //     ],
+    //     roles: ['master', 'ceo']
+    // },
     // {
     //     name: 'Compras',
     //     url: 'dashboard/purchases',
@@ -130,37 +267,29 @@ export const navErp: CustomNavData[] = [
                     routerLinkActiveOptions: { exact: true }
                 }
             },
-            {
-                name: 'Colecciones',
-                url: 'dashboard/collections',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }
-            },
-            {
-                name: 'Inventario',
-                url: 'dashboard/products/inventory',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }
-            },
         ],
-        roles: ['master']
+        roles: ['ceo','master']
     },
-    {
-        name: 'Caja chica',
-        url: '/dashboard/pettycashes',
-        icon: 'fa-solid fa-comments-dollar',
-        children: [
-            {
-                name: 'Todos', url: '/dashboard/pettycashes', icon: 'nav-icon-bullet',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }
-            },
-        ],
-        roles: ['ceo', 'master']
-    },
+    // {
+    //     name: 'Caja chica',
+    //     url: '/dashboard/pettycashes',
+    //     icon: 'fa-solid fa-comments-dollar',
+    //     children: [
+    //         {
+    //             name: 'Todos', url: '/dashboard/pettycashes', icon: 'nav-icon-bullet',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             }
+    //         },
+    //         {
+    //             name: 'Ingresos en Efectivo', url: '/dashboard/pettycashes/income', icon: 'nav-icon-bullet',
+    //             linkProps: {
+    //                 routerLinkActiveOptions: { exact: true }
+    //             }
+    //         },
+    //     ],
+    //     roles: ['ceo', 'master']
+    // },
     {
         title: true,
         name: 'Usuarios',

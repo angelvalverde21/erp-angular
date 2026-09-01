@@ -127,6 +127,7 @@ export class ShopifyOrderCreateComponent {
   get variants(): FormArray<FormGroup> {
     return this.form.get('variants') as FormArray<FormGroup>;
   }
+  
   variants_selected: any[] = []; // Aquí se almacenarán los variants seleccionados
 
   //Variantes seleccionadas

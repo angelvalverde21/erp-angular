@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { JsonPipe, PercentPipe } from '@angular/common';
 import { faPen, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { ButtonEditComponent } from '@buttons/button-edit/button-edit.component';
+import { EmployeIndexRowComponent } from '../employe-index-row/employe-index-row.component';
 
 @Component({
   selector: 'app-employee-index',
@@ -11,8 +12,8 @@ import { ButtonEditComponent } from '@buttons/button-edit/button-edit.component'
     DateShopifyPipe,
     JsonPipe,
     ButtonEditComponent,
-    PercentPipe
 
+    EmployeIndexRowComponent
   ],
   templateUrl: './employee-index.component.html',
   styleUrl: './employee-index.component.scss'
@@ -30,7 +31,7 @@ export class EmployeeIndexComponent {
 
   }
 
-  getEmployeeId(id: number = 0) {
-    this.router.navigate([id], { relativeTo: this.route });
-  }
+  // getEmployeeId(id: number = 0) {
+  //   this.router.navigate([id], { relativeTo: this.route });
+  // }
 }

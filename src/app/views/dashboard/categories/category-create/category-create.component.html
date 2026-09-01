@@ -7,8 +7,8 @@
     <div class="row mb-3 pt-3 pb-4 px-4">
         <div class="col-lg-12">
             <app-input-group [icon]="editIcon" text="Nombre de la categoria">
-                <input formControlName="name" type="text" class="form-control" placeholder="Nombre de Categoria" aria-label="name"
-                    aria-describedby="basic-tiktok" />
+                <input formControlName="name" type="text" class="form-control" placeholder="Nombre de Categoria"
+                    aria-label="name" aria-describedby="basic-tiktok" />
             </app-input-group>
         </div>
 
@@ -18,13 +18,14 @@
                 @if(loadingSubcategories){
                 <app-loading></app-loading>
                 }@else{
+
                 <app-category-selected (emitCategorySelected)="categorySelected($event)" formControlName="parent_id"
                     [categories]="categories"></app-category-selected>
                 }
             </div>
         </div>
 
-        <div class="col-lg-12">
+        <!-- <div class="col-lg-12">
 
             <div class="card mt-3 mb-4">
 
@@ -46,13 +47,16 @@
                 </div>
             
             </div>
-        </div>
-        
+        </div> -->
+
 
         <div class="col-lg-12 col-12">
 
-            <app-button (action)="create()" color="primary" [icon]="faPlus" [disabled]="disabledButton"
-                [spinner]="loadingIcon">Crear Categoria</app-button>
+            <div class="mt-3">
+                <app-button (action)="create()" color="primary" [icon]="faPlus" [disabled]="disabledButton"
+                    [spinner]="loadingIcon">Crear Categoria</app-button>
+            </div>
+
 
         </div>
 

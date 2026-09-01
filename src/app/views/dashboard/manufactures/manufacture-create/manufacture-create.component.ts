@@ -2,10 +2,12 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { ManufactureFormComponent } from '../manufacture-form/manufacture-form.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
-import { ButtonSaveComponent } from '../../../shared/components/buttons/button-save/button-save.component';
+import { ButtonSaveComponent } from '@shared/components/buttons/button-save/button-save.component';
 import Swal from 'sweetalert2';
 import { Subject, takeUntil } from 'rxjs';
 import { ManufactureService } from '../manufacture.service';
+import { SupplierService } from '../../users/suppliers/supplier.service';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-manufacture-create',
@@ -13,7 +15,8 @@ import { ManufactureService } from '../manufacture.service';
     ManufactureFormComponent,
     ReactiveFormsModule,
     JsonPipe,
-    ButtonSaveComponent
+    ButtonSaveComponent,
+    LoadingComponent
   ],
   templateUrl: './manufacture-create.component.html',
   styleUrl: './manufacture-create.component.scss'
@@ -31,7 +34,8 @@ export class ManufactureCreateComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private _manufacture: ManufactureService
+    private _manufacture: ManufactureService,
+    private _supplier: SupplierService
   ) {
 
   }
@@ -62,6 +66,7 @@ export class ManufactureCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.suppliersInit();
     this.formInit();
   }
 
@@ -107,6 +112,30 @@ export class ManufactureCreateComponent implements OnInit, OnDestroy {
         console.error(error);
       },
 
+    });
+  }
+
+  suppliers: any[] = [];  
+
+  suppliersInit(){
+
+    this.loading = true;
+
+    this._supplier.index().pipe(takeUntil(this.destroy$)).subscribe({
+    
+      next: (resp: any) => {
+        console.log(resp);
+        console.log(resp.data);
+        
+        this.suppliers = resp.data;
+        this.loading = false;
+      },
+    
+      error: (error: any) => {
+        Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
+        console.error(error);
+      },
+    
     });
   }
 

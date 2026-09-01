@@ -3,15 +3,15 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./order-index-page/order-index-page.component').then((m) => m.OrderIndexPageComponent),
+    loadComponent: () => import('./manufacture-order-index-page/manufacture-order-index-page.component').then((m) => m.ManufactureOrderIndexPageComponent),
     data: {
-      title: 'Todos',
+      title: 'Ordenes de Compra',
     }
   },
 
   {
     path: 'create',
-    loadComponent: () => import('./order-create-page/order-create-page.component').then((m) => m.OrderCreatePageComponent),
+    loadComponent: () => import('./manufacture-order-create-page/manufacture-order-create-page.component').then((m) => m.ManufactureOrderCreatePageComponent),
     data: {
       title: 'Create',
     }
@@ -19,30 +19,37 @@ export const routes: Routes = [
 
   {
     path: ':order_id',
-    loadComponent: () => import('./order-edit-page/order-edit-page.component').then((m) => m.OrderEditPageComponent),
+    loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-edit-page.component').then((m) => m.ManufactureOrderEditPageComponent),
     data: {
       title: 'Ordenes de Compra',
     },
     children: [
       {
         path: '',
-        loadComponent: () => import('../orders/order-edit-page/order-summary/order-summary.component').then((m) => m.OrderSummaryComponent),
+        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-resumen/manufacture-order-resumen.component').then((m) => m.ManufactureOrderResumenComponent),
         data: {
-          title: 'Resumen',
+          title: 'Ordenes de Compra',
         }
       },
       {
         path: 'variants',
-        loadComponent: () => import('../orders/order-edit-page/order-variant-index/order-variant-index.component').then((m) => m.OrderVariantIndexComponent),
+        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-variant-index/manufacture-order-variant-index.component').then((m) => m.ManufactureOrderVariantIndexComponent),
         data: {
-          title: 'Variantes',
+          title: 'order/variantes',
         }
       },
       {
-        path: 'receptions',
-        loadComponent: () => import('../orders/order-edit-page/order-reception-index/order-reception-index.component').then((m) => m.OrderReceptionIndexComponent),
+        path: 'payments',
+        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-payment-index/manufacture-order-payment-index.component').then((m) => m.ManufactureOrderPaymentIndexComponent),
         data: {
-          title: 'Recepciones',
+          title: 'order/pagos realizados',
+        }
+      },
+      {
+        path: 'kardexes',
+        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-kardex-index/manufacture-order-kardex-index.component').then((m) => m.ManufactureOrderKardexIndexComponent),
+        data: {
+          title: 'order/recepciones',
         }
       },
     ]

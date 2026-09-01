@@ -12,7 +12,7 @@ import { JsonPipe } from '@angular/common';
   imports: [
     PaymentFormComponent,
     ButtonSaveComponent,
-    JsonPipe
+    JsonPipe,
   ],
   templateUrl: './payment-create.component.html',
   styleUrl: './payment-create.component.scss'
@@ -58,8 +58,9 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       amount: ['', [Validators.required]],
       date: [today, [Validators.required]],
-      direction: ['in', [Validators.required]],
-      gateway_id: [null, [Validators.required]],
+      direction: ['out', [Validators.required]],
+      gateway_id: [2, [Validators.required]],
+      comment: [''],
       images: [[]],
       paymentable_type: [this.paymentable_type, [Validators.required]],
       paymentable_id: [this.paymentable_id, [Validators.required]],
@@ -116,7 +117,13 @@ export class PaymentCreateComponent implements OnInit, OnDestroy {
     this._paymentService.store(data).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        Swal.fire('Guardado', 'EL pago ha sido guardado', 'success');
+        Swal.fire({
+          icon: "success",
+          title: "Guardado",
+          showConfirmButton: false,
+          timer: 1000
+        });
+        // Swal.close();
         console.log(resp);
         this.payment = resp.data;
         this.loading = false;

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { TwoDecimalsDirective } from 'src/app/core/directives/two-decimals.directive';
 import { ButtonTrashComponent } from '@shared/components/buttons/button-trash/button-trash.component';
-import { ControlContainer, FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'tr[app-order-variant-row]',

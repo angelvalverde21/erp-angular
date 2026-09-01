@@ -42,5 +42,11 @@ export class ReportService extends BaseCrudDashboardService{
     return this.http.get<any[]>(`${url}/month-all`);
   }
 
+  cashWeekly(): Observable<any[]> {
+    const url = `${this.baseUrl}`;
+    console.log(url);
+    return this.http.get<any[]>(`${url}/report-cash-weekly`);
+  }
+
 }
 

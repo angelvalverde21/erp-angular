@@ -1,37 +1,39 @@
 import { navErp } from './navs/_nav.erp';
 import { navShopify } from './navs/_nav.shopify';
-import { navMercadoPago } from './navs/_nav.mercadopago';
+import { navPasarelas } from './navs/_nav.pasarelas';
 import { CustomNavData } from '../../interfaces/nav.interface';
 import { navConfig } from './navs/_nav.config';
 import { navReport } from './navs/_nav.report';
 import { buildNav } from './navs/build.nav';
 import { navMarketing } from './navs/_nav.marketing';
+import { navManufactures } from './navs/_nav.manufactures';
+import { navAcquires } from './navs/_nav.acquires';
 
 export const navItems: CustomNavData[] = buildNav([
-
   {
     name: 'Dashboard',
     url: 'dashboard',
-    iconComponent: { name: 'cil-speedometer' }
+    iconComponent: { name: 'cil-speedometer' },
   },
 
   // ✅ Combina los módulos aquí
+  // ...navInventory,
   ...navErp,
-  ...navMarketing,
-  ...navConfig,
+  // ...navMarketing,
+  // ...navConfig,
+  // ...navAcquires,
   ...navShopify,
-  ...navMercadoPago,
+  ...navPasarelas,
   ...navReport,
   {
     title: true,
     name: 'Links',
-    class: 'mt-auto'
+    class: 'mt-auto',
   },
   {
     name: 'Ayuda',
     url: 'https://3b.pe',
     iconComponent: { name: 'cil-description' },
-    attributes: { target: '_blank' }
-  }
-
+    attributes: { target: '_blank' },
+  },
 ]);

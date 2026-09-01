@@ -45,6 +45,46 @@ export const navConfig: CustomNavData[] = [
             },
         ],
         roles: ['master', 'ceo']
+    },
+    {
+        name: 'Asistencias',
+        url: 'dashboard/attendances',
+        icon: 'fa-solid fa-user-clock',
+        children: [
+            {
+                name: 'Todos', url: 'dashboard/attendances', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+            {
+                name: 'Subir', url: 'dashboard/attendances/upload', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+        ],
+        roles: ['master', 'ceo']
+    },
+    {
+        name: 'Locaciones',
+        url: 'dashboard/locations',
+        icon: 'fa-solid fa-house',
+        children: [
+            {
+                name: 'Todos', url: 'dashboard/locations', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+            {
+                name: 'Crear', url: 'dashboard/locations/create', icon: 'nav-icon-bullet',
+                linkProps: {
+                    routerLinkActiveOptions: { exact: true }
+                }
+            },
+        ],
+        roles: ['master', 'ceo']
     }
 ];
 

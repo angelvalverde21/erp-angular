@@ -1,1 +1,30 @@
-<p>employe-index-row works!</p>
+<!-- <tr (click)="getEmployeeId(employee.id)"> -->
+
+<td class="text-center">{{ employee.id }}</td>
+<td>
+    <a href="" [routerLink]="firstLink">{{ employee.user.name }}</a>
+</td>
+<!-- <td>{{ user.category.name }}</td> -->
+<td class="d-none d-md-table-cell">{{ employee.user.document_number }}</td>
+<td class="d-none d-md-table-cell">{{ employee.salary }}</td>
+<td class="d-none d-md-table-cell">
+    @if(employee.user.status){
+    <span class="badge text-bg-secondary text-white">Activo</span>
+    }@else{
+    <span class="badge text-bg-danger text-white">Bloqueado</span>
+    }
+</td>
+<td class="d-none d-md-table-cell">
+
+    @for (rol of employee.user.roles; track rol.id) {
+    <span class="badge text-bg-success text-white me-1">{{ rol.title }}</span>
+    }
+
+</td>
+<td class="text-center d-none d-md-table-cell">{{ (employee?.comission ?? 0) / 100 | percent }}</td>
+<!-- <td class="text-center">{{ employee?.created_at | DateShopify }}</td> -->
+<td>{{ employee.total_minutes }}</td>
+<td style="width: 80px;">{{ employee.total_minutes * factor | pen }}</td>
+<td class="text-center">
+    <app-button-menu [menus]="menus"></app-button-menu>
+</td>

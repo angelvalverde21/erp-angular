@@ -16,10 +16,18 @@ export const routes: Routes = [
     }
   },
   {
+    path: 'between/:day_start/:day_end',
+    loadComponent: () => import('./bar-between-page/bar-between-page.component').then((m) => m.BarBetweenPageComponent),
+    data: {
+      title: 'Todos',
+    }
+  },
+  {
     path: 'daily/:days',
     loadComponent: () => import('./bar-daily-page/bar-daily-page.component').then((m) => m.BarDailyPageComponent),
     data: {
       title: 'Todos',
     }
   },
+  
 ];

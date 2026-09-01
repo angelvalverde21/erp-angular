@@ -21,6 +21,13 @@ export const routes: Routes = [
           title: 'Crear Flujo de caja'
         }
       },
+      {
+        path: 'income',
+        loadComponent: () => import('./cash-income-weekly-index/cash-income-weekly-index.component').then(m => m.CashIncomeWeeklyIndexComponent),
+        data: {
+          title: 'Crear Flujo de caja'
+        }
+      },
 
       {
         path: ':petty_cash_id',

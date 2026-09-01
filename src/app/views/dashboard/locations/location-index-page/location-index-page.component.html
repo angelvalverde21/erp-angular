@@ -1,0 +1,60 @@
+@if (loading) {
+<app-loading></app-loading>
+} @else {
+
+
+<div class="card">
+
+    <div class="card-header py-3 d-flex align-items-center">
+        <span class="me-2"><fa-icon [icon]="faHome"></fa-icon></span>
+        <span>Lista de Locaciones</span>
+    </div>
+
+    <div class="card-body">
+
+            <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th class="text-center">Código</th>
+          <th class="text-center">Tipo</th>
+          <th class="text-center"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (location of locations; track location.id) {
+          <ng-container 
+            *ngTemplateOutlet="recursiveRows; context: { $implicit: location, level: 0 }">
+          </ng-container>
+        }
+      </tbody>
+    </table>
+
+    </div>
+
+</div>
+
+}
+
+<!-- 🔁 TEMPLATE RECURSIVO -->
+<ng-template #recursiveRows let-node let-level="level">
+  <tr>
+    <td>
+      <span [style.padding-left.px]="level * 20">
+        {{ node.name }}
+      </span>
+    </td>
+    <td class="text-center">{{ node.code }}</td>
+    <td class="text-center">{{ node.type }}</td>
+    <td class="text-center px-3" style="width: 50px;"><app-button-edit></app-button-edit></td>
+  </tr>
+
+  @if (node.children?.length) {
+    @for (child of node.children; track child.id) {
+      <ng-container 
+        *ngTemplateOutlet="recursiveRows; context: { $implicit: child, level: level + 1 }">
+      </ng-container>
+    }
+  }
+</ng-template>

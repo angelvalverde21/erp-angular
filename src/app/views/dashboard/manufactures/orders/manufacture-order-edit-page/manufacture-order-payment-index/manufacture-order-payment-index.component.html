@@ -1,0 +1,10 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+
+<!-- <app-user-head-table (emitSearchResult)="receiveSearchResult($event)" type=""></app-user-head-table> -->
+
+
+<app-payment-index [paymentable_type]="'manufacture'" [paymentable_id]="manufacture_id" [payments]="payments"></app-payment-index>
+
+}

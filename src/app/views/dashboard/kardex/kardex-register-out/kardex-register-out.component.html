@@ -1,4 +1,2 @@
-<app-kardex-index-selected [variants]="variants" [color_check]="'danger'"
-    (emitKardexVariants)="receiveKardexVariants($event)"></app-kardex-index-selected>
-<app-button [color]="'danger text-white'" mb="3" [disabled]="buttonDisabled" (click)="registerOut()">Registrar
-    Salida</app-button>
+<app-kardex-index-selected [variants]="variants" [comments]="['Fallado', 'Correccion']" [color_check]="'danger'" (emitKardexVariants)="receiveKardexVariants($event)"></app-kardex-index-selected>
+<app-button [color]="'danger text-white'" mb="3" [disabled]="buttonDisabled" (click)="registerOut()">Registrar Salida</app-button>

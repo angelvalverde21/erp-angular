@@ -1,0 +1,64 @@
+@switch(displayFulfillmentStatus) {
+    @case ('UNFULFILLED') {
+        <span class="badge bg-warning">No Preparado</span>
+            }
+
+    @case ('FULFILLED') {
+        <span class="badge bg-secondary">Preparado</span>
+            }
+
+    @case ('PARTIALLY_FULFILLED') {
+        <span class="badge bg-info">Parcialmente preparado</span>
+            }
+
+    @case ('IN_PROGRESS') {
+        <span class="badge bg-primary">En preparación</span>
+            }
+
+    @case ('SCHEDULED') {
+        <span class="badge bg-secondary">Programado</span>
+            }
+
+    @case ('ON_HOLD') {
+        <span class="badge bg-dark">En espera</span>
+            }
+            
+
+    @case ('RESTOCKED') {
+        <span class="badge bg-light text-dark">Reabastecido</span>
+            }
+            
+
+    @case ('CANCELLED') {
+        <span class="badge bg-danger">Cancelado</span>
+            }
+            
+
+    @case ('CLOSED') {
+        <span class="badge bg-secondary">Cerrado</span>
+            }
+
+    @default {
+        <span class="badge bg-secondary">Estado desconocido</span>
+    }
+}
+
+
+
+<!-- @switch (displayFulfillmentStatus) {
+  @case ('UNFULFILLED') {
+    <span class="badge bg-warning">No Preparado</span>
+  }
+
+  @case ('FULFILLED') {
+    <span class="badge bg-secondary">Preparado</span>
+  }
+
+  @case ('PARTIALLY_FULFILLED') {
+    <span class="badge bg-info">Parcialmente preparado</span>
+  }
+
+  @default {}
+} -->
+
+

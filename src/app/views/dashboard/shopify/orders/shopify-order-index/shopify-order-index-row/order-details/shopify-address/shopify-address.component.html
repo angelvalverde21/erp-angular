@@ -1,0 +1,31 @@
+<ul class="list-group list-group-flush transparent-list w-100">
+  @if (addresses; as address) {
+    <li class="list-group-item">
+      <h6>CONSIGNATARIO</h6>
+    </li>
+
+    @if (address.firstName || address.lastName) {
+      <li class="list-group-item my-0 py-1">{{ address.firstName | uppercase }} {{ address.lastName | uppercase }}</li>
+    }
+
+    @if (address.company) {
+      <li class="list-group-item my-0 py-1">{{ address.company }}</li>
+    }
+
+    @if (address.phone) {
+      <li class="list-group-item my-0 py-1">{{ address.phone }}</li>
+    }
+
+    @if (address.address1) {
+      <li class="list-group-item my-0 py-1">{{ address.address1 }}</li>
+    }
+
+    @if (address.address2) {
+      <li class="list-group-item">
+        <strong>{{ address.address2 | uppercase }}</strong>
+      </li>
+    }
+  } @else {
+    <li class="list-group-item text-muted">Sin dirección de envío</li>
+  }
+</ul>

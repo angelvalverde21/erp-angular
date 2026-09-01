@@ -2,7 +2,7 @@ import {
   Component, Input, OnInit, TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { faEdit, faTags, faPlus, faIdCard, faUser, faAddressCard } from '@fortawesome/free-solid-svg-icons';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -14,6 +14,7 @@ import { SupplierCreateComponent } from '../../users/suppliers/supplier-create/s
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SupplierSelectedComponent } from '../../users/suppliers/supplier-selected/supplier-selected.component';
+import { TwoDecimalsDirective } from '../../../../core/directives/two-decimals.directive';
 
 @Component({
   selector: 'app-purchase-form',
@@ -28,13 +29,15 @@ import { SupplierSelectedComponent } from '../../users/suppliers/supplier-select
     FontAwesomeModule,
     NgSelectModule,
     JsonPipe,
-    SupplierSelectedComponent
+    SupplierSelectedComponent,
+    TwoDecimalsDirective,
+    ReactiveFormsModule
   ],
   templateUrl: './purchase-form.component.html',
   styleUrl: './purchase-form.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
-export class PurchaseFormComponent{
+export class PurchaseFormComponent implements OnInit {
 
   faEdit = faEdit;
   faTags = faTags;
@@ -46,6 +49,11 @@ export class PurchaseFormComponent{
 
   modal: any;
 
+  ngOnInit(): void {
+    console.log(this.suppliers);
+
+  }
+
   @Input({ required: true }) form!: FormGroup;
   @Input() suppliers: any;
   @Input() units: any;
@@ -56,6 +64,7 @@ export class PurchaseFormComponent{
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
+    console.log(this.suppliers);
   }
 
 
@@ -76,9 +85,18 @@ export class PurchaseFormComponent{
 
   supplierReceiveCreate(supplier: any) {
 
-    console.log(supplier);
+    console.log('listado de suppliers en el componente padre', this.suppliers);
+    console.log('nuevo supplier', supplier);
 
-    this.suppliers = [supplier, ...this.suppliers];
+    const newSupplier = {
+      id: supplier.id,
+      name: supplier.user.name,
+    };
+
+    console.log('new supplier', newSupplier);
+    
+
+    this.suppliers = [newSupplier, ...this.suppliers];
 
     this.form.get('supplier_id')?.setValue(supplier.id);
     // this.form.get('supplier_id')?.setValue(supplier.id);
@@ -86,7 +104,10 @@ export class PurchaseFormComponent{
     if (supplier) {
       this.modal.close();
     }
+
   }
+
+  @Input() purchase_items!: FormArray<FormGroup>;
 
 
 }

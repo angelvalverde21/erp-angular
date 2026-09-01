@@ -44,7 +44,7 @@ export class ProductCreatePageComponent implements OnInit, OnDestroy {
   //   return this._product.base_path(path);
   // }
 
-  receiveProductCreate(product: Product) {
+  receiveProductCreate(product: any) {
 
     console.log(product);
 

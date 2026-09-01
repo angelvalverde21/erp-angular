@@ -18,7 +18,7 @@
                 <td>{{ product?.name }}</td>
                 <td>{{ product?.category?.name }}</td>
                 <td>{{ product?.price }}</td>
-                <td></td>
+                <td>{{ product.created_at! | DateShopify }}</td>
                 <td class="text-center">
                     <div class="controls d-flex justify-content-center align-items-center">
                         <app-button-edit></app-button-edit>

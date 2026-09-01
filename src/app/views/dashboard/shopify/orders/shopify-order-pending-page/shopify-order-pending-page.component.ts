@@ -34,7 +34,10 @@ export class ShopifyOrderPendingPageComponent implements OnInit, OnDestroy {
   faFilter = faFilter;
   store: string = "";
 
-  constructor(private _order: ShopifyOrderService, private _base: BaseService) {
+  constructor(
+    private _order: ShopifyOrderService, 
+    private _base: BaseService
+  ) {
     this.store = this._base.storeName!;
   }
 

@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { effect, inject, Injectable } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseService } from '../base.service';
 import { API, environment } from '../../environments/environment';
@@ -8,15 +8,18 @@ import { API, environment } from '../../environments/environment';
 export abstract class BaseCrudDashboardService {
 
   private _base = inject(BaseService);
-  baseUrl: string;
+  // baseUrl: string;
+  protected extraPath: string = '';
 
   constructor(protected http: HttpClient, public section: string) {
 
-    this.baseUrl = `${API.private}/${this._base.store}/dashboard/${this.section}`
     console.log(this.baseUrl);
 
   }
 
+  get baseUrl(): string {
+    return `${API.private}/${this._base.store}/dashboard/${this.section}${this.extraPath}`;
+  }
 
   // Generic method to get all items
   // index(): Observable<any[]> {
@@ -26,6 +29,7 @@ export abstract class BaseCrudDashboardService {
   // }
 
   index(page: number = 1, status?: string): Observable<any[]> {
+
     console.log(this.baseUrl);
 
     return this.http.get<any[]>(this.baseUrl, {
@@ -86,6 +90,7 @@ export abstract class BaseCrudDashboardService {
     return this.http.post(`${url}`, data);
   }
 
+
   // Generic method to update an existing item
   update(id: number, data: any): Observable<any> {
     const url = `${this.baseUrl}/${id}`;
@@ -122,7 +127,7 @@ export abstract class BaseCrudDashboardService {
     console.log("imprimiendo url de search");
     console.log(url);
     return this.http.post(`${url}/search`, data);
-    
+
   }
 
   batch(data: any = {}): Observable<any> {
@@ -131,6 +136,50 @@ export abstract class BaseCrudDashboardService {
     // console.log("imprimiendo url de batch");
     // console.log(url);
     return this.http.post(`${url}`, data);
+
+  }
+
+  // Generic method to create a new item
+  upload(data: any): Observable<any> {
+    const url = `${this.baseUrl}/upload`;
+    console.log("imprimiendo url de upload");
+    console.log(url);
+    return this.http.post(`${url}`, data, {
+      reportProgress: true,
+      observe: 'events'
+    });
+  }
+
+
+  print(data: any) {
+    const url = `${this.baseUrl}/print`;
+    console.log("imprimiendo url de print");
+    console.log(url);
+    return this.http.post(url, data, {
+      responseType: 'blob'
+    });
+  }
+
+  /* signals events */
+
+
+  // estado reactivo
+  receiveSignalEvent = signal<any>(null);
+
+  set(data: any) {
+
+    console.log(data);
+    this.receiveSignalEvent.set(data);
+
+  }
+
+  // estado reactivo
+  receiveSignal = signal<any>(null);
+
+  setSignal(data: any) {
+
+    console.log(data);
+    this.receiveSignal.set(data);
 
   }
 

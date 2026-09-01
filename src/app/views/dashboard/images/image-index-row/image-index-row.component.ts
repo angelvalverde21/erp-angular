@@ -1,12 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ButtonTrashComponent } from '@buttons/button-trash/button-trash.component';
+import { ImagePreviewComponent } from 'src/app/views/shared/components/image-preview/image-preview.component';
 
 @Component({
   selector: 'tr[app-image-index-row]',
   imports: [
     LoadingComponent,  
-    ButtonTrashComponent
+    ButtonTrashComponent,
+    ImagePreviewComponent
   ],
   templateUrl: './image-index-row.component.html',
   styleUrl: './image-index-row.component.scss'

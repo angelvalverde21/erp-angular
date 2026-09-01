@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
 import {
@@ -49,7 +49,8 @@ function isOverflown(element: HTMLElement) {
     RouterLink,
     ShadowOnScrollDirective,
     UpperCasePipe,
-    IconDirective
+    IconDirective,
+    RouterModule
   ],
 })
 export class DefaultLayoutComponent implements OnInit {
@@ -66,6 +67,7 @@ export class DefaultLayoutComponent implements OnInit {
   ) { }
 
   @HostListener('document:click', ['$event'])
+
   onNavGroupClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
     const toggle = target.closest('.nav-group-toggle') as HTMLElement;
@@ -88,12 +90,14 @@ export class DefaultLayoutComponent implements OnInit {
     }
   }
 
-
+  store: string | null = '';
 
   ngOnInit(): void {
 
     // Obtengo el usuario de localStorage
     this.user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    this.store = this._base.store;
 
     // Obtengo sus roles
     const localroles = this.user.roles || [];

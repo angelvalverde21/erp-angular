@@ -1,0 +1,52 @@
+// Estilos para el campo de comentario
+textarea[formControlName="comment"] {
+  resize: vertical;
+  min-height: 60px;
+  max-height: 200px;
+  
+  &:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+}
+
+// Estilos para el campo de fecha
+input[formControlName="delivery_date"] {
+  cursor: pointer;
+  
+  &:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+}
+
+// Estilo para la fila de total
+.table-active {
+  td, th {
+    font-weight: 600;
+    background-color: #f8f9fa;
+  }
+  
+  h5 {
+    font-weight: 700;
+    color: #2c3e50;
+  }
+}
+
+// Estilo para los labels
+.form-label {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  
+  i {
+    margin-right: 0.5rem;
+  }
+}
+
+// Estilos responsivos
+@media (max-width: 768px) {
+  .col-md-8, .col-md-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

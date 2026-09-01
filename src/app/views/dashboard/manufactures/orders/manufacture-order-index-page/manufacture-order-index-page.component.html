@@ -1,0 +1,29 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-head-page title="Ordenes de compra" [icon]="faBoxesStacked">
+    <app-button-link [path]="['./create']">+ Orden</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3">
+        <app-head-search (emitSearchResult)="receiveSearchResult($event)" [is_redirect]="false"  type="manufacture_order" [button_active]="false" />
+    </div>
+
+    <div class="card-body p-0">
+        @if(manufactures?.length > 0){
+            <app-manufacture-order-index [manufactures]="manufactures"></app-manufacture-order-index>
+        }@else{
+            <p class="p-4">No se cuenta con registro de ordenes de compra (Moip)</p>
+        }
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ manufactures?.length }}</small>
+    </div>
+
+</div>
+
+}

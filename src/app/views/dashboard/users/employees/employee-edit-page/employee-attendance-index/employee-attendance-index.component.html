@@ -1,0 +1,94 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+
+<!-- <app-head-search type="employee_attendance" [is_redirect]="false"
+    (emitSearchResult)="receiveAttendances($event)"></app-head-search> -->
+
+<div class="card mb-3">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <app-head-search type="employee_attendance" [box_search]="false" [show_date]="true" [is_redirect]="false"
+            (emitSearchResult)="receiveAttendances($event)"></app-head-search>
+
+        <app-button-add (click)="openVerticallyCentered(content)"></app-button-add>
+    </div>
+
+    <div class="card-body p-0">
+        <app-attendance-index [attendances]="attendances" [employee]="employee" (emitHoursMinuts)="receiveHoursMinuts($event)"
+            (emitHoursDecimal)="receiveHoursDecimal($event)"></app-attendance-index>
+    </div>
+
+    <div class="card-footer" style="border-top: 0;">
+        <div class="d-flex justify-content-end align-items-center">
+            <span class="text-muted me-2">Total Horas:</span>
+            <span class="text-muted"></span>
+        </div>
+    </div>
+
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title">Agregar asistencia</h6>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <app-attendance-create [employee_id]="employee_id" (emitAttendanceCreate)="receiveAttendanceCreate($event)"></app-attendance-create>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+
+
+<!-- <div class="card mb-3">
+
+    <div class="card-header py-3">
+        Resumen de pago
+    </div>
+
+    <div class="card-body">
+
+        <ul class="list-group list-group-flush">
+
+
+            <li class="list-group-item text-success d-flex justify-content-between align-items-center">
+                <span>Horas laboradas: 73:59 Horas</span>
+                <h6>S/. 535.76</h6>
+            </li>
+
+            <li class="text-danger list-group-item d-flex justify-content-between align-items-center">
+                <span>Descuento Almuerzo: - 10 Horas (*)</span>
+                <h6>- S/. 72.40</h6>
+            </li>
+
+            <li class="text-danger  list-group-item d-flex justify-content-between align-items-center">
+                <span>Descuento dia 11 de Abril: - 9 Horas (**)</span>
+                <h6>- S/. 65.16</h6>
+            </li>
+
+            <li class="text-success  list-group-item d-flex justify-content-between align-items-center">
+                <span>Comisiones del 1 al 18</span>
+                <h6>S/. 137.41</h6>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="card-footer bg-dark text-white py-3 d-flex justify-content-between align-items-center">
+        <span>Total a Pagar</span>
+        <h3>+ S/. 535.61</h3>
+    </div>
+
+
+</div>
+
+<p>(*) El control biometrico marca las horas de corrido y no descuenta la hora del almuerzo, por tanto se descuento 1
+    hora por cada dia de los 10 dias laborados</p>
+<p>(**) El 11 fue sabado y este dia es de convenio para recuperar dias pasados, por lo que no entra en el computo de
+    esta quincena</p> -->
+
+
+}

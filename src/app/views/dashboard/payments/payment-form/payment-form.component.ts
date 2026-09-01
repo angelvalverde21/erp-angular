@@ -1,10 +1,13 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputGroupComponent } from 'src/app/views/shared/components/form/input-group/input-group.component';
 import { GatewaySelectedComponent } from '../../gateways/gateway-selected/gateway-selected.component';
 import { NgxDropzoneModule } from 'ngx-dropzone';
-import { faCloud, faFileCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { faCloud, faFileCirclePlus, faReceipt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TwoDecimalsDirective } from 'src/app/core/directives/two-decimals.directive';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { ImageIndexComponent } from '../../images/image-index/image-index.component';
 
 
 
@@ -16,6 +19,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     GatewaySelectedComponent,
     NgxDropzoneModule,
     FontAwesomeModule,
+    TwoDecimalsDirective,
+    NgbAccordionModule,
+    ImageIndexComponent
   ],
   templateUrl: './payment-form.component.html',
   styleUrl: './payment-form.component.scss'
@@ -23,8 +29,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 export class PaymentFormComponent {
 
   @Input({ required: true }) form!: FormGroup;
+  @Output() emitUpdatePayment = new EventEmitter<any>();
+  faReceipt = faReceipt;
 
-  @Input() formCreate: boolean = true;
+  @Input() payment: any;
 
   images: File[] = [];
   faFileCirclePlus = faFileCirclePlus;
@@ -117,5 +125,17 @@ export class PaymentFormComponent {
       title: 'PayPal',
     },
   ];
+
+  receiveImage(image: any) {
+
+    console.log("imagen actualizada", image);
+
+    this.payment.images = [image, ...this.payment.images];
+    this.emitUpdatePayment.emit(this.payment);
+
+    console.log(this.payment);
+
+
+  }
 
 }

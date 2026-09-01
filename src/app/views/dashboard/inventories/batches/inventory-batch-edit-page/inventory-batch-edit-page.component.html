@@ -1,0 +1,12 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+
+<app-head-page title="Inventario" [subtitle]="inventory.name" [export]="false">
+    <app-button-print-barcode [variants]="variants" class="me-2"></app-button-print-barcode>
+    <app-button-back></app-button-back>
+</app-head-page>
+
+<app-inventory-batch-edit [inventory]="inventory"></app-inventory-batch-edit>
+
+}

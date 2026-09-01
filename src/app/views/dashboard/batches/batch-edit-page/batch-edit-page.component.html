@@ -1,0 +1,26 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+<app-head-page [title]="batch?.name" subtitle="Revisando lote">
+    <app-button-back></app-button-back>
+</app-head-page>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <app-batch-edit [batch]="batch" (emitBatchUpdate)="receiveBatchUpdate($event)"></app-batch-edit>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <app-button-save>Ingresar inventario</app-button-save>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+}

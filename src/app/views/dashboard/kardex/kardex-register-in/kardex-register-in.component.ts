@@ -8,7 +8,6 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-kardex-register-in',
   imports: [
-
     KardexIndexSelectedComponent,
     ButtonComponent
   ],
@@ -53,6 +52,8 @@ export class KardexRegisterInComponent {
 
 
   registerIn() {
+
+    console.log(this.variantsKardex);
 
     this.variantsKardex = this.variantsKardex.map(variant => ({
       ...variant,

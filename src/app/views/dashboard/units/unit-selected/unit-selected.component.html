@@ -1,7 +1,7 @@
 @if(loading){
 <app-loading></app-loading>
 }@else{
-<select id="SubUnits" class="form-select" aria-label="Default select example" [ngModel]="value"
+<select id="SubUnits" class="form-select form-select-sm py-1" aria-label="Default select example" [ngModel]="value"
     (change)="onUnitChange($event)">
 
     <option [value]="null">Seleccione</option>

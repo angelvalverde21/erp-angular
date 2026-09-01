@@ -23,6 +23,8 @@ import Swal from 'sweetalert2';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SupplierService } from '../supplier.service';
+import { Supplier } from '@interfaces/supplier.interface';
+
 @Component({
   selector: 'app-supplier-selected',
   standalone: true,
@@ -42,15 +44,13 @@ import { SupplierService } from '../supplier.service';
     }
   ]
 })
-export class SupplierSelectedComponent
-
-  implements ControlValueAccessor, OnInit, OnDestroy {
+export class SupplierSelectedComponent implements ControlValueAccessor, OnDestroy, OnInit{
 
   isDisabled = false;
   supplier_id: number | null = null;
   loading = false;
 
-  @Input() suppliers: any[] = [];
+  @Input() suppliers: Supplier[] = [];
 
   private destroy$ = new Subject<void>();
   private pendingSupplierId: number | null = null;
@@ -60,17 +60,23 @@ export class SupplierSelectedComponent
 
   constructor(private _supplier: SupplierService) { }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnInit(): void {
 
-    if (changes['suppliers']) {
-      this.suppliers = this.normalizeSuppliers(changes['suppliers'].currentValue);
-    }
+    console.log(this.suppliers);
+    
+
+    this.suppliers = this.suppliers.map((supplier: Supplier) => {
+      return {
+        name: supplier?.user?.name,
+        id: supplier.id
+      }
+    });
+
+    console.log(this.suppliers);
+    
 
   }
 
-  ngOnInit() {
-    this.supplierInit();
-  }
 
   writeValue(value: number | null): void {
     this.pendingSupplierId = value;
@@ -95,26 +101,6 @@ export class SupplierSelectedComponent
     this.onTouchedCb();
   }
 
-  private supplierInit() {
-
-    this._supplier.index()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resp: any) => {
-        //Da formato porque el json viene de la forma supplier.user.name 
-
-        this.suppliers = this.normalizeSuppliers(resp.data);
-
-        this.trySetSupplier();
-      });
-
-  }
-
-  private normalizeSuppliers(suppliers: any[]): any[] {
-    return suppliers.map(s => ({
-      ...s,
-      name: s.user?.name
-    }));
-  }
 
   private trySetSupplier() {
     if (!this.suppliers.length || this.pendingSupplierId == null) return;

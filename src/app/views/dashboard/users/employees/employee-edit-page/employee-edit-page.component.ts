@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { EmployeeEditComponent } from '../employee-edit/employee-edit.component';
+import { EmployeeEditComponent } from './employee-edit/employee-edit.component';
 import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
 import { HeadPageComponent } from "@shared/components/head-page/head-page.component";
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { EmployeeService } from '../employee.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { RoleService } from '../../../roles/role.service';
 import { HeadTableComponent } from '@shared/components/head-table/head-table.component';
@@ -18,6 +18,9 @@ import { VoidIndexComponent } from 'src/app/views/shared/components/void-index/v
 import { PenPipe } from '@shared/pipes/pen.pipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
+import { AttendanceIndexComponent } from '../../../attendances/attendance-index/attendance-index.component';
+import { EmployeeWidgetComponent } from './employee-widget/employee-widget.component';
+import { HeadSearchComponent } from '../../../../shared/components/head-search/head-search.component';
 
 @Component({
   selector: 'app-employee-edit-page',
@@ -33,7 +36,11 @@ import { CommonModule } from '@angular/common';
     VoidIndexComponent,
     PenPipe,
     FontAwesomeModule,
-    CommonModule
+    CommonModule,
+    AttendanceIndexComponent,
+    RouterModule,
+    EmployeeWidgetComponent,
+    HeadSearchComponent
   ],
   templateUrl: './employee-edit-page.component.html',
   styleUrl: './employee-edit-page.component.scss',
@@ -46,6 +53,10 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   employee_id: number = 0
   employee: any;
+
+  summary = {
+    sum_payments: 0
+  };
 
   faCalculator = faCalculator;
   faChartLine = faChartLine;
@@ -64,6 +75,7 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
 
     config.backdrop = 'static';
     config.keyboard = false;
+    
   }
 
   modal: any;
@@ -78,6 +90,7 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
   orders: any[] = [];
 
   loadingOrders: boolean = false;
+  
 
   employeeInit() {
 
@@ -87,6 +100,9 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
 
       next: (resp: any) => {
         this.employee = resp.data;
+        console.log(resp);
+        this._employee.setSignal(this.employee);
+        this.summary.sum_payments = this.employee.balance;
         this.is_sales = this.employee.user.roles.includes('sales');
         this.loading = false
       },
@@ -109,7 +125,7 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
 
       next: (resp: any) => {
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
-        console.log(resp);
+        // console.log(resp);
         this.roles = resp.data;
         this.roles_loading = false;
       },

@@ -6,8 +6,10 @@ import { LoadingComponent } from '../../../../../shared/components/loading/loadi
 import { ShopifyProductIndexComponent } from '../../shopify-product-index/shopify-product-index.component';
 import { ProductHeadTableComponent } from '../../shared/product-head-table/product-head-table.component';
 import { ShopifyProductPriceIndexComponent } from '../shopify-product-price-index/shopify-product-price-index.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PaginatorComponent } from 'src/app/views/dashboard/shared/paginator/paginator.component';
+import { UserHeadTableComponent } from "src/app/views/dashboard/users/shared/user-head-table/user-head-table.component";
+import { HeadTableComponent } from 'src/app/views/shared/components/head-table/head-table.component';
 
 @Component({
   selector: 'app-shopify-product-price-index-page',
@@ -16,7 +18,9 @@ import { PaginatorComponent } from 'src/app/views/dashboard/shared/paginator/pag
     ShopifyProductIndexComponent,
     ProductHeadTableComponent,
     ShopifyProductPriceIndexComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    UserHeadTableComponent,
+    HeadTableComponent
   ],
   templateUrl: './shopify-product-price-index-page.component.html',
   styleUrl: './shopify-product-price-index-page.component.scss'
@@ -31,7 +35,8 @@ export class ShopifyProductPriceIndexPageComponent {
 
   constructor(
     private _shopify_product: ShopifyProductService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
 
   }
@@ -83,11 +88,21 @@ export class ShopifyProductPriceIndexPageComponent {
 
   }
 
-  receiveSearchResult(products: any) {
-    console.log(products);
+  // receiveSearchResult(products: any) {
+  //   console.log(products);
 
-    // this.products = $event.data;
+  //   // this.products = $event.data;
+  //   this.links = [];
+  //   this.products = products
+  // }
 
-    this.products = products
+
+  receiveParams($event: any) {
+    this.router.navigate(['search'], {
+      relativeTo: this.route,
+      queryParams: $event  // 👈 Angular convierte cada propiedad del objeto en un query param
+    }).then(() => {
+      console.log('Nueva URL:', this.router.url);
+    });
   }
 }

@@ -12,10 +12,11 @@ import { CourierService } from '@dashboard/users/couriers/courier.service';
 import { ManufactureService } from '@dashboard/manufactures/manufacture.service';
 import { GatewayService } from '@dashboard/gateways/gateway.service';
 import { ManufactureOrderService } from '@dashboard/manufactures/orders/order.service';
-import { ManufactureProductionService } from '@dashboard/manufactures/productions/production.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { ProductService } from '@dashboard/products/product.service';
+import { EmployeePaymentService } from '@dashboard/users/employees/employee-edit-page/employe-payment-index/employe.payment.service';
+import { EmployeeAttendanceService } from '@dashboard/users/employees/employee-edit-page/employee-attendance-index/employee.attendance.service';
 
 @Component({
   selector: 'app-head-table',
@@ -45,13 +46,18 @@ export class HeadTableComponent implements OnInit, OnDestroy {
     | 'manufacture_production'
     | 'manufacture_order'
     | 'manufacture'
+    | 'employee_attendance'
+    | 'employe_payment'
     = 'customer';
 
   @Input() button_active: boolean = true;
   @Input() is_redirect: boolean = true;
   @Input() box_search: boolean = true;
+  @Input() show_date: boolean = true;
   @Output() emitSearchResult = new EventEmitter<any>();
+  @Output() emitLoadingStatus = new EventEmitter<boolean>();
   @Output() emitParams = new EventEmitter<{}>();
+
 
   private searchSubject = new Subject<string>();
 
@@ -64,10 +70,11 @@ export class HeadTableComponent implements OnInit, OnDestroy {
     private _courier: CourierService,
     private _manufacture: ManufactureService,
     private _manufacture_order: ManufactureOrderService,
-    private _manufacture_production: ManufactureProductionService,
     private _shopify_product: ShopifyProductService,
     private _gateway: GatewayService,
     private _product: ProductService,
+    private _employee_payment: EmployeePaymentService,
+    private _employee_attendance: EmployeeAttendanceService,
     private fb: FormBuilder
   ) { }
 
@@ -78,8 +85,8 @@ export class HeadTableComponent implements OnInit, OnDestroy {
 
     this.form = this.fb.group({
       search: ['', Validators.required],
-      start_date: [this.today],
-      end_date: [this.today],
+      start_date: [null],
+      end_date: [null],
     });
 
   }
@@ -113,14 +120,16 @@ export class HeadTableComponent implements OnInit, OnDestroy {
 
     this.formInit();
 
-    // this.form.valueChanges
-    //   .pipe(
-    //     debounceTime(500),
-    //     takeUntil(this.destroy$)
-    //   )
-    //   .subscribe(resp => {
-
-    //   });
+    this.form.valueChanges
+      .pipe(
+        debounceTime(500),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(resp => {
+        console.log(resp);
+        
+        this.search();
+      });
 
   }
 
@@ -134,15 +143,17 @@ export class HeadTableComponent implements OnInit, OnDestroy {
     if (this.is_redirect) {
 
       console.log("is_redirect");
-      
-
       this.emitParams.emit(this.form.value);
-
+      
     } else {
-
+      
+      this.emitLoadingStatus.emit(true);
+      
       this.getService().search(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
 
         next: (resp: any) => {
+          console.log(resp);
+          
           this.emitSearchResult.emit(resp?.data ?? []);
           this.loading = false;
         },
@@ -170,8 +181,9 @@ export class HeadTableComponent implements OnInit, OnDestroy {
       case 'shopify_product': return this._shopify_product;
       case 'gateway': return this._gateway;
       case 'manufacture_order': return this._manufacture_order;
-      case 'manufacture_production': return this._manufacture_production;
       case 'product': return this._product;
+      case 'employe_payment': return this._employee_payment;
+      case 'employee_attendance': return this._employee_attendance;
       default: return this._customer;
     }
   }

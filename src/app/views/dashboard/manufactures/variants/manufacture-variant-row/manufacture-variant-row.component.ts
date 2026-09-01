@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnDestroy, Output, OnInit, TemplateRef,
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
-import { ManufactureVariantService } from '../manufactureVariant.service';
 import Swal from 'sweetalert2';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -10,9 +9,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputGroupComponent } from '@shared/components/form/input-group/input-group.component';
 import { JsonPipe } from '@angular/common';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { Fancybox } from '@fancyapps/ui';
 import { ShopifyImageThumbnailPipe } from '@shared/pipes/shopify/shopify-image-thumbnail.pipe';
 import { ShopifyImageMediumPipe } from '@shared/pipes/shopify/shopify-image-medium.pipe';
+import { ManufactureVariantService } from '../../manufacture.variants.service';
+import { ImagePreviewComponent } from '@shared/components/image-preview/image-preview.component'
 
 @Component({
   selector: 'tr[app-manufacture-variant-row]',
@@ -24,7 +24,8 @@ import { ShopifyImageMediumPipe } from '@shared/pipes/shopify/shopify-image-medi
     JsonPipe,
     LoadingComponent,
     ShopifyImageThumbnailPipe,
-    ShopifyImageMediumPipe
+    ShopifyImageMediumPipe,
+    ImagePreviewComponent
   ],
   templateUrl: './manufacture-variant-row.component.html',
   styleUrl: './manufacture-variant-row.component.scss',
@@ -63,9 +64,6 @@ export class ManufactureVariantRowComponent implements OnDestroy, OnInit {
 
     this.destroy$.next();
     this.destroy$.complete();
-
-    Fancybox.unbind(this.elRef.nativeElement);
-    Fancybox.close();
   }
 
   @Input() manufacture_variant: any = {};
@@ -124,6 +122,8 @@ export class ManufactureVariantRowComponent implements OnDestroy, OnInit {
     // Aquí puedes agregar la lógica para eliminar el variante del manufacture_variants
   }
 
+
+
   editManufactureVariant(content: TemplateRef<any>, manufacture_variant_id: number, manufacture_id: number) {
     this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
 
@@ -135,10 +135,6 @@ export class ManufactureVariantRowComponent implements OnDestroy, OnInit {
 
 
   ngOnInit(): void {
-
-    Fancybox.bind(this.elRef.nativeElement, '[data-fancybox]', {
-      // Custom options
-    })
 
     this.form = this.fb.group({
       quantity: [''],
@@ -194,11 +190,14 @@ export class ManufactureVariantRowComponent implements OnDestroy, OnInit {
 
     this.loading = true;
 
-    this._manufactureVariantService.update(this.manufacture_variant.manufacture_id, this.manufacture_variant.id, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
+    this._manufactureVariantService.setManufactureId(this.manufacture_variant.manufacture_id);
+
+    this._manufactureVariantService.update(this.manufacture_variant.id, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         console.log(resp);
         this.loading = false;
+        // this.manufacture_variant = resp.data;
         this.emitUpdatedQuantity.emit(resp.data); //emite el manufacture_variant actualizado
       },
 

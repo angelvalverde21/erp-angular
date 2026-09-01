@@ -1,6 +1,4 @@
-<app-payment-form [form]="form"  [formCreate]="false"></app-payment-form>
-
-<app-image-index [images]="payment.images" [imageable_type]="'payment'" [imageable_id]="payment.id" (emitImagePreview)="receiveImage($event)"></app-image-index>
+<app-payment-form [form]="form" [payment]="payment"></app-payment-form>
 
 <!-- {{ form.value | json }} -->
 <div class="mb-3">

@@ -6,18 +6,18 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class PenPipe implements PipeTransform {
 
-  transform(value: number): string {
-    
-    if (typeof value === 'number' && (value || value === 0)) {
-      const formattedValue = value.toFixed(2); // Redondear a dos decimales
-      return `S/. ${formattedValue}`; // Agregar el símbolo de la moneda
-    }else{
-      const numberValue = Number(value);
-      const formattedValue = numberValue.toFixed(2);
-      return `S/. ${formattedValue}`;
+  transform(value: number | string): string {
 
+    const numberValue = Number(value);
+
+    if (isNaN(numberValue)) {
+      return 'S/. 0.00';
     }
-    // return ''; // Manejar casos donde el valor no está definido o es null
+
+    const sign = numberValue < 0 ? '-' : '';
+    const formattedValue = Math.abs(numberValue).toFixed(2);
+
+    return ` ${sign} S/. ${formattedValue}`;
   }
 
 }

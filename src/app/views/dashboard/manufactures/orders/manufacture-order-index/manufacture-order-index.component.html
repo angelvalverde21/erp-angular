@@ -1,0 +1,31 @@
+<table class="table table-hover mb-0 align-middle">
+
+    <thead class="table-light ">
+        <tr>
+            <!-- <th class="text-center">#</th> -->
+            <!-- <th class="text-center"></th> -->
+            <th class="text-center">#Cod</th>
+            <!-- <th class="text-center" style="width: 200px;">Tipo</th> -->
+            <th style="width: 400px;">Producto</th>
+            <!-- <th class="text-center d-none d-xl-table-cell" style="width: 200px;">Costo</th> -->
+            <th class="text-center" style="width: 200px;">Pedido</th>
+            <th class="text-center d-none d-lg-table-cell" style="width: 200px;">Avance</th>
+            <!-- <th class="text-center d-none d-xl-table-cell" style="width: 200px;">Variantes</th> -->
+            <!-- <th class="text-center" style="width: 200px;">Gasto</th> -->
+            <th class="text-center d-none d-xl-table-cell" style="width: 300px;">Fecha</th>
+            <!-- <th class="text-center">Recepcion</th> -->
+            <th class="text-center">Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @for (manufacture of manufactures; track manufacture.id) {
+
+        <tr app-manufacture-order-index-row [manufacture]="manufacture" class="my-3"
+        ></tr>
+        }
+
+    </tbody>
+
+</table>

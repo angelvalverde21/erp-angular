@@ -1,5 +1,10 @@
-<app-manufacture-form [form]="form" [type]="type"></app-manufacture-form>
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+<app-manufacture-form [form]="form" [type]="type" [suppliers]="suppliers"></app-manufacture-form>
 
-<app-button-save (click)="createManufacture()" [spinner]="loading" [disabled]="disabledButton">Guardar cambios</app-button-save>
+<app-button-save (click)="createManufacture()" [spinner]="loading" [disabled]="disabledButton">Guardar
+    cambios</app-button-save>
 
 <!-- {{ form.value | json }} -->
+}

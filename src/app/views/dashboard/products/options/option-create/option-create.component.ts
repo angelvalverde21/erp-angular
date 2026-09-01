@@ -63,7 +63,7 @@ export class OptionCreateComponent {
     this._option.store(this.product_id, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         console.log(resp);
         this.option = resp.data;
         this.emitOption.emit(this.option);

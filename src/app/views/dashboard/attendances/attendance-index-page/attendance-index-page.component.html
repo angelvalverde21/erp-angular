@@ -1,0 +1,76 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+
+<app-head-page title="Lista de asistencias" [icon]="faClipboardUser" [export]="false">
+    <button class="btn btn-outline-dark btn-sm d-flex justify-content-between align-items-center me-1"
+        (click)="openVerticallyCentered(content)">
+        <fa-icon [icon]="faUpload" class="me-1"></fa-icon>
+        <span>Upload</span>
+    </button>
+    <app-button-back></app-button-back>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3 bg-dark text-white">
+        Lista de Asistencia
+    </div>
+
+    <div class="card-body">
+
+        <app-attendance-index [attendances]="attendances"></app-attendance-index>
+
+    </div>
+
+</div>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Archivo de asistencia</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+
+            <div class="modal-body">
+
+                <div class="mb-3">
+                    <label class="form-label">Subir Archivo CSV</label>
+
+                    <input type="file" class="form-control" accept=".csv" (change)="onFileChange($event)">
+
+                </div>
+
+                <!-- Barra de progreso -->
+                @if(uploading){
+                <div class="progress mt-3">
+                    <div class="progress-bar" role="progressbar" [style.width.%]="progress"
+                        [attr.aria-valuenow]="progress" aria-valuemin="0" aria-valuemax="100">
+                        {{ progress }}%
+                    </div>
+                </div>
+                }
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">
+                    Cancel
+                </button>
+
+                <button type="submit" class="btn btn-dark" [disabled]="form.invalid || uploading">
+                    {{ uploading ? 'Subiendo...' : 'Upload' }}
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</ng-template>
+
+}

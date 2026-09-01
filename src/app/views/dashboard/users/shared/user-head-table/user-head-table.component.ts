@@ -11,7 +11,6 @@ import { CourierService } from '../../couriers/courier.service';
 import { ManufactureService } from '../../../manufactures/manufacture.service';
 import { GatewayService } from '../../../gateways/gateway.service';
 import { ManufactureOrderService } from '../../../manufactures/orders/order.service';
-import { ManufactureProductionService } from '../../../manufactures/productions/production.service';
 
 @Component({
   selector: 'app-user-head-table',
@@ -40,7 +39,6 @@ export class UserHeadTableComponent implements OnInit, OnDestroy {
     private _courier: CourierService,
     private _manufacture: ManufactureService,
     private _manufacture_order: ManufactureOrderService,
-    private _manufacture_production: ManufactureProductionService,
     private _shopify_product: ShopifyProductService,
     private _gateway: GatewayService
   ) { }
@@ -58,7 +56,6 @@ export class UserHeadTableComponent implements OnInit, OnDestroy {
       case 'shopify_product': return this._shopify_product;
       case 'gateway': return this._gateway;
       case 'manufacture_order': return this._manufacture_order;
-      case 'manufacture_production': return this._manufacture_production;
       default: return this._customer;
     }
   }

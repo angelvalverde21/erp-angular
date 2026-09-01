@@ -1,0 +1,14 @@
+@if(loading){
+<app-loading></app-loading>
+}@else{
+
+<app-head-page title="Editar" [export]="false">
+
+</app-head-page>
+
+<div class="alert alert-info">{{ manufacture?.name }}</div>
+
+<app-production-widget [summary]="summary"></app-production-widget>
+
+<router-outlet></router-outlet>
+}

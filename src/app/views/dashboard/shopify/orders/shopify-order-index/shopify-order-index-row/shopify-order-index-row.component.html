@@ -1,0 +1,34 @@
+<ng-container>
+  <td class="text-center">{{ order.name }}</td>
+  <td class="text-center">
+    <app-shopify-notes [note]="order.note"></app-shopify-notes>
+  </td>
+  <td class="text-center">{{ order.createdAt | DateShopify }}</td>
+
+  <!-- Nombre y apellidos -->
+  <td>
+    <p class="my-1">{{ order.customer?.firstName | uppercase }} {{ order.customer?.lastName | uppercase }}</p>
+  </td>
+
+  <!-- Courier -->
+  <td>
+    <app-shipping-lines [shippingLines]="order.shippingLines"></app-shipping-lines>
+  </td>
+
+  <!-- fullfilmentstatus -->
+  <td class="text-center">
+    <app-shopify-shipping-status [displayFulfillmentStatus]="order.displayFulfillmentStatus"></app-shopify-shipping-status>
+  </td>
+  <td class="text-center">
+    <app-icon-origen [origen]="order.sourceName"></app-icon-origen>
+  </td>
+  <td class="text-center">
+    <app-shopify-tags [tags]="order.tags"></app-shopify-tags>
+  </td>
+  <td class="text-center">
+    <app-status-pay [status]="order.displayFinancialStatus"></app-status-pay>
+  </td>
+  <td class="text-center">Articulos ({{ order.lineItems.length }})</td>
+  <td class="text-center"><app-order-details [order]="order"></app-order-details></td>
+</ng-container>
+

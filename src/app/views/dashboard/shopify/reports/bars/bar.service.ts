@@ -1,18 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { BaseCrudDashboardService } from '../../../base-crud-dashboard.service';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { BaseCrudDashboardService } from "../../../base-crud-dashboard.service";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
-
-export class BarService  extends BaseCrudDashboardService{
-
+export class BarService extends BaseCrudDashboardService {
   constructor(http: HttpClient) {
-
-    super(http, 'shopify/reports/bars');
-
+    super(http, "shopify/reports/bars");
   }
 
   // Generic method to get all items
@@ -36,7 +32,7 @@ export class BarService  extends BaseCrudDashboardService{
   }
 
   base_path(path: string[] = []) {
-    return ['reports', ...path];
+    return ["reports", ...path];
   }
 
   monthAll(): Observable<any[]> {
@@ -45,5 +41,9 @@ export class BarService  extends BaseCrudDashboardService{
     return this.http.get<any[]>(`${url}/month-all`);
   }
 
+  between(day_start: string, day_end: string): Observable<any[]> {
+    const url = `${this.baseUrl}/between/${day_start}/${day_end}`;
+    console.log(url);
+    return this.http.get<any[]>(`${url}`);
+  }
 }
-

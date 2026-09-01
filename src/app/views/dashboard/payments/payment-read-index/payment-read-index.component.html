@@ -1,0 +1,35 @@
+@if(payments.length === 0){
+    <app-void-index></app-void-index>
+}@else{
+    <div class="table-responsive">
+
+    <table class="table table-striped mb-0 align-middle">
+        <thead class="table-light">
+            <tr>
+                <th class="text-center" scope="col">Codigo</th>
+                <th class="text-center" scope="col">Voucher</th>
+                <th class="text-center" scope="col">Metodo</th>
+                <th class="text-center" scope="col">Tipo</th>
+                <th class="text-center" scope="col">Fecha</th>
+                <th class="text-center" scope="col">Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (payment of payments; track payment.id) {
+            <tr app-payment-index-row [payment]="payment" [edit]="false"></tr>
+            }
+
+            <tr>
+                <td colspan="4"></td>
+                <td class="text-end"><h5>Saldo</h5></td>
+                <td class="text-center"><h5>{{ sum_payments }}</h5></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+
+
+}

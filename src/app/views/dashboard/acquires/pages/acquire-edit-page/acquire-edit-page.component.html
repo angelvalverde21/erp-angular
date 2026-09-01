@@ -1,0 +1,13 @@
+@if (loading) {
+  <app-loading></app-loading>
+} @else {
+  <div class="alert alert-light">
+    <span class="fw-bold">{{ acquire?.name }}</span>
+  </div>
+
+  <app-order-widget [summary]="summary"></app-order-widget>
+
+  <div class="alert alert-info mb-3" role="alert">Entrega: {{ acquire?.date_end | dateToString }}</div>
+
+  <router-outlet></router-outlet>
+}
