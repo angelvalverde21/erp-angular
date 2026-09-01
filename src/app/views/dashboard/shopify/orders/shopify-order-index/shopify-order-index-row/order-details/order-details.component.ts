@@ -20,6 +20,7 @@ import { IconOrigenComponent } from '../icon-origen/icon-origen.component';
 import { StatusPayComponent } from '../status-pay/status-pay.component';
 import { ShopifyTagsComponent } from '../shopify-tags/shopify-tags.component';
 import { MenuButtonComponent } from './menu-button/menu-button.component';
+import { ShopifyShippingStatusComponent } from '../shopify-shipping-status/shopify-shipping-status.component'
 
 @Component({
   selector: 'app-order-details',
@@ -34,7 +35,8 @@ import { MenuButtonComponent } from './menu-button/menu-button.component';
     IconOrigenComponent,
     StatusPayComponent,
     ShopifyTagsComponent,
-    MenuButtonComponent
+    MenuButtonComponent,
+    ShopifyShippingStatusComponent
   ],
   templateUrl: './order-details.component.html',
   styleUrl: './order-details.component.scss',

@@ -7,7 +7,6 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
-
     <app-menu-button [order]="order"></app-menu-button>
 
     <div class="row mb-3">
@@ -29,7 +28,9 @@
               }
               <div class="d-flex justify-content-between align-items-center"><span>Origen:</span> <app-icon-origen [origen]="order.sourceName"></app-icon-origen></div>
               <hr />
-              <div class="d-flex justify-content-between align-items-center"><span>Status:</span> <app-status-pay [status]="order.displayFinancialStatus"></app-status-pay></div>
+              <div class="d-flex justify-content-between align-items-center"><span>Status de envio:</span><app-shopify-shipping-status [displayFulfillmentStatus]="order.displayFulfillmentStatus"></app-shopify-shipping-status></div>
+              <hr />
+              <div class="d-flex justify-content-between align-items-center"><span>Status del pago:</span> <app-status-pay [status]="order.displayFinancialStatus"></app-status-pay></div>
               <hr />
               <div class="d-flex justify-content-between align-items-center"><span>Tags:</span> <app-shopify-tags [tags]="order.tags"></app-shopify-tags></div>
             </div>
@@ -47,8 +48,8 @@
                 <th class="text-center">Qty</th>
                 <th class="text-center">Image</th>
                 <th>Descripcion</th>
-                <th>Precio</th>
-                <th>Total</th>
+                <th class="text-center">Precio</th>
+                <th class="text-center">Total</th>
               </tr>
             </thead>
 
