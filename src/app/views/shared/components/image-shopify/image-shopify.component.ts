@@ -22,6 +22,8 @@ export class ImageShopifyComponent implements OnInit, OnDestroy {
 
   }
 
+  @Input() height: number = 45; 
+
   ngOnInit(): void {
 
     Fancybox.bind(this.elRef.nativeElement, '[data-fancybox]', {
