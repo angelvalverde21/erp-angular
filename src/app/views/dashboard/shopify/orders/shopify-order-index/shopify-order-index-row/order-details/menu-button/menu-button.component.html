@@ -1,0 +1,11 @@
+<div class="controls d-flex justify-content-center align-items-center mb-3">
+  <app-button-pdf ngbDropdownItem [order_id]="removeHash(order.name)"><fa-icon [icon]="faPrint" class="me-2"></fa-icon>Etiqueta de envio</app-button-pdf>
+
+  <div ngbDropdown class="d-inline-block">
+    <button type="button" class="btn btn-dark" id="dropdownBasic1" ngbDropdownToggle>Acciones Shopify</button>
+    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+      <button ngbDropdownItem>Marcar como preparado</button>
+      <a ngbDropdownItem [href]="getURlShopify(order.id)" target="_blank" rel="noopener noreferrer" class="btn btn-dark btn-sm"><fa-icon [icon]="faEdit" class="me-2"></fa-icon>Editar</a>
+    </div>
+  </div>
+</div>

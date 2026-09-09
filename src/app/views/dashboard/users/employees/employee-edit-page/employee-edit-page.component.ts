@@ -259,10 +259,10 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
     return this.getPricesFinal(this.orders) * (Number(this.employee.comission) / 100);
   }
 
-  pricesFinal: number = 0;
-  pricesLabel: number = 0;
-  discount: number = 0;
-  commission: number = 0;
-  shippingTotal: number = 0;
+  pricesFinal: number = 0; //precio final de venta
+  pricesLabel: number = 0; //precio de etiqueta de los prodcutos
+  discount: number = 0; //descuento por cada pedido
+  commission: number = 0; //comsion del vendedor
+  shippingTotal: number = 0; //costos de envio
 
 }

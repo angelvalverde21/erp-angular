@@ -1,0 +1,20 @@
+@if (note != null) {
+  <button type="button" class="btn p-0 border-0 bg-transparent shadow-none" (click)="openVerticallyCentered(content)"  placement="top" [ngbTooltip]="note">
+    <fa-icon [icon]="faCommentDots"></fa-icon>
+  </button>
+
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h6 class="modal-title"><fa-icon [icon]="faCommentDots" class="me-2"></fa-icon>Observaciones</h6>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-warning" role="alert">
+        {{ note }}
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Cerrar</button>
+    </div>
+  </ng-template>
+}
