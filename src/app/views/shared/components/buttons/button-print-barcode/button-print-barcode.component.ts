@@ -78,4 +78,5 @@ export class ButtonPrintBarcodeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
 
   }
+  
 }

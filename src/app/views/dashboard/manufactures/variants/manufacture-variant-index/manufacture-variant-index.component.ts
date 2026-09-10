@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { Subject, takeUntil } from 'rxjs';
 import { VariantSearchComponent } from '../../../products/variants/variant-search/variant-search.component';
 import { ManufactureVariantService } from '../../manufacture.variants.service';
+import { ButtonPrintComponent } from '../../../../shared/components/buttons/button-print/button-print.component';
 
 @Component({
   selector: 'app-manufacture-variant-index',
@@ -17,7 +18,8 @@ import { ManufactureVariantService } from '../../manufacture.variants.service';
     ManufactureVariantRowComponent,
     ButtonAddComponent,
     FontAwesomeModule,
-    VariantSearchComponent
+    VariantSearchComponent,
+    ButtonPrintComponent
   ],
   templateUrl: './manufacture-variant-index.component.html',
   styleUrl: './manufacture-variant-index.component.scss',
