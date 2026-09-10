@@ -2,7 +2,7 @@
     <span class="ms-3"><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Productos</span>
 
     <div class="actions d-flex justify-content-between align-items-center">
-        <app-button-print class="me-2" color="dark"></app-button-print>
+        <app-button-print class="me-2" color="dark" [manufacture_id]="manufacture_id"></app-button-print>
         <app-button-add (click)="openVerticallyCentered(content)" class="mb-3" color="dark">{{ text_button }}</app-button-add>
     </div>
 
