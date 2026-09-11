@@ -27,4 +27,6 @@ export class ManufactureVariantService extends BaseCrudDashboardService {
     this.extraPath = `/${manufacture_id}/variants`;
   }
 
+
+
 }
