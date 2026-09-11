@@ -21,7 +21,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { ImagePreviewComponent } from '../../../../shared/components/image-preview/image-preview.component';
-import { distinctUntilChanged, filter, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Subscription } from 'rxjs';
 import { PenPipe } from '../../../../shared/pipes/pen.pipe';
 import { ImageShopifyComponent } from '../../../../shared/components/image-shopify/image-shopify.component';
 @Component({
@@ -42,6 +42,8 @@ import { ImageShopifyComponent } from '../../../../shared/components/image-shopi
 export class VariantIndexFormComponent implements OnInit, OnDestroy {
   @Input() variants: any[] = [];
   @Output() formValuesChanged = new EventEmitter<any>();
+  // @Output() formValues = new EventEmitter<boolean>();
+
 
   faBarcode = faBarcode;
   form!: FormGroup;
@@ -58,8 +60,7 @@ export class VariantIndexFormComponent implements OnInit, OnDestroy {
     // Inicializar el formulario con todos los campos
     this.form = this.fb.group({
       comment: ['', [Validators.maxLength(500)]], // Campo de comentario
-      date_start: [this.getDateToday(), [Validators.required]], // Campo de fecha de entrega
-      date_end: [this.getDateToday(), [Validators.required]], // Campo de fecha de entrega
+      created_at: [this.getDateToday(), [Validators.required]], // Campo de fecha de entrega
       variants: this.fb.array(
         [],
         [this.atLeastOneValidVariantValidator.bind(this)],
@@ -118,17 +119,33 @@ export class VariantIndexFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
     this.initializeComponent();
 
-    this.form.statusChanges.pipe(distinctUntilChanged()).subscribe((status) => {
-      if (status === 'VALID') {
-        console.log('Formulario válido');
-        this.onFormValid();
-      } else {
-        console.log('Formulario inválido');
-        this.onFormInvalid();
-      }
-    });
+    this.form.valueChanges
+      .pipe(
+        debounceTime(500)
+      )
+      .subscribe(() => {
+
+        const status = this.form.status;
+
+        const formValue = {
+          status: status,
+          values: this.form.getRawValue()
+        };
+
+        this.formValuesChanged.emit(formValue);
+
+        if (status === 'VALID') {
+          console.log('Formulario válido');
+          this.onFormValid();
+        } else {
+          console.log('Formulario inválido');
+          this.onFormInvalid();
+        }
+      });
+
   }
 
   onFormInvalid(): void {

@@ -1,5 +1,5 @@
 {
-  "printWidth": 80,
+  "printWidth": 70,
   "singleQuote": true,
   "tabWidth": 2,
   "useTabs": false,
@@ -11,5 +11,7 @@
         "parser": "angular"
       }
     }
-  ]
+  ],
+  "plugins": ["prettier-plugin-multiline-arrays"],
+  "multilineArraysWrapThreshold": 1
 }

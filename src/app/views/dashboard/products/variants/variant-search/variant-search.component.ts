@@ -69,6 +69,8 @@ export class VariantSearchComponent implements OnInit {
       this.getSearch();
 
     });
+
+
     
 
   }
@@ -80,6 +82,20 @@ export class VariantSearchComponent implements OnInit {
   // onSearchChange(value: string) {
   //   this.search$.next(value);
   // }
+
+  receiveFormValuesChanged(data: any){
+    console.log("data desde receiveFormValue");
+    
+    console.log(data);
+
+    if (data.status === "VALID") {
+
+      this.buttonDisabled = false;
+    }else{
+      this.buttonDisabled = true; 
+    }
+    
+  }
 
   getSearch() {
 

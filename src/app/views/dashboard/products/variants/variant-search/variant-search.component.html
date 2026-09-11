@@ -1,5 +1,5 @@
 <form [formGroup]="form">
-  <div class="py-3">
+  <div class="py-3 mx-3">
     <app-input-group [icon]="faMagnifyingGlass" text="">
       <input formControlName="search" type="text" class="form-control" placeholder="Busca Productos" aria-label="name" aria-describedby="basic-name" />
     </app-input-group>
@@ -10,7 +10,7 @@
   } @else {
     @if (variants?.length > 0) {
       @if (type_form) {
-        <app-variant-index-form [variants]="variants" (formValuesChanged)="receiveValues($event)"></app-variant-index-form>
+        <app-variant-index-form [variants]="variants" (formValuesChanged)="receiveValues($event)" (formValuesChanged)="receiveFormValuesChanged($event)"></app-variant-index-form>
       } @else {
         <app-variant-index [variants]="variants" (variantArraySelected)="receiveSelectedVariants($event)" (emitVariantsSelected)="receiveVariantsSelected($event)"></app-variant-index>
       }

@@ -77,27 +77,14 @@
       </div>
     </div>
 
-    <!-- Campo de fecha de pedido -->
-    <div class="col-lg-6 col-12">
-      <div class="form-group">
-        <label for="date_start" class="form-label fw-bold"> <i class="bi bi-calendar-event"></i> Fecha de pedido </label>
-        <input id="date_start" formControlName="date_start" type="date" class="form-control" [min]="minDate" [value]="form.get('date_start')?.value" />
-        <div class="form-text text-muted">Fecha estimada de entrega</div>
-        <!-- Mensaje de error si es requerido -->
-        @if (form.get('date_start')?.invalid && form.get('date_start')?.touched) {
-          <div class="text-danger small mt-1">La fecha es requerida</div>
-        }
-      </div>
-    </div>
-
     <!-- Campo de fecha de entrega -->
     <div class="col-lg-6 col-12">
       <div class="form-group">
-        <label for="date_end" class="form-label fw-bold"> <i class="bi bi-calendar-event"></i> Fecha de Entrega </label>
-        <input id="date_end" formControlName="date_end" type="date" class="form-control" [min]="minDate" [value]="form.get('date_end')?.value" />
-        <div class="form-text text-muted">Fecha estimada de entrega</div>
+        <label for="created_at" class="form-label fw-bold"> <i class="bi bi-calendar-event"></i> Fecha de Entrega </label>
+        <input id="created_at" formControlName="created_at" type="date" class="form-control" [min]="minDate" [value]="form.get('created_at')?.value" />
+        <div class="form-text text-muted">Fecha creacion</div>
         <!-- Mensaje de error si es requerido -->
-        @if (form.get('date_end')?.invalid && form.get('date_end')?.touched) {
+        @if (form.get('created_at')?.invalid && form.get('created_at')?.touched) {
           <div class="text-danger small mt-1">La fecha de entrega es requerida</div>
         }
       </div>

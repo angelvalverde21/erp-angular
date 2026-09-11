@@ -37,7 +37,8 @@ export class ImageShopifyComponent implements OnInit, OnDestroy {
     Fancybox.close();
   }
 
-  @Input() image: any;
+  @Input() image: string = '';
+  // @Input() height: number = 45;
 
   @Input() title: string = '';
 
