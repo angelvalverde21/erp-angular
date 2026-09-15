@@ -1,29 +1,35 @@
 <ng-container [formGroup]="form">
+  <td class="text-center"><fa-icon [icon]="faBarcode" class="me-3"></fa-icon> {{ variant.sku }}</td>
+
+  <td class="text-center">
+    <app-image-preview [image]="variant?.product?.image"></app-image-preview>
+    <!-- <img [src]="variant?.product?.image?.url_thumbnail" height="100px" style="border-radius: 5px;" alt=""> -->
+  </td>
+
+  <td class="text-center">{{ variant?.product?.name }}</td>
+
+  @for (option_value of variant.option_values; track option_value.id) {
     <td class="text-center">
-        <fa-icon [icon]="faBarcode" class="me-3"></fa-icon> {{ variant.sku }}
+      <span class="badge bg-secondary px-3 py-1">{{ option_value.value }}</span>
     </td>
+  }
 
-    <td class="text-center">
-        <img [src]="variant?.product?.image?.url_thumbnail" height="100px" style="border-radius: 5px;" alt="">
-    </td>
+  <td style="width: 100px" class="px-3">
+    <input type="number" formControlName="quantity" class="form-control text-center" placeholder="0" onclick="this.select()" aria-label="quantity" aria-describedby="basic-quantity" />
+  </td>
 
-    <td class="text-center">{{ variant?.product?.name }}</td>
+  <td>
+    <select class="form-select" formControlName="comment" aria-label="Default select example">
+      <option selected>Seleccione</option>
+      @for (comment of comments; track $index) {
+        <option value="{{ comment }}">{{ comment }}</option>
+      }
+    </select>
+  </td>
 
-    @for (option_value of variant.option_values; track option_value.id) {
-    <td class="text-center"><span class="badge bg-secondary px-3 py-1">{{ option_value.value }}</span></td>
-    }
+  <td style="width: 75px" class="px-3">
+    <app-button [icon]="faCheck" [color]="form.valid ? `${color_check} text-white` : 'outline-dark'"></app-button>
+  </td>
 
-    <td style="width: 100px;" class="px-3">
-        <input type="number" formControlName="quantity" class="form-control text-center" placeholder="0"
-            onclick="this.select()" aria-label="quantity" aria-describedby="basic-quantity" />
-    </td>
-
-
-    <td style="width: 75px;" class="px-3">
-        <app-button [icon]="faCheck" [color]="form.valid ? `${color_check} text-white` : 'outline-dark'"></app-button>
-    </td>
-
-    <!-- {{ form.value | json }} -->
-
-
+  <!-- {{ form.value | json }} -->
 </ng-container>

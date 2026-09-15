@@ -34,6 +34,9 @@ export class AttendanceEditComponent implements OnInit {
   form!: FormGroup;
 
   ngOnInit(): void {
+    console.log(this.attendance);
+    console.log(this.attendance?.id);
+
     this.formInit();
     this.form.patchValue(this.attendance);
   }
@@ -43,20 +46,37 @@ export class AttendanceEditComponent implements OnInit {
       date: [{ value: '', disabled: true }],
       check_in: ['', Validators.required],
       check_out: ['', Validators.required],
+      employee_id: [this.attendance.employee_id, Validators.required],
       comment: [''],
     });
   }
 
   loading: boolean = false;
 
-  update() {
+  createOrUpdate() {
 
+    console.log(this.form.getRawValue());
+    
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
     }
 
+    console.log("createOrUpdate");
+    
+
+    if (this.attendance?.id === null) {
+      this.create();
+    }else{
+      this.update();
+    }
+
+  }
+
+  update() {
+
     this.loading = true;
+    
 
     this._attendance.update(this.attendance.id, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
 
@@ -77,6 +97,30 @@ export class AttendanceEditComponent implements OnInit {
 
     });
 
+  }
+
+  create() {
+
+    this.loading = true;
+
+    this._attendance.store(this.form.getRawValue()).pipe(takeUntil(this.destroy$)).subscribe({
+
+      next: (resp: any) => {
+        Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+        console.log(resp);
+        this.attendance = resp.data;
+        this.loading = false;
+
+        this.emitAttendanceUpdate.emit(this.attendance);
+      },
+
+      error: (error: any) => {
+        Swal.fire('Error', 'Ocurrió un problema al actualizar. Inténtalo nuevamente.', 'error');
+        console.error(error);
+        this.loading = false;
+      },
+
+    });
   }
 
   destroy$ = new Subject<void>();

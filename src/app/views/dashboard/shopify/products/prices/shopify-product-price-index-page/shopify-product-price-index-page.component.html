@@ -5,13 +5,13 @@
     <app-button-link [path]="['./create']">Agregar Cliente</app-button-link>
 </app-head-page> -->
 
-<app-head-table [type]="'shopify_product'"  (emitParams)="receiveParams($event)"></app-head-table>
 
 <div class="card mb-3">
 
     <div class="card-header py-3">
 
-        <app-product-head-table [status]="status" (emitStatusProductsSync)="reListProduct()"></app-product-head-table>
+        <!-- <app-product-head-table [status]="status" (emitStatusProductsSync)="reListProduct()"></app-product-head-table> -->
+        <app-head-table [show_date]="false" [type]="'shopify_product'" (emitParams)="receiveParams($event)"></app-head-table>
 
     </div>
 

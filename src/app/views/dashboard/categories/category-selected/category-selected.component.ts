@@ -2,11 +2,13 @@ import {
   Component,
   EventEmitter,
   forwardRef,
+  Injector,
   Input,
   OnInit,
   Output,
+  Self,
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { Category } from '../../../../interfaces/category.interface';
 
 @Component({
@@ -34,14 +36,25 @@ export class CategorySelectedComponent implements OnInit, ControlValueAccessor {
     //cargar categorias
   }
 
-  value: string = '';
+  constructor(private injector: Injector) { }
+
+  get control() {
+    return this.injector.get(NgControl, null)?.control;
+  }
+
+  get invalid(): boolean {
+    return !!(this.control?.invalid && this.control?.touched);
+  }
+
+  value: number | null = null ;
 
   private onChangeFn: (value: any) => void = () => { };
   private onTouchedFn: () => void = () => { };
 
+
   // Se llama cuando el valor externo cambia (ej. setValue)
   writeValue(value: any): void {
-    
+
     this.value = value != null ? value : null;
     console.log(value);
 
@@ -93,12 +106,17 @@ export class CategorySelectedComponent implements OnInit, ControlValueAccessor {
     return undefined;
   }
 
-  onCategoryChange(event: any) {
-    const id = event.target.value;
+  onCategoryChange(id: number | null) {
+
     this.value = id;
 
-    const category = this.findCategoryById(this.categories, id);
-    this.emitCategorySelected.emit(category);
+    const category = id
+      ? this.findCategoryById(this.categories, id)
+      : null;
+
+    if (category) {
+      this.emitCategorySelected.emit(category);
+    }
 
     this.onChangeFn(id);
     this.onTouchedFn();

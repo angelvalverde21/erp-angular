@@ -1,0 +1,29 @@
+@if(loading){
+    <app-loading></app-loading>
+}@else{
+
+<app-head-page title="Producciones" [icon]="faGears">
+    <app-button-link [color]="'primary'" [path]="['./create']">+ Produccion</app-button-link>
+</app-head-page>
+
+<div class="card">
+
+    <div class="card-header py-3">
+        <app-head-search (emitSearchResult)="receiveSearchResult($event)" [is_redirect]="false" type="manufacture_production" [button_active]="false" />
+    </div>
+
+    <div class="card-body p-0">
+        @if(productions?.length > 0){
+            <app-production-index [productions]="productions"></app-production-index>
+        }@else{
+            <p class="p-4">No se cuenta con registro de productions</p>
+        }
+    </div>
+
+    <div class="card-footer text-end" style="border-top: 0;">
+        <small class="text-muted">Total: {{ productions?.length }}</small>
+    </div>
+
+</div>
+
+}

@@ -68,6 +68,13 @@ export class OptionValueIndexComponent implements OnInit {
 
   removeOptionValue(option_value_id: number) {
 
+
+
+    this.option_values = this.option_values.filter((v: any) => v.id !== option_value_id);
+
+    console.log(option_value_id);
+    
+
   }
 
 }

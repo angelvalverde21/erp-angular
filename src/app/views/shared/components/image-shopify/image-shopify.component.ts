@@ -35,8 +35,15 @@ export class ImageShopifyComponent implements OnInit, OnDestroy {
     Fancybox.close();
   }
 
-  @Input() image: any;
+  @Input() image: string = '';
+  @Input() height: number = 45;
 
   @Input() title: string = '';
+
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/images/placeholder.png';
+  }
 
 }

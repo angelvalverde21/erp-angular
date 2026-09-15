@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/button-edit/button-edit.component';
 import { AttendanceEditComponent } from '../attendance-edit/attendance-edit.component';
+import { MinutesToHoursPipe } from '@shared/pipes/minutesToHours.pipe'
+import { PenPipe } from '@shared/pipes/pen.pipe'
 
 @Component({
   selector: 'tr[app-attendance-index-row]',
@@ -24,7 +26,9 @@ import { AttendanceEditComponent } from '../attendance-edit/attendance-edit.comp
     NgbDropdownModule,
     ButtonEditComponent,
     AttendanceEditComponent,
-    NgbTooltipModule
+    NgbTooltipModule,
+    MinutesToHoursPipe,
+    PenPipe
   ],
   templateUrl: './attendance-index-row.component.html',
   styleUrl: './attendance-index-row.component.scss',
@@ -50,7 +54,6 @@ export class AttendanceIndexRowComponent {
 
   }
 
-
   faCircleCheck = faCircleCheck;
   faCheck = faCheck;
   faCircleXmark = faCircleXmark;
@@ -67,6 +70,24 @@ export class AttendanceIndexRowComponent {
   receiveAttendanceUpdate(attendance: any) {
     this.attendance = { ...this.attendance, ...attendance };
     this.closeModal();
+  }
+
+  get salaryExtra() {
+    return ((Number(this.attendance.salary_day) * Number(this.attendance.minutes - 60)) / 480).toFixed(2);
+  }
+
+  getWorkedMinutes(attendance: any): number {
+    if (attendance.minutes - 60 >= 0 && attendance.employee_work_type !== 'partime') {
+      return attendance.minutes - 60;
+    }
+
+    return attendance.minutes;
+  }
+
+  getMinutesClass(attendance: any): string {
+    const minutes = this.getWorkedMinutes(attendance);
+
+    return minutes < 480 ? 'text-danger' : 'text-success';
   }
 
 }

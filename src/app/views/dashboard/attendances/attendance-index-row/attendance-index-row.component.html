@@ -1,7 +1,28 @@
+<td class="text-center">{{ attendance.date | dayOfWeek }}</td>
+
 <td class="text-center">
-  {{ attendance.date | date:'dd/MM/yyyy' }}
+    {{ attendance.date | date:'dd/MM/yyyy' }}
 </td>
-<td class="text-center">{{ attendance.employee?.user.name | uppercase }}</td>
+
+<td class="text-center">{{ attendance.employee_name | uppercase }}</td>
+
+@switch (attendance.missing_text) {
+
+@case ('REMOTO') {
+<td colspan="4" class="text-center" style="letter-spacing: 10px">REMOTO</td>
+}
+
+@case ('DESCANZO') {
+<td colspan="4" class="text-center" style="letter-spacing: 10px">DESCANZO</td>
+}
+
+@case ('FALTO') {
+
+<td colspan="4" class="text-center" style="letter-spacing: 10px">FALTO</td>
+}
+
+@default {
+
 <td class="text-center">
 
 
@@ -14,26 +35,54 @@
     }
 
 </td>
+
 <td class="text-center">{{ attendance.check_out }}</td>
+
+
 <td class="text-center">
 
-    <div class="d-flex justify-content-center align-items-center">
+    @if(attendance.missing === true){
 
-        <!-- Cumplio las 8 Horas -->
-        @if (attendance.check_in | attendanceStatus:attendance.check_out) {
-        <span class="text-success">
-            {{ attendance.check_in | workedHours:attendance.check_out }}
-        </span>
-        } @else {
-        <span class="text-danger">
-            {{ attendance.check_in | workedHours:attendance.check_out }}
-        </span>
-        }
-    </div>
+    }@else{
+
+    <!-- En employe partime no se descuenta la hora de almuerzo, en employe fulltime si se descuenta la hora de almuerzo. -->
+    @if(attendance.employee_work_type == "partime"){
+
+    }@else{
+    -1h 00m
+    }
+
+    }
 
 </td>
 
-<td class="text-center">{{ attendance.date | dayOfWeek }}</td>
+<td class="text-center">
+
+    <span [class]="getMinutesClass(attendance)">
+        {{ getWorkedMinutes(attendance) | minutesToHours }}
+    </span>
+</td>
+
+
+<!-- <td class="text-center">8h 00m</td> -->
+}
+
+}
+
+<td class="text-center">
+    @if(attendance?.salary_extra == 0){
+
+    }@else{
+    @if(attendance?.salary_extra > 0){
+    <span class="text-success">+{{ attendance?.salary_extra | pen }}</span>
+
+    }@else{
+    <span class="text-danger">{{ attendance?.salary_extra | pen }}</span>
+    }
+
+    }
+</td>
+
 <td class="text-center" style="width: 150px;">
 
     {{ attendance.comment }}
@@ -47,14 +96,15 @@
     } -->
 
 </td>
-<td class="text-center">
+
+<!-- <td class="text-center">
 
     @if(attendance.missing){
     <fa-icon class="text-danger" style="font-size: 1rem;" [icon]="faCircleXmark"></fa-icon>
     }@else{
     <fa-icon class="text-success" style="font-size: 1rem;" [icon]="faCheck"></fa-icon>
     }
-</td>
+</td> -->
 
 <td>
     <div ngbDropdown class="d-inline-block">
@@ -68,7 +118,6 @@
         </div>
     </div>
 </td>
-
 
 <ng-template #content let-modal>
     <div class="modal-header">

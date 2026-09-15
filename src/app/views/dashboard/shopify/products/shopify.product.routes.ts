@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'all',
+    path: '',
     loadComponent: () => import('./shopify-product-index-page/shopify-product-index-page.component').then((m) => m.ShopifyProductIndexPageComponent),
     data: {
       title: 'Productos',

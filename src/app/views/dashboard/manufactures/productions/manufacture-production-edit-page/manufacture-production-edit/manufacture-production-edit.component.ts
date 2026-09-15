@@ -80,8 +80,8 @@ export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
   formInit() {
     this.form = this.fb.group({
       name: ['', Validators.required],
-      manufacture_start: ['', Validators.required],
-      manufacture_end: ['', Validators.required],
+      // manufacture_start: ['', Validators.required],
+      // manufacture_end: ['', Validators.required],
     });
   }
 
@@ -119,7 +119,8 @@ export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
             title: 'Correcto',
             text: 'Datos guardados correctamente',
             confirmButtonText: 'OK',
-            showConfirmButton: true
+            timer: 500,
+            showConfirmButton: false
           })
 
           console.log(resp);

@@ -77,7 +77,7 @@ export class ProductFormComponent{
   }
   
   openVerticallyCentered(content: TemplateRef<any>) {
-    this.modal = this.modalService.open(content, { centered: true });
+    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
   }
 
 
@@ -95,7 +95,7 @@ export class ProductFormComponent{
 
     console.log(category.id);
     
-    this.form.get('category_id')?.setValue(category.id != null ? String(category.id) : '');
+    this.form.get('category_id')?.setValue(category.id);
 
     this.closeModal();
 

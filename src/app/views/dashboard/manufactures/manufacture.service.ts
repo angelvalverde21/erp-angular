@@ -33,8 +33,19 @@ export class ManufactureService extends BaseCrudDashboardService {
 
   setManufacture(data: any) {
     console.log(data);
-    
+
     this.manufactureSingnalEvent.set(data);
+  }
+
+  pdf(manufacture_id: number) {
+
+    const url = `${this.baseUrl}/${manufacture_id}/variants/pdf/report`;
+    console.log(url);
+
+    return this.http.get(url, {
+      responseType: 'blob', // Importante para descargar el archivo como blob
+    });
+
   }
 
 }

@@ -5,7 +5,7 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./manufacture-order-index-page/manufacture-order-index-page.component').then((m) => m.ManufactureOrderIndexPageComponent),
     data: {
-      title: 'Todos',
+      title: 'Ordenes de Compra',
     }
   },
 
@@ -26,30 +26,30 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-edit/manufacture-order-edit.component').then((m) => m.ManufactureOrderEditComponent),
+        loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-resumen/manufacture-order-resumen.component').then((m) => m.ManufactureOrderResumenComponent),
         data: {
-          title: 'Editar',
+          title: 'Ordenes de Compra',
         }
       },
       {
         path: 'variants',
         loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-variant-index/manufacture-order-variant-index.component').then((m) => m.ManufactureOrderVariantIndexComponent),
         data: {
-          title: 'Variantes',
+          title: 'order/variantes',
         }
       },
       {
         path: 'payments',
         loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-payment-index/manufacture-order-payment-index.component').then((m) => m.ManufactureOrderPaymentIndexComponent),
         data: {
-          title: 'Pagos realizados',
+          title: 'order/pagos realizados',
         }
       },
       {
         path: 'kardexes',
         loadComponent: () => import('./manufacture-order-edit-page/manufacture-order-kardex-index/manufacture-order-kardex-index.component').then((m) => m.ManufactureOrderKardexIndexComponent),
         data: {
-          title: 'Recepciones',
+          title: 'order/recepciones',
         }
       },
     ]

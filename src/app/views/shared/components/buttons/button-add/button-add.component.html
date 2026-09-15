@@ -1,9 +1,13 @@
 @if(path){
 <button type="button" class="text-white d-flex justify-content-center btn btn-sm btn-{{ color }}" [routerLink]="path ?? null">
-    + Añadir <ng-content></ng-content>
+    @if (text_default) {
+        + Añadir 
+    }<ng-content></ng-content>
 </button>
 }@else{
 <button type="button" class="text-white d-flex justify-content-center btn btn-sm btn-{{ color }}">
-    + Añadir <ng-content></ng-content>
+    @if (text_default) {
+        + Añadir 
+    }<ng-content></ng-content>
 </button>
 }

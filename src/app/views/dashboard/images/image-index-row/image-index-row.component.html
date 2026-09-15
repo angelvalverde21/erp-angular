@@ -1,5 +1,8 @@
 <td class="text-center">{{ image.id }}</td>
-<td class="text-center"><img [src]="image.url_thumbnail" height="100" alt=""></td>
+<td class="text-center">
+    <app-image-preview [image]="image"></app-image-preview>
+    <!-- <img [src]="image.url_thumbnail" height="100" alt=""> -->
+</td>
 <td class="text-center">{{ image.name }}</td>
 <td class="text-center" style="width: 50px;">
     @if(loading){

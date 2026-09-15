@@ -7,6 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ManufactureOrderService } from '../manufacture.order.service';
 import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
 import { ManufactureOrderIndexComponent } from '../manufacture-order-index/manufacture-order-index.component';
+import { HeadSearchComponent } from 'src/app/views/shared/components/head-search/head-search.component';
 
 @Component({
   selector: 'app-manufacture-order-index-page',
@@ -15,7 +16,8 @@ import { ManufactureOrderIndexComponent } from '../manufacture-order-index/manuf
     ButtonBackComponent,
     LoadingComponent,
     ButtonLinkComponent,
-    ManufactureOrderIndexComponent
+    ManufactureOrderIndexComponent,
+    HeadSearchComponent
   ],
   templateUrl: './manufacture-order-index-page.component.html',
   styleUrl: './manufacture-order-index-page.component.scss'
@@ -34,6 +36,8 @@ export class ManufactureOrderIndexPageComponent implements OnInit, OnDestroy {
   }
 
   receiveSearchResult(manufactures: any) {
+    console.log(manufactures);
+    
     this.manufactures = manufactures;
   }
 

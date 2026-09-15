@@ -20,6 +20,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { AttendanceIndexComponent } from '../../../attendances/attendance-index/attendance-index.component';
 import { EmployeeWidgetComponent } from './employee-widget/employee-widget.component';
+import { HeadSearchComponent } from '../../../../shared/components/head-search/head-search.component';
 
 @Component({
   selector: 'app-employee-edit-page',
@@ -38,7 +39,8 @@ import { EmployeeWidgetComponent } from './employee-widget/employee-widget.compo
     CommonModule,
     AttendanceIndexComponent,
     RouterModule,
-    EmployeeWidgetComponent
+    EmployeeWidgetComponent,
+    HeadSearchComponent
   ],
   templateUrl: './employee-edit-page.component.html',
   styleUrl: './employee-edit-page.component.scss',
@@ -98,7 +100,7 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
 
       next: (resp: any) => {
         this.employee = resp.data;
-        console.log(this.employee);
+        console.log(resp);
         this._employee.setSignal(this.employee);
         this.summary.sum_payments = this.employee.balance;
         this.is_sales = this.employee.user.roles.includes('sales');
@@ -257,10 +259,10 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
     return this.getPricesFinal(this.orders) * (Number(this.employee.comission) / 100);
   }
 
-  pricesFinal: number = 0;
-  pricesLabel: number = 0;
-  discount: number = 0;
-  commission: number = 0;
-  shippingTotal: number = 0;
+  pricesFinal: number = 0; //precio final de venta
+  pricesLabel: number = 0; //precio de etiqueta de los prodcutos
+  discount: number = 0; //descuento por cada pedido
+  commission: number = 0; //comsion del vendedor
+  shippingTotal: number = 0; //costos de envio
 
 }

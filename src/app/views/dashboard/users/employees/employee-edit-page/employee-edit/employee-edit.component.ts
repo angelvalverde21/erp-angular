@@ -1,4 +1,4 @@
-import { Component, effect, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, Input, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { EmployeeFormComponent } from '../../employee-form/employee-form.component';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,6 +8,13 @@ import { JsonPipe } from '@angular/common';
 import { HeadTableComponent } from 'src/app/views/shared/components/head-table/head-table.component';
 import { UserControlsUpdateComponent } from '../../../shared/user-controls-update/user-controls-update.component';
 import { EmployeeService } from '../../employee.service';
+import { HeadPageComponent } from 'src/app/views/shared/components/head-page/head-page.component';
+import { ButtonLinkComponent } from 'src/app/views/shared/components/buttons/button-link/button-link.component';
+// import { ScheduleIndexComponent } from '@dashboard/schedules/schedule-index/schedule-index.component';
+import { ScheduleIndexComponent } from '@dashboard/schedules/schedule-index/schedule-index.component';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { ScheduleCreateComponent } from '../../../../schedules/schedule-create/schedule-create.component';
+import { EmployeeScheduleIndexComponent } from '../employee-schedule-index/employee-schedule-index.component';
 
 
 @Component({
@@ -17,31 +24,47 @@ import { EmployeeService } from '../../employee.service';
     ButtonComponent,
     UserControlsUpdateComponent,
     JsonPipe,
-    HeadTableComponent
+    HeadTableComponent,
+    HeadPageComponent,
+    ButtonLinkComponent,
+    ScheduleIndexComponent,
+    ScheduleCreateComponent,
+    EmployeeScheduleIndexComponent
   ],
   templateUrl: './employee-edit.component.html',
-  styleUrl: './employee-edit.component.scss'
+  styleUrl: './employee-edit.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
-export class EmployeeEditComponent implements OnDestroy{
+export class EmployeeEditComponent implements OnDestroy {
 
   disabledButton: boolean = false;
   loadingIcon: boolean = false;
   form!: FormGroup;
   @Input() employee!: any;
 
+  schedules: any[] = [];
+
   @Input() roles: any;
   faSave = faSave;
 
   constructor(
     private fb: FormBuilder,
-    private _employee: EmployeeService
+    private _employee: EmployeeService,
+    config: NgbModalConfig,
+    private modalService: NgbModal,
   ) {
+
+    config.backdrop = 'static';
+    config.keyboard = false;
 
     this.formInit();
 
     effect(() => {
 
       this.employee = this._employee.receiveSignal();
+
+      this.schedules = this.employee.schedules;
+
       console.log(this.employee);
       if (!this.employee) return;
 
@@ -55,7 +78,11 @@ export class EmployeeEditComponent implements OnDestroy{
         tag_sales: this.employee.tag_sales,
         roles: this.employee.user.roles,               // ya es array ['produccion','compras']
         salary: this.employee?.salary,    //aquí se anida el salario
-        comission: this.employee?.comission
+        type: this.employee?.type,    //aquí se anida el tipo
+        comission: this.employee?.comission,
+        work_time_start: this.employee?.work_time_start,
+        work_time_end: this.employee?.work_time_end,
+        auto_close_end_time: this.employee?.auto_close_end_time,
       });
 
     });
@@ -97,6 +124,7 @@ export class EmployeeEditComponent implements OnDestroy{
   }
 
   private formInit(): void {
+
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required]],
@@ -106,10 +134,26 @@ export class EmployeeEditComponent implements OnDestroy{
       status: ['', [Validators.required]],
       roles: ['', [Validators.required]],
       salary: ['', [Validators.required]],
+      type: ['fulltime', [Validators.required]],
+      work_time_start: ['', [Validators.required]],
+      work_time_end: ['', [Validators.required]],
+      auto_close_end_time: ['', [Validators.required]],
       tag_sales: [''],
       comission: [''],
     });
+
   }
 
+  modal: any;
+
+  openVerticallyCentered(content: TemplateRef<any>) {
+    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
+  }
+
+  closeModal() {
+    this.modal.close();
+  }
 
 }
+
+

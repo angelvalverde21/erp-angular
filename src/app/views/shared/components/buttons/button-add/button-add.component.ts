@@ -18,6 +18,8 @@ export class ButtonAddComponent {
 
   @Input() path: any; 
   @Input() color: string = 'success'; 
+  @Input() text_default: boolean = true; 
+
   
   // @Output() action = new EventEmitter<void>();
 

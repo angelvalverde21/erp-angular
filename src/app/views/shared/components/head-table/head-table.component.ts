@@ -53,9 +53,11 @@ export class HeadTableComponent implements OnInit, OnDestroy {
   @Input() button_active: boolean = true;
   @Input() is_redirect: boolean = true;
   @Input() box_search: boolean = true;
+  @Input() show_date: boolean = true;
   @Output() emitSearchResult = new EventEmitter<any>();
   @Output() emitLoadingStatus = new EventEmitter<boolean>();
   @Output() emitParams = new EventEmitter<{}>();
+
 
   private searchSubject = new Subject<string>();
 
@@ -118,14 +120,16 @@ export class HeadTableComponent implements OnInit, OnDestroy {
 
     this.formInit();
 
-    // this.form.valueChanges
-    //   .pipe(
-    //     debounceTime(500),
-    //     takeUntil(this.destroy$)
-    //   )
-    //   .subscribe(resp => {
-
-    //   });
+    this.form.valueChanges
+      .pipe(
+        debounceTime(500),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(resp => {
+        console.log(resp);
+        
+        this.search();
+      });
 
   }
 

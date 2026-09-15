@@ -11,6 +11,7 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PurchaseCardComponent } from '../../purchases/purchase-card/purchase-card.component';
 import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/button-edit/button-edit.component';
+import { ImagePreviewComponent } from 'src/app/views/shared/components/image-preview/image-preview.component';
 @Component({
   selector: 'tr[app-payment-index-row]',
   imports: [
@@ -22,7 +23,8 @@ import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/but
     FontAwesomeModule,
     PurchaseCardComponent,
     CommonModule,
-    ButtonEditComponent
+    ButtonEditComponent,
+    ImagePreviewComponent
   ],
   templateUrl: './payment-index-row.component.html',
   styleUrl: './payment-index-row.component.scss',

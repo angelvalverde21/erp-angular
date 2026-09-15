@@ -41,6 +41,14 @@ export class ShopifyOrderService extends BaseCrudDashboardService {
     });
   }
 
+  cash(cursor?: string) {
+    return this.http.get<any[]>(`${this.baseUrl}/cash`, {
+      params: {
+        ...(cursor && { cursor })
+      }
+    });
+  }
+
 
 }
 

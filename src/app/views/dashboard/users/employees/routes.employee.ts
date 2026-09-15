@@ -38,6 +38,12 @@ export const routes: Routes = [
         data: { title: 'Informacion de colaborador' }
       },
       {
+        path: 'schedules',
+        loadComponent: () =>
+          import('./employee-edit-page/employee-schedule-index/employee-schedule-index.component').then(m => m.EmployeeScheduleIndexComponent),
+        data: { title: 'Horarios de colaborador' }
+      },
+      {
         path: 'salaries',
         loadComponent: () =>
           import('./employee-edit-page/employee-salary-index/employee-salary-index.component').then(m => m.EmployeeSalaryIndexComponent),

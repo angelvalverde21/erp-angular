@@ -41,6 +41,13 @@ export const routes: Routes = [
         (m) => m.routes
       ),
   },
+  {
+    path: 'acquires',
+    loadChildren: () =>
+      import('./acquires/routes.acquire').then(
+        (m) => m.routes
+      ),
+  },
 
   {
     path: 'manufactures',
@@ -95,9 +102,15 @@ export const routes: Routes = [
     // canActivate: [authGuard],
   },
   {
-    path: 'mercadopago',
+    path: 'pasarelas',
     loadChildren: () =>
       import('./mercadopago/routes.mercadopago').then((m) => m.routes),
+    // canActivate: [authGuard],
+  },
+  {
+    path: 'yapes',
+    loadChildren: () =>
+      import('./yapes/routes.yape').then((m) => m.routes),
     // canActivate: [authGuard],
   },
   {

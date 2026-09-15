@@ -1,4 +1,6 @@
 export interface SummaryPurchase {
+
+    created_at?: string;     // Fecha de creación del pedido
     cost?: number;             // Costo por unidad
     sum_variants?: number;   // Cantidad total de productos
     count_variants?: number;   // Cantidad total de productos

@@ -2,13 +2,14 @@
 import { InputGroupComponent } from '@shared/components/form/input-group/input-group.component';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { InventoryVariantIndexComponent } from '../inventory-variant-index/inventory-variant-index.component';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { debounceTime, filter, Subject, takeUntil } from 'rxjs';
 import { ProductService } from '../../../products/product.service';
 import Swal from 'sweetalert2';
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import { VoidIndexComponent } from '@shared/components/void-index/void-index.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { ButtonAddComponent } from 'src/app/views/shared/components/buttons/button-add/button-add.component';
 
 @Component({
   selector: 'app-inventory-variant-search',
@@ -19,7 +20,8 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
     ButtonComponent,
     ReactiveFormsModule,
     VoidIndexComponent,
-    LoadingComponent
+    LoadingComponent,
+    ButtonAddComponent
   ],
   templateUrl: './inventory-variant-search.component.html',
   styleUrl: './inventory-variant-search.component.scss'
@@ -45,19 +47,18 @@ export class InventoryVariantSearchComponent implements OnInit {
   loading: boolean = false;
 
   ngOnInit(): void {
-
     this.form = this.fb.group({
-      search: ['']
+      search: ['', Validators.required]
     });
 
-    // this.search$
-    //   .pipe(debounceTime(300))
-    //   .subscribe(value => {
-    //     this.getSearch(value);
-    //   });
-    this.form.get('search')?.valueChanges.pipe(debounceTime(300)).subscribe(value => {
-      this.getSearch();
-    });
+    this.form.get('search')?.valueChanges
+      .pipe(
+        debounceTime(300)
+        // filter(value => value?.trim().length > 0)
+      )
+      .subscribe(() => {
+        this.getSearch();
+      });
   }
 
   faMagnifyingGlass = faMagnifyingGlass;
@@ -134,7 +135,7 @@ export class InventoryVariantSearchComponent implements OnInit {
 
   inventoryVariantsSelected: any;
 
-  receiveInventoryVariantsSelected(inventoryVariantsSelected: any){
+  receiveInventoryVariantsSelected(inventoryVariantsSelected: any) {
     // this.emitInventoryVariantsSelected.emit(inventoryVariantsSelected);
     console.log("Received variants selected:", inventoryVariantsSelected);
     this.inventoryVariantsSelected = inventoryVariantsSelected;

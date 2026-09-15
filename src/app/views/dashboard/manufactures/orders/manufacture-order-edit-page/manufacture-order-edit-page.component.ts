@@ -93,6 +93,7 @@ export class ManufactureOrderEditPageComponent implements OnInit {
 
         //Este valor se envia por signals
         this.summary = {
+          created_at: this.manufacture.created_at,
           sum_variants: this.manufacture.sum_variants,
           sum_kardexes: this.manufacture.sum_kardexes,
           sum_payments: this.manufacture.sum_payments,

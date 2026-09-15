@@ -91,7 +91,7 @@ export class OptionValueCreateComponent implements OnInit {
     this._option_value.store(null, null, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
-        Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         console.log(resp);
         this.option_value = resp.data;
         this.loading = false;

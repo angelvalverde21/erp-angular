@@ -3,14 +3,14 @@
 }@else{
 
 <app-head-page title="Ordenes de compra" [icon]="faBoxesStacked">
-    <app-button-link [path]="['./create']">+ Orden de Compra</app-button-link>
+    <app-button-link [path]="['./create']">+ Orden</app-button-link>
 </app-head-page>
 
 <div class="card">
 
-    <!-- <div class="card-header py-3">
-        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)"  type="manufacture_order" [button_active]="false"></app-user-head-table>
-    </div> -->
+    <div class="card-header py-3">
+        <app-head-search (emitSearchResult)="receiveSearchResult($event)" [is_redirect]="false"  type="manufacture_order" [button_active]="false" />
+    </div>
 
     <div class="card-body p-0">
         @if(manufactures?.length > 0){

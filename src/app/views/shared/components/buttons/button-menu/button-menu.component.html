@@ -1,0 +1,30 @@
+<div ngbDropdown class="d-inline-block">
+
+    <app-button-edit id="dropdownBasic1" ngbDropdownToggle></app-button-edit>
+    <!-- <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
+                <fa-icon [icon]="faEllipsis"></fa-icon>
+            </button> -->
+    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+
+        @for (menu of menus; track $index) {
+
+        <button ngbDropdownItem [routerLink]="menu.routerLink">
+            <fa-icon [icon]="menu.icon" class="me-2"></fa-icon>
+            {{ menu.label }}
+        </button>
+
+        @if(menu.divider){
+            <div class="dropdown-divider"></div>
+        }
+
+        }
+
+        <div class="dropdown-divider"></div>
+
+        <!-- <button type="button" class="" ngbDropdownItem><fa-icon [icon]="faEdit" class="me-2"></fa-icon>Editar</button> -->
+        <button type="button" class="text-danger" ngbDropdownItem><fa-icon [icon]="faTrash"
+                class="me-2"></fa-icon>Borrar</button>
+
+    </div>
+
+</div>

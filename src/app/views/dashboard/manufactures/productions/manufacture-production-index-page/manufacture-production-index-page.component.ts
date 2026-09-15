@@ -8,6 +8,7 @@ import { faGears } from '@fortawesome/free-solid-svg-icons';
 import { HeadTableComponent } from '@shared/components/head-table/head-table.component';
 import { ManufactureProductionIndexComponent } from '../manufacture-production-index/manufacture-production-index.component';
 import { ManufactureProductionService } from '../manufacture.production.service';
+import { HeadSearchComponent } from 'src/app/views/shared/components/head-search/head-search.component';
 
 @Component({
   selector: 'app-manufacture-production-index-page',
@@ -17,7 +18,7 @@ import { ManufactureProductionService } from '../manufacture.production.service'
     ButtonBackComponent,
     LoadingComponent,
     ButtonLinkComponent,
-    HeadTableComponent,
+    HeadSearchComponent,
   ],
   templateUrl: './manufacture-production-index-page.component.html',
   styleUrl: './manufacture-production-index-page.component.scss'
