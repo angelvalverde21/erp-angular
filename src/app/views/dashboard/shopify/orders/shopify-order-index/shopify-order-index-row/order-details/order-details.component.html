@@ -2,9 +2,13 @@
   <fa-icon [icon]="faEllipsis"></fa-icon>
 </button>
 <ng-template #content let-modal>
-  <div class="modal-header">
+  <div class="modal-header d-flex justify-content-between align-items-center">
     <h6 class="modal-title">Order: {{ order.name }}</h6>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    <div class="">
+      <span class="me-2">Creado {{ order.createdAt | DateShopify }}</span>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
   </div>
   <div class="modal-body">
     <app-menu-button [order]="order"></app-menu-button>

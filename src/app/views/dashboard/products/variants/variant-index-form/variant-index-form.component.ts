@@ -23,6 +23,7 @@ import {
 import { ImagePreviewComponent } from '../../../../shared/components/image-preview/image-preview.component';
 import { debounceTime, distinctUntilChanged, filter, Subscription } from 'rxjs';
 import { PenPipe } from '../../../../shared/pipes/pen.pipe';
+import { ImageShopifyComponent } from '../../../../shared/components/image-shopify/image-shopify.component';
 @Component({
   selector: 'app-variant-index-form',
   imports: [
@@ -33,6 +34,7 @@ import { PenPipe } from '../../../../shared/pipes/pen.pipe';
     ReactiveFormsModule,
     ImagePreviewComponent,
     PenPipe,
+    ImageShopifyComponent
   ],
   templateUrl: './variant-index-form.component.html',
   styleUrl: './variant-index-form.component.scss',
