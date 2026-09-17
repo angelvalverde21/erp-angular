@@ -55,6 +55,8 @@ export class CourierEditPageComponent implements OnInit, OnDestroy {
 
     this.route.params.subscribe(params => {
       this.courier_id = params['courier_id'];
+      console.log(this.courier_id);
+      
     });
   }
 

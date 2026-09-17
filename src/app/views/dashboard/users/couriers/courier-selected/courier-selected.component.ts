@@ -159,7 +159,7 @@ export class CourierSelectedComponent
       .subscribe((resp: any) => {
 
         console.log(resp.data);
-        
+
         this.couriers = resp.data;
         this.loading = false;
 

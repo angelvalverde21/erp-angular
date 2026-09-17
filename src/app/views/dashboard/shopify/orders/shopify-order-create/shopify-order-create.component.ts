@@ -95,8 +95,7 @@ export class ShopifyOrderCreateComponent {
       variants: this.fb.array([]), // Aquí se agregarán los variants del pedido
       courier_address_id: [null, Validators.required],
       delivery_cost: ['', Validators.required],
-      quantity: ['', Validators.required],
-      price: ['', Validators.required],
+      shipping_method: [null, Validators.required],
     });
 
   }

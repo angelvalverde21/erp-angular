@@ -20,7 +20,7 @@ export const navItems: CustomNavData[] = buildNav([
   // ...navInventory,
   ...navErp,
   // ...navMarketing,
-  // ...navConfig,
+  ...navConfig,
   // ...navAcquires,
   ...navShopify,
   ...navPasarelas,

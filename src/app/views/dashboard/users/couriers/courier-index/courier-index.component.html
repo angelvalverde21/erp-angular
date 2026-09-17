@@ -13,21 +13,21 @@
         </thead>
         <tbody>
 
-            @for (user of couriers; track user.id) {
+            @for (courrier of couriers; track courrier.user.id) {
 
-            <tr (click)="getCourierId(user.id)">
-                <td class="text-center">{{ user.id }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.document_number }}</td>
-                <td>{{ user.phone }}</td>
+            <tr (click)="getCourierId(courrier.id)">
+                <td class="text-center">{{ courrier.id }}</td>
+                <td>{{ courrier.user.name }}</td>
+                <td>{{ courrier.user.document_number }}</td>
+                <td>{{ courrier.user.phone }}</td>
                                 <td>
-                    @if(user.status){
+                    @if(courrier.user.status){
                         <span class="badge text-bg-secondary text-white">Activo</span>
                     }@else{
                         <span class="badge text-bg-danger text-white">Bloqueado</span>
                     }
                 </td>
-                <td>{{ user.created_at | DateShopify }}</td>
+                <td>{{ courrier.user.created_at | DateShopify }}</td>
                 <td class="text-center">
                     <div class="controls d-flex justify-content-center align-items-center">
                     </div>
