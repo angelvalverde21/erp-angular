@@ -41,9 +41,9 @@
             <select class="form-select mb-3" aria-label="Default select example" formControlName="shipping_method">
             
                 <option [value]="null">Seleccione</option>
-                <option value="1">Envio Express (1 a 2 dias)</option>
-                <option value="2">Envio por Agencia (2 a 5 dias)</option>
-                <option value="3">Recojo en tienda</option>
+                <option value="express_delivery">Envio Express</option>
+                <option value="agency_delivery">Envio por Agencia</option>
+                <option value="store_pickup">Recojo en tienda</option>
             
             </select>
 
@@ -61,15 +61,8 @@
 
                 </div>
                 }
-                @if(is_express_shipping){
-                <div class="col-lg-6 col-md-6 col-12">
-                    <app-button-check class="w-100 mb-3">
-                        Delivery Express
-                    </app-button-check>
-                </div>
-                }
                 @if(is_freight_collect){
-                <div class="col-lg-12 col-md-12 col-12">
+                <div class="col-lg-6 col-md-12 col-12">
                     <app-button-check class="w-100 mb-3">
                         Pago en destino
                     </app-button-check>
@@ -95,10 +88,7 @@
                 </div>
             </div>
 
-            <div class="controls d-flex justify-content-end">
-                <button type="button" class="btn btn-primary btn-sm"
-                    (click)="accordion.toggle('fourth')">Siguiente</button>
-            </div>
+
         </div>
     </div>
 

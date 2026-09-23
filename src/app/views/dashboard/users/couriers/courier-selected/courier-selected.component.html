@@ -1,6 +1,7 @@
 @if(loading){
 <app-loading></app-loading>
 }@else{
+
 <ng-select [items]="couriers" bindLabel="name" bindValue="id" [clearable]="false" [disabled]="isDisabled"
     [ngModel]="courier_id" (ngModelChange)="setCourier($event)" placeholder="Selecciona courier" class="mb-3">
 
@@ -18,7 +19,9 @@
 
 </ng-select>
 
+
 @if(showSelectedAddress){
+<label for="courier_address_c" class="mb-2">Seleccionar Oficina</label>
 
 <ng-select [items]="addresses" bindLabel="primary" bindValue="id" [clearable]="false" [disabled]="isDisabled"
     [ngModel]="courier_address_id" (ngModelChange)="setCourierAddress($event)" placeholder="Selecciona Sucursal"
