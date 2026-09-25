@@ -21,6 +21,8 @@ import { StatusPayComponent } from '../status-pay/status-pay.component';
 import { ShopifyTagsComponent } from '../shopify-tags/shopify-tags.component';
 import { MenuButtonComponent } from './menu-button/menu-button.component';
 import { ShopifyShippingStatusComponent } from '../shopify-shipping-status/shopify-shipping-status.component'
+import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
+
 
 @Component({
   selector: 'app-order-details',
@@ -36,7 +38,8 @@ import { ShopifyShippingStatusComponent } from '../shopify-shipping-status/shopi
     StatusPayComponent,
     ShopifyTagsComponent,
     MenuButtonComponent,
-    ShopifyShippingStatusComponent
+    ShopifyShippingStatusComponent,
+    DateShopifyPipe
   ],
   templateUrl: './order-details.component.html',
   styleUrl: './order-details.component.scss',

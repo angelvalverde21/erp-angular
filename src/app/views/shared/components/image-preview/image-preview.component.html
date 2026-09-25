@@ -1,4 +1,4 @@
-<a data-fancybox="gallery" [attr.data-caption]="`${ title}`" [href]="image?.url_thumbnail">
-    <img [src]="image?.url_medium || 'assets/images/300x300.svg'" (error)="onImageError($event)" class="me-2"
+<a data-fancybox="gallery" [attr.data-caption]="`${ title}`" [href]="image?.url_medium">
+    <img [src]="image?.url_thumbnail || 'assets/images/300x300.svg'" (error)="onImageError($event)" class="me-2"
         [height]="height" alt="">
 </a>

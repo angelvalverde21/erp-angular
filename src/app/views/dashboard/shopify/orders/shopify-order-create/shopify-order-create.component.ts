@@ -39,7 +39,6 @@ import { TwoDecimalsDirective } from 'src/app/core/directives/two-decimals.direc
     ButtonSaveComponent,
     ButtonCheckComponent,
     TwoDecimalsDirective,
-    
   ],
   templateUrl: './shopify-order-create.component.html',
   styleUrl: './shopify-order-create.component.scss',
@@ -96,8 +95,7 @@ export class ShopifyOrderCreateComponent {
       variants: this.fb.array([]), // Aquí se agregarán los variants del pedido
       courier_address_id: [null, Validators.required],
       delivery_cost: ['', Validators.required],
-      quantity: ['', Validators.required],
-      price: ['', Validators.required],
+      shipping_method: [null, Validators.required],
     });
 
   }
@@ -127,7 +125,7 @@ export class ShopifyOrderCreateComponent {
   get variants(): FormArray<FormGroup> {
     return this.form.get('variants') as FormArray<FormGroup>;
   }
-  
+
   variants_selected: any[] = []; // Aquí se almacenarán los variants seleccionados
 
   //Variantes seleccionadas
@@ -174,9 +172,22 @@ export class ShopifyOrderCreateComponent {
   receiveCourierSelected(courier: any) {
     console.log('Courier seleccionado', courier);
 
-      this.is_cash_on_delivery = courier.is_cash_on_delivery;
-      this.is_express_shipping = courier.is_express_shipping;
-      this.is_freight_collect = courier.is_freight_collect;
+    this.is_cash_on_delivery = courier.is_cash_on_delivery;
+    this.is_express_shipping = courier.is_express_shipping;
+    this.is_freight_collect = courier.is_freight_collect;
 
   }
+
+  // Controles para guardar los datos del pedido
+
+  @ViewChild('accordion') accordion: any;
+
+  onNextButtonClick() {
+    // Tu lógica aquí
+    console.log('Botón Siguiente clickeado');
+    
+    // Toggle del accordion
+    this.accordion.toggle('second');
+  }
+  
 }

@@ -3,13 +3,15 @@ import { Fancybox } from '@fancyapps/ui';
 import { ShopifyImageThumbnailPipe } from '../../pipes/shopify/shopify-image-thumbnail.pipe';
 import { ShopifyImageMediumPipe } from '../../pipes/shopify/shopify-image-medium.pipe';
 import { ShopifyImageLargePipe } from '../../pipes/shopify/shopify-image-large.pipe';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-image-preview',
   imports: [
     ShopifyImageThumbnailPipe,
     ShopifyImageMediumPipe,
-    ShopifyImageLargePipe
+    ShopifyImageLargePipe,
+    JsonPipe,
   ],
   templateUrl: './image-preview.component.html',
   styleUrl: './image-preview.component.scss'

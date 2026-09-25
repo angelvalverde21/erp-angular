@@ -23,6 +23,7 @@ import Swal from 'sweetalert2';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CourierService } from '../courier.service';
+import { StoreService } from '../../../../stores/store.service';
 @Component({
   selector: 'app-courier-selected',
   standalone: true,
@@ -60,7 +61,10 @@ export class CourierSelectedComponent
   onChangeCb: (value: number | null) => void = () => { };
   onTouchedCb: () => void = () => { };
 
-  constructor(private _courier: CourierService) { }
+  constructor(
+    private _courier: CourierService,
+    private _store: StoreService
+  ) { }
 
   ngOnInit() {
     this.courierInit();
@@ -122,6 +126,9 @@ export class CourierSelectedComponent
 
   setCourier(courierId: number) {
 
+    console.log(courierId);
+
+
     this.courier_id = courierId;
 
     this.showSelectedAddress = true;
@@ -131,6 +138,95 @@ export class CourierSelectedComponent
     // this.onTouchedCb();
     this.emitCourierSelected.emit(this.couriers.find(courier => courier.id === courierId));
 
+  }
+
+  typeShipping: string | null = null;
+
+  onTypeChange(type_courier: string | null) {
+
+
+    this.courier_id = null;
+
+    // let courierId: number | null = null;
+    console.log('cambió a:', type_courier);
+
+    switch (type_courier) {
+
+      case 'express_delivery':
+
+        this._courier.express().pipe(takeUntil(this.destroy$)).subscribe({
+
+          next: (resp: any) => {
+            console.log(resp);
+            this.couriers = resp.data;
+            this.setCourierDefault();
+            this.loading = false;
+          },
+
+          error: (error: any) => {
+            this.loading = false;
+            Swal.fire('Error', 'Ocurrió un problema al cargar los datos. Inténtalo nuevamente.', 'error');
+            console.error(error);
+          },
+
+        });
+
+        break;
+
+      case 'agency_delivery':
+        this._courier.agency().pipe(takeUntil(this.destroy$)).subscribe({
+          next: (resp: any) => {
+            console.log(resp);
+            this.couriers = resp.data;
+            this.setCourierDefault();
+            this.loading = false;
+          },
+          error: (error: any) => {
+            this.loading = false;
+            Swal.fire('Error', 'Ocurrió un problema al cargar los datos. Inténtalo nuevamente.', 'error');
+            console.error(error);
+          }
+        });
+        break;
+
+      case 'store_pickup':
+
+        this._store.current().pipe(takeUntil(this.destroy$)).subscribe({
+
+          next: (resp: any) => {
+            console.log(resp);
+            this.couriers = resp.data;
+            this.setCourierDefault();
+            this.loading = false;
+          },
+
+          error: (error: any) => {
+            Swal.fire('Error', 'Ocurrió un problema al cargar los datos. Inténtalo nuevamente.', 'error');
+            console.error(error);
+            this.loading = false;
+          }
+
+        });
+
+        break;
+
+    }
+
+
+
+  }
+
+  setCourierDefault() {
+    this.courier_id = this.couriers.length > 0 ? this.couriers[0].id : null;
+    this.addresses = this.couriers[0].addresses || [];
+    console.log(this.addresses);
+    
+    this.courier_address_id = this.addresses.length > 0 ? this.addresses[0].id : null;
+    console.log(this.courier_address_id);
+    
+    this.setCourierAddress(this.courier_address_id);
+
+    this.showSelectedAddress = true;
   }
 
   loadingCourierAddress: boolean = false;
@@ -159,7 +255,7 @@ export class CourierSelectedComponent
       .subscribe((resp: any) => {
 
         console.log(resp.data);
-        
+
         this.couriers = resp.data;
         this.loading = false;
 

@@ -1,5 +1,115 @@
 <form [formGroup]="form">
-    <div ngbAccordion #accordion="ngbAccordion" [closeOthers]="true">
+
+    <div class="card mb-3">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold">Direcci&oacute;n de envio</h6>
+        </div>
+        <div class="card-body">
+            <app-address-form></app-address-form>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold">Productos</h6>
+            <app-button-add color="primary" (click)="openVerticallyCentered(content)">Productos</app-button-add>
+
+        </div>
+        <div class="card-body">
+
+            @if(variants.length === 0){
+            <app-void-index></app-void-index>
+            }@else{
+            <div class="mb-3">
+                <app-order-variant-index [variants]="variants"></app-order-variant-index>
+            </div>
+
+            }
+        </div>
+
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold">Metodo de envio o recojo</h6>
+        </div>
+        <div class="card-body">
+
+
+            <label for="courier_address_id" class="mb-2">Seleccionar Courier</label>
+            <app-courier-selected formControlName="courier_address_id"
+                (emitCourierSelected)="receiveCourierSelected($event)"></app-courier-selected>
+
+            <div class="row">
+
+                @if(is_cash_on_delivery){
+                <div class="col-lg-6 col-md-6 col-12">
+                    <app-button-check class="w-100 mb-3">
+                        Contra Entrega
+                    </app-button-check>
+
+                </div>
+                }
+                @if(is_freight_collect){
+                <div class="col-lg-6 col-md-12 col-12">
+                    <app-button-check class="w-100 mb-3">
+                        Pago en destino
+                    </app-button-check>
+                </div>
+                }
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-6 col-md-6 col-12">
+                    <app-input-group [icon]="faDolly" text="Costo de Traslado">
+                        <input formControlName="delivery_cost" type="number" class="form-control" placeholder="0.00"
+                            aria-label="delivery_cost" aria-describedby="basic-delivery_cost" twoDecimals />
+                    </app-input-group>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-12">
+                    <app-input-group [icon]="faTruck" text="Costo de envio">
+                        <input formControlName="delivery_cost" type="number" class="form-control" placeholder="0.00"
+                            aria-label="delivery_cost" aria-describedby="basic-delivery_cost" twoDecimals />
+                    </app-input-group>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold">Resumen de pagos</h6>
+        </div>
+        <div class="card-body p-0 my-0">
+            <ul class="list-group list-group-flush" style="border-radius: 5px;">
+
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>Sub Total</span>
+                    <h6>{{ summary?.subTotal ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>IGV</span>
+                    <h6>{{ summary?.igv ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>Envio</span>
+                    <h6>{{ summary?.delivery ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                    <span>Total</span>
+                    <h5>{{ summary?.total ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h5>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- <div ngbAccordion #accordion="ngbAccordion" [closeOthers]="true">
         <div ngbAccordionItem="first" [collapsed]="false">
             <h2 ngbAccordionHeader>
                 <button ngbAccordionButton>
@@ -12,7 +122,7 @@
                         <app-address-form></app-address-form>
                         <div class="controls d-flex justify-content-end">
                             <button type="button" class="btn btn-primary btn-sm"
-                                (click)="accordion.toggle('second')">Siguiente</button>
+                                (click)="onNextButtonClick()">Siguiente</button>
                         </div>
                     </ng-template>
                 </div>
@@ -157,9 +267,9 @@
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </div> -->
 
+</form>
 
 <!-- <pre>
     {{ form.value | json }}

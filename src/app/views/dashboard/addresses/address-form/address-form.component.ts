@@ -1,5 +1,5 @@
 import { CommonModule, JsonPipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { faHome, faUser, faPhone, faImagePortrait, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { InputDistrictIdComponent } from '../input-district-id/input-district-id.component';
 import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
@@ -38,6 +38,11 @@ export class AddressFormComponent {
   get form(): FormGroup {
     return this.controlContainer.control as FormGroup;
   }
+
+  @Output() formValue = new EventEmitter<any>();
+
+  
+  
 
   isInvalid(controlName: string): boolean {
     const control = this.form.get(controlName);
