@@ -24,6 +24,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CourierService } from '../courier.service';
 import { StoreService } from '../../../../stores/store.service';
+import { BaseService } from '../../../../base.service';
 @Component({
   selector: 'app-courier-selected',
   standalone: true,
@@ -63,7 +64,7 @@ export class CourierSelectedComponent
 
   constructor(
     private _courier: CourierService,
-    private _store: StoreService
+    private _base: BaseService
   ) { }
 
   ngOnInit() {
@@ -191,7 +192,7 @@ export class CourierSelectedComponent
 
       case 'store_pickup':
 
-        this._store.current().pipe(takeUntil(this.destroy$)).subscribe({
+        this._base.stores().pipe(takeUntil(this.destroy$)).subscribe({
 
           next: (resp: any) => {
             console.log(resp);

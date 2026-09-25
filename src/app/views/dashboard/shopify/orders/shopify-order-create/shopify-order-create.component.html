@@ -4,7 +4,7 @@
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold">Direcci&oacute;n de envio</h6>
         </div>
-        <div class="card-body">
+        <div class="card-body pt-4 pb-3 px-4">
             <app-address-form></app-address-form>
         </div>
     </div>
@@ -31,12 +31,12 @@
     </div>
 
     <div class="card mb-3">
+
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold">Metodo de envio o recojo</h6>
         </div>
-        <div class="card-body">
 
-
+        <div class="card-body pt-4 pb-3 px-4">
             <label for="courier_address_id" class="mb-2">Seleccionar Courier</label>
             <app-courier-selected formControlName="courier_address_id"
                 (emitCourierSelected)="receiveCourierSelected($event)"></app-courier-selected>

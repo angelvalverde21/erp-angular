@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Resp } from '../interfaces/response.interface';
 import { Store } from '../interfaces/store.interface';
-
+import { API } from '../environments/environment';
 
 @Injectable({
     providedIn: 'root',
@@ -56,7 +56,7 @@ export class BaseService {
     }
 
     stores(): Observable<any[]> {
-        const url = `${this.baseUrl}/current`;
+        const url = `${API.private}/${this.store}/dashboard/current`;
         console.log(url);
         return this.http.get<any[]>(`${url}`);
     }
