@@ -2,6 +2,20 @@
 <app-loading></app-loading>
 }@else{
 
+<label for="courier_address_id" class="mb-2">Seleccione Metodo de envio</label>
+
+<select class="form-select mb-3" aria-label="Seleccione tipo de envío" class="form-select mb-3"
+    [(ngModel)]="typeShipping" name="typeShipping" (ngModelChange)="onTypeChange($event)">
+    <option [ngValue]="null">Seleccione</option>
+    <option [ngValue]="'express_delivery'">Envio Express</option>
+    <option [ngValue]="'agency_delivery'">Envio por Agencia</option>
+    <option [ngValue]="'store_pickup'">Recojo en tienda</option>
+</select>
+
+@if(courier_id){
+
+<label for="courier_address_c" class="mb-2">Tienda</label>
+
 <ng-select [items]="couriers" bindLabel="name" bindValue="id" [clearable]="false" [disabled]="isDisabled"
     [ngModel]="courier_id" (ngModelChange)="setCourier($event)" placeholder="Selecciona courier" class="mb-3">
 
@@ -13,15 +27,17 @@
 
     <ng-template ng-label-tmp let-item="item">
         <div class="d-flex align-items-center gap-2">
-            <span>{{ item.name }}</span>
+            <span>{{ item.name | uppercase }}</span>
         </div>
     </ng-template>
 
 </ng-select>
 
+}
 
 @if(showSelectedAddress){
-<label for="courier_address_c" class="mb-2">Seleccionar Oficina</label>
+
+<label for="courier_address_c" class="mb-2">Sucursal</label>
 
 <ng-select [items]="addresses" bindLabel="primary" bindValue="id" [clearable]="false" [disabled]="isDisabled"
     [ngModel]="courier_address_id" (ngModelChange)="setCourierAddress($event)" placeholder="Selecciona Sucursal"

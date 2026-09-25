@@ -36,16 +36,6 @@
         </div>
         <div class="card-body">
 
-            <label for="courier_address_id" class="mb-2">Seleccione Metodo de envio</label>
-
-            <select class="form-select mb-3" aria-label="Default select example" formControlName="shipping_method">
-            
-                <option [value]="null">Seleccione</option>
-                <option value="express_delivery">Envio Express</option>
-                <option value="agency_delivery">Envio por Agencia</option>
-                <option value="store_pickup">Recojo en tienda</option>
-            
-            </select>
 
             <label for="courier_address_id" class="mb-2">Seleccionar Courier</label>
             <app-courier-selected formControlName="courier_address_id"
