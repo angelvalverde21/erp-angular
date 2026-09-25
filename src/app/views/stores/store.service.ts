@@ -9,20 +9,14 @@ import { BaseCrudDashboardService } from '../dashboard/base-crud-dashboard.servi
 @Injectable({
   providedIn: 'root',
 })
-export class StoreService extends BaseCrudDashboardService {
+export class StoreService extends CrudService {
 
   constructor(http: HttpClient) {
 
-    super(http, 'stores');
+   const url = environment.apiStore;
+
+   super(http, url);
     
-  }
-
-  current(): Observable<any> {
-
-    const url = `${this.baseUrl}/current`;
-    console.log("hola");
-    console.log(url);
-    return this.http.get(`${url}`);
   }
 
 }

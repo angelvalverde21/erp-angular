@@ -55,4 +55,10 @@ export class BaseService {
         localStorage.setItem('store_name', store.slug);
     }
 
+    stores(): Observable<any[]> {
+        const url = `${this.baseUrl}/current`;
+        console.log(url);
+        return this.http.get<any[]>(`${url}`);
+    }
+
 }
