@@ -1,10 +1,10 @@
 <form [formGroup]="form">
-    <div class="row mb-3">
+    <div class="row">
 
         <!-- {{ addressForm.valid }} -->
 
         <div class="col-lg-12 col-12">
-            <app-input-group [icon]="faUser" text="Nombre completo">
+            <app-input-group [icon]="faUser" text="">
                 <input formControlName="name" type="text" inputmode="numeric" class="form-control is-required"
                     [ngClass]="isInvalid('name') ? 'is-invalid' : ''" placeholder="* Nombre completo" aria-label="name"
                     aria-describedby="Nombre completo">
@@ -60,7 +60,7 @@
             <textarea id="" formControlName="references" [ngClass]="isInvalid('references') ? 'is-invalid' : '' "
                 class="form-control mb-3" placeholder="Referencia"></textarea>
         </div>
-        {{ form.value | json }}
+        <!-- {{ form.value | json }} -->
 
     </div>
 
