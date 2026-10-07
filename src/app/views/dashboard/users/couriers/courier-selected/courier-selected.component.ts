@@ -129,7 +129,6 @@ export class CourierSelectedComponent
 
     console.log(courierId);
 
-
     this.courier_id = courierId;
 
     this.showSelectedAddress = true;
@@ -144,7 +143,6 @@ export class CourierSelectedComponent
   typeShipping: string | null = null;
 
   onTypeChange(type_courier: string | null) {
-
 
     this.courier_id = null;
 
@@ -213,11 +211,10 @@ export class CourierSelectedComponent
 
     }
 
-
-
   }
 
   setCourierDefault() {
+
     this.courier_id = this.couriers.length > 0 ? this.couriers[0].id : null;
     this.addresses = this.couriers[0].addresses || [];
     console.log(this.addresses);
@@ -228,6 +225,7 @@ export class CourierSelectedComponent
     this.setCourierAddress(this.courier_address_id);
 
     this.showSelectedAddress = true;
+
   }
 
   loadingCourierAddress: boolean = false;
@@ -237,9 +235,7 @@ export class CourierSelectedComponent
   setCourierAddress(courier_address_id: any) {
 
     this.courier_address_id = courier_address_id;
-
     // this.showSelectedAddress = true;
-
     this.onChangeCb(courier_address_id);
     this.onTouchedCb();
 
@@ -256,7 +252,6 @@ export class CourierSelectedComponent
       .subscribe((resp: any) => {
 
         console.log(resp.data);
-
         this.couriers = resp.data;
         this.loading = false;
 
@@ -289,12 +284,8 @@ export class CourierSelectedComponent
   private AddressInit(courierId: number) {
 
     console.log(courierId);
-
     const courier = this.couriers.find(courier => courier.id === courierId);
-
-
     this.addresses = courier?.addresses || [];
-
     this.courier_address_id = this.addresses.length > 0 ? this.addresses[0].id : null;
     this.setCourierAddress(this.courier_address_id); //seteamos el primer valor para que se muestre en el select de direcciones
 

@@ -170,6 +170,7 @@ export class ShopifyOrderCreateComponent {
   is_freight_collect: boolean = false;
 
   receiveCourierSelected(courier: any) {
+    
     console.log('Courier seleccionado', courier);
 
     this.is_cash_on_delivery = courier.is_cash_on_delivery;
