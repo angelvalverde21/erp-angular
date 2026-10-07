@@ -84,18 +84,19 @@ export class ShopifyOrderCreateComponent {
     // });
 
     this.form = this.fb.group({
-      name: ['', Validators.required],
+      name: ['Angel Valverde', Validators.required],
       identity_id: [1, Validators.required],
-      document_number: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-      primary: ['', Validators.required],
-      secondary: [''],
-      references: [''],
-      district_id: ['', Validators.required],
+      document_number: ['42412498', Validators.required],
+      phone: ['943402809', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      primary: ['Urb Albino Herrera MZ H LT 16', Validators.required],
+      secondary: ['1era etapa Callao'],
+      references: ['Altura de la cuadra 8 de avenida pacasmayo'],
+      district_id: ['70101', Validators.required],
       variants: this.fb.array([]), // Aquí se agregarán los variants del pedido
       courier_address_id: [null, Validators.required],
       delivery_cost: ['', Validators.required],
-      shipping_method: [null, Validators.required],
+      is_cod: [null, Validators.required],
+      freight_collect: [null, Validators.required],
     });
 
   }
@@ -165,16 +166,14 @@ export class ShopifyOrderCreateComponent {
   }
 
 
-  is_cash_on_delivery: boolean = false;
-  is_express_shipping: boolean = false;
-  is_freight_collect: boolean = false;
+  is_cod: boolean = false;
+  freight_collect: boolean = false;
 
   receiveCourierSelected(courier: any) {
-    console.log('Courier seleccionado', courier);
 
-    this.is_cash_on_delivery = courier.is_cash_on_delivery;
-    this.is_express_shipping = courier.is_express_shipping;
-    this.is_freight_collect = courier.is_freight_collect;
+    console.log('Courier seleccionado', courier);
+    this.is_cod = courier.is_cod;
+    this.freight_collect = courier.freight_collect;
 
   }
 

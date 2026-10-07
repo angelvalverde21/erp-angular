@@ -41,41 +41,36 @@
             <app-courier-selected formControlName="courier_address_id"
                 (emitCourierSelected)="receiveCourierSelected($event)"></app-courier-selected>
 
-            <div class="row">
-
-                @if(is_cash_on_delivery){
-                <div class="col-lg-6 col-md-6 col-12">
-                    <app-button-check class="w-100 mb-3">
-                        Contra Entrega
-                    </app-button-check>
-
-                </div>
-                }
-                @if(is_freight_collect){
-                <div class="col-lg-6 col-md-12 col-12">
-                    <app-button-check class="w-100 mb-3">
-                        Pago en destino
-                    </app-button-check>
-                </div>
-                }
-
-            </div>
 
             <div class="row">
 
-                <div class="col-lg-6 col-md-6 col-12">
-                    <app-input-group [icon]="faDolly" text="Costo de Traslado">
-                        <input formControlName="delivery_cost" type="number" class="form-control" placeholder="0.00"
-                            aria-label="delivery_cost" aria-describedby="basic-delivery_cost" twoDecimals />
-                    </app-input-group>
-                </div>
-
-                <div class="col-lg-6 col-md-6 col-12">
+                <div class="col-lg-12 col-md-12 col-12">
                     <app-input-group [icon]="faTruck" text="Costo de envio">
                         <input formControlName="delivery_cost" type="number" class="form-control" placeholder="0.00"
                             aria-label="delivery_cost" aria-describedby="basic-delivery_cost" twoDecimals />
                     </app-input-group>
                 </div>
+            </div>
+
+
+            <div class="row">
+
+                <!-- @if(is_cod){
+                <div class="col-lg-6 col-md-6 col-12">
+                    <app-button-check formControlName="is_cod" class="w-100 mb-3">
+                        Contra Entrega
+                    </app-button-check>
+
+                </div>
+                } -->
+                @if(freight_collect){
+                <div class="col-lg-12 col-md-12 col-12">
+                    <app-button-check formControlName="freight_collect" class="w-100 mb-3">
+                        Pago en destino
+                    </app-button-check>
+                </div>
+                }
+
             </div>
 
 
@@ -269,11 +264,13 @@
         </div>
     </div> -->
 
+    <pre>
+    {{ form.value | json }}
+</pre>
+
 </form>
 
-<!-- <pre>
-    {{ form.value | json }}
-</pre> -->
+
 
 <ng-template #content let-modal>
     <div class="modal-header">
