@@ -218,10 +218,10 @@ export class CourierSelectedComponent
     this.courier_id = this.couriers.length > 0 ? this.couriers[0].id : null;
     this.addresses = this.couriers[0].addresses || [];
     console.log(this.addresses);
-    
+
     this.courier_address_id = this.addresses.length > 0 ? this.addresses[0].id : null;
     console.log(this.courier_address_id);
-    
+
     this.setCourierAddress(this.courier_address_id);
 
     this.showSelectedAddress = true;

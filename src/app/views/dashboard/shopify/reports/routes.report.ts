@@ -17,6 +17,14 @@ export const routes: Routes = [
     }
   },
   {
+    path: 'top/between/:start/:end',
+    loadComponent: () => import('./report-top-products-between-page/report-top-products-between-page.component').then((m) => m.ReportTopProductsBetweenPageComponent),
+    data: {
+      title: 'Reporte entre fechas',
+      name: 'report.products.top', // 👈 nombre único
+    }
+  },
+  {
     path: 'sales',
     loadComponent: () => import('./report-sales-page/report-sales-page.component').then((m) => m.ReportSalesPageComponent),
     data: {

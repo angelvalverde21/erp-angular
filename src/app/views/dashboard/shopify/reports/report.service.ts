@@ -32,6 +32,13 @@ export class ReportService extends BaseCrudDashboardService{
     return this.http.get<any[]>(`${url}`);
   }
 
+    // Generic method to get all items
+  topProductsBetween(start: string, end: string): Observable<any[]> {
+    const url = `${this.baseUrl}/top/between/${start}/${end}`;
+    console.log(url);
+    return this.http.get<any[]>(`${url}`);
+  }
+
   base_path(path: string[] = []){
     return ['reports',...path];
   }
