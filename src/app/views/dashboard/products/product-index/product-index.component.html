@@ -1,36 +1,78 @@
-<div class="table-responsive">
-    <table class="table table-hover mb-0 align-middle">
-        <thead class="table-light">
+﻿<section class="product-list" aria-labelledby="product-list-title">
+    <div class="product-list-header">
+        <div class="product-list-heading">
+            <span class="product-list-icon" aria-hidden="true"><i class="fa-solid fa-boxes-stacked"></i></span>
+            <div>
+                <h2 id="product-list-title">Catálogo de productos</h2>
+                <p>Consulta los productos y accede a sus detalles para editarlos.</p>
+            </div>
+        </div>
+        <span class="product-list-count">{{ products.length }} {{ products.length === 1 ? 'producto cargado' : 'productos cargados' }}</span>
+    </div>
+
+    <table class="table table-hover mb-0 align-middle product-table">
+        <caption class="visually-hidden">Catálogo de productos con categoría, precio en soles, fecha de creación y acceso a edición.</caption>
+        <thead>
             <tr>
-                <th class="text-center">#</th>
-                <th>Nombre</th>
-                <th>Categoría</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th class="text-center">Acciones</th>
+                <th scope="col" class="text-center d-none d-lg-table-cell product-code">Código</th>
+                <th scope="col">Producto</th>
+                <th scope="col" class="d-none d-md-table-cell product-category">Categoría</th>
+                <th scope="col" class="text-end product-price">Precio <span>PEN</span></th>
+                <th scope="col" class="d-none d-xl-table-cell product-created">Fecha de creación</th>
+                <th scope="col" class="text-center product-actions">Acciones</th>
             </tr>
         </thead>
         <tbody>
-
             @for (product of products; track product.id) {
-            <tr (click)="getProduct(product.id)">
-                <td class="text-center">{{ product.id }}</td>
-                <td>{{ product?.name }}</td>
-                <td>{{ product?.category?.name }}</td>
-                <td>{{ product?.price }}</td>
-                <td>{{ product.created_at! | DateShopify }}</td>
-                <td class="text-center">
-                    <div class="controls d-flex justify-content-center align-items-center">
-                        <app-button-edit></app-button-edit>
-                        <!-- <app-button [icon]="faTrash" separation="0" color="outline-dark"></app-button> -->
+            <tr class="product-row" (click)="getProduct(product.id)">
+                <td class="text-center d-none d-lg-table-cell product-id">#{{ product.id }}</td>
+                <td>
+                    <div class="product-identity">
+                        <span class="product-thumbnail" aria-hidden="true">
+                            @if (product.image?.url_thumbnail) {
+                            <img [src]="product.image?.url_thumbnail" alt="" width="44" height="44" loading="lazy" />
+                            } @else {
+                            <i class="fa-solid fa-box"></i>
+                            }
+                        </span>
+                        <div class="product-details">
+                            <button type="button" class="product-name" (click)="$event.stopPropagation(); getProduct(product.id)">
+                                {{ product.name || 'Producto sin nombre' }}
+                            </button>
+                            <span class="product-mobile-category d-md-none">{{ product.category?.name || 'Sin categoría' }}</span>
+                            <span class="product-mobile-code d-lg-none">#{{ product.id }}</span>
+                        </div>
                     </div>
+                </td>
+                <td class="d-none d-md-table-cell">
+                    <span class="product-category-badge">{{ product.category?.name || 'Sin categoría' }}</span>
+                </td>
+                <td class="text-end product-amount">
+                    @if (product.price !== null && product.price !== undefined) {
+                    {{ product.price | currency:'PEN':'symbol':'1.2-2':'es-PE' }}
+                    } @else {
+                    <span class="product-missing-price">Sin precio</span>
+                    }
+                </td>
+                <td class="d-none d-xl-table-cell product-date">{{ (product.created_at | DateShopify) || 'Sin fecha' }}</td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-outline-secondary product-edit"
+                        [attr.aria-label]="'Editar ' + (product.name || 'producto ' + product.id)"
+                        title="Editar producto" (click)="$event.stopPropagation(); getProduct(product.id)">
+                        <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                    </button>
+                </td>
+            </tr>
+            } @empty {
+            <tr>
+                <td colspan="6" class="product-empty">
+                    <span class="product-empty-icon" aria-hidden="true"><i class="fa-solid fa-box-open"></i></span>
+                    <h3>No hay productos para mostrar</h3>
+                    <p>Los productos registrados aparecerán aquí. Si realizaste una búsqueda, prueba con otro término.</p>
                 </td>
             </tr>
             }
-
         </tbody>
     </table>
-
-    <div #bottom></div>
-    
-</div>
+    <div #bottom class="product-load-trigger" aria-hidden="true"></div>
+</section>

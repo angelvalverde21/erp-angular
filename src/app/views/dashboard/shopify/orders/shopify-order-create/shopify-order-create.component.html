@@ -1,308 +1,266 @@
-<form [formGroup]="form">
-
-    <div class="card mb-3">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold">Direcci&oacute;n de envio</h6>
+﻿<form [formGroup]="form" class="shopify-order-create">
+    <div class="order-intro">
+        <div>
+            <span class="order-eyebrow">NUEVO PEDIDO</span>
+            <h2>Prepara tu pedido</h2>
+            <p>Completa los datos del cliente, agrega productos y elige cómo enviarlos.</p>
         </div>
-        <div class="card-body pt-4 pb-3 px-4">
-            <app-address-form></app-address-form>
-        </div>
+        <span class="order-status">En preparación</span>
     </div>
 
-    <div class="card mb-3">
-
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold">Productos</h6>
-            <app-button-add color="primary" (click)="openVerticallyCentered(content)">Productos</app-button-add>
-
-        </div>
-        <div class="card-body">
-
-            @if(variants.length === 0){
-            <app-void-index></app-void-index>
-            }@else{
-            <div class="mb-3">
-                <app-order-variant-index [variants]="variants"></app-order-variant-index>
-            </div>
-
-            }
-        </div>
-
-    </div>
-
-    <div class="card mb-3">
-
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold">Metodo de envio o recojo</h6>
-        </div>
-
-        <div class="card-body pt-4 pb-3 px-4">
-            <label for="courier_address_id" class="mb-2">Seleccionar Courier</label>
-            <app-courier-selected formControlName="courier_address_id"
-                (emitCourierSelected)="receiveCourierSelected($event)"></app-courier-selected>
-
-
-            @if (delivery_type === 'agency' || delivery_type === 'express') {
-            <div class="row">
-
-                <div class="col-lg-12 col-md-12 col-12">
-                    <app-input-group [icon]="faTruck" text="Costo de envio">
-                        <input formControlName="delivery_cost" type="number" class="form-control" placeholder="0.00"
-                            aria-label="delivery_cost" aria-describedby="basic-delivery_cost" twoDecimals />
-                    </app-input-group>
+    <div class="order-layout">
+        <div class="order-main">
+            <section class="order-panel" aria-labelledby="order-address-title">
+                <div class="order-panel-header">
+                    <span class="order-section-icon" aria-hidden="true"><fa-icon [icon]="faUser"></fa-icon></span>
+                    <div>
+                        <h3 id="order-address-title">Datos del cliente y dirección</h3>
+                        <p>Indica quién recibirá el pedido y dónde entregarlo.</p>
+                    </div>
                 </div>
-            </div>
-            }
-            <div class="row">
-
-                <!-- @if(is_cod){
-                <div class="col-lg-6 col-md-6 col-12">
-                    <app-button-check formControlName="is_cod" class="w-100 mb-3">
-                        Contra Entrega
-                    </app-button-check>
-
+                <div class="order-panel-body">
+                    <app-address-form></app-address-form>
                 </div>
-                } -->
-                @if(freight_collect){
-                <div class="col-lg-12 col-md-12 col-12">
-                    <app-button-check formControlName="freight_collect" class="w-100 mb-3">
-                        Pago en destino
-                    </app-button-check>
+            </section>
+
+            <section class="order-panel" aria-labelledby="order-products-title">
+                <div class="order-panel-header order-products-header">
+                    <span class="order-section-icon" aria-hidden="true"><fa-icon [icon]="faBarcode"></fa-icon></span>
+                    <div class="order-section-heading">
+                        <h3 id="order-products-title">Productos <span class="order-count">{{ variants.length }}</span></h3>
+                        <p>Selecciona las variantes y ajusta sus cantidades.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary order-add-button" (click)="openVerticallyCentered(content)">
+                        <span aria-hidden="true">+</span> Agregar productos
+                    </button>
+                </div>
+                @if (variants.length === 0) {
+                <div class="order-empty">
+                    <span class="order-empty-icon" aria-hidden="true"><fa-icon [icon]="faDolly"></fa-icon></span>
+                    <h4>Tu pedido aún no tiene productos</h4>
+                    <p>Usa «Agregar productos» para buscar y seleccionar los artículos del pedido.</p>
+                </div>
+                } @else {
+                <div class="order-products-table">
+                    <app-order-variant-index [variants]="variants"></app-order-variant-index>
                 </div>
                 }
-
-            </div>
-
-
+            </section>
+            <section class="order-panel" aria-labelledby="order-notes-title">
+                <div class="order-panel-header order-products-header">
+                    <span class="order-section-icon" aria-hidden="true"><fa-icon [icon]="faPaperclip"></fa-icon></span>
+                    <div class="order-section-heading">
+                        <h3 id="order-notes-title">Notas y comprobantes <span class="order-count" aria-live="polite">{{ notes.length }}</span></h3>
+                        <p>Observaciones, pagos y documentos relacionados con esta venta.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary order-add-button" (click)="openNoteModal(noteModal)">
+                        <i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Agregar nota
+                    </button>
+                </div>
+                @if (notes.length === 0) {
+                <div class="order-empty">
+                    <span class="order-empty-icon" aria-hidden="true"><fa-icon [icon]="faPaperclip"></fa-icon></span>
+                    <h4>Aún no has agregado notas</h4>
+                    <p>Agrega una nota con texto, comprobantes o ambos. Esta sección es opcional.</p>
+                </div>
+                } @else {
+                <ol class="list-group list-group-flush list-unstyled mb-0">
+                    @for (note of notes.controls; track note; let noteIndex = $index) {
+                    <li class="list-group-item p-3">
+                        <div class="d-flex align-items-start gap-3">
+                            <span class="badge text-bg-light border mt-1">{{ noteIndex + 1 }}</span>
+                            <div class="flex-grow-1" style="min-width: 0;">
+                                <span class="badge bg-primary-subtle text-primary-emphasis mb-2">{{ noteCategoryLabel(note) }}</span>
+                                @if (note.get('text')!.value) {
+                                <p class="small text-break mb-2" style="white-space: pre-wrap;">{{ note.get('text')!.value }}</p>
+                                } @else {
+                                <p class="small text-body-secondary mb-2">Nota con comprobantes adjuntos.</p>
+                                }
+                                @if (noteAttachments(note).length > 0) {
+                                <div class="d-flex flex-wrap gap-2">
+                                    @for (attachment of noteAttachments(note).controls; track attachment) {
+                                    @let preview = attachmentPreviews.get(attachment);
+                                    @let file = attachment.get('file')!.value;
+                                    @if (preview) {
+                                    <a class="btn btn-outline-secondary btn-sm text-break text-start" [href]="preview.url" target="_blank" rel="noopener noreferrer"
+                                        [attr.aria-label]="'Abrir ' + file.name + ' en una pestaña nueva'">
+                                        <i class="fa-solid fa-paperclip me-1" aria-hidden="true"></i>{{ file.name }}
+                                    </a>
+                                    }
+                                    }
+                                </div>
+                                }
+                            </div>
+                            <div class="d-flex flex-column flex-sm-row gap-1">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" [attr.aria-label]="'Editar nota ' + (noteIndex + 1)"
+                                    title="Editar nota" (click)="openNoteModal(noteModal, note)">
+                                    <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-sm" [attr.aria-label]="'Eliminar nota ' + (noteIndex + 1)"
+                                    title="Eliminar nota" (click)="removeNote(noteIndex)">
+                                    <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                    }
+                </ol>
+                }
+            </section>
         </div>
+
+        <aside class="order-sidebar" aria-label="Envío y resumen del pedido">
+            <section class="order-panel" aria-labelledby="order-shipping-title">
+                <div class="order-panel-header">
+                    <span class="order-section-icon" aria-hidden="true"><fa-icon [icon]="faTruck"></fa-icon></span>
+                    <div>
+                        <h3 id="order-shipping-title">Envío o recojo</h3>
+                        <p>Elige cómo llegará el pedido.</p>
+                    </div>
+                </div>
+                <div class="order-panel-body">
+                    <div id="order-courier-label" class="order-field-label">Courier</div>
+                    <app-courier-selected formControlName="courier_address_id" aria-labelledby="order-courier-label"
+                        (emitCourierSelected)="receiveCourierSelected($event)"></app-courier-selected>
+                    @if (delivery_type === 'agency' || delivery_type === 'express') {
+                    <div class="order-shipping-cost">
+                        <app-input-group [icon]="faTruck" text="Costo de envío">
+                            <input formControlName="delivery_cost" type="number" class="form-control" placeholder="0.00"
+                                aria-label="Costo de envío en soles" twoDecimals />
+                        </app-input-group>
+                    </div>
+                    }
+                    @if (freight_collect) {
+                    <div class="order-freight-option">
+                        <app-button-check formControlName="freight_collect" class="d-block w-100">
+                            Pago en destino
+                        </app-button-check>
+                        <p>El costo del envío se paga al recibir el pedido.</p>
+                    </div>
+                    }
+                </div>
+            </section>
+
+            <section class="order-panel order-summary" aria-labelledby="order-summary-title">
+                <div class="order-panel-header">
+                    <div>
+                        <h3 id="order-summary-title">Resumen de pagos</h3>
+                        <p>Importes expresados en soles (PEN).</p>
+                    </div>
+                </div>
+                <dl class="order-totals">
+                    <div>
+                        <dt>Subtotal</dt>
+                        <dd>{{ summary?.subTotal ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd>
+                    </div>
+                    <div>
+                        <dt>IGV</dt>
+                        <dd>{{ summary?.igv ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Envío</dt>
+                        <dd>{{ summary?.delivery ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd>
+                    </div>
+                    <div class="order-total">
+                        <dt>Total del pedido</dt>
+                        <dd>{{ summary?.total ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd>
+                    </div>
+                </dl>
+            </section>
+        </aside>
     </div>
-
-    <div class="card mb-3">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold">Resumen de pagos</h6>
-        </div>
-        <div class="card-body p-0 my-0">
-            <ul class="list-group list-group-flush" style="border-radius: 5px;">
-
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>Sub Total</span>
-                    <h6>{{ summary?.subTotal ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>IGV</span>
-                    <h6>{{ summary?.igv ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>Envio</span>
-                    <h6>{{ summary?.delivery ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
-                    <span>Total</span>
-                    <h5>{{ summary?.total ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h5>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- <div ngbAccordion #accordion="ngbAccordion" [closeOthers]="true">
-        <div ngbAccordionItem="first" [collapsed]="false">
-            <h2 ngbAccordionHeader>
-                <button ngbAccordionButton>
-                    <fa-icon [icon]="faUser" class="me-2"></fa-icon> Generar pedido
-                </button>
-            </h2>
-            <div ngbAccordionCollapse>
-                <div ngbAccordionBody>
-                    <ng-template>
-                        <app-address-form></app-address-form>
-                        <div class="controls d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary btn-sm"
-                                (click)="onNextButtonClick()">Siguiente</button>
-                        </div>
-                    </ng-template>
-                </div>
-            </div>
-        </div>
-        <div ngbAccordionItem="second">
-            <h2 ngbAccordionHeader>
-                <button ngbAccordionButton>
-                    <fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Detalles del pedido
-                </button>
-            </h2>
-            <div ngbAccordionCollapse>
-                <div ngbAccordionBody>
-                    <ng-template>
-
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span>Agregar items</span>
-                            <app-button-add color="dark"
-                                (click)="openVerticallyCentered(content)">Productos</app-button-add>
-                        </div>
-
-                        @if(variants.length === 0){
-                        <app-void-index></app-void-index>
-                        }@else{
-                        <div class="mb-3">
-                            <app-order-variant-index [variants]="variants"></app-order-variant-index>
-                        </div>
-                        <div class="controls d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary btn-sm"
-                                (click)="accordion.toggle('third')">Siguiente</button>
-                        </div>
-                        }
-
-
-                    </ng-template>
-                </div>
-            </div>
-        </div>
-        <div ngbAccordionItem="third">
-            <h2 ngbAccordionHeader>
-                <button ngbAccordionButton>
-                    <fa-icon [icon]="faDolly" class="me-2"></fa-icon> Shipping
-
-                </button>
-            </h2>
-            <div ngbAccordionCollapse>
-                <div ngbAccordionBody>
-                    <ng-template>
-
-                        <label for="courier_address_id" class="mb-2">Seleccionar Courier</label>
-                        <app-courier-selected formControlName="courier_address_id"
-                            (emitCourierSelected)="receiveCourierSelected($event)"></app-courier-selected>
-
-                        <div class="row">
-
-                            @if(is_cash_on_delivery){
-                            <div class="col-lg-6 col-md-6 col-12">
-                                <app-button-check class="w-100 mb-3">
-                                    Contra Entrega
-                                </app-button-check>
-
-                            </div>
-                            }
-                            @if(is_express_shipping){
-                            <div class="col-lg-6 col-md-6 col-12">
-                                <app-button-check class="w-100 mb-3">
-                                    Delivery Express
-                                </app-button-check>
-                            </div>
-                            }
-                            @if(is_freight_collect){
-                            <div class="col-lg-12 col-md-12 col-12">
-                                <app-button-check class="w-100 mb-3">
-                                    Pago en destino
-                                </app-button-check>
-                            </div>
-                            }
-
-                        </div>
-
-                        <div class="row">
-
-                            <div class="col-lg-6 col-md-6 col-12">
-                                <app-input-group [icon]="faDolly" text="Costo de Traslado">
-                                    <input formControlName="delivery_cost" type="number" class="form-control"
-                                        placeholder="0.00" aria-label="delivery_cost"
-                                        aria-describedby="basic-delivery_cost" twoDecimals />
-                                </app-input-group>
-                            </div>
-
-                            <div class="col-lg-6 col-md-6 col-12">
-                                <app-input-group [icon]="faTruck" text="Costo de envio">
-                                    <input formControlName="delivery_cost" type="number" class="form-control"
-                                        placeholder="0.00" aria-label="delivery_cost"
-                                        aria-describedby="basic-delivery_cost" twoDecimals />
-                                </app-input-group>
-                            </div>
-                        </div>
-
-                        <div class="controls d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary btn-sm"
-                                (click)="accordion.toggle('fourth')">Siguiente</button>
-                        </div>
-
-                    </ng-template>
-                </div>
-            </div>
-        </div>
-        <div ngbAccordionItem="fourth">
-            <h2 ngbAccordionHeader>
-                <button ngbAccordionButton>Detalle de pagos</button>
-            </h2>
-            <div ngbAccordionCollapse>
-                <div ngbAccordionBody>
-                    <ng-template>
-                        <ul class="list-group list-group-flush mb-3">
-
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span>Sub Total</span>
-                                <h6>{{ summary?.subTotal ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span>IGV</span>
-                                <h6>{{ summary?.igv ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span>Delivery</span>
-                                <h6>{{ summary?.delivery ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
-                                <span>Total</span>
-                                <h5>{{ summary?.total ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h5>
-                            </li>
-
-                        </ul>
-
-                        <div class="controls d-flex justify-content-end">
-                            <app-button-save color="dark">Generar Pedido</app-button-save>
-                        </div>
-
-                    </ng-template>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <pre>
-    {{ form.value | json }}
-</pre>
-
 </form>
-
-
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h6 class="modal-title d-flex justify-content-between align-items-center">
-            <fa-icon [icon]="faBarcode" class="me-2"></fa-icon>
-            A&ntilde;adir Productos
-        </h6>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        <h2 class="modal-title fs-5">
+            <fa-icon [icon]="faBarcode" class="me-2" aria-hidden="true"></fa-icon> Agregar productos
+        </h2>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-
+        <p class="text-body-secondary mb-3">Busca y selecciona los productos que deseas incluir en el pedido.</p>
         <app-variant-search (emitVariantsSelected)="receiveVariantsSelected($event)"></app-variant-search>
-
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Close click')">Cerrar</button>
     </div>
-
 </ng-template>
 
-<ng-template #courier let-modal>
+
+<ng-template #noteModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">A&ntilde;adir Courier</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        <h2 id="order-note-modal-title" class="modal-title fs-5">{{ editingNote ? 'Editar nota' : 'Agregar nota' }}</h2>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button>
     </div>
-    <div class="modal-body">
-
-        <!-- <app-courier-search (emitCourierSelected)="receiveCourierSelected($event)"></app-courier-search> -->
-
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-    </div>
-
+    @if (noteDraft; as draft) {
+    @let attachments = noteAttachments(draft);
+    @let errors = noteAttachmentErrors.get(draft) ?? [];
+    <form [formGroup]="draft" (ngSubmit)="saveNote()" class="d-flex flex-column overflow-hidden">
+        <div class="modal-body">
+            <p id="order-note-modal-description" class="text-body-secondary small">Escribe una observación o adjunta comprobantes de pago, envío o venta.</p>
+            <div class="mb-3">
+                <label for="order-note-category" class="form-label">Tipo de nota</label>
+                <select id="order-note-category" formControlName="category" class="form-select">
+                    <option value="sale">Venta</option>
+                    <option value="payment">Pago</option>
+                    <option value="shipping">Envío</option>
+                    <option value="other">Otro</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="order-note-text" class="form-label">Nota</label>
+                <textarea id="order-note-text" formControlName="text" class="form-control" rows="4" ngbAutofocus
+                    placeholder="Por ejemplo: adelanto del 50 % recibido por transferencia. Se adjunta la captura."></textarea>
+            </div>
+            <label for="order-note-files" class="form-label"><i class="fa-solid fa-paperclip me-1" aria-hidden="true"></i> Adjuntar comprobantes</label>
+            <input #noteFiles id="order-note-files" type="file" class="form-control"
+                accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,image/jpeg,image/png,image/webp,image/gif,application/pdf" multiple
+                aria-describedby="order-note-files-help order-note-errors" (change)="addAttachments(draft, noteFiles)" />
+            <div id="order-note-files-help" class="form-text">JPG, PNG, WEBP, GIF o PDF. Máximo 10 MB por archivo. Puedes seleccionar varios.</div>
+            <div id="order-note-errors" aria-live="polite" aria-atomic="true">
+                @if (errors.length > 0) {
+                <ul class="alert alert-warning small mt-3 mb-0 ps-4">
+                    @for (error of errors; track $index) { <li>{{ error }}</li> }
+                </ul>
+                }
+            </div>
+            @if (attachments.length > 0) {
+            <h3 class="h6 mt-4 mb-3">Comprobantes <span class="badge text-bg-secondary">{{ attachments.length }}</span></h3>
+            <ul class="list-group">
+                @for (attachment of attachments.controls; track attachment; let fileIndex = $index) {
+                @let file = attachment.get('file')!.value;
+                @let preview = attachmentPreviews.get(attachment);
+                <li class="list-group-item d-flex align-items-center gap-3">
+                    @if (preview) {
+                    <a class="d-flex align-items-center justify-content-center bg-body-tertiary rounded overflow-hidden flex-shrink-0"
+                        style="width: 56px; height: 56px;" [href]="preview.url" target="_blank" rel="noopener noreferrer"
+                        [attr.aria-label]="'Abrir ' + file.name + ' en una pestaña nueva'">
+                        @if (preview.isImage) {
+                        <img class="w-100 h-100 object-fit-contain" [src]="preview.url" [alt]="'Vista previa de ' + file.name" />
+                        } @else {
+                        <i class="fa-solid fa-file-pdf fs-3" aria-hidden="true"></i>
+                        }
+                    </a>
+                    }
+                    <div class="flex-grow-1 small" style="min-width: 0;">
+                        <p class="fw-semibold mb-1 text-break">{{ file.name }}</p>
+                        <span class="text-body-secondary">{{ formatAttachmentSize(file.size) }}</span>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger btn-sm flex-shrink-0"
+                        [attr.aria-label]="'Quitar ' + file.name" (click)="removeAttachment(draft, fileIndex)">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </li>
+                }
+            </ul>
+            }
+            <p class="form-text mt-3 mb-0">Incluye al menos un texto o un comprobante para guardar la nota.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!canSaveNote">{{ editingNote ? 'Guardar cambios' : 'Agregar nota' }}</button>
+        </div>
+    </form>
+    }
 </ng-template>

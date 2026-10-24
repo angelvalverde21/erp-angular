@@ -1,0 +1,91 @@
+﻿.shopify-order-create {
+    --order-border: var(--bs-border-color, var(--cui-border-color, #e2e8f0));
+    --order-muted: var(--bs-secondary-color, var(--cui-secondary-color, #64748b));
+    --order-surface: var(--bs-body-bg, var(--cui-body-bg, #fff));
+
+    .order-intro {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        h2 { margin: .4rem 0; font-size: 1.5rem; font-weight: 700; }
+        p { margin: 0; color: var(--order-muted); }
+    }
+    .order-eyebrow { color: var(--order-muted); font-size: .7rem; font-weight: 700; letter-spacing: .12em; }
+    .order-status, .order-count {
+        padding: .35rem .7rem;
+        border-radius: 2rem;
+        background: rgba(59, 130, 246, .1);
+        color: var(--bs-primary, var(--cui-primary, #2563eb));
+        font-size: .75rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .order-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+    .order-main, .order-sidebar { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
+    .order-panel {
+        border: 1px solid var(--order-border);
+        border-radius: 1rem;
+        background: var(--order-surface);
+        box-shadow: 0 3px 12px rgba(15, 23, 42, .03);
+        min-width: 0;
+    }
+    .order-panel-header {
+        display: flex;
+        align-items: center;
+        gap: .85rem;
+        padding: 1.25rem;
+        border-bottom: 1px solid var(--order-border);
+        h3 { display: flex; align-items: center; gap: .6rem; margin: 0; font-size: 1rem; font-weight: 700; }
+        p { margin: .35rem 0 0; font-size: .8rem; color: var(--order-muted); }
+    }
+    .order-section-icon, .order-empty-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: .75rem;
+        background: rgba(100, 116, 139, .09);
+        color: var(--order-muted);
+    }
+    .order-section-heading { flex: 1; min-width: 0; }
+    .order-panel-body { padding: 1.25rem 1.25rem .5rem; }
+    .order-add-button { font-size: .8rem; white-space: nowrap; border-radius: .5rem; }
+    .order-empty {
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+        h4 { margin: 1rem 0 .5rem; font-size: 1rem; font-weight: 600; }
+        p { max-width: 23rem; margin: 0 auto; color: var(--order-muted); font-size: .85rem; line-height: 1.6; }
+    }
+    .order-empty-icon { width: 3.5rem; height: 3.5rem; font-size: 1.4rem; border-radius: 1rem; }
+    .order-products-table { padding: .5rem; }
+    .order-field-label { margin-bottom: .5rem; font-size: .85rem; font-weight: 600; }
+    .order-shipping-cost { margin-top: .75rem; }
+    .order-freight-option {
+        margin: .5rem 0 1rem;
+        p { margin: .5rem 0 0; font-size: .75rem; color: var(--order-muted); }
+    }
+    .order-totals {
+        margin: 0;
+        padding: 1.25rem;
+        > div { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-bottom: 1rem; }
+        dt { color: var(--order-muted); font-size: .85rem; font-weight: 400; }
+        dd { margin: 0; font-size: .9rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .order-total { padding: 1.25rem 0 0; border-top: 1px dashed var(--order-border); }
+        .order-total dt { color: inherit; font-weight: 700; }
+        .order-total dd { font-size: 1.3rem; font-weight: 700; }
+    }
+    @media (min-width: 1200px) {
+        .order-layout { grid-template-columns: minmax(0, 1fr) 360px; align-items: start; }
+        .order-sidebar { position: sticky; top: 5rem; }
+    }
+    @media (max-width: 767.98px) {
+        .order-intro { align-items: flex-start; flex-direction: column; }
+        .order-products-header { flex-wrap: wrap; }
+        .order-add-button { width: 100%; }
+        .order-panel-header, .order-panel-body, .order-totals { padding: 1rem; }
+    }
+}

@@ -27,3 +27,37 @@ button[ngbDropdownToggle]::after {
   font-weight: 700;
   flex-shrink: 0;
 }
+
+:host(.production-list-row) {
+  th, td {
+    padding: 1.1rem .65rem;
+    border-bottom-color: var(--production-border, #e2e8f0);
+    font-size: .85rem;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+
+  th {
+    color: var(--production-muted, #64748b);
+    font-size: .75rem;
+    font-weight: 500;
+  }
+
+  td > a {
+    color: var(--bs-body-color, var(--cui-body-color, #1e293b));
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 1.5;
+
+    &:hover { color: var(--bs-primary, var(--cui-primary, #2563eb)); text-decoration: underline; }
+    &:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }
+  }
+
+  h6 { margin: 0; font-size: .85rem; font-weight: 600; }
+  .date-sub { color: var(--production-muted, #64748b); line-height: 1.5; }
+
+  @media (max-width: 575.98px) {
+    th, td { padding: .9rem .3rem; font-size: .8rem; }
+    th { font-size: .7rem; }
+  }
+}
