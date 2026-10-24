@@ -215,6 +215,8 @@ export class CourierSelectedComponent
 
   setCourierDefault() {
 
+    this.emitCourierSelected.emit(this.couriers.length > 0 ? this.couriers[0] : null);
+
     this.courier_id = this.couriers.length > 0 ? this.couriers[0].id : null;
     this.addresses = this.couriers[0].addresses || [];
     console.log(this.addresses);

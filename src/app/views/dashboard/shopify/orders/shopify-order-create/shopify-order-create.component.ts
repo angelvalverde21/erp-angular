@@ -168,6 +168,7 @@ export class ShopifyOrderCreateComponent {
 
   is_cod: boolean = false;
   freight_collect: boolean = false;
+  delivery_type: string | null = null;
 
   receiveCourierSelected(courier: any) {
     
@@ -175,8 +176,8 @@ export class ShopifyOrderCreateComponent {
 
     console.log('Courier seleccionado', courier);
     this.is_cod = courier.is_cod;
-    this.freight_collect = courier.freight_collect;
-
+    this.freight_collect = courier.freight_collect; //pago en destino
+    this.delivery_type = courier.delivery_type;
   }
 
   // Controles para guardar los datos del pedido
