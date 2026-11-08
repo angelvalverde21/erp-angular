@@ -8,12 +8,11 @@ import { ProductService } from '../product.service'
 import Swal from 'sweetalert2';
 import { HeadPageComponent } from "@shared/components/head-page/head-page.component";
 import { ButtonComponent } from "@shared/components/buttons/button/button.component";
-import { ButtonLinkComponent } from "@shared/components/buttons/button-link/button-link.component";
 import { Product } from '../../../../interfaces/product.interface';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { HeadTableComponent } from '@shared/components/head-table/head-table.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HeadSearchComponent } from 'src/app/views/shared/components/head-search/head-search.component';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ProductSearchComponent } from '../product-search/product-search.component';
 
 
 @Component({
@@ -22,11 +21,11 @@ import { HeadSearchComponent } from 'src/app/views/shared/components/head-search
     ProductIndexComponent,
     ButtonComponent,
     FontAwesomeModule,
-    ButtonLinkComponent,
+    RouterLink,
     HeadPageComponent,
     LoadingComponent,
     HeadTableComponent,
-    HeadSearchComponent
+    ProductSearchComponent
   ],
   templateUrl: './product-search-page.component.html',
   styleUrl: './product-search-page.component.scss'
@@ -43,7 +42,7 @@ export class ProductSearchPageComponent implements OnInit, OnDestroy {
     private _product: ProductService,
     private route: ActivatedRoute
   ) {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.params = params;
     });
   }
@@ -57,35 +56,42 @@ export class ProductSearchPageComponent implements OnInit, OnDestroy {
   }
 
   initSearch() {
+    this.cancelSearch$.next();
     this.loading = true;
 
-    this._product.search(this.params).pipe(takeUntil(this.destroy$)).subscribe({
+    this._product.search({ ...this.params }).pipe(takeUntil(this.destroy$), takeUntil(this.cancelSearch$)).subscribe({
 
       next: (resp: any) => {
-        console.log(resp);
         this.products = resp.data;
         this.loading = false;
       },
 
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
+        this.loading = false;
+        Swal.fire('Error', 'No se pudo completar la búsqueda. Inténtalo nuevamente.', 'error');
         console.error(error);
       },
 
     });
   }
 
-  destroy$ = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
+  private readonly cancelSearch$ = new Subject<void>();
 
   ngOnDestroy(): void {
 
     this.destroy$.next();
     this.destroy$.complete();
+    this.cancelSearch$.complete();
 
   }
 
   receiveParams($event: any) {
-    this.params = $event;
+    this.params = {
+      ...$event,
+      sort_by: this.params.sort_by ?? 'created_at',
+      sort_direction: this.params.sort_direction ?? 'desc',
+    };
     this.initSearch();
   }
 

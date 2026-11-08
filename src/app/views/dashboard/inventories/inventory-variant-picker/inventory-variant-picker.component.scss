@@ -1,0 +1,12 @@
+:host { display: block; }
+.variant-picker { border: 1px solid var(--cui-border-color, #e2e8f0); border-radius: .6rem; padding: 1rem; }
+.picker-invalid { border-color: var(--cui-danger, #dc3545); box-shadow: 0 0 0 1px var(--cui-danger, #dc3545); }
+.variant-selected { display: flex; align-items: center; gap: .8rem; margin-bottom: .85rem; color: var(--section-accent); div { flex: 1; min-width: 0; } strong { display: block; color: var(--cui-body-color, #1e293b); font-size: .85rem; overflow-wrap: anywhere; } }
+small { display: block; margin-top: .3rem; color: var(--cui-secondary-color, #64748b); font-size: .73rem; }
+.variant-search-label { display: block; margin-bottom: .5rem; font-size: .76rem; color: var(--cui-secondary-color, #64748b); }
+.variant-search { display: flex; gap: .5rem; input { flex: 1; min-width: 0; padding: .65rem .8rem; border: 1px solid var(--cui-border-color, #e2e8f0); border-radius: .5rem; background: var(--cui-body-bg, #fff); color: inherit; font-size: .8rem; } > button { padding: .6rem 1rem; border: 0; border-radius: .5rem; background: var(--section-accent); color: #fff; font-size: .8rem; } }
+button:disabled { opacity: .5; cursor: not-allowed; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--section-accent); outline-offset: 2px; }
+.variant-results { list-style: none; padding: 0; margin: .75rem 0 0; max-height: 260px; overflow-y: auto; li + li { border-top: 1px solid var(--cui-border-color, #e2e8f0); } button { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; border: 0; padding: .8rem .5rem; background: transparent; color: inherit; text-align: left; font-size: .8rem; &:hover { background: var(--section-tint); } strong { font-size: .82rem; } > span:last-child { color: var(--section-accent); font-weight: 600; font-size: .73rem; } } }
+.variant-no-results, .variant-error { padding: .75rem 0; margin: 0; color: var(--cui-secondary-color, #64748b); font-size: .78rem; }
+.variant-error { color: var(--cui-danger-text-emphasis, #b42318); }

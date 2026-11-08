@@ -1,16 +1,67 @@
-<form [formGroup]="form">
+<div class="product-editor" [formGroup]="form">
+  <div class="product-editor-main">
+  <fieldset class="product-editor-fields" [disabled]="loadingIcon">
+    <section class="product-edit-card" aria-labelledby="product-information-title">
+      <div class="product-edit-heading">
+        <span class="product-edit-icon" aria-hidden="true"><i class="fa-regular fa-pen-to-square"></i></span>
+        <div><h2 id="product-information-title">Información del producto</h2><p>Nombre, descripción, categoría y características del producto.</p></div>
+      </div>
+      <div class="product-information-body pb-3">
+        <app-product-form section="basic" [form]="form" [categories]="categories" [brands]="brands" (emitCategorySelected)="categorySelected($event)"></app-product-form>
+        <details class="product-extra-details" [open]="propertiesExpanded" (toggle)="propertiesExpanded = propertiesDetails.open" #propertiesDetails>
+          <summary><span><i class="fa-solid fa-sliders" aria-hidden="true"></i>Categoría, material y etiquetas</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
+          <div class="product-extra-body">
+          <app-product-form section="category" [form]="form" [categories]="categories" [brands]="brands" (emitCategorySelected)="categorySelected($event)"></app-product-form>
+        <div class="product-properties">
+        <div class="product-edit-field"><label for="product-edit-material">Material</label><input id="product-edit-material" class="form-control" formControlName="material" placeholder="Material principal" [class.is-invalid]="form.get('material')?.invalid && form.get('material')?.touched" /></div>
+        <div class="product-edit-field">
+          <label for="product-edit-tags">Etiquetas</label>
+          <div class="product-tags-input form-control p-2">
+            @if (tagItems.length) {
+            <ul class="d-flex flex-wrap gap-1 list-unstyled m-0 mb-1" aria-label="Etiquetas del producto">
+              @for (tag of tagItems; track tag) {
+              <li class="d-inline-flex align-items-center gap-2 rounded bg-body-tertiary px-2 py-1 small mw-100 text-break">{{ tag }}<button type="button" class="btn p-0 border-0 text-reset d-inline-flex align-items-center" (click)="removeTag(tag)" [disabled]="loadingIcon" [attr.aria-label]="'Quitar etiqueta ' + tag"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></li>
+              }
+            </ul>
+            }
+            <input #tagInput id="product-edit-tags" type="text" class="w-100 border-0 bg-transparent p-1" [value]="tagDraft" [disabled]="loadingIcon"
+              (input)="onTagInput(tagInput)" (keydown.enter)="confirmTag($event, tagInput)" (blur)="commitTags(tagInput)"
+              [placeholder]="tagItems.length ? 'Agregar etiqueta...' : 'Escribe una etiqueta...'" aria-describedby="product-tags-help" />
+          </div>
+          <small id="product-tags-help" class="d-block text-body-secondary mt-2 small">Separa las etiquetas con comas o presiona Enter.</small>
+        </div>
+        </div>
+          </div>
+        </details>
+      </div>
+      <div class="product-save-section">
+        @if (form.dirty) { <p class="product-unsaved" role="status"><i class="fa-solid fa-circle" aria-hidden="true"></i>Cambios sin guardar</p> }
+        @else if (success) { <p class="product-save-success" role="status"><i class="fa-regular fa-circle-check" aria-hidden="true"></i>Cambios guardados</p> }
+        @if (form.invalid && form.touched) { <p class="product-form-error" role="alert">Revisa los campos obligatorios antes de guardar.</p> }
+        <app-button color="dark" [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon" (action)="update()">Guardar cambios</app-button>
+      </div>
+    </section>
 
-    <app-product-form [form]="form" [categories]="categories" [brands]="brands"
-        (emitCategorySelected)="categorySelected($event)"></app-product-form>
+  </fieldset>
+  <ng-content select="[product-prices]"></ng-content>
+  <fieldset class="product-editor-fields" [disabled]="loadingIcon">
+    <section class="product-edit-card product-media" aria-labelledby="product-images-title">
+      <div class="product-edit-heading">
+        <span class="product-edit-icon" aria-hidden="true"><i class="fa-regular fa-images"></i></span>
+        <div><h2 id="product-images-title">Imágenes del producto</h2><p>Revisa las fotografías asociadas al producto.</p></div>
+      </div>
+      <div class="product-media-body">
+        <app-gallery #gallery [path]="'products/' + product.id + '/images'"></app-gallery>
+        @if (!gallery.loading && !gallery.images.length) {
+        <div class="product-media-empty"><i class="fa-regular fa-image" aria-hidden="true"></i><p>No hay imágenes en este producto.</p></div>
+        }
+      </div>
+    </section>
+  </fieldset>
+  <ng-content select="[product-details]"></ng-content>
+  </div>
 
-    <app-gallery [path]="`products/${product.id}/images`"></app-gallery>
-
-    <div class="controls d-flex justify-content-between align-items-center">
-        <app-button color="dark" [icon]="faSave" [disabled]="disabledButton" [spinner]="loadingIcon" (action)="update()">Guardar
-            Cambios</app-button>
-
-        <!-- <app-button-gallery></app-button-gallery> -->
-    </div>
-
-
-</form>
+  <aside class="product-editor-sidebar" aria-label="Opciones del producto">
+    <ng-content select="[product-options]"></ng-content>
+  </aside>
+</div>

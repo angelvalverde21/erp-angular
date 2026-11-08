@@ -1,0 +1,12 @@
+
+@if (branches.length) {
+  <div class="branch-sites" aria-label="Sucursales de la empresa">
+    @for (item of branches; track item.id) {
+      <article class="organization-record record-branch">
+        <span class="record-icon" aria-hidden="true"><i class="fa-solid fa-building"></i></span>
+        <div class="record-details"><small class="record-label">Sucursal</small><h2>{{ item.name }}</h2><code>{{ item.code }}</code><div class="record-meta"><span><i class="fa-solid fa-warehouse" aria-hidden="true"></i>{{ item.warehouses_count ?? 0 }} almacenes</span>@if (item.is_main) { <span><i class="fa-solid fa-star" aria-hidden="true"></i>Principal</span> }</div></div>
+        <div class="record-actions"><span class="branch-badge" [class.active]="item.is_active">{{ item.is_active ? 'Activa' : 'Inactiva' }}</span><a class="branch-edit-link" [routerLink]="['./', item.id, 'edit']"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>Editar sucursal<span class="visually-hidden"> {{ item.name }}</span></a><a class="branch-action" [routerLink]="['./', item.id, 'warehouses']">Ver almacenes<i class="fa-solid fa-arrow-right" aria-hidden="true"></i><span class="visually-hidden"> de {{ item.name }}</span></a></div>
+      </article>
+    }
+  </div>
+} @else { <div class="branch-state"><i class="fa-solid fa-building" aria-hidden="true"></i><strong>Aún no hay sucursales</strong><p>Agrega una sucursal para comenzar.</p><a class="branch-action" [routerLink]="['./create']">Agregar sucursal</a></div> }

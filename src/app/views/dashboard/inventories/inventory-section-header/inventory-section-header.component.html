@@ -1,0 +1,54 @@
+<header class="inventory-heading">
+  <nav class="inventory-breadcrumb" aria-label="Ruta de inventarios">
+  <a [routerLink]="root">Inventarios</a>
+  @if (sessions) {
+    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    <a [routerLink]="sessionsPath">{{ inventory?.name || 'Inventario' }}</a>
+  }
+  @if (workspace === 'counts') {
+    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    <a [routerLink]="sessionEditPath">Sesión #{{ session?.id || '…' }}</a>
+  }
+  <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+  <span aria-current="page">{{ title }}</span>
+</nav>
+  <div class="heading-main">
+    <span class="heading-icon" aria-hidden="true"><i [class]="sectionIcon"></i></span>
+    <div class="heading-copy">
+      <span class="section-label">{{ sectionLabel }}</span>
+      <h1>{{ title }}</h1>
+      @if (description && workspace !== 'counts') { <p>{{ description }}</p> }
+    </div>
+  </div>
+  <div class="heading-actions"><ng-content></ng-content></div>
+  @if (sessions) {
+    <div class="inventory-context" aria-label="Contexto del inventario">
+      <div class="context-group">
+        <span class="context-label">Inventario</span>
+        @if (inventory) {
+          <a [routerLink]="inventoryEditPath" title="Ver datos del inventario">{{ inventory.name }}<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          <app-inventory-status [status]="inventory.status"></app-inventory-status>
+          @if (inventory.inventoriable?.name) { <span class="context-detail">{{ inventory.inventoriable?.name }}</span>@if (inventory.inventoriable?.subtitle) { <small class="d-block">{{ inventory.inventoriable?.subtitle }}</small> } }
+        } @else { <span class="context-detail">Cargando inventario…</span> }
+      </div>
+      @if (workspace === 'counts') {
+        <div class="context-group session-context">
+          <span class="context-label">Sesión</span>
+          @if (session) {
+            <a [routerLink]="sessionEditPath" title="Ver datos de la sesión">#{{ session.id }}<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+            <app-inventory-status [status]="session.status"></app-inventory-status>
+            @if (session.user?.name) { <span class="context-detail"><i class="fa-regular fa-user" aria-hidden="true"></i>{{ session.user?.name }}</span> }
+          } @else { <span class="context-detail">Cargando sesión…</span> }
+        </div>
+      }
+    </div>
+  }
+</header>
+
+@if (sessions && inventory) {
+  <nav class="inventory-work-tabs" aria-label="Secciones del inventario">
+    <a [routerLink]="sessionsPath" [class.tab-current]="workspace === 'sessions' || workspace === 'counts'" [attr.aria-current]="workspace === 'sessions' || workspace === 'counts' ? 'page' : null"><i class="fa-solid fa-stopwatch" aria-hidden="true"></i>Sesiones</a>
+    <a [routerLink]="progressPath" [class.tab-current]="workspace === 'progress'" [attr.aria-current]="workspace === 'progress' ? 'page' : null"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>Avance por ubicación</a>
+    <a [routerLink]="adjustmentsPath" [class.tab-current]="workspace === 'adjustments'" [attr.aria-current]="workspace === 'adjustments' ? 'page' : null"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i>Ajustes</a>
+  </nav>
+}

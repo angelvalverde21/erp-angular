@@ -1,1 +1,8 @@
-<p>location-create-page works!</p>
+<div class="branch-page section-locations">
+  <app-branch-section-header level="locations" title="Agregar ubicación" description="Completa los datos para registrar una ubicación." [creating]="true" [warehouse]="context">
+    <a class="branch-back" [routerLink]="['../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver a ubicaciones</a>
+  </app-branch-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }}</div> }
+  @if (loading) { @if (!error) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Preparando formulario…</div> } }
+  @else { <section class="branch-panel branch-form-surface"><header class="branch-panel-heading"><h2>Datos de ubicación</h2><p>Los campos con * son obligatorios.</p></header><app-location-create [saving]="saving" [parentId]="parentId" [parents]="parents" [initialParentId]="initialParentId" (save)="save($event)"></app-location-create></section> }
+</div>

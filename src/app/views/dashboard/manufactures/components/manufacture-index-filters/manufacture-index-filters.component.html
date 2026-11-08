@@ -1,0 +1,13 @@
+<form class="manufacture-filters" [formGroup]="form" (ngSubmit)="apply()" aria-label="Filtros del listado">
+  <div class="manufacture-filter-grid">
+    <label class="manufacture-search-field"><span>{{ searchLabel }}</span><span class="manufacture-search-input"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input type="search" formControlName="search" [placeholder]="placeholder" autocomplete="off" /></span></label>
+    <label><span>Desde</span><input type="date" class="form-control" formControlName="start_date" [max]="form.controls.end_date.value" aria-describedby="manufacture-date-range-error" /></label>
+    <label><span>Hasta</span><input type="date" class="form-control" formControlName="end_date" [min]="form.controls.start_date.value" aria-describedby="manufacture-date-range-error" /></label>
+    <div class="manufacture-filter-actions">
+      <button type="submit" class="manufacture-primary-action" [disabled]="busy || form.invalid">@if (busy) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> } @else { <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> }{{ busy ? 'Buscando...' : 'Buscar' }}</button>
+      <button type="button" class="manufacture-secondary-action" (click)="clear()" [disabled]="busy || (!hasValues && !hasAppliedFilters)"><i class="fa-solid fa-arrow-rotate-left" aria-hidden="true"></i>Limpiar</button>
+    </div>
+  </div>
+  @if (form.hasError('dateRange')) { <p id="manufacture-date-range-error" class="manufacture-filter-error" role="alert">La fecha «Desde» debe ser anterior o igual a «Hasta».</p> }
+  @else { <p class="manufacture-filter-help"><i class="fa-regular fa-calendar" aria-hidden="true"></i>Busca por nombre o código y añade un rango de fechas si lo necesitas.</p> }
+</form>

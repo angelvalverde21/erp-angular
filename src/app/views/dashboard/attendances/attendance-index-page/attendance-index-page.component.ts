@@ -1,165 +1,91 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-
-import { AttendanceService } from '../attendance.service';
-import { Subject, takeUntil } from 'rxjs';
-import Swal from 'sweetalert2';
-import { AttendanceIndexComponent } from '../attendance-index/attendance-index.component';
-import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
-import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { faClipboardUser, faUpload } from '@fortawesome/free-solid-svg-icons';
-import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { HttpEventType } from '@angular/common/http';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { AttendanceService } from '../attendance.service';
+import { AttendanceIndexComponent } from '../attendance-index/attendance-index.component';
+import { AttendanceCreateComponent } from '../attendance-create/attendance-create.component';
 
 @Component({
   selector: 'app-attendance-index-page',
-  imports: [
-    AttendanceIndexComponent,
-    HeadPageComponent,
-    LoadingComponent,
-    ButtonBackComponent,
-    FontAwesomeModule,
-    ReactiveFormsModule
-  ],
+  imports: [FormsModule, AttendanceIndexComponent, AttendanceCreateComponent],
   templateUrl: './attendance-index-page.component.html',
   styleUrl: './attendance-index-page.component.scss',
-  encapsulation: ViewEncapsulation.None
 })
 export class AttendanceIndexPageComponent implements OnInit, OnDestroy {
-
-  form!: FormGroup;
-  file!: File;
-
-  /* progreso de carga */
-  progress = 0;
-  uploading = false;
-  /* fin de progreso de carga */
-
-  constructor(
-    config: NgbModalConfig,
-    private modalService: NgbModal,
-    private _attendance: AttendanceService,
-    private fb: FormBuilder
-
-  ) {
-    // customize default values of modals used by this component tree
-    config.backdrop = 'static';
-    config.keyboard = false;
-  }
-
-  faClipboardUser = faClipboardUser;
-  faUpload = faUpload;
-
   attendances: any[] = [];
-  loading: boolean = true;
+  filters = { search: '', start_date: '', end_date: '' };
+  meta = { current_page: 1, last_page: 1, total: 0 };
+  loading = false;
+  error = '';
+  uploading = false;
+  progress = 0;
+  file: File | null = null;
+  uploadError = '';
+  importResult = '';
+  private modal?: NgbModalRef;
+  private readonly destroy$ = new Subject<void>();
 
+  constructor(private service: AttendanceService, private modalService: NgbModal) {}
 
-  onFileChange(event: any) {
+  ngOnInit(): void { this.load(); }
 
-    const file = event.target.files[0];
-
-    if (file) {
-      this.file = file;
-      this.form.patchValue({
-        file: file
-      });
-    }
-
-  }
-
-  ngOnInit(): void {
-
-    this.form = this.fb.group({
-      file: [null, Validators.required]
-    });
-
+  load(page = 1): void {
+    if (this.loading) return;
     this.loading = true;
-
-    this._attendance.index().pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        console.log(resp);
-        this.attendances = resp.data;
-        this.loading = false;
+    this.error = '';
+    this.service.list(page, this.filters).pipe(takeUntil(this.destroy$), finalize(() => this.loading = false)).subscribe({
+      next: (response: any) => {
+        this.attendances = response.data;
+        this.meta = response.meta;
       },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
-        console.error(error);
-      },
-
+      error: error => this.error = this.message(error, 'No se pudieron cargar las asistencias.'),
     });
-
   }
 
-  destroy$ = new Subject<void>();
+  open(template: TemplateRef<any>): void {
+    this.file = null;
+    this.uploadError = '';
+    this.progress = 0;
+    this.modal = this.modalService.open(template, { centered: true, backdrop: 'static', size: 'lg' });
+  }
+
+  onFileChange(event: Event): void {
+    this.file = (event.target as HTMLInputElement).files?.[0] ?? null;
+  }
+
+  submit(): void {
+    if (!this.file || this.uploading) return;
+    const data = new FormData();
+    data.append('file', this.file);
+    this.uploading = true;
+    this.uploadError = '';
+    this.service.upload(data).pipe(takeUntil(this.destroy$), finalize(() => this.uploading = false)).subscribe({
+      next: (event: any) => {
+        if (event.type === HttpEventType.UploadProgress && event.total) this.progress = Math.round(100 * event.loaded / event.total);
+        if (event.type === HttpEventType.Response) {
+          const result = event.body.data;
+          this.importResult = result.processed_days + ' jornadas importadas de ' + result.employees + ' empleados.';
+          this.modal?.close();
+          this.load();
+        }
+      },
+      error: error => this.uploadError = this.message(error, 'No se pudo importar el archivo.'),
+    });
+  }
+
+  created(): void {
+    this.modal?.close();
+    this.load();
+  }
+
+  private message(error: any, fallback: string): string {
+    return error.error?.errors ? Object.values(error.error.errors).flat().join(' ') : fallback;
+  }
 
   ngOnDestroy(): void {
-
     this.destroy$.next();
     this.destroy$.complete();
-
   }
-
-
-  modal: any;
-
-  openVerticallyCentered(content: TemplateRef<any>) {
-    this.modal = this.modalService.open(content, { centered: true });
-  }
-
-  closeModal() {
-    this.modal.close();
-  }
-
-  submit() {
-
-    if (this.form.invalid || !this.file) return;
-
-    const formData = new FormData();
-    formData.append('file', this.file);
-
-    this.uploading = true;
-    this.progress = 0;
-
-    this._attendance.upload(formData)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-
-        next: (event: any) => {
-
-          // 📊 Progreso real
-          if (event.type === HttpEventType.UploadProgress && event.total) {
-            this.progress = Math.round((100 * event.loaded) / event.total);
-          }
-
-          // ✅ Respuesta final
-          if (event.type === HttpEventType.Response) {
-            this.uploading = false;
-            this.progress = 100;
-
-            Swal.fire('Guardado', 'El archivo ha subido correctamente', 'success');
-            this.closeModal();
-
-            console.log(event.body);
-          }
-        },
-
-        error: (error: any) => {
-          this.uploading = false;
-
-          Swal.fire(
-            'Error',
-            'Ocurrió un problema al subir el archivo. Inténtalo nuevamente.',
-            'error'
-          );
-
-          console.error(error);
-        }
-
-      });
-  }
-
 }

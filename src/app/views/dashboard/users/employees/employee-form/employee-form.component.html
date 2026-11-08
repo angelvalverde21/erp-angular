@@ -1,101 +1,113 @@
-<form [formGroup]="form">
-
-    <div class="row mb-3">
-        <div class="col-lg-6">
-            <app-input-group text="Nombre completo" [icon]="faPenToSquare">
-                <input formControlName="name"
-                    [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched" type="text"
-                    class="form-control" placeholder="Nombre completo" aria-label="name"
-                    aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
-
-        <div class="col-lg-6">
-            <app-input-group text="Phone" [icon]="faPhone">
-                <input formControlName="phone" type="text"
-                    [class.is-invalid]="form.get('phone')?.invalid && form.get('phone')?.touched" class="form-control"
-                    placeholder="Phone" aria-label="phone" aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
-
-        <div class="col-lg-12">
-            <app-input-group text="Email" [icon]="faEnvelope">
-                <input formControlName="email" type="text"
-                    [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched" class="form-control"
-                    placeholder="Email" aria-label="email" aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
-        <div class="col-lg-6">
-            <label for="identity_id" class="mb-2">Tipo de documento</label>
-            <app-identity-selected [formControlName]="'identity_id'"
-                [class.is-invalid]="form.get('identity_id')?.invalid && form.get('identity_id')?.touched"></app-identity-selected>
-        </div>
-
-
-        <div class="col-lg-6">
-            <app-input-group text="Numero de documento" [icon]="faIdBadge">
-                <input formControlName="document_number" type="text"
-                    [class.is-invalid]="form.get('document_number')?.invalid && form.get('document_number')?.touched"
-                    class="form-control" placeholder="Numero de documento" aria-label="Numero de documento"
-                    aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
-        <label class="mb-2">Agregar Roles</label>
-        <ng-select [items]="roles" [multiple]="true" [class.is-invalid]="form.get('roles')?.invalid &&
-                   (form.get('roles')?.dirty || form.get('roles')?.touched)" placeholder="Seleccione roles"
-            class="mb-3" formControlName="roles">
-        </ng-select>
-
-        <div class="col-lg-3">
-            <app-input-group text="Sueldo Mensual" icontext="S/.">
-                <input formControlName="salary" type="text" class="form-control"
-                    [class.is-invalid]="form.get('salary')?.invalid && form.get('salary')?.touched" placeholder="salary"
-                    aria-label="salary" aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
-
-        <div class="col-lg-3">
-
-            <label for="type" class="mb-2">Tipo</label>
-
-            <select class="form-select" formControlName="type" aria-label="Default select example"
-                [class.is-invalid]="form.get('type')?.invalid && form.get('type')?.touched">
-
-                <option value="partime">Part Time</option>
-                <option value="fulltime">Full Time</option>
-
-            </select>
-
-        </div>
-
-        <div class="col-lg-3">
-            <app-input-group text="Comision" icontext="%">
-                <input formControlName="comission" type="text" class="form-control"
-                    [class.is-invalid]="form.get('comission')?.invalid && form.get('comission')?.touched"
-                    placeholder="Comision" aria-label="Comision" aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
-        <div class="col-lg-3">
-            <app-input-group text="Tag Ventas" icontext="%">
-                <input formControlName="tag_sales" type="text" class="form-control"
-                    [class.is-invalid]="form.get('tag_sales')?.invalid && form.get('tag_sales')?.touched"
-                    placeholder="Etiqueta ventas" aria-label="tag ventas" aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-        <!-- <div class="col-lg-4">
-                    <app-input-group text="Slug" [icon]="faIdBadge">
-                        <input formControlName="slug" type="text" class="form-control" placeholder="Slug"
-                            aria-label="Slug" aria-describedby="basic-name" />
-                    </app-input-group>
-                </div> -->
-
+<div [formGroup]="form" class="personnel-form">
+  <section class="personnel-section">
+    <div class="personnel-section-heading">
+      <span class="personnel-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+      <div><h3>Información personal</h3><p>Datos personales y de contacto de su cuenta de usuario.</p></div>
     </div>
+    <div class="personnel-grid">
+      <label class="personnel-field personnel-wide"><span class="personnel-label">Nombre completo *</span>
+        <input class="form-control" formControlName="name" autocomplete="name" placeholder="Ej. María García"
+          [class.is-invalid]="invalid('name')">
+        @if (invalid('name')) { <small class="text-danger">Ingresa el nombre del empleado.</small> }
+      </label>
+      <label class="personnel-field"><span class="personnel-label">Correo de acceso *</span>
+        <input class="form-control" type="email" formControlName="email" autocomplete="username"
+          placeholder="nombre@ejemplo.com" [class.is-invalid]="invalid('email')">
+        @if (invalid('email')) { <small class="text-danger">Ingresa un correo válido.</small> }
+      </label>
+      <label class="personnel-field"><span class="personnel-label">Teléfono <small>Opcional</small></span>
+        <input class="form-control" formControlName="phone" autocomplete="tel" placeholder="Ej. 999 999 999">
+      </label>
+      <div class="personnel-field">
+        <label>Tipo de documento <small>Opcional</small></label>
+        <app-identity-selected formControlName="identity_id"></app-identity-selected>
+      </div>
+      <label class="personnel-field"><span class="personnel-label">Número de documento <small>Opcional</small></span>
+        <input class="form-control" formControlName="document_number" placeholder="Documento de identidad">
+      </label>
+    </div>
+  </section>
 
-    <!-- {{ form.value | json }} -->
-</form>
+  <section class="personnel-section">
+    <div class="personnel-section-heading">
+      <span class="personnel-icon"><i class="fa-solid fa-briefcase" aria-hidden="true"></i></span>
+      <div><h3>Información laboral</h3><p>Jornada, remuneración y configuración comercial.</p></div>
+    </div>
+    <div class="personnel-grid">
+      <label class="personnel-field"><span class="personnel-label">Fecha de ingreso</span>
+        <input class="form-control" type="date" formControlName="date_entry">
+      </label>
+      <label class="personnel-field"><span class="personnel-label">Jornada</span>
+        <select class="form-select" formControlName="type">
+          <option value="fulltime">Tiempo completo</option><option value="partime">Tiempo parcial</option>
+        </select>
+      </label>
+      <label class="personnel-field"><span class="personnel-label">Sueldo mensual <small>PEN · opcional</small></span>
+        <div class="input-group"><span class="input-group-text">S/</span>
+          <input class="form-control" type="number" min="0" step="0.01" formControlName="salary" placeholder="0.00">
+        </div>
+      </label>
+      <label class="personnel-field"><span class="personnel-label">Comisión de ventas <small>Opcional</small></span>
+        <div class="input-group">
+          <input class="form-control" type="number" min="0" max="100" step="1" formControlName="comission" placeholder="0">
+          <span class="input-group-text">%</span>
+        </div>
+      </label>
+      <label class="personnel-field"><span class="personnel-label">Etiqueta de ventas <small>Shopify · opcional</small></span>
+        <input class="form-control" formControlName="tag_sales" placeholder="Ej. VENTAS_MARIA">
+      </label>
+      <label class="personnel-field"><span class="personnel-label">Estado laboral</span>
+        <select class="form-select" formControlName="status"><option [ngValue]="true">Activo</option><option [ngValue]="false">Inactivo</option></select>
+      </label>
+    </div>
+  </section>
+
+  <section class="personnel-section">
+    <div class="personnel-section-heading">
+      <span class="personnel-icon"><i class="fa-solid fa-user-lock" aria-hidden="true"></i></span>
+      <div><h3>Acceso al ERP</h3><p>Cuenta de acceso y roles del empleado.</p></div>
+    </div>
+    <div class="personnel-grid">
+      <label class="personnel-field"><span class="personnel-label">Contraseña <small>Mínimo 8 caracteres</small></span>
+        <input class="form-control" type="password" autocomplete="new-password" formControlName="password" [class.is-invalid]="invalid('password')">
+        <small>Al editar, déjala vacía para conservar la actual.</small>
+      </label>
+      <label class="personnel-field"><span class="personnel-label">Confirmar contraseña</span>
+        <input class="form-control" type="password" autocomplete="new-password" formControlName="password_confirmation">
+        @if (form.hasError('passwordMismatch') && form.get('password_confirmation')?.touched) { <small class="text-danger">Las contraseñas no coinciden.</small> }
+      </label>
+      <div class="personnel-field personnel-wide">
+        <label>Roles de acceso *</label>
+        <ng-select [items]="roleOptions" [multiple]="true" formControlName="roles" placeholder="Selecciona los roles del empleado"></ng-select>
+        <small>Se asignan a su cuenta de usuario y se usan para determinar el acceso a los módulos del ERP.</small>
+        @if (invalid('roles')) { <small class="text-danger">Selecciona al menos un rol.</small> }
+      </div>
+    </div>
+  </section>
+
+  <section class="personnel-section">
+    <div class="personnel-section-heading">
+      <span class="personnel-icon"><i class="fa-solid fa-fingerprint" aria-hidden="true"></i></span>
+      <div><h3>Asistencia y marcación</h3><p>Horario general y código del reloj biométrico.</p></div>
+    </div>
+    <div class="personnel-grid">
+      <label class="personnel-field"><span class="personnel-label">Código biométrico <small>Opcional</small></span>
+        <input class="form-control" formControlName="biometric_code" placeholder="Código registrado en el reloj">
+        <small>Se usa para importar marcaciones. También se reconoce el número de documento.</small>
+      </label>
+      <label class="personnel-field"><span class="personnel-label">Tolerancia <small>Minutos</small></span>
+        <input class="form-control" type="number" min="0" max="120" formControlName="tolerance_minutes">
+      </label>
+      <label class="personnel-field"><span class="personnel-label">Hora de entrada</span>
+        <input class="form-control" type="time" step="1" formControlName="work_time_start">
+      </label>
+      <label class="personnel-field"><span class="personnel-label">Hora de salida</span>
+        <input class="form-control" type="time" step="1" formControlName="work_time_end">
+      </label>
+      <label class="personnel-check personnel-wide">
+        <input type="checkbox" formControlName="allow_extra_hours">
+        <span><strong>Considerar horas adicionales</strong><small>Los horarios por día pueden definir una configuración diferente.</small></span>
+      </label>
+    </div>
+  </section>
+</div>

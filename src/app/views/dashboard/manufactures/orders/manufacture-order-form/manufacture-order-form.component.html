@@ -1,70 +1,36 @@
-<div class="row mb-3" [formGroup]="form">
-
-    <!-- {{ addressForm.valid }} -->
-
-    <div class="col-lg-12 col-12">
-        <app-input-group text="Nombre del producto que se fabricara">
-            <input formControlName="name" type="text" class="form-control"
-                [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
-                placeholder="Nombre de la produccion" aria-label="name" aria-describedby="basic-name" />
-        </app-input-group>
+<div class="purchase-order-form" [formGroup]="form">
+  <div class="purchase-order-field">
+    <label for="purchase-order-name">Nombre de la orden <span class="text-danger" aria-hidden="true">*</span></label>
+    <input id="purchase-order-name" formControlName="name" type="text" class="form-control form-control-lg"
+      placeholder="Ej.: Pedido de prendas · Noviembre" [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+      aria-required="true" aria-describedby="purchase-order-name-help" />
+    <p id="purchase-order-name-help">Usa un nombre que te permita identificar fácilmente este pedido.</p>
+    @if (isInvalid('name')) { <span class="text-danger small" role="alert">Ingresa un nombre para la orden.</span> }
+  </div>
+  <div class="purchase-order-field">
+    <label id="purchase-order-supplier-label">Proveedor</label>
+    <div class="purchase-order-supplier-control">
+      <app-supplier-selected formControlName="supplier_id" [suppliers]="suppliers" aria-labelledby="purchase-order-supplier-label"></app-supplier-selected>
+      <button type="button" class="btn btn-outline-secondary" (click)="openVerticallyCentered(newSupplier)"><i class="fa-solid fa-plus me-2" aria-hidden="true"></i>Nuevo proveedor</button>
     </div>
-
-    <div class="col-lg-12 col-12">
-        <label for="supplier_id" class="mb-2">Proveedor</label>
-        <div class="mb-3 d-flex justify-content-between align-items-center">
-            <app-supplier-selected formControlName="supplier_id" class="w-100 me-2"
-                [suppliers]="suppliers"></app-supplier-selected>
-            <app-button [icon]="faPlus" (click)="openVerticallyCentered(newSupplier)">Crear</app-button>
-        </div>
+    <p>Selecciona un proveedor existente o registra uno nuevo.</p>
+  </div>
+  <div class="purchase-order-dates">
+    <div class="purchase-order-field">
+      <label for="purchase-order-start">Fecha del pedido</label>
+      <input id="purchase-order-start" formControlName="manufacture_start" type="date" class="form-control"
+        [class.is-invalid]="isInvalid('manufacture_start')" />
+      @if (isInvalid('manufacture_start')) { <span class="text-danger small" role="alert">Indica la fecha del pedido.</span> }
     </div>
-
-    <div class="col-lg-6 col-12">
-        <app-input-group text="Fecha de pedido">
-            <input formControlName="manufacture_start" type="date" class="form-control" placeholder="Fecha de entrega"
-                aria-label="delivery_date" aria-describedby="basic-delivery_date" [class.is-invalid]="form.get('manufacture_start')?.invalid && form.get('manufacture_start')?.touched" />
-        </app-input-group>
+    <div class="purchase-order-field">
+      <label for="purchase-order-end">Entrega prevista</label>
+      <input id="purchase-order-end" formControlName="manufacture_end" type="date" class="form-control"
+        [class.is-invalid]="isInvalid('manufacture_end')" />
+      @if (isInvalid('manufacture_end')) { <span class="text-danger small" role="alert">Indica la fecha de entrega.</span> }
     </div>
-
-    <div class="col-lg-6 col-12">
-        <app-input-group text="Fecha de entrega">
-            <input formControlName="manufacture_end" type="date" class="form-control" placeholder="Fecha de entrega"
-                aria-label="delivery_date" aria-describedby="basic-delivery_date" [class.is-invalid]="form.get('manufacture_start')?.invalid && form.get('manufacture_start')?.touched" />
-        </app-input-group>
-    </div>
-
-
-
-
-    <!-- <div class="col-lg-6 col-12">
-        <app-input-group text="Presupuesto Aproximado" icontext="S/. ">
-            <input type="number" twoDecimals class="form-control is-required" [ngClass]="isInvalid('budget') ? 'is-invalid' : '' "
-                placeholder="Presupuesto" formControlName="budget" required />
-        </app-input-group>
-
-    </div>
-
-    <div class="col-lg-6 col-12">
-        <app-input-group text="Cantidad a fabricar (Espectativa)">
-            <input type="number" step="0.1" class="form-control is-required" [ngClass]="isInvalid('quantity_total') ? 'is-invalid' : '' "
-                placeholder="0" formControlName="quantity_total" required />
-        </app-input-group>
-
-    </div> -->
-
-    <!-- {{ form.value | json }} -->
-
+  </div>
 </div>
-
-
 <ng-template #newSupplier let-modal>
-
-    <div class="modal-header">
-        <h4 class="modal-title">Crear proveedor</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body pb-4">
-        <app-supplier-create (emitSupplierCreate)="supplierReceiveCreate($event)"></app-supplier-create>
-    </div>
-
+  <div class="modal-header"><h2 class="modal-title fs-5">Nuevo proveedor</h2><button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button></div>
+  <div class="modal-body pb-4"><app-supplier-create (emitSupplierCreate)="supplierReceiveCreate($event)"></app-supplier-create></div>
 </ng-template>

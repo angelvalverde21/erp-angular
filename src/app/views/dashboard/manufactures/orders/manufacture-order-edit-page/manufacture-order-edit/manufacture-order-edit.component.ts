@@ -1,7 +1,5 @@
 import { Component, effect, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
-import { ButtonSaveComponent } from '@shared/components/buttons/button-save/button-save.component';
 import Swal from 'sweetalert2';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
@@ -15,8 +13,6 @@ import { ManufactureService } from '@dashboard/manufactures/manufacture.service'
   selector: 'app-manufacture-order-edit',
   imports: [
     ReactiveFormsModule,
-    JsonPipe,
-    ButtonSaveComponent,
     LoadingComponent,
     ManufactureOrderFormComponent,
   ],
@@ -31,6 +27,7 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
 
   loading: boolean = false;
   disabledButton: boolean = false;
+  error = '';
   manufacture_id: number = 0;
 
   @Input() manufacture_order: any;
@@ -85,13 +82,14 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
 
     // console.log(this.manufacture_order);
     this.formInit();
+    this.manufacture_id = this.manufacture_order.id ?? this.manufacture_id;
     this.suppliersInit();
 
     this.form.patchValue({
       name: this.manufacture_order.name,
       supplier_id: this.manufacture_order.supplier_id,
-      manufacture_start: this.manufacture_order.manufacture_start.split(' ')[0],
-      manufacture_end: this.manufacture_order.manufacture_end.split(' ')[0],
+      manufacture_start: this.manufacture_order.manufacture_start?.split(/[ T]/)[0] ?? '',
+      manufacture_end: this.manufacture_order.manufacture_end?.split(/[ T]/)[0] ?? '',
     });
 
 
@@ -102,6 +100,7 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
 
   suppliersInit() {
 
+    this.error = '';
     this.loading = true;
 
     this._supplier.index().pipe(takeUntil(this.destroy$)).subscribe({
@@ -114,6 +113,8 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
       },
 
       error: (error: any) => {
+        this.loading = false;
+        this.error = 'No se pudieron consultar los proveedores. Intenta nuevamente.';
         Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         console.error(error);
       },
@@ -124,6 +125,8 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
 
   update() {
 
+    if (this.disabledButton) return;
+
     console.log(this.form.value);
 
     if (!this.form.valid) {
@@ -132,7 +135,7 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
     }
 
     this.loading = false;
-    this.disabledButton = false;
+    this.disabledButton = true;
 
     Swal.fire({
       title: 'Espere...',

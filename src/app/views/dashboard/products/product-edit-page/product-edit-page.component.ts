@@ -1,49 +1,43 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { ProductService } from '../product.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 // import { UploadDropzoneComponent } from '@shared/upload-dropzone/upload-dropzone.component';
-import { faCircleCheck, faPalette, faPenToSquare, faPlus, faRulerCombined, faRulerVertical, faBarcode } from '@fortawesome/free-solid-svg-icons';
+import { faPalette, faPenToSquare, faPlus, faRulerCombined, faBarcode } from '@fortawesome/free-solid-svg-icons';
 import { ProductEditComponent } from '../product-edit/product-edit.component';
 import { Product } from '../../../../interfaces/product.interface';
 import { Resp } from '../../../../interfaces/response.interface';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Category } from '../../../../interfaces/category.interface';
 import { Size } from '../../../../interfaces/size.interface';
-import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
-import { ButtonBackComponent } from '../../../shared/components/buttons/button-back/button-back.component';
-import { HeadPageComponent } from "../../../shared/components/head-page/head-page.component";
 import { Brand } from '../../../../interfaces/brand.interface';
 import { StoreService } from '../../../stores/store.service';
 import { BaseService } from '../../../base.service';
 import Swal from 'sweetalert2';
 import { Color } from '../../colors/color.interface';
-import { JsonPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { OptionIndexComponent } from '../options/option-index/option-index.component';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { VariantIndexComponent } from '../variants/variant-index/variant-index.component';
 import { BarcodeIndexComponent } from '../../barcodes/barcode-index/barcode-index.component';
+import { ProductPricesComponent } from '../product-prices/product-prices.component';
+import { OptionValueDeletion } from '../options/OptionValues/option_value.service';
+import { OptionRemoval } from '../options/option.service';
 
 @Component({
   selector: 'app-product-edit-page',
   imports: [
     LoadingComponent,
     ProductEditComponent,
-    FontAwesomeModule,
-    ButtonComponent,
-    ButtonBackComponent,
-    HeadPageComponent,
-    JsonPipe,
+    RouterLink,
+    DatePipe,
     OptionIndexComponent,
-    NgbAccordionModule,
     VariantIndexComponent,
-    BarcodeIndexComponent
+    BarcodeIndexComponent,
+    ProductPricesComponent
   ],
   templateUrl: './product-edit-page.component.html',
   styleUrl: './product-edit-page.component.scss',
-  encapsulation: ViewEncapsulation.None
 })
 
 export class ProductEditPageComponent implements OnInit, OnDestroy {
@@ -70,7 +64,7 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
     config.backdrop = 'static';
     config.keyboard = false;
 
-    this.route.params.subscribe(params => {
+    this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.product_id = params['product_id'];
     });
 
@@ -139,6 +133,28 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
     this.product.category = category;
 
   }
+
+  productUpdated(product: Product): void {
+    this.product.name = product.name;
+    this.product.price = product.price;
+    this.product.body = product.body;
+  }
+
+  optionValueDeleted(event: OptionValueDeletion): void {
+    this.product.options = this.product.options.map(option => option.id === event.option_id
+      ? { ...option, option_values: (option.option_values || []).filter((value: any) => value.id !== event.option_value_id) }
+      : option);
+    const deletedIds = new Set(event.deleted_variant_ids);
+    this.product.variants = this.product.variants.filter(variant => !deletedIds.has(variant.id));
+    this.product.stock_total = this.product.variants.reduce((total, variant) => total + Number(variant.stock || 0), 0);
+  }
+
+  optionBlockRemoved(event: OptionRemoval): void {
+    this.product.options = this.product.options.filter(option => option.id !== event.option_id);
+    const hiddenIds = new Set(event.hidden_variant_ids);
+    this.product.variants = this.product.variants.filter(variant => !hiddenIds.has(variant.id));
+    this.product.stock_total = this.product.variants.reduce((total, variant) => total + Number(variant.stock || 0), 0);
+  }
   // colorCreate(color: any) {
   //   console.log('Color upload event:', color);
   //   this.product.colors.unshift(color);
@@ -173,6 +189,7 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
   }
 
   setupLoading: boolean = true;
+  setupError = '';
 
   categories: Category[] = [];
   brands: Brand[] = [];
@@ -180,6 +197,7 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
   productSetup() {
 
     this.setupLoading = true;
+    this.setupError = '';
 
     this._store.get(this._base.store).pipe(takeUntil(this.destroy$)).subscribe({
 
@@ -192,6 +210,8 @@ export class ProductEditPageComponent implements OnInit, OnDestroy {
       },
 
       error: (error: any) => {
+        this.setupLoading = false;
+        this.setupError = 'No se pudo cargar la configuración del producto. Inténtalo nuevamente.';
         Swal.fire('Error', 'Ocurrió un problema al solicitar la informacion del producto. Inténtalo nuevamente.', 'error');
         console.error(error);
       },

@@ -1,45 +1,190 @@
-<form [formGroup]="form" (ngSubmit)="search()" class="mb-3">
+<div class="barcode-search">
+  <header class="barcode-heading">
+    <div>
+      <span class="barcode-eyebrow">INVENTARIO</span>
+      <h2>Actualizar stock</h2>
+      <p>Escanea un producto y registra sus existencias.</p>
+    </div>
+    <span class="barcode-heading-icon" aria-hidden="true"><fa-icon [icon]="faBarcode"></fa-icon></span>
+  </header>
 
-    <app-input-group [icon]="faBarcode" text="Buscar por código de barras">
-        <input formControlName="barcode" type="text" class="form-control" placeholder="barcode" aria-label="barcode"
-            aria-describedby="basic-barcode" />
-    </app-input-group>
+  <form [formGroup]="form" (ngSubmit)="search()" class="barcode-panel barcode-search-panel" [attr.aria-busy]="loading">
+    <label for="inventory-barcode-input">Código de barras</label>
+    <div class="barcode-search-controls">
+      <div class="barcode-input-wrap">
+        <fa-icon [icon]="faBarcode" aria-hidden="true"></fa-icon>
+        <input #barcodeInput id="inventory-barcode-input" formControlName="barcode" type="text" placeholder="Escanea o escribe el código" (click)="barcodeInput.select()"
+          autocomplete="off" autocapitalize="off" [spellcheck]="false" [readonly]="loading || updatingStock" aria-describedby="inventory-barcode-help" />
+      </div>
+      <button type="submit" class="btn btn-dark text-white barcode-search-button" [disabled]="!canSearch">
+        @if (loading) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> }
+        @else { <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> }
+        {{ loading ? 'Buscando...' : 'Buscar producto' }}
+      </button>
+    </div>
+    <div id="inventory-barcode-help" class="barcode-input-help">
+      <span><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Compatible con lector de códigos de barras.</span>
+      <span>Presiona <kbd>Enter</kbd> para buscar</span>
+    </div>
+  </form>
 
-    <!-- <button class="btn btn-dark w-100"><fa-icon [icon]="faBarcode" class="me-2"></fa-icon> Buscar</button> -->
+  @if (loading) {
+  <div class="barcode-state" role="status">
+    <app-loading></app-loading>
+    <h3>Consultando inventario</h3>
+    <p>Buscando el producto del código {{ searchedBarcode }}.</p>
+  </div>
+  } @else if (error) {
+  <div class="barcode-state barcode-state-error" role="alert">
+    <span class="barcode-state-icon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></span>
+    <h3>No pudimos completar la consulta</h3>
+    <p>{{ error }}</p>
+    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="search()">Reintentar búsqueda</button>
+  </div>
+  } @else if (variant) {
+  <div class="barcode-workspace">
+    <section class="barcode-panel barcode-results" aria-labelledby="barcode-results-title">
+      <h3 id="barcode-results-title" class="visually-hidden">Información de la variante</h3>
+      <div class="barcode-product">
+        <span class="barcode-product-image">
+          @if (productImageUrl; as imageUrl) { <img [src]="imageUrl" [alt]="variant.product?.name || 'Imagen del producto'" width="64" height="64" (error)="imageUnavailable = true" /> }
+          @else { <i class="fa-solid fa-box-open" role="img" aria-label="Producto sin imagen disponible"></i> }
+        </span>
+        <div class="barcode-product-info">
+          <strong>{{ variant.product?.name || 'Producto encontrado' }}</strong>
+          <div class="barcode-product-meta">
+            <span>Código {{ searchedBarcode }}</span>
+            <span>Variante #{{ variant.id }}</span>
+            @if (variant.product_id) { <span>Producto #{{ variant.product_id }}</span> }
+          </div>
+          @if (variant.variant_option_values?.length) {
+          <div class="barcode-variant-options" aria-label="Opciones de la variante">
+            @for (option of variant.variant_option_values; track option.id) {
+            <span>{{ option.option?.label || option.option?.name || 'Opción' }}: <strong>{{ (option.option_value?.value || 'No especificado') | uppercase }}</strong></span>
+            }
+          </div>
+          }
+        </div>
+      </div>
+      <dl class="barcode-details">
+        <div><dt>SKU</dt><dd>{{ variant.sku || 'No especificado' }}</dd></div>
+        <div><dt>Precio</dt><dd>{{ variant.price == null ? 'Sin precio' : (variant.price | currency:'PEN':'symbol':'1.2-2':'es-PE') }}</dd></div>
+        <div><dt>Última actualización</dt><dd>{{ variant.updated_at ? (variant.updated_at | date:'dd/MM/yyyy, HH:mm') : 'No disponible' }}</dd></div>
+      </dl>
+      <div class="barcode-product-actions">
+      @if (productEditLink; as productLink) {
+      <a class="btn btn-outline-secondary btn-sm barcode-product-link" [routerLink]="updatingStock ? null : productLink" [class.disabled]="updatingStock" [attr.aria-disabled]="updatingStock">
+        <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>Ver producto
+      </a>
+      }
+      <button type="button" class="btn btn-outline-dark btn-sm barcode-print-button" (click)="openVerticallyCentered(content)" [disabled]="!variants.length || updatingStock">
+        <i class="fa-solid fa-print" aria-hidden="true"></i>Imprimir etiquetas
+      </button>
+      </div>
+    </section>
+    <form class="barcode-panel barcode-stock-form" [formGroup]="stockForm" (ngSubmit)="updateStock()" [attr.aria-busy]="updatingStock" aria-labelledby="barcode-stock-title">
+      <header class="barcode-stock-header">
+        <div>
+          <h3 id="barcode-stock-title">{{ hasStockChange ? 'Stock al guardar' : 'Stock actual' }}</h3>
+          @if (hasStockChange) {
+          <p id="barcode-operation-preview" class="barcode-header-summary" role="status">{{ operationSummary }}</p>
+          } @else {
+          <p class="barcode-stock-product">{{ variant.product?.name || 'Variante #' + variant.id }}</p>
+          <div class="barcode-stock-variant">
+            @for (option of variant.variant_option_values; track option.id) {
+            <span>{{ option.option?.label || option.option?.name || 'Opción' }}: <strong>{{ (option.option_value?.value || 'No especificado') | uppercase }}</strong></span>
+            }
+          </div>
+          <span class="barcode-stock-status">{{ variant.stock == null ? 'No disponible' : variant.stock === 0 ? 'Sin existencias' : 'Existencias registradas' }}</span>
+          }
+        </div>
+        <strong class="barcode-stock-number">
+          {{ variant.stock ?? '—' }}
+          @if (hasStockChange) { <i class="fa-solid fa-arrow-right" aria-label="cambia a"></i> {{ resultingStock }} }
+          <small>unidades</small>
+        </strong>
+      </header>
+      <div class="barcode-stock-body">
+      <div class="barcode-stock-row row g-4 align-items-start mb-4">
+        <div class="col-12 col-sm-6">
+          <label for="barcode-stock-change" class="d-block small mb-2">Agregar o retirar unidades</label>
+          <input #stockChangeInput id="barcode-stock-change" type="number" step="1" class="form-control form-control-lg" formControlName="change" (wheel)="stockChangeInput.blur()" (click)="stockChangeInput.select()"
+            [attr.min]="variant.stock === 0 ? 0 : null" (keydown)="blockNegativeValue($event)"
+            [class.is-invalid]="changeControl.invalid && (changeControl.dirty || changeControl.touched)"
+            aria-describedby="barcode-change-help barcode-stock-feedback" />
+          <p id="barcode-change-help" class="small text-body-secondary mt-2 mb-0">{{ variant.stock === 0 ? 'Sin stock disponible para retirar. Ingresa las unidades a agregar.' : 'Ej.: 5 para agregar o −5 para retirar.' }}</p>
+        </div>
+        <div class="col-12 col-sm-6">
+          <label for="barcode-new-stock" class="d-block small mb-2">Stock total</label>
+          <input #stockTotalInput id="barcode-new-stock" type="number" min="0" step="1" inputmode="numeric" class="form-control form-control-lg" formControlName="stock" (wheel)="stockTotalInput.blur()" (click)="stockTotalInput.select()"
+            (keydown)="blockNegativeValue($event)"
+            [class.is-invalid]="!validStock && (stockControl.dirty || stockControl.touched)"
+            aria-describedby="barcode-total-help barcode-stock-feedback" />
+          <p id="barcode-total-help" class="small text-body-secondary mt-2 mb-0">También puedes escribir el total contado.</p>
+        </div>
+      </div>
+      <div id="barcode-stock-feedback" class="small mb-3">
+        @if ((stockForm.dirty || stockForm.touched) && !stockForm.valid && !updatingStock) { <p class="text-danger mb-0" role="alert">Ingresa cantidades enteras. El stock total debe ser igual o mayor a cero.</p> }
+        @if ((resultingStock ?? 0) < 0) { <p class="text-danger mb-0" role="alert">No puedes retirar más unidades que el stock disponible.</p> }
+        @if (variant.stock == null) { <p class="text-danger mb-0" role="alert">Falta el stock de referencia para registrar esta operación.</p> }
+        @if (stockError) { <p class="text-danger mb-0" role="alert">{{ stockError }}</p> }
+        @if (stockNeedsReview) { <button type="button" class="btn btn-outline-secondary btn-sm mt-2" (click)="search()">Volver a consultar producto</button> }
+      </div>
+      <details class="barcode-reason mb-3">
+        <summary class="small">Agregar motivo (opcional)</summary>
+        <label for="stock-reason" class="small mt-2 mb-1">Motivo del movimiento</label>
+        <textarea id="stock-reason" formControlName="reason" class="form-control form-control-sm" rows="2" maxlength="500"
+          placeholder="Por ejemplo: compra, devolución o merma"></textarea>
+      </details>
+      @if (!operationComplete) {
+      <div class="barcode-save-row">
+      <button type="submit" class="btn btn-dark text-white barcode-search-button" [disabled]="!canUpdateStock" [attr.aria-describedby]="hasStockChange ? 'barcode-operation-preview barcode-stock-feedback' : 'barcode-stock-feedback'">
+        @if (updatingStock) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> }
+        @else { <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i> }
+        {{ updatingStock ? 'Registrando...' : 'Guardar cambios' }}
+      </button>
+      </div>
+      }
+      <div class="small mt-2">
+        @if (operationComplete) {
+        <p class="text-success mb-0" role="status"><i class="fa-regular fa-circle-check me-1" aria-hidden="true"></i>Inventario actualizado correctamente.</p>
+        <button type="button" class="btn btn-outline-secondary btn-sm mt-2" (click)="barcodeInput.focus(); barcodeInput.select()">Buscar otro producto</button>
+        }
+      </div>
+      </div>
+    </form>
 
-    <!-- <app-button-print-barcode></app-button-print-barcode> -->
+  </div>
+  <section class="barcode-panel barcode-history" aria-labelledby="barcode-kardex-title">
+    <header class="barcode-history-header">
+      <div><h3 id="barcode-kardex-title">Historial de movimientos</h3><p>Entradas y salidas del producto consultado.</p></div>
+      <span>{{ variant.kardexes?.length ?? 0 }} registros</span>
+    </header>
+    <app-kardex-index [kardexes]="kardexes"></app-kardex-index>
+  </section>
+  } @else if (hasSearched) {
+  <div class="barcode-state" role="status">
+    <span class="barcode-state-icon" aria-hidden="true"><i class="fa-solid fa-magnifying-glass"></i></span>
+    <h3>No encontramos el producto</h3>
+    <p>No hay una variante para el código <strong>{{ searchedBarcode }}</strong>. Comprueba el código o realiza otra consulta.</p>
+    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="barcodeInput.focus(); barcodeInput.select()">Buscar otro código</button>
+  </div>
+  } @else {
+  <div class="barcode-state barcode-state-initial">
+    <span class="barcode-state-icon" aria-hidden="true"><fa-icon [icon]="faBarcode"></fa-icon></span>
+    <h3>Escanea tu primer producto</h3>
+    <p>Aquí verás su stock actual y podrás agregar unidades o corregir el total contado.</p>
+    <button type="button" class="btn btn-outline-secondary" (click)="barcodeInput.focus(); barcodeInput.select()">Ingresar código</button>
+  </div>
+  }
 
-</form>
-
-@if(loading){
-<app-loading></app-loading>
-}@else{
-@if(kardexes.length > 0){
-
-<app-button mb="3" [icon]="faBarcode" [me]="true" (click)="openVerticallyCentered(content)"> Imprimir</app-button>
-
-<app-kardex-index [kardexes]="kardexes"></app-kardex-index>
-
-}
-
-}
+</div>
 
 <ng-template #content let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Imprimir</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-        <app-barcode-index [variants]="variants" (emitPrintStatus)="receivePrintStatus($event)"></app-barcode-index>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-    </div>
+  <div class="modal-header">
+    <div><h2 class="modal-title fs-5">Imprimir etiquetas</h2><p class="small text-body-secondary mb-0 mt-1">Código {{ searchedBarcode }}</p></div>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body"><app-barcode-index [variants]="variants" (emitPrintStatus)="receivePrintStatus($event)"></app-barcode-index></div>
+  <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cerrar</button></div>
 </ng-template>
-
-<!-- <div class="mb-3">
-        <label for="barcode" class="form-label">Barcode</label>
-        <input type="text" id="barcode" formControlName="barcode" class="form-control">
-    </div> -->
-
-    

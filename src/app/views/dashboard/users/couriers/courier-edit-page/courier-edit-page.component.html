@@ -1,61 +1,65 @@
-<app-head-page title="Editar Courier" [icon]="faTruck">
-    <app-button-back></app-button-back>
-</app-head-page>
+<app-head-page [title]="courier?.name || 'Editar courier'"><app-button-back></app-button-back></app-head-page>
+@if (loading) {
+  <div class="courier-card loading-state" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Cargando courier…</div>
+} @else if (error) {
+  <div class="courier-card loading-state" role="alert"><p>{{ error }}</p><button class="btn btn-outline-secondary" (click)="courierInit()">Reintentar</button></div>
+} @else if (courier) {
+  <div class="courier-card editor-card mb-4">
+    <app-courier-edit [courier]="courier" (emitCourierUpdate)="receiveCourierUpdate($event)"></app-courier-edit>
+  </div>
 
-@if(loading || !courier){
-<app-loading></app-loading>
-}@else{
-    
-<div class="card mb-3">
-    <div class="card-body">
-        <app-courier-edit [courier]="courier"></app-courier-edit>
-    </div>
-</div>
-
-<app-head-page [icon]="faHouse" title="Sucursales">
-    <button type="button" class="btn btn-outline-dark btn-sm" (click)="openVerticallyCentered(content)">+ Crear
-        Sucursal</button>
-</app-head-page>
-
-<div class="card mb-3">
-
-    <div class="card-header py-3 bg-light d-flex justify-content-between align-items-center">
-       Mostrando {{ addresses.length }} Registros
-    </div>
-
-    <div class="card-body p-0">
-
-        @if(addresses.length > 0){
-
-        <app-address-index [addresses]="courier.addresses" [user_id]="courier.user_id"></app-address-index>
-
-        }@else{
-        <div class="p-3">
-            No hay oficinas registradas
+  <section class="courier-card">
+    <header class="offices-heading">
+      <div class="offices-title"><span class="offices-icon" aria-hidden="true"><i class="fa-regular fa-building"></i></span><div><h2>Oficinas y agencias <span>{{ courier.addresses_count ?? 0 }}</span></h2><p>Gestiona los puntos de atención y sus datos de contacto.</p></div></div>
+      <button type="button" class="btn btn-dark add-office-button" (click)="openOffice(officeModal)"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar oficina</button>
+    </header>
+    @if (courier.addresses_count || addressSearch) {
+      <div class="offices-search">
+        <div class="office-search-field">
+        <label class="visually-hidden" for="office-search">Buscar oficina</label>
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input id="office-search" class="form-control" type="search" placeholder="Buscar por oficina, dirección, distrito o teléfono"
+          [(ngModel)]="addressSearch" (ngModelChange)="loadAddresses()">
         </div>
+        <span class="page-size-label">20 oficinas por página</span>
+      </div>
+    }
+      @if (addressLoading) {
+        <div class="loading-state" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Cargando oficinas…</div>
+      } @else if (addressError) {
+        <div class="loading-state" role="alert"><p>{{ addressError }}</p><button type="button" class="btn btn-outline-secondary btn-sm mt-2" (click)="loadAddresses(addressPage)">Reintentar</button></div>
+      } @else if (addresses.length) {
+        <app-address-index [addresses]="addresses" addressable_type="courier" [addressable_id]="courier.id"
+          (emitUpdateAddress)="receiveUpdateAddress()"></app-address-index>
+      } @else if (addressSearch) {
+        <p class="loading-state">No se encontraron oficinas con esa búsqueda.</p>
+      } @else {
+        <div class="loading-state"><strong>Agrega la primera oficina</strong><p>Registra una dirección para poder seleccionar este courier en un pedido.</p></div>
+      }
+      <div class="offices-footer">
+        <span>Mostrando <strong>{{ addressFrom }}–{{ addressTo }}</strong> de <strong>{{ addressTotal }}</strong> oficinas</span>
+        @if (addressLastPage > 1) {
+          <nav class="office-pagination" aria-label="Páginas de oficinas">
+            <button type="button" class="page-arrow" [disabled]="addressPage <= 1 || addressLoading" (click)="loadAddresses(addressPage - 1)" aria-label="Página anterior"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+            @for (page of addressPageNumbers; track page) {
+              <button type="button" class="page-number" [class.active]="addressPage === page" [attr.aria-current]="addressPage === page ? 'page' : null" [disabled]="addressLoading" (click)="loadAddresses(page)">{{ page }}</button>
+            }
+            <button type="button" class="page-arrow" [disabled]="addressPage >= addressLastPage || addressLoading" (click)="loadAddresses(addressPage + 1)" aria-label="Página siguiente"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+          </nav>
         }
-
-    </div>
-
-    <div class="card-footer">
-        {{ addresses.length }} Registros encontrados
-    </div>
-
-</div>
-
-
+      </div>
+  </section>
 }
 
-<ng-template #content let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Crear Oficina</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-        <app-address-create [user_id]="courier.user_id"
-            (emitCreateAddress)="receiveCreateAddress($event)"></app-address-create>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-    </div>
+<ng-template #officeModal let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title fs-5">Nueva oficina</h2>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    @if (courier) {
+      <app-address-create addressable_type="courier" [addressable_id]="courier.id"
+        (emitCreateAddress)="receiveCreateAddress()"></app-address-create>
+    }
+  </div>
 </ng-template>

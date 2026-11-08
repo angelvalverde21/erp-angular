@@ -1,31 +1,20 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-
-<div class="pb-3 d-flex justify-content-between align-items-center">
-
-    <span class="ms-3"><fa-icon [icon]="faRightLeft" class="me-2"></fa-icon>Entrega y
-        recepcion</span>
-
-    <div class="buttons d-flex justify-content-end align-items-center bt-sm">
-
-        <button class="btn btn-success py-1 me-2 text-white btn-sm" (click)="openVerticallyCentered(ingreso)">+
-            Ingreso</button>
-
-        <app-button-trash [me]="true" [icon]="faMinus" (click)="openVerticallyCentered(salida)">
-            Salida</app-button-trash>
-
+@if (loading) { <app-loading></app-loading> } @else if (error) {
+<div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar los movimientos</h3><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary" (click)="productionKardexesInit()">Reintentar</button></div>
+} @else {
+<section class="production-panel">
+  <header class="production-section-heading">
+    <div><h2>Movimientos de inventario</h2><p>Registra las entradas y salidas de los productos de esta producción.</p></div>
+    <div class="d-flex flex-wrap gap-2">
+      <button type="button" class="btn btn-success text-white px-3 py-2" (click)="openVerticallyCentered(ingreso)"><i class="fa-solid fa-plus me-2" aria-hidden="true"></i>Registrar ingreso</button>
+      <button type="button" class="btn btn-outline-danger px-3 py-2" (click)="openVerticallyCentered(salida)"><i class="fa-solid fa-minus me-2" aria-hidden="true"></i>Registrar salida</button>
     </div>
-
-</div>
-
-<app-kardex-index [kardexes]="kardexes" (emitKardexSummary)="receiveKardexSummary($event)"></app-kardex-index>
-
-
+  </header>
+  <div class="production-panel-body"><app-kardex-index [kardexes]="kardexes" (emitKardexSummary)="receiveKardexSummary($event)"></app-kardex-index></div>
+</section>
 <ng-template #ingreso let-modal>
     <div class="modal-header bg-success text-white">
         <h6 class="modal-title">+ Ingreso de productos</h6>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
         @if(loadingKardex){
@@ -41,7 +30,7 @@
 <ng-template #reingreso let-modal>
     <div class="modal-header bg-warning text-white">
         <h6 class="modal-title">+ Re Ingreso (Reparados)</h6>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"></button>
     </div>
 
     <div class="modal-body">
@@ -60,7 +49,7 @@
 <ng-template #salida let-modal>
     <div class="modal-header bg-danger text-white">
         <h6 class="modal-title">- Salida de productos</h6>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
         @if(loadingKardex){

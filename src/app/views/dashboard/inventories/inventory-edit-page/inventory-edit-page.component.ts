@@ -1,88 +1,49 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
-import Swal from 'sweetalert2';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Subject, finalize, forkJoin, of, takeUntil } from 'rxjs';
+import { Inventory, InventoryOptions, InventoryPayload } from 'src/app/interfaces/inventory.interface';
 import { InventoryService } from '../inventory.service';
-import { HeadPageComponent } from 'src/app/views/shared/components/head-page/head-page.component';
-import { ButtonBackComponent } from 'src/app/views/shared/components/buttons/button-back/button-back.component';
-import { LoadingComponent } from 'src/app/views/shared/components/loading/loading.component';
+import { InventorySectionHeaderComponent } from '../inventory-section-header/inventory-section-header.component';
 import { InventoryEditComponent } from '../inventory-edit/inventory-edit.component';
-import { ButtonPrintBarcodeComponent } from 'src/app/views/shared/components/buttons/button-print-barcode/button-print-barcode.component';
+import { branchError, markBranchFieldErrors } from '../../branches/branch-api.model';
 
-@Component({
-  selector: 'app-inventory-edit-page',
-  imports: [
-    HeadPageComponent,
-    ButtonBackComponent,
-    LoadingComponent,
-    InventoryEditComponent,
-    ButtonPrintBarcodeComponent
-  ],
-  templateUrl: './inventory-edit-page.component.html',
-  styleUrl: './inventory-edit-page.component.scss'
-})
-export class InventoryEditPageComponent implements OnInit, OnDestroy{
-
-
-  inventory_id: number = 0;
-  inventory: any = null;  
-
-  variants: any[] = [];
-
-  loading: boolean = false;
-
+@Component({ selector: 'app-inventory-edit-page', imports: [RouterLink, InventorySectionHeaderComponent, InventoryEditComponent], templateUrl: './inventory-edit-page.component.html', styleUrl: './inventory-edit-page.component.scss' })
+export class InventoryEditPageComponent implements OnInit, OnDestroy {
+  @ViewChild(InventoryEditComponent) private editor?: InventoryEditComponent;
+  options: InventoryOptions | null = null;
+  inventory: Inventory | null = null;
+  
+  loading = true;
+  saving = false;
+  error = '';
+  readonly inventoryId: number;
+  
+  private readonly destroy$ = new Subject<void>();
   constructor(
+    private _inventory: InventoryService,
+    
+    private router: Router,
     private route: ActivatedRoute,
-    private _inventory: InventoryService
-  ) {
-
-    this.route.params.subscribe(params => {
-      this.inventory_id = Number(params['inventory_id']);
-    });
-
-  }
-
-  ngOnInit(): void {
-    this.inventoryInit();
-  }
-
-  inventoryInit(){
-
+  ) { this.inventoryId = Number(this.route.snapshot.paramMap.get('inventory_id'));  }
+  ngOnInit(): void { this.load(); }
+  load(): void {
+    if (!Number.isSafeInteger(this.inventoryId) || this.inventoryId < 1) { this.error = 'El registro solicitado no es válido.'; this.loading = false; return; }
     this.loading = true;
-
-    this._inventory.get(this.inventory_id).pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        console.log(resp);
-        this.inventory = resp.data;
-
-        this.variants = this.inventory.kardexes.map((kardex: any) => {
-          return {
-            id: kardex.variant_id,
-            sku: kardex.variant.sku,
-            quantity: kardex.quantity,
-          }
-        });
-
-        this.loading = false;
-      },
-    
-      error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al traer los datos. Inténtalo nuevamente.','error');
-        console.error(error);
-      },
-    
+    this.error = '';
+    forkJoin({ options: this._inventory.options(), inventory: this._inventory.details(this.inventoryId),  }).pipe(takeUntil(this.destroy$), finalize(() => this.loading = false)).subscribe({
+      next: response => { this.options = response.options.data; this.inventory = response.inventory?.data ?? null;   },
+      error: error => this.error = branchError(error, 'No se pudo cargar la información.'),
     });
-
   }
-
-  destroy$ = new Subject<void>();
   
-  ngOnDestroy(): void {
-  
-    this.destroy$.next();
-    this.destroy$.complete();
-  
+  save(payload: InventoryPayload): void {
+    if (this.saving) return;
+    this.saving = true;
+    this.error = '';
+    this._inventory.saveChanges(this.inventoryId, payload).pipe(takeUntil(this.destroy$), finalize(() => this.saving = false)).subscribe({
+      next: () => this.router.navigate(['../../'], { relativeTo: this.route }),
+      error: error => { markBranchFieldErrors(this.editor?.form, error); this.error = branchError(error, 'No se pudieron guardar los cambios.'); },
+    });
   }
-
+  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 }

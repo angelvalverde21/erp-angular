@@ -1,0 +1,12 @@
+.purchase-order-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.purchase-order-field { min-width: 0; }
+.purchase-order-form label { display: block; margin-bottom: .6rem; font-size: .875rem; font-weight: 600; }
+.purchase-order-field > p { margin: .5rem 0 0; color: var(--cui-secondary-color, #64748b); font-size: .8rem; line-height: 1.6; }
+.purchase-order-form .form-control { min-height: 2.9rem; border-radius: .6rem; font-size: 1rem; }
+.purchase-order-form .ng-select .ng-select-container { min-height: 2.9rem; border-radius: .6rem; }
+.purchase-order-supplier-control { display: flex; align-items: start; gap: .75rem; }
+.purchase-order-supplier-control app-supplier-selected { flex: 1; min-width: 0; }
+.purchase-order-supplier-control button { flex-shrink: 0; min-height: 2.9rem; font-size: .8rem; }
+.purchase-order-dates { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+@media(max-width: 991.98px) { .purchase-order-form { grid-template-columns: 1fr; } }
+@media(max-width: 575.98px) { .purchase-order-dates { grid-template-columns: 1fr; } .purchase-order-supplier-control { flex-wrap: wrap; } .purchase-order-supplier-control app-supplier-selected { flex-basis: 100%; } }

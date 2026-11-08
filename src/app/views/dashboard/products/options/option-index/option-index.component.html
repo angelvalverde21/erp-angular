@@ -1,12 +1,14 @@
-<app-option-create [options_init]="options_init" [product_id]="product_id"
-    (emitOption)="receiveOption($event)"></app-option-create>
-
-@for (option of options; track option.id) {
-
-<app-head-page title="{{ option.label }}">
-</app-head-page>
-
-<app-option-value-index [option_values]="option.option_values" [name]="option.name"
-    [option_id]="option.id"></app-option-value-index>
-
-}
+<fieldset class="options-workspace" [disabled]="removingOptionId !== null">
+  @if (options_init?.length) {
+    <app-option-create [options_init]="options_init" [product_id]="product_id" (emitOption)="receiveOption($event)"></app-option-create>
+  }
+  <div class="option-groups">
+    @for (option of orderedOptions; track option.id) {
+      <app-option-value-index [product_id]="product_id" [option_values]="option.option_values" [name]="option.name" [label]="option.label" [option_id]="option.id" (valueDeleted)="valueDeleted.emit($event)" (removeBlock)="removeOption(option)"></app-option-value-index>
+    } @empty {
+      <div class="options-empty"><i class="fa-solid fa-sliders" aria-hidden="true"></i><p>Personaliza las opciones</p><span>Agrega tallas o colores para organizar las variantes del producto.</span></div>
+    }
+  </div>
+</fieldset>
+@if (removing) { <p class="small text-body-secondary d-flex align-items-center gap-2 mt-2 mb-0" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Quitando opción...</p> }
+@if (removalError) { <p class="small text-danger mt-2 mb-0" role="alert">{{ removalError }}</p> }

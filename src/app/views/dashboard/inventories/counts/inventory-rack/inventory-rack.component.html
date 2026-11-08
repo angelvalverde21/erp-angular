@@ -1,0 +1,43 @@
+<section class="virtual-rack" aria-labelledby="virtual-rack-title">
+  <header class="rack-heading">
+    <div class="rack-heading-copy"><span class="rack-icon"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span><div><h2 id="virtual-rack-title">Rack virtual</h2><p>El conteo de esta sesión, organizado como tu almacén.</p></div></div>
+    <div class="rack-zone-picker"><label for="rack-zone">Zona del almacén</label><select #zoneInput id="rack-zone" class="form-select" [value]="selectedZoneId ?? ''" (change)="selectZone(zoneInput.value)">@for (zone of zones; track zone.id) { <option [value]="zone.id">{{ zone.name }}</option> }</select></div>
+  </header>
+  @if (selectedZone) {
+    <div class="rack-summary"><strong>{{ selectedZone?.name }}</strong><span>{{ shelves.length }} niveles</span><span>{{ loading || hasErrors ? '—' : (totalUnits | number) }} unidades vigentes</span><span>{{ loading || hasErrors ? '—' : (totalCaptures | number) }} capturas</span><button type="button" (click)="reload()" [disabled]="loading"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Actualizar</button></div>
+    <div class="rack-structure">
+      @for (shelf of shelves; track shelf.location.id) {
+        <section class="rack-shelf" [class.shelf-active]="shelf.location.id === activeLocationId" [attr.aria-label]="shelf.label">
+          <header class="shelf-heading"><div><span class="shelf-level-marker" aria-hidden="true"></span><h3>{{ shelf.label }}</h3>@if (shelf.location.id === activeLocationId) { <span class="shelf-current">En captura</span> }</div><p>@if (shelf.page > 0) { <strong>{{ shelf.summary.units | number }}</strong> unidades · {{ shelf.summary.variants }} variantes } @else { — }</p></header>
+          <div class="shelf-content" [attr.aria-busy]="shelf.loading">
+            @for (item of shelf.items; track item.variant_id) {
+              <article class="rack-product">
+                <div class="rack-product-main">
+                  @if (item.variant?.product?.image; as image) { <app-image-preview [image]="image" [title]="item.variant?.product?.name || 'Producto'" [height]="48" [width]="48" [previewSize]="600"></app-image-preview> } @else { <span class="rack-product-placeholder"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span> }
+                  <div class="rack-product-info"><h4>{{ item.variant?.product?.name || 'Variante #' + item.variant_id }}</h4><small>{{ item.variant?.sku || 'Sin SKU' }} · #{{ item.variant_id }}</small></div>
+                  <div class="rack-product-quantity"><strong>{{ item.counted_quantity | number }}</strong><span>uds.</span></div>
+                </div>
+                @if (item.variant?.variant_option_values?.length) { <div class="rack-product-options">@for (option of item.variant?.variant_option_values; track option.id) { <span>{{ option.option?.label || option.option?.name || 'Opción' }}: <b>{{ option.option_value?.value | uppercase }}</b></span> }</div> }
+                <p class="rack-product-captures">{{ item.capture_count }} {{ +item.capture_count === 1 ? 'captura vigente' : 'capturas vigentes' }}@if (+item.counted_quantity === 0) { · Contado en cero }</p>
+                <details class="rack-capture-details" (toggle)="openHistory($event, shelf.location.id, item.variant_id)"><summary>Ver capturas<i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
+                  @if (history.get(historyKey(shelf.location.id, item.variant_id)); as state) {
+                    @for (capture of state.records; track capture.id) { <div class="rack-capture"><div><strong>{{ capture.quantity }} uds.</strong><app-inventory-status [status]="capture.status"></app-inventory-status></div><small>{{ capture.user?.name }} · {{ capture.counted_at | date:'dd/MM HH:mm' }}</small><a [routerLink]="['./', capture.id, 'edit']">Ver / editar captura #{{ capture.id }}<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div> }
+                    @if (state.loading) { <p class="rack-message" role="status">Cargando capturas…</p> }
+                    @if (state.error) { <p class="rack-error" role="alert">{{ state.error }} <button type="button" (click)="loadHistory(shelf.location.id, item.variant_id)">Reintentar</button></p> }
+                    @else if (!state.loading && state.page < state.lastPage) { <button type="button" class="rack-more" (click)="loadHistory(shelf.location.id, item.variant_id)">Ver más capturas</button> }
+                  }
+                </details>
+              </article>
+            }
+            @if (!shelf.loading && !shelf.error && !shelf.items.length) { <div class="shelf-empty"><i class="fa-solid fa-barcode" aria-hidden="true"></i><span>Sin capturas vigentes</span><small>Los productos contados en este nivel aparecerán aquí.</small></div> }
+          </div>
+          @if (shelf.loading) { <p class="rack-message" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando productos…</p> }
+          @if (shelf.error) { <p class="rack-error" role="alert">{{ shelf.error }} <button type="button" (click)="loadShelf(shelf)">Reintentar</button></p> }
+          @else if (!shelf.loading && shelf.page < shelf.lastPage) { <button type="button" class="rack-more" (click)="loadShelf(shelf)">Mostrar más productos de {{ shelf.label }} · {{ shelf.items.length }} de {{ shelf.summary.variants }}</button> }
+          <div class="shelf-board" aria-hidden="true"></div>
+        </section>
+      } @empty { <p class="rack-message">Esta zona no tiene sububicaciones habilitadas para el inventario.</p> }
+    </div>
+  } @else { <p class="rack-message">Este almacén todavía no tiene ubicaciones disponibles.</p> }
+  <footer class="rack-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Las cantidades corresponden a las capturas vigentes de esta sesión. «Sin capturas» no significa que el nivel esté vacío.</footer>
+</section>

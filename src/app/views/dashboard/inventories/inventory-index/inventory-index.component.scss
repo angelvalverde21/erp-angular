@@ -1,0 +1,7 @@
+@use '../inventory-table';
+.inventory-total-column { text-align: right !important; white-space: nowrap; }
+.inventory-counted-quantity { font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+:host { display: block; margin-left: 0; }
+.inventory-work-links { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: .5rem; a { color: var(--section-accent); font-size: .73rem; font-weight: 600; text-decoration: none; &:hover { text-decoration: underline; } } }
+@media (max-width: 767.98px) { :host { margin-left: 0; } }

@@ -1,0 +1,53 @@
+<form [formGroup]="form" (ngSubmit)="submit()" [attr.aria-busy]="saving">
+  <fieldset class="branch-form border-0 m-0" [disabled]="saving">
+    <div class="branch-form-intro"><h3>Identificación</h3><p>Nombre y código para reconocer la sucursal.</p></div><div class="branch-field-row"><div class="branch-field"><label for="branch-name">Nombre *</label><input id="branch-name" formControlName="name" required maxlength="255" placeholder="Ej. Sucursal Miraflores"></div><div class="branch-field"><label for="branch-code">Código *</label><input id="branch-code" formControlName="code" maxlength="50" placeholder="Se genera desde el nombre"><small>Se genera desde el nombre. Puedes ajustarlo.</small></div></div>
+    <div class="branch-field">
+      <div class="branch-address-heading">
+        <label for="branch-address">Dirección (opcional)</label>
+        <div class="d-flex flex-wrap gap-2">
+        @if (form.controls.address_id.value) {
+          <button type="button" class="branch-address-add" (click)="openAddressModal(addressModal, true)" [disabled]="saving">
+            <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>Editar dirección
+          </button>
+        }
+        <button type="button" class="branch-address-add" (click)="openAddressModal(addressModal)" [disabled]="saving">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i>Nueva dirección
+        </button>
+        </div>
+      </div>
+      <select id="branch-address" formControlName="address_id">
+        <option [ngValue]="null">Sin dirección asignada</option>
+        @for (address of addresses; track address.id) {
+          <option [ngValue]="address.id">{{ address.primary }}{{ address.name ? ' · ' + address.name : '' }}</option>
+        }
+      </select>
+      <small>Selecciona una dirección de la empresa o agrega una nueva.</small>
+    </div>
+    <label class="branch-option"><input type="checkbox" formControlName="is_main"><span><strong>Sucursal principal</strong><small>Solo una sucursal puede ser la principal de la empresa.</small></span></label>
+    <label class="branch-option"><input type="checkbox" formControlName="is_active"><span><strong>Sucursal activa</strong><small>Si desmarcas esta opción, el registro se identificará como inactivo.</small></span></label>
+    @if (form.invalid && form.touched) { <p class="branch-validation" role="alert">Completa los campos obligatorios y revisa la longitud del nombre y código.</p> }
+    <div class="branch-form-actions"><a class="branch-back" [routerLink]="cancelPath" [class.disabled]="saving" [attr.aria-disabled]="saving">Cancelar</a><button type="submit" class="branch-action" [disabled]="saving">@if (saving) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Guardando… } @else { <i class="fa-solid" [class.fa-plus]="!editing" [class.fa-floppy-disk]="editing" aria-hidden="true"></i>{{ submitLabel }} }</button></div>
+  </fieldset>
+</form>
+
+<ng-template #addressModal let-modal>
+  <div class="modal-header">
+    <span class="branch-address-modal-icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+    <div>
+      <h2 id="branch-address-modal-title" class="modal-title fs-5">{{ addressEditing ? 'Editar dirección' : 'Nueva dirección' }}</h2>
+      <p class="text-body-secondary small mb-0 mt-1">{{ addressEditing ? 'Los cambios se reflejan en las sucursales y almacenes que usan esta dirección.' : 'Registra la dirección que usará esta sucursal.' }}</p>
+    </div>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body p-4">
+    @if (addressLoading) {
+      <div class="text-center py-4" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Cargando dirección…</div>
+    } @else if (addressError) {
+      <p class="text-danger mb-0" role="alert">{{ addressError }}</p>
+    } @else if (addressEditing && editingAddress) {
+      <app-address-edit addressable_type="store" presentation="branch" [address]="editingAddress" (cancel)="modal.dismiss()" (emitUpdateAddress)="receiveCreateAddress($event)"></app-address-edit>
+    } @else if (!addressEditing) {
+      <app-address-create addressable_type="store" presentation="branch" (cancel)="modal.dismiss()" (emitCreateAddress)="receiveCreateAddress($event)"></app-address-create>
+    }
+  </div>
+</ng-template>

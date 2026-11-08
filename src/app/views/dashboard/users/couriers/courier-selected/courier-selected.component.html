@@ -1,22 +1,57 @@
 @if(loading){
-<app-loading></app-loading>
+<div class="courier-loading" aria-busy="true">
+    <app-loading size="sm"></app-loading>
+    <span>Cargando opciones de envío…</span>
+</div>
 }@else{
 
-<label for="courier_address_id" class="mb-2">Seleccione Metodo de envio</label>
+@if (presentation === 'cards') {
+<fieldset class="delivery-methods">
+    <legend>Modalidad de entrega</legend>
+    <div class="delivery-method-grid">
+        <label class="delivery-method" [class.selected]="typeShipping === 'express_delivery'">
+            <input type="radio" name="delivery-method" value="express_delivery" [disabled]="isDisabled"
+                [(ngModel)]="typeShipping" (ngModelChange)="onTypeChange($event)">
+            <i class="fa-solid fa-truck-fast delivery-method-icon" aria-hidden="true"></i>
+            <span><strong>Envío express</strong><small>Entrega a domicilio</small></span>
+            <i class="fa-solid fa-circle-check delivery-method-check" aria-hidden="true"></i>
+        </label>
+        <label class="delivery-method" [class.selected]="typeShipping === 'agency_delivery'">
+            <input type="radio" name="delivery-method" value="agency_delivery" [disabled]="isDisabled"
+                [(ngModel)]="typeShipping" (ngModelChange)="onTypeChange($event)">
+            <i class="fa-solid fa-box delivery-method-icon" aria-hidden="true"></i>
+            <span><strong>Por agencia</strong><small>Retiro en una agencia</small></span>
+            <i class="fa-solid fa-circle-check delivery-method-check" aria-hidden="true"></i>
+        </label>
+        <label class="delivery-method" [class.selected]="typeShipping === 'store_pickup'">
+            <input type="radio" name="delivery-method" value="store_pickup" [disabled]="isDisabled"
+                [(ngModel)]="typeShipping" (ngModelChange)="onTypeChange($event)">
+            <i class="fa-solid fa-store delivery-method-icon" aria-hidden="true"></i>
+            <span><strong>Recojo en tienda</strong><small>Entrega en nuestro local</small></span>
+            <i class="fa-solid fa-circle-check delivery-method-check" aria-hidden="true"></i>
+        </label>
+    </div>
+</fieldset>
+@if (!typeShipping && !courier_id) {
+<p class="delivery-method-help">Elige una modalidad para ver los servicios y puntos de entrega disponibles.</p>
+}
+} @else {
+<label for="courier-shipping-method" class="mb-2">Método de envío</label>
 
-<select class="form-select mb-3" aria-label="Seleccione tipo de envío" class="form-select mb-3"
+<select id="courier-shipping-method" class="form-select mb-3" aria-label="Seleccione tipo de envío" [disabled]="isDisabled"
     [(ngModel)]="typeShipping" name="typeShipping" (ngModelChange)="onTypeChange($event)">
     <option [ngValue]="null">Seleccione</option>
     <option [ngValue]="'express_delivery'">Envio Express</option>
     <option [ngValue]="'agency_delivery'">Envio por Agencia</option>
     <option [ngValue]="'store_pickup'">Recojo en tienda</option>
 </select>
+}
 
 @if(courier_id){
 
-<label for="courier_address_c" class="mb-2">Tienda</label>
+<label for="courier-provider" class="courier-selection-label mb-2">{{ typeShipping === 'store_pickup' ? 'Tienda' : 'Courier' }}</label>
 
-<ng-select [items]="couriers" bindLabel="name" bindValue="id" [clearable]="false" [disabled]="isDisabled"
+<ng-select labelForId="courier-provider" [items]="couriers" bindLabel="name" bindValue="id" [clearable]="false" [disabled]="isDisabled"
     [ngModel]="courier_id" (ngModelChange)="setCourier($event)" placeholder="Selecciona courier" class="mb-3">
 
     <ng-template ng-option-tmp let-item="item">
@@ -37,9 +72,9 @@
 
 @if(showSelectedAddress){
 
-<label for="courier_address_c" class="mb-2">Sucursal</label>
+<label for="courier-office" class="courier-selection-label mb-2">{{ typeShipping === 'store_pickup' ? 'Punto de recojo' : 'Oficina o agencia' }}</label>
 
-<ng-select [items]="addresses" bindLabel="primary" bindValue="id" [clearable]="false" [disabled]="isDisabled"
+<ng-select labelForId="courier-office" [items]="addresses" bindLabel="primary" bindValue="id" [clearable]="false" [disabled]="isDisabled"
     [ngModel]="courier_address_id" (ngModelChange)="setCourierAddress($event)" placeholder="Selecciona Sucursal"
     class="mb-3">
 

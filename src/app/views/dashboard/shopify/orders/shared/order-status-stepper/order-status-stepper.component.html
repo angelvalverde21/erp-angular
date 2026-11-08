@@ -1,0 +1,26 @@
+<section class="status-stepper" aria-label="Seguimiento del pedido">
+  <div class="status-stepper-heading">
+    <h3>Estado del pedido</h3>
+    <span aria-live="polite" aria-atomic="true">{{ progressLabel }}</span>
+  </div>
+  @if (cancelled) {
+  <p class="status-stepper-notice" role="status">El pedido fue cancelado. Revisa el estado del pago para verificar si corresponde un reembolso.</p>
+  } @else if (onHold) {
+  <p class="status-stepper-notice" role="status">La preparación está en espera. Revisa el motivo antes de continuar con el despacho.</p>
+  }
+  <ol aria-label="Seguimiento del registro, pago y envío del pedido">
+    @for (step of steps; track step.status; let index = $index) {
+    <li [class.is-complete]="index < currentStep" [class.is-current]="index === currentStep"
+        [attr.aria-current]="index === currentStep ? 'step' : null">
+      <span class="status-stepper-icon" aria-hidden="true">
+        <i class="fa-solid" [class]="'fa-solid ' + (index < currentStep ? 'fa-check' : step.icon)"></i>
+      </span>
+      <div class="status-stepper-copy">
+        <span class="status-stepper-label">{{ step.label }}</span>
+        <span class="status-stepper-description">{{ step.description }}</span>
+        <span class="status-stepper-state">{{ cancelled ? 'Flujo cancelado' : onHold ? 'En espera' : currentStep < 0 ? 'Sin confirmar' : index < currentStep ? 'Completado' : index === currentStep ? 'Estado actual' : 'Pendiente' }}</span>
+      </div>
+    </li>
+    }
+  </ol>
+</section>

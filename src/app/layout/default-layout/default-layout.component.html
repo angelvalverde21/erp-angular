@@ -1,30 +1,91 @@
 <!--sidebar-->
 <c-sidebar
   #sidebar1="cSidebar"
-  class="d-print-none sidebar sidebar-fixed border-end"
+  class="d-print-none sidebar sidebar-fixed erp-sidebar"
   colorScheme="dark"
   id="sidebar1"
   visible
 >
-  <c-sidebar-header class="border-bottom">
-    <c-sidebar-brand class="d-flex justify-content-between align-items-center w-100">
-      <button class="btn btn-outline-light" style="font-size: 0.75rem;" [routerLink]="['/', store, 'dashboard', 'users', 'employees', user?.employee?.id]">{{ user.name }}</button>
-      <span class="sidebar-brand-full">{{ user.roles[0] | uppercase }}</span>
-      <!-- <span class="sidebar-brand-narrow">E</span> -->
-      <!-- <svg [class]="{icon: false}" cIcon class="sidebar-brand-full" height="32" name="logo" title="CoreUI Logo"></svg> -->
-      <!-- <svg cIcon class="sidebar-brand-narrow" height="32" name="signet" title="CoreUI Logo"></svg> -->
+  <c-sidebar-header class="erp-sidebar-header">
+    <c-sidebar-brand class="erp-sidebar-brand">
+      <a class="erp-workspace-link" [routerLink]="['/', store, 'dashboard']" aria-label="Ir al inicio">
+        <span class="erp-brand-mark" aria-hidden="true"><i class="fa-solid fa-layer-group"></i></span>
+        <span class="erp-brand-copy">
+          <span class="erp-brand-eyebrow">ESPACIO DE TRABAJO</span>
+          <span class="erp-brand-name">{{ storeName || 'ERP' }}</span>
+        </span>
+      </a>
     </c-sidebar-brand>
   </c-sidebar-header>
 
   <ng-scrollbar pointerEventsMethod="scrollbar" visibility="hover">
-    <c-sidebar-nav [navItems]="navItems" dropdownMode="close" compact />
+    <c-sidebar-nav #sidebarNav dropdownMode="none" aria-label="Navegación principal">
+      <ng-container *ngTemplateOutlet="navigation; context: { $implicit: navItems }" />
+    </c-sidebar-nav>
+
+    <ng-template #navigation let-items>
+      @for (item of items; track item) {
+        @if (item.title) {
+          <div class="nav-title" [ngClass]="item.class">{{ item.name }}</div>
+        } @else if (item.divider) {
+          <div class="nav-divider" role="separator"></div>
+        } @else if (item.children?.length) {
+          <div class="nav-group" [class.show]="openMenus.has(item)" [ngClass]="item.class">
+            <button type="button" class="nav-link nav-group-toggle erp-nav-group-toggle"
+              [attr.aria-expanded]="openMenus.has(item)" (click)="toggleMenu(item, items)">
+              <ng-container *ngTemplateOutlet="navigationIcon; context: { $implicit: item }" />
+              {{ item.name }}
+            </button>
+            <div class="nav-group-items" [hidden]="!openMenus.has(item)">
+              <ng-container *ngTemplateOutlet="navigation; context: { $implicit: item.children }" />
+            </div>
+          </div>
+        } @else {
+          <div class="nav-item" [ngClass]="item.class">
+            @if (isExternalUrl(item.url)) {
+              <a class="nav-link" [href]="item.url" target="_blank" rel="noopener noreferrer">
+                <ng-container *ngTemplateOutlet="navigationIcon; context: { $implicit: item }" />
+                {{ item.name }}
+              </a>
+            } @else {
+              <a class="nav-link" [routerLink]="item.url" routerLinkActive="active"
+                [routerLinkActiveOptions]="item.linkProps?.routerLinkActiveOptions || { exact: true }"
+                (click)="sidebarNav.hideMobile()">
+                <ng-container *ngTemplateOutlet="navigationIcon; context: { $implicit: item }" />
+                {{ item.name }}
+              </a>
+            }
+          </div>
+        }
+      }
+    </ng-template>
+
+    <ng-template #navigationIcon let-item>
+      @if (item.iconComponent) {
+        <svg cIcon [name]="item.iconComponent.name" class="nav-icon" aria-hidden="true"></svg>
+      } @else if (item.icon) {
+        <span class="nav-icon" aria-hidden="true"><span [ngClass]="item.icon"></span></span>
+      }
+    </ng-template>
   </ng-scrollbar>
 
-  @if (!sidebar1.narrow) {
-    <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
-      <button cSidebarToggler aria-label="Toggle sidebar fold"></button>
-    </c-sidebar-footer>
-  }
+  <c-sidebar-footer class="erp-sidebar-footer">
+    <a class="erp-profile-link"
+      [routerLink]="user?.employee?.id ? ['/', store, 'dashboard', 'users', 'employees', user.employee.id] : null"
+      [attr.aria-label]="'Perfil de ' + (user?.name || 'Usuario')" [title]="user?.name || 'Usuario'">
+      <span class="erp-profile-avatar" aria-hidden="true">{{ (user?.name || 'U').slice(0, 1) | uppercase }}</span>
+      <span class="erp-profile-copy">
+        <span class="erp-profile-name">{{ user?.name || 'Usuario' }}</span>
+        <span class="erp-profile-role">{{ (user?.roles?.[0] || 'Usuario') | uppercase }}</span>
+      </span>
+      <i class="fa-solid fa-angle-right erp-profile-arrow" aria-hidden="true"></i>
+    </a>
+    <div class="erp-collapse-row d-none d-lg-flex">
+      <span class="erp-collapse-label">Contraer menú</span>
+      <button type="button" cSidebarToggler="sidebar1" toggle="unfoldable"
+        aria-label="Contraer o expandir menú" title="Contraer o expandir menú"></button>
+    </div>
+  </c-sidebar-footer>
 </c-sidebar>
 
 <!--main-->

@@ -1,29 +1,19 @@
-@if(loading){
-    <app-loading></app-loading>
-}@else{
-
-<app-head-page title="Producciones" [icon]="faGears">
-    <app-button-link [color]="'primary'" [path]="['./create']">+ Produccion</app-button-link>
-</app-head-page>
-
-<div class="card">
-
-    <div class="card-header py-3">
-        <app-head-search (emitSearchResult)="receiveSearchResult($event)" [is_redirect]="false" type="manufacture_production" [button_active]="false" />
-    </div>
-
-    <div class="card-body p-0">
-        @if(productions?.length > 0){
-            <app-manufacture-production-index [productions]="productions"></app-manufacture-production-index>
-        }@else{
-            <p class="p-4">No se cuenta con registro de productions</p>
-        }
-    </div>
-
-    <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Total: {{ productions?.length }}</small>
-    </div>
-
+<div class="production-page manufacture-theme-production">
+  <app-manufacture-section-header section="production" title="Producciones" description="Planifica la fabricación, controla los costos y recibe lo que produces." actionLabel="Nueva producción" [actionLink]="createPath" [showNavigation]="true"></app-manufacture-section-header>
+  <section class="production-panel" aria-labelledby="production-list-title">
+    <header class="production-section-heading manufacture-list-heading">
+      <h2 id="production-list-title">Producciones registradas</h2>
+      <span class="production-list-count">{{ productions.length }} {{ activeFilters ? 'resultados' : 'registros en esta vista' }}</span>
+    </header>
+    <app-manufacture-index-filters searchLabel="Buscar producción" placeholder="Nombre o código de producción" [busy]="loading" [hasAppliedFilters]="!!activeFilters" (applyFilters)="applyFilters($event)" (clearFilters)="clearFilters()"></app-manufacture-index-filters>
+    @if (loading) {
+    <div class="production-empty" role="status"><app-loading></app-loading><p>Cargando producciones...</p></div>
+    } @else if (error) {
+    <div class="production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar las producciones</h3><p>{{ error }}</p><button type="button" class="manufacture-secondary-action" (click)="productionsInit()">Reintentar</button></div>
+    } @else if (productions.length) {
+    <app-manufacture-production-index [productions]="productions"></app-manufacture-production-index>
+    } @else {
+    <div class="production-empty"><i class="fa-solid fa-gears" aria-hidden="true"></i><h3>No hay producciones para mostrar</h3><p>Prueba con otros filtros o crea una producción para comenzar.</p><a class="manufacture-primary-action" [routerLink]="createPath">Crear producción</a></div>
+    }
+  </section>
 </div>
-
-}

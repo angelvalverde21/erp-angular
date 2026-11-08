@@ -1,27 +1,23 @@
+import { ManufactureSectionHeaderComponent } from '../../components/manufacture-section-header/manufacture-section-header.component';
 import { Component, OnDestroy, OnInit, effect } from '@angular/core';
 // import { HeadPageComponent } from '@components/head-page/head-page.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { LoadingComponent } from '@components/loading/loading.component';
 import Swal from 'sweetalert2';
-import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
 import { ManufactureProductionService } from '../manufacture.production.service';
 import { ProductionWidgetComponent } from './production-widget/production-widget.component';
-import { ManufactureProductionEditComponent } from './manufacture-production-edit/manufacture-production-edit.component';
 import { SummaryPurchase } from '@interfaces/summary.interface';
 import { ManufactureService } from '../../manufacture.service';
 
 @Component({
   selector: 'app-manufacture-production-edit-page',
   imports: [
+    ManufactureSectionHeaderComponent,
     LoadingComponent,
-    HeadPageComponent,
-    ButtonLinkComponent,
     ProductionWidgetComponent,
     RouterModule,
-    ManufactureProductionEditComponent
     // NgbDropdownModule
   ],
   templateUrl: './manufacture-production-edit-page.component.html',
@@ -32,6 +28,7 @@ import { ManufactureService } from '../../manufacture.service';
 export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy {
 
   loading: boolean = false;
+  error = '';
   manufacture: any = null;
   manufacture_id: number = 0;
   purchases: any;
@@ -89,6 +86,7 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
   //usado
   productionInit() {
 
+    this.error = '';
     this.loading = true;
 
     this._manufacture.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
@@ -119,6 +117,8 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
       },
 
       error: (error: any) => {
+        this.loading = false;
+        this.error = 'No se pudo consultar la producción. Intenta nuevamente.';
         Swal.fire('Error', 'Ocurrió un problema. Inténtalo nuevamente.', 'error');
         console.error(error);
       },

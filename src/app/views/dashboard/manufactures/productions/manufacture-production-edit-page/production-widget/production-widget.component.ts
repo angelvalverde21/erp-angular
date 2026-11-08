@@ -1,21 +1,15 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
-import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { Router, RouterModule } from '@angular/router';
 import { faBarcode, faBagShopping, faCalculator, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { CommonModule } from '@angular/common';
 import { PenPipe } from '@shared/pipes/pen.pipe';
 import { BaseService } from 'src/app/views/base.service';
 
 @Component({
   selector: 'app-production-widget',
   imports: [
-    HeadPageComponent,
-    ButtonLinkComponent,
     RouterModule,
     FontAwesomeModule,
-    CommonModule,
     PenPipe
   ],
   templateUrl: './production-widget.component.html',
@@ -78,8 +72,8 @@ export class ProductionWidgetComponent implements OnInit {
 
     this.widgets = [
       {
-        title: 'Costo',
-        subtitle: 'Por unidad',
+        title: 'Resumen',
+        subtitle: 'Costo por unidad',
         value: (this.summary?.sum_variants > 0 ? (this.summary?.sum_purchases / this.summary?.sum_variants ? this.summary?.sum_purchases / this.summary?.sum_variants : 0) : 0),
         link: ['./'],
         exact: true,
@@ -88,23 +82,23 @@ export class ProductionWidgetComponent implements OnInit {
       },
       {
         title: 'Compras',
-        subtitle: 'Totales',
+        subtitle: 'Gasto total',
         value: this.summary?.sum_purchases ? this.summary?.sum_purchases : 0,
         link: ['./purchases'],
         icon: faBagShopping,
         type: 'currency'
       },
       {
-        title: 'Inventario',
-        subtitle: `${this.summary?.count_variants} Variantes`,
+        title: 'Productos',
+        subtitle: `${this.summary?.count_variants ?? 0} variantes · Unidades planificadas`,
         value: this.summary?.sum_variants ? this.summary?.sum_variants : 0,
         link: ['./variants'],
         icon: faCalculator,
         type: 'units'
       },
       {
-        title: 'Recepción',
-        subtitle: 'Recibidos',
+        title: 'Movimientos',
+        subtitle: 'Unidades recibidas',
         value: this.summary?.sum_kardexes ? this.summary?.sum_kardexes : 0,
         link: ['./kardexes'],
         icon: faRightLeft,

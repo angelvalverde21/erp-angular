@@ -1,0 +1,6 @@
+@use '../../purchase-order-ui';
+.purchase-order-kardex-group + .purchase-order-kardex-group { margin-top: 1.5rem; }
+.purchase-order-kardex-group h3 { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin: 0 0 .85rem; font-size: .8rem; font-weight: 500; color: var(--cui-secondary-color, #64748b); }
+.purchase-order-direction { padding: .3rem .65rem; border-radius: .4rem; font-size: .75rem; font-weight: 600; }
+.purchase-order-direction-in { background: var(--cui-success-bg-subtle, #e8f5ee); color: var(--cui-success-text-emphasis, #166534); }
+.purchase-order-direction-out { background: var(--cui-danger-bg-subtle, #fcebec); color: var(--cui-danger-text-emphasis, #a91f35); }

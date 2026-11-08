@@ -1,0 +1,4 @@
+@use '../../branches/branch-ui';
+
+:host { display: block; width: 100%; min-width: 0; }
+.branch-form { width: 100%; max-width: none; min-width: 0; }

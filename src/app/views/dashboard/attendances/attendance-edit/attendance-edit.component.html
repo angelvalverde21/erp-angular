@@ -1,32 +1,26 @@
-<form [formGroup]="form">
-
-    <div class="row">
-
-        <div class="col-12 col-md-12 col-lg-12">
-            <app-input-group text="Dia de Ingreso">
-                <input formControlName="date" [disabled]="true" type="text" class="form-control" placeholder="date"
-                    aria-label="date" aria-describedby="basic-date" /> </app-input-group>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-6">
-            <app-input-group text="Hora de Entrada">
-                <input formControlName="check_in" step="1" [class.is-invalid]="form.get('check_in')?.invalid && form.get('check_in')?.touched" type="time" class="form-control" placeholder="check_in"
-                    aria-label="check_in" aria-describedby="basic-check_in" /> </app-input-group>
-        </div>
-        <div class="col-12 col-md-6 col-lg-6">
-            <app-input-group text="Hora de Salida">
-                <input formControlName="check_out" step="1" [class.is-invalid]="form.get('check_out')?.invalid && form.get('check_out')?.touched" type="time" class="form-control" placeholder="check_out"
-                    aria-label="check_out" aria-describedby="basic-check_out" /> </app-input-group>
-        </div>
-
-        <div class="col-12 col-md-12 col-lg-12">
-            <label for="razon" class="mb-2">Razon del cambio</label>
-            <textarea formControlName="comment" id="razon" class="form-control mb-3"></textarea>
-        </div>
-
+<form [formGroup]="form" (ngSubmit)="createOrUpdate()" class="personnel-form">
+  <div class="personnel-grid">
+    <div class="personnel-field personnel-wide"><label>Empleado *</label>
+      <app-employee-selected formControlName="employee_id"></app-employee-selected>
+      @if (form.controls['employee_id'].touched && form.controls['employee_id'].invalid) { <small class="text-danger">Selecciona un empleado.</small> }
     </div>
-
-    <app-button-save (click)="createOrUpdate()" [spinner]="loading">Guardar Cambios</app-button-save>
-
-
+    <label class="personnel-field personnel-wide"><span class="personnel-label">Fecha *</span>
+      <input class="form-control" type="date" formControlName="date" required>
+    </label>
+    <label class="personnel-field"><span class="personnel-label">Entrada</span><input class="form-control" type="time" step="1" formControlName="check_in"></label>
+    <label class="personnel-field"><span class="personnel-label">Salida</span><input class="form-control" type="time" step="1" formControlName="check_out">
+      <small>Puedes dejarla vacía si falta la marcación.</small>
+    </label>
+    <label class="personnel-field personnel-wide"><span class="personnel-label">Observación</span>
+      <textarea class="form-control" rows="3" maxlength="250" formControlName="comment" placeholder="Motivo del registro o de la corrección"></textarea>
+    </label>
+  </div>
+  <div class="personnel-card-footer px-0 pb-0 mt-3">
+    @if (error) { <p class="personnel-error" role="alert">{{ error }}</p> }
+    <button class="personnel-button personnel-primary" type="submit" [disabled]="loading">
+      @if (loading) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> }
+      @else { <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> }
+      {{ loading ? 'Guardando…' : 'Guardar asistencia' }}
+    </button>
+  </div>
 </form>

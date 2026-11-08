@@ -1,0 +1,40 @@
+<section class="inventory-list" aria-labelledby="inventory-list-title">
+  <header class="inventory-list-header">
+    <div class="inventory-list-heading">
+      <span class="inventory-list-icon" aria-hidden="true"><i class="fa-solid fa-clipboard-list"></i></span>
+      <div><h2 id="inventory-list-title">Inventarios registrados</h2><p>Consulta el ámbito, el estado y las sesiones de cada inventario.</p></div>
+    </div>
+    <span class="inventory-page-count">{{ inventories.length }} en esta página</span>
+  </header>
+  <div class="inventory-table-scroll" tabindex="0" role="region" aria-label="Tabla de inventarios">
+    <table class="inventory-table" [class.inventory-table-empty]="!inventories.length">
+      <caption class="visually-hidden">Inventarios con código, nombre, ámbito, estado, sesiones, fecha de creación y acciones.</caption>
+      <thead><tr>
+        <th scope="col" class="inventory-id-column">Código</th>
+        <th scope="col">Inventario</th>
+        <th scope="col" class="inventory-scope-column">Ámbito</th>
+        <th scope="col" class="inventory-status-column">Estado</th>
+        <th scope="col" class="inventory-sessions-column">Sesiones</th>
+        <th scope="col" class="inventory-total-column">Unidades contadas</th>
+        <th scope="col" class="inventory-date-column">Fecha de creación</th>
+        <th scope="col" class="inventory-actions-column">Acciones</th>
+      </tr></thead>
+      <tbody>
+        @for (item of inventories; track item.id) {
+          <tr>
+            <td class="inventory-id">#{{ item.id }}</td>
+            <td><a class="inventory-name" [routerLink]="['./', item.id, 'sessions']">{{ item.name }}</a>@if (item.creator?.name) { <small class="inventory-secondary">Creado por {{ item.creator?.name }}</small> }<div class="inventory-work-links"><a [routerLink]="['./', item.id, 'location-progress']">Ubicaciones</a><a [routerLink]="['./', item.id, 'adjustments']">Ajustes</a></div></td>
+            <td><span class="inventory-scope-name">{{ item.inventoriable?.name || 'Toda la empresa' }}</span>@if (item.inventoriable?.subtitle) { <small class="inventory-secondary">{{ item.inventoriable?.subtitle }}</small> }<small class="inventory-secondary">{{ item.scope_type ? scopeLabels[item.scope_type] : 'Empresa' }}</small></td>
+            <td><app-inventory-status [status]="item.status"></app-inventory-status></td>
+            <td class="inventory-session-count"><strong>{{ item.sessions_count ?? 0 }}</strong><small class="inventory-secondary" [class.sessions-open]="(item.open_sessions_count ?? 0) > 0">{{ item.open_sessions_count ?? 0 }} abiertas</small></td>
+            <td class="inventory-total-column"><strong class="inventory-counted-quantity">{{ item.counted_quantity ?? 0 }}</strong><small class="inventory-secondary">unidades</small></td>
+            <td class="inventory-created"><span>{{ item.created_at | date:'dd/MM/yyyy' }}</span><small class="inventory-secondary">{{ item.created_at | date:'HH:mm' }}</small></td>
+            <td><div class="inventory-row-actions"><a class="inventory-edit" [routerLink]="['./', item.id, 'edit']"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>Editar<span class="visually-hidden"> {{ item.name }}</span></a><a class="inventory-view" [routerLink]="['./', item.id, 'sessions']">Ver sesiones<i class="fa-solid fa-arrow-right" aria-hidden="true"></i><span class="visually-hidden"> de {{ item.name }}</span></a></div></td>
+          </tr>
+        } @empty {
+          <tr><td colspan="8"><div class="inventory-empty"><span class="inventory-list-icon" aria-hidden="true"><i class="fa-solid fa-clipboard-list"></i></span><strong>No hay inventarios para mostrar</strong><p>Crea un inventario o cambia los filtros de búsqueda.</p></div></td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

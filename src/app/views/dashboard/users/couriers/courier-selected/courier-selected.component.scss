@@ -6,3 +6,59 @@
 :host-context(.is-invalid) ::ng-deep .ng-select.ng-select-focused .ng-select-container {
   box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }
+.courier-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  min-height: 6rem;
+  padding: 1rem;
+  color: var(--bs-secondary-color, var(--cui-secondary-color, #64748b));
+  font-size: .8rem;
+}
+:host { display: block; }
+
+.delivery-methods {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  border: 0;
+
+  legend { float: none; width: auto; margin: 0 0 .8rem; font-size: .8rem; font-weight: 600; color: #526176; }
+}
+
+.delivery-method-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+.delivery-method {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .8rem;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid #e0e5ee;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color .15s, background-color .15s, box-shadow .15s;
+
+  input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  strong { display: block; font-size: .82rem; font-weight: 600; color: #34435a; }
+  small { display: block; margin-top: .25rem; font-size: .72rem; line-height: 1.5; color: #8491a5; }
+  &:hover { background: #fafbfe; border-color: #b9c3d5; }
+  &:focus-within { outline: 3px solid rgba(101, 84, 232, .2); outline-offset: 2px; }
+  &.selected { border-color: var(--cui-primary, #6554e8); background: #f8f7ff; box-shadow: 0 0 0 1px var(--cui-primary, #6554e8); }
+  &:has(input:disabled) { opacity: .6; cursor: default; }
+}
+.delivery-method-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: #f0f3f8; color: #7a879d; font-size: .95rem; }
+.selected .delivery-method-icon { background: #eeebff; color: var(--cui-primary, #6554e8); }
+.delivery-method-check { position: absolute; top: 1rem; right: 1rem; color: var(--cui-primary, #6554e8); font-size: .85rem; opacity: 0; }
+.selected .delivery-method-check { opacity: 1; }
+.delivery-method-help { margin: -.15rem 0 0; color: #8491a5; font-size: .75rem; line-height: 1.6; }
+.courier-selection-label { font-size: .8rem; font-weight: 600; color: #526176; }
+
+@media (max-width: 575px) {
+  .delivery-method-grid { grid-template-columns: 1fr; }
+  .delivery-method { flex-direction: row; align-items: center; padding: .9rem; gap: .85rem; }
+  .delivery-method-check { top: 50%; transform: translateY(-50%); }
+}
+

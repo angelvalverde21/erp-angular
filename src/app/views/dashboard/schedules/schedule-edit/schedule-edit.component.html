@@ -1,5 +1,1 @@
-<app-schedule-form [form]="form"></app-schedule-form>
-
-<!-- {{ form.value | json }} -->
-
-<app-button-save [spinner]="loading" [disabled]="loading" [class] (click)="update()">Guardar Cambios</app-button-save>
+<form [formGroup]="form" (ngSubmit)="update()"><app-schedule-form [form]="form"></app-schedule-form><div class="d-flex justify-content-end mt-4"><button class="btn btn-primary d-inline-flex align-items-center gap-2" type="submit" [disabled]="loading">@if (loading) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> }Guardar horario</button></div></form>

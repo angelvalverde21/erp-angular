@@ -1,12 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { InputGroupComponent } from '../../../../../shared/components/form/input-group/input-group.component';
-import { Form, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { OptionValueService } from '../option_value.service';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { ButtonComponent } from '../../../../../shared/components/buttons/button/button.component';
 import { UpperCaseDirective } from '../../../../../../core/directives/only-uppercase.directive';
 // import { OptionValueIndexComponent } from '../option-value-index/option-value-index.component';
 import { noCommaValidator } from '../../../../../../core/validators/no-coma'
@@ -14,12 +10,8 @@ import { noCommaValidator } from '../../../../../../core/validators/no-coma'
 @Component({
   selector: 'app-option-value-create',
   imports: [
-    InputGroupComponent,
     ReactiveFormsModule,
-    JsonPipe,
-    CommonModule,
     UpperCaseDirective,
-    ButtonComponent,
     // OptionValueIndexComponent
     // OptionValueIndexComponent
   ],
@@ -30,8 +22,8 @@ export class OptionValueCreateComponent implements OnInit {
 
   @Output() emitOptionValue = new EventEmitter<[]>();
 
-  faPlus = faPlus;
   @Input() option_id: number = 0;
+  @Input() existingValues: { value: string }[] = [];
   @Input() options: any[] = [];
   @Input() option_selected: string = "";
   @Input() text_selected: string = "Valor";
@@ -68,7 +60,12 @@ export class OptionValueCreateComponent implements OnInit {
   formInit() {
     this.form = this.fb.group({
       option_id: [this.option_id, Validators.required],
-      value: ["", [Validators.required, noCommaValidator]]
+      value: ["", [Validators.required, noCommaValidator, Validators.maxLength(255), (control: AbstractControl) => {
+        const value = String(control.value ?? '').trim().toUpperCase();
+        if (!value) return { required: true };
+        return this.existingValues.some(existing => String(existing.value).trim().toUpperCase() === value)
+          ? { duplicate: true } : null;
+      }]]
     });
   }
 
@@ -81,6 +78,8 @@ export class OptionValueCreateComponent implements OnInit {
   option_value: any;
 
   create() {
+    if (this.loading) return;
+    this.form.get('value')?.updateValueAndValidity();
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
@@ -88,7 +87,8 @@ export class OptionValueCreateComponent implements OnInit {
 
     this.loading = true;
 
-    this._option_value.store(null, null, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
+    const values = { ...this.form.value, value: this.form.value.value.trim() };
+    this._option_value.store(null, null, values).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
@@ -112,6 +112,12 @@ export class OptionValueCreateComponent implements OnInit {
 
       error: (error: any) => {
         this.loading = false;
+
+        if (error.status === 422 && error.error?.errors?.value) {
+          this.form.get('value')?.setErrors({ server: error.error.errors.value.join(' ') });
+          this.form.get('value')?.markAsTouched();
+          return;
+        }
 
         Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         console.error(error);

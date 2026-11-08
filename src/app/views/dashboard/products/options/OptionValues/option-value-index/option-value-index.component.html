@@ -1,24 +1,27 @@
-<app-option-value-create [option_id]="option_id"
-    (emitOptionValue)="receiveOptionValue($event)"></app-option-value-create>
-
-@if(option_values != undefined ){
-
-<ul class="list-group list-group-flush mt-3">
-
-    @for (option_value of option_values; track option_value.id){
-
-    <li class="list-group-item">
-        <div class="info d-flex justify-content-between align-items-center">
-            <span>
-               {{ option_value.value }}
-            </span>
-            <button class="btn btn-outline-danger btn-sm" (click)="removeOptionValue(option_value.id)">Eliminar</button>
-        </div>
-
-
-    </li>
-
+<section class="option-values" [attr.aria-labelledby]="'option-values-title-' + option_id">
+  <header class="option-values-heading">
+    <div class="option-values-title">
+      <span class="option-kind-icon" aria-hidden="true"><i [class]="name === 'color' ? 'fa-solid fa-palette' : name === 'size' ? 'fa-solid fa-ruler-combined' : 'fa-solid fa-sliders'"></i></span>
+      <h3 [id]="'option-values-title-' + option_id">{{ label || name }}</h3>
+    </div>
+    <div class="option-heading-actions">
+      <span class="option-values-count" aria-live="polite">{{ option_values?.length || 0 }} {{ option_values?.length === 1 ? 'valor' : 'valores' }}</span>
+      <button type="button" class="option-remove-block" [disabled]="confirmingDelete" (click)="removeBlock.emit()" [attr.aria-label]="'Quitar opción ' + (label || name)" [attr.title]="'Quitar opción ' + (label || name)"><i class="fa-solid fa-box-archive" aria-hidden="true"></i>Quitar opción</button>
+    </div>
+  </header>
+  <app-option-value-create [option_id]="option_id" [existingValues]="option_values || []" [text_selected]="name === 'size' ? 'Ej. S, M o 28' : name === 'color' ? 'Ej. Azul o negro' : 'Escribe un valor'" (emitOptionValue)="receiveOptionValue($event)"></app-option-value-create>
+  <ul class="option-values-list" [attr.aria-label]="'Valores de ' + (label || name)">
+    @for (option_value of option_values; track option_value.id) {
+      <li class="option-value-pill"><span>{{ option_value.value }}</span><button type="button" (click)="removeOptionValue(option_value.id)" [disabled]="confirmingDelete" [attr.aria-label]="'Eliminar ' + option_value.value + ' de ' + (label || name)" [attr.title]="'Eliminar ' + option_value.value"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></li>
+    } @empty {
+      <li class="option-values-empty">Agrega el primer valor de esta opción.</li>
     }
-</ul>
-
-}
+  </ul>
+  @if (deletingId !== null) {
+    <p class="small text-body-secondary d-flex align-items-center gap-2 mt-2 mb-0" role="status">
+      <span class="spinner-border spinner-border-sm flex-shrink-0" aria-hidden="true"></span>
+      <span>Eliminando valor y variantes asociadas...</span>
+    </p>
+  }
+  @if (deletionError) { <p class="small text-danger mt-2 mb-0" role="alert">{{ deletionError }}</p> }
+</section>

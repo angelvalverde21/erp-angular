@@ -2,6 +2,7 @@ import {
   Component,
   EventEmitter,
   forwardRef,
+  Input,
   OnDestroy,
   OnInit,
   Optional,
@@ -14,7 +15,7 @@ import {
   NG_VALUE_ACCESSOR,
   NgControl
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { InputGroupComponent } from '@shared/components/form/input-group/input-group.component';
@@ -50,6 +51,7 @@ export class CourierSelectedComponent
   implements ControlValueAccessor, OnInit, OnDestroy {
 
   isDisabled = false;
+  @Input() presentation: 'select' | 'cards' = 'select';
   courier_id: number | null = null;
   couriers: any[] = [];
   loading = false;
@@ -142,75 +144,38 @@ export class CourierSelectedComponent
 
   typeShipping: string | null = null;
 
-  onTypeChange(type_courier: string | null) {
-
+  onTypeChange(type_courier: string | null): void {
     this.courier_id = null;
+    this.courier_address_id = null;
+    this.couriers = [];
+    this.addresses = [];
+    this.showSelectedAddress = false;
+    this.onChangeCb(null);
+    this.emitCourierSelected.emit(null);
 
-    // let courierId: number | null = null;
-    console.log('cambió a:', type_courier);
+    const request = type_courier === 'express_delivery' ? this._courier.express()
+      : type_courier === 'agency_delivery' ? this._courier.agency()
+      : type_courier === 'store_pickup' ? this._base.stores()
+      : null;
 
-    switch (type_courier) {
-
-      case 'express_delivery':
-
-        this._courier.express().pipe(takeUntil(this.destroy$)).subscribe({
-
-          next: (resp: any) => {
-            console.log(resp);
-            this.couriers = resp.data;
-            this.setCourierDefault();
-            this.loading = false;
-          },
-
-          error: (error: any) => {
-            this.loading = false;
-            Swal.fire('Error', 'Ocurrió un problema al cargar los datos. Inténtalo nuevamente.', 'error');
-            console.error(error);
-          },
-
-        });
-
-        break;
-
-      case 'agency_delivery':
-        this._courier.agency().pipe(takeUntil(this.destroy$)).subscribe({
-          next: (resp: any) => {
-            console.log(resp);
-            this.couriers = resp.data;
-            this.setCourierDefault();
-            this.loading = false;
-          },
-          error: (error: any) => {
-            this.loading = false;
-            Swal.fire('Error', 'Ocurrió un problema al cargar los datos. Inténtalo nuevamente.', 'error');
-            console.error(error);
-          }
-        });
-        break;
-
-      case 'store_pickup':
-
-        this._base.stores().pipe(takeUntil(this.destroy$)).subscribe({
-
-          next: (resp: any) => {
-            console.log(resp);
-            this.couriers = resp.data;
-            this.setCourierDefault();
-            this.loading = false;
-          },
-
-          error: (error: any) => {
-            Swal.fire('Error', 'Ocurrió un problema al cargar los datos. Inténtalo nuevamente.', 'error');
-            console.error(error);
-            this.loading = false;
-          }
-
-        });
-
-        break;
-
+    if (!request) {
+      this.loading = false;
+      return;
     }
 
+    this.loading = true;
+    request.pipe(
+      takeUntil(this.destroy$),
+      finalize(() => this.loading = false),
+    ).subscribe({
+      next: (resp: any) => {
+        this.couriers = resp.data ?? [];
+        this.setCourierDefault();
+      },
+      error: () => {
+        Swal.fire('Error', 'Ocurrió un problema al cargar los datos. Inténtalo nuevamente.', 'error');
+      },
+    });
   }
 
   setCourierDefault() {
@@ -218,7 +183,7 @@ export class CourierSelectedComponent
     this.emitCourierSelected.emit(this.couriers.length > 0 ? this.couriers[0] : null);
 
     this.courier_id = this.couriers.length > 0 ? this.couriers[0].id : null;
-    this.addresses = this.couriers[0].addresses || [];
+    this.addresses = this.couriers[0]?.addresses ?? [];
     console.log(this.addresses);
 
     this.courier_address_id = this.addresses.length > 0 ? this.addresses[0].id : null;
@@ -226,7 +191,7 @@ export class CourierSelectedComponent
 
     this.setCourierAddress(this.courier_address_id);
 
-    this.showSelectedAddress = true;
+    this.showSelectedAddress = this.addresses.length > 0;
 
   }
 
@@ -259,10 +224,10 @@ export class CourierSelectedComponent
 
         this.couriers = resp.data.map((courier: any) => ({
           id: courier.id, // 🔥 necesario para bindValue="id"
-          name: courier.user?.name ?? 'Sin nombre',
-          is_cash_on_delivery: courier.is_cash_on_delivery ?? false,
-          is_express_shipping: courier.is_express_shipping ?? false,
-          is_freight_collect: courier.is_freight_collect ?? false,
+          name: courier.name,
+          is_cod: courier.is_cod,
+          delivery_type: courier.delivery_type,
+          freight_collect: courier.freight_collect,
           addresses: courier.addresses || [] // Asegúrate de que siempre haya un array, incluso si no hay direcciones
         }));
 

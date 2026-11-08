@@ -1,0 +1,7 @@
+@use '../../inventory-table';
+:host { display: block; margin-left: 0; }
+.quantity-cell { font-variant-numeric: tabular-nums; font-weight: 600; }
+@media (max-width: 767.98px) { :host { margin-left: 0; } }
+
+.quantity-positive { color: var(--cui-success-text-emphasis, #166534); }
+.quantity-negative { color: var(--cui-danger-text-emphasis, #b42318); }

@@ -1,4 +1,4 @@
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +11,6 @@ import { BaseService } from 'src/app/views/base.service';
 @Component({
   selector: 'app-kardex-index',
   imports: [
-    JsonPipe,
     FontAwesomeModule,
     CommonModule,
     DateShopifyPipe,

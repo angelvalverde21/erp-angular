@@ -11,6 +11,9 @@
 
   </div>
   <div class="modal-body">
+    <app-order-status-stepper [status]="progressStatus"
+      [cancelled]="!!order.cancelledAt || order.displayFulfillmentStatus === 'CANCELLED'"
+      [onHold]="order.displayFulfillmentStatus === 'ON_HOLD'"></app-order-status-stepper>
     <app-menu-button [order]="order"></app-menu-button>
 
     @if (order.note != null) {
@@ -79,7 +82,7 @@
               @for (fulfillmentOrder of order.fulfillmentOrders; track fulfillmentOrder.id) {
 
               <!-- <li>{{ fulfillmentOrder.assignedLocation.name }}</li> -->
-               <!-- <tr>
+              <!-- <tr>
                 <td colspan="5">
                   <div class="d-flex justify-content-between align-items-center">
                     <span>Fulfillment Order: {{ fulfillmentOrder.id }}</span>

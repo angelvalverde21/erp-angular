@@ -20,6 +20,8 @@ export class AddressEditComponent implements OnInit, OnDestroy {
 
 
   @Output() emitUpdateAddress = new EventEmitter<any>();
+  @Output() cancel = new EventEmitter<void>();
+  @Input() presentation: 'default' | 'branch' = 'default';
   
   form!: FormGroup;
 
@@ -51,13 +53,13 @@ export class AddressEditComponent implements OnInit, OnDestroy {
       primary: ['', [Validators.required]],
       secondary: [''],
       district_id: ['', [Validators.required]],
-      phone: ['', [Validators.required]],
+      phone: ['', ['courier', 'store'].includes(this.addressable_type) ? [] : [Validators.required]],
       references: [''],
       document_number: [''],
       identity_id: [''],
-      user_id: [this.user_id, [Validators.required]],
       addressable_type: [this.addressable_type, [Validators.required]],
-      addressable_id: [this.addressable_id, [Validators.required]],
+      addressable_id: [this.addressable_type === 'store' ? null : this.addressable_id,
+        this.addressable_type === 'store' ? [] : [Validators.required]],
 
     });
 
@@ -67,6 +69,7 @@ export class AddressEditComponent implements OnInit, OnDestroy {
   disabledButton: boolean = false;
 
   updateAddress() {
+    if (this.loading) return;
 
     // console.log("empezando la creacion de una direccion");
 
@@ -91,7 +94,7 @@ export class AddressEditComponent implements OnInit, OnDestroy {
 
       next: (resp: any) => {
 
-        Swal.fire('Guardado', 'El registro ha sido creado', 'success');
+        Swal.fire('Guardado', 'La dirección ha sido actualizada', 'success');
         console.log(resp);
         this.address = resp.data;
         this.loading = false;

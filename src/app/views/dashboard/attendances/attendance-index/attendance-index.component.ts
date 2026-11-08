@@ -1,92 +1,59 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { AttendanceIndexRowComponent } from '../attendance-index-row/attendance-index-row.component';
-import { MinutesToHoursPipe } from '@shared/pipes/minutesToHours.pipe'
-import { PenPipe } from '@shared/pipes/pen.pipe'
+import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { AttendanceEditComponent } from '../attendance-edit/attendance-edit.component';
+
 @Component({
   selector: 'app-attendance-index',
-  imports: [
-    AttendanceIndexRowComponent,
-    MinutesToHoursPipe,
-    PenPipe
-  ],
+  imports: [DatePipe, CurrencyPipe, AttendanceEditComponent],
   templateUrl: './attendance-index.component.html',
-  styleUrl: './attendance-index.component.scss'
+  styleUrl: './attendance-index.component.scss',
 })
-export class AttendanceIndexComponent implements OnChanges, OnInit {
+export class AttendanceIndexComponent {
+  @Input() employee: any;
+  @Output() emitHoursMinuts = new EventEmitter<string>();
+  @Output() emitHoursDecimal = new EventEmitter<number>();
+  @Output() attendanceChanged = new EventEmitter<any>();
+  private rows: any[] = [];
+  editing: any;
+  private modal?: NgbModalRef;
 
+  @Input() set attendances(value: any[] | null) {
+    this.rows = [...(value ?? [])].sort((a, b) => b.date.localeCompare(a.date));
+  }
+  get attendances(): any[] { return this.rows; }
+  get workedMinutes(): number { return this.rows.reduce((sum, row) => sum + Number(row.paid_minutes ?? row.minutes_computed ?? 0), 0); }
+  get lateCount(): number { return this.rows.filter(row => row.is_late).length; }
+  get missingCount(): number { return this.rows.filter(row => row.missing).length; }
 
-  @Input() employee: any 
+  constructor(private modalService: NgbModal) {}
 
-  sum_minutes_ideal: number = 0;
-  sum_minutes_worked: number = 0;
-  sum_minutes_break: number = 0;
-  sum_salary_extra: number = 0;
-
-  ngOnChanges(changes: SimpleChanges): void {
-
-    if (changes['attendances']) {
-      // this.calculateHours(this.getTotalSeconds());
-
-      this.sum_minutes_ideal = 0;
-      this.sum_minutes_worked = 0;
-      this.sum_minutes_break = 0;
-      this.sum_salary_extra = 0;
-
-      this.attendances.forEach((attendance: any) => {
-
-        this.sum_minutes_ideal += 480;
-        this.sum_minutes_break += 60;
-        this.sum_minutes_worked += Number(attendance.minutes);
-        this.sum_salary_extra += Number(attendance.salary_extra);
-
-      });
-
-      this.sum_minutes_worked = this.sum_minutes_worked - this.sum_minutes_break;
-
-      console.log(this.sum);
-
-    }
-
+  duration(value: number | null): string {
+    if (value == null) return '—';
+    const minutes = Math.max(0, Math.round(value));
+    return Math.floor(minutes / 60) + ' h ' + (minutes % 60).toString().padStart(2, '0') + ' min';
   }
 
-
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes['attendances']) {
-  //     this.emitHoursMinuts.emit(this.hoursMinuts);
-  //     this.emitHoursDecimal.emit(this.hoursDecimal);
-  //   }
-  // }
-
-
-  private _attendances: any[] = [];
-
-  @Output() emitHoursMinuts = new EventEmitter<any>();
-  @Output() emitHoursDecimal = new EventEmitter<any>();
-
-
-  @Input()
-
-  set attendances(value: any[]) {
-    this._attendances = [...(value || [])].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+  state(row: any): string {
+    if (!row.employee_id) return 'Sin asignar';
+    if (row.missing) return 'Falta';
+    if (row.missing_text === 'REMOTO') return 'Remoto';
+    if (row.missing_text === 'DESCANZO') return 'Descanso';
+    if (row.incomplete) return 'Marcación incompleta';
+    return row.is_late ? 'Tardanza' : 'Registrada';
   }
 
-  get attendances(): any[] {
-    return this._attendances;
+  edit(row: any, template: TemplateRef<any>): void {
+    this.editing = row;
+    this.modal = this.modalService.open(template, { centered: true, backdrop: 'static', size: 'lg' });
   }
 
-
-
-  //nueva forma de calculo
-
-  sum: number = 0;
-
-  ngOnInit(): void {
-
-
-
+  updated(row: any): void {
+    const index = this.rows.indexOf(this.editing);
+    this.rows = this.rows.map((item, position) => position === index ? row : item);
+    this.modal?.close();
+    this.attendanceChanged.emit(row);
+    this.emitHoursMinuts.emit(this.duration(this.workedMinutes));
+    this.emitHoursDecimal.emit(this.workedMinutes / 60);
   }
-
-
 }

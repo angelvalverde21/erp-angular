@@ -1,60 +1,22 @@
-@if (loading) {
-<app-loading></app-loading>
-} @else {
-
-
-<div class="card">
-
-    <div class="card-header py-3 d-flex align-items-center">
-        <span class="me-2"><fa-icon [icon]="faHome"></fa-icon></span>
-        <span>Lista de Locaciones</span>
-    </div>
-
-    <div class="card-body">
-
-            <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th class="text-center">Código</th>
-          <th class="text-center">Tipo</th>
-          <th class="text-center"></th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (location of locations; track location.id) {
-          <ng-container 
-            *ngTemplateOutlet="recursiveRows; context: { $implicit: location, level: 0 }">
-          </ng-container>
-        }
-      </tbody>
-    </table>
-
-    </div>
-
+<div class="branch-page section-locations">
+  <app-branch-section-header level="locations" title="Ubicaciones" description="Identifica zonas, estantes y posiciones dentro de este almacén." [creating]="false" [warehouse]="context">
+    <a class="branch-back" [routerLink]="['../../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Almacenes</a><a class="branch-action" [routerLink]="['./create']"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar ubicación</a>
+  </app-branch-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} <button type="button" class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button></div> }
+  @if (success) { <div class="alert alert-success" role="status">{{ success }}</div> }
+  <section class="section-collection" [attr.aria-busy]="loading">
+    @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando ubicaciones…</div> }
+    @else if (!error) { <app-location-index [locations]="locations" [selectedLocationId]="selectedLocationId" [deletingId]="deleting ? pendingDelete?.id ?? null : null" (deleteLocation)="requestDelete($event)" (selectLocation)="selectLocation($event)"></app-location-index> }
+  </section>
 </div>
 
-}
-
-<!-- 🔁 TEMPLATE RECURSIVO -->
-<ng-template #recursiveRows let-node let-level="level">
-  <tr>
-    <td>
-      <span [style.padding-left.px]="level * 20">
-        {{ node.name }}
-      </span>
-    </td>
-    <td class="text-center">{{ node.code }}</td>
-    <td class="text-center">{{ node.type }}</td>
-    <td class="text-center px-3" style="width: 50px;"><app-button-edit></app-button-edit></td>
-  </tr>
-
-  @if (node.children?.length) {
-    @for (child of node.children; track child.id) {
-      <ng-container 
-        *ngTemplateOutlet="recursiveRows; context: { $implicit: child, level: level + 1 }">
-      </ng-container>
-    }
-  }
+<ng-template #deleteConfirmation let-modal>
+  <div class="modal-header"><h2 id="location-delete-title" class="modal-title fs-5">Eliminar ubicación</h2><button type="button" class="btn-close" aria-label="Cancelar" [disabled]="deleting" (click)="modal.dismiss()"></button></div>
+  <div class="modal-body">
+    <p>¿Quieres eliminar la ubicación <strong>{{ pendingDelete?.name }}</strong>?</p>
+    @if (pendingDelete?.code) { <p class="small text-body-secondary">Código: {{ pendingDelete?.code }}</p> }
+    <p class="small text-body-secondary mb-0">Esta acción no se puede deshacer. Las ubicaciones con sububicaciones o registros asociados no se pueden eliminar.</p>
+    @if (deleteError) { <div class="alert alert-danger mt-3 mb-0" role="alert">{{ deleteError }}</div> }
+  </div>
+  <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" [disabled]="deleting" (click)="modal.dismiss()">Cancelar</button><button type="button" class="btn btn-danger" [disabled]="deleting" (click)="confirmDelete()">@if (deleting) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }{{ deleting ? 'Eliminando…' : 'Eliminar ubicación' }}</button></div>
 </ng-template>

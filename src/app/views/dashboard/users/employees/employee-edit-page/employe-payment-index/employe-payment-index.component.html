@@ -1,54 +1,16 @@
-@if(loading){
-<app-loading></app-loading>
-
-}@else{
-
-
-<div class="card mb-3">
-
-
-    <div class="card-body">
-        <app-head-table [type]="'employe_payment'" (emitSearchResult)="receiveSearchResult($event)"
-            (emitLoadingStatus)="receiveLoadingStatus($event)" [is_redirect]="false"></app-head-table>
-
+@if (loading) { <div class="personnel-empty" role="status"><span class="spinner-border spinner-border-sm"></span>Cargando movimientos…</div> }
+@else {
+  <section class="personnel-card mb-3">
+    <header class="personnel-card-header"><div><h2>Movimientos del empleado</h2><p>Ingresos y egresos asociados directamente a su ficha.</p></div></header>
+    <div class="personnel-card-body">
+      <app-head-table type="employe_payment" (emitSearchResult)="receiveSearchResult($event)" (emitLoadingStatus)="receiveLoadingStatus($event)" [is_redirect]="false"></app-head-table>
     </div>
-
-</div>
-
-<div ngbAccordion [closeOthers]="true">
-
-    <div ngbAccordionItem [collapsed]="false">
-        <h2 ngbAccordionHeader>
-            <button ngbAccordionButton>Gastos Corrientes</button>
-        </h2>
-        <div ngbAccordionCollapse>
-            <div ngbAccordionBody class="px-0 pb-3">
-                <ng-template>
-
-                    <app-payment-index [payments]="employee_payments" [paymentable_id]="employee_id"
-                        [paymentable_type]="'employee'"></app-payment-index>
-
-                </ng-template>
-            </div>
-        </div>
-
-    </div>
-
-    @if(user.roles.includes('production') || user.roles.includes('master') || user.roles.includes('ceo')){
-    <div ngbAccordionItem>
-        <h2 ngbAccordionHeader>
-            <button ngbAccordionButton>
-                Gastos de Compras
-            </button>
-        </h2>
-        <div ngbAccordionCollapse>
-            <div ngbAccordionBody class="py-3 px-0">
-                <ng-template>
-                    <app-payment-read-index [payments]="purchases_payments"></app-payment-read-index>
-                </ng-template>
-            </div>
-        </div>
-    </div>
-    }
-</div>
+    <app-payment-index [payments]="employee_payments || []" [paymentable_id]="employee_id" paymentable_type="employee"></app-payment-index>
+  </section>
+  @if (purchases_payments?.length) {
+    <section class="personnel-card mb-3">
+      <header class="personnel-card-header"><div><h2>Operaciones de compras registradas</h2><p>Historial de la cuenta vinculada. Estos importes no forman parte del saldo personal del empleado.</p></div></header>
+      <app-payment-read-index [payments]="purchases_payments"></app-payment-read-index>
+    </section>
+  }
 }

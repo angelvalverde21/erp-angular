@@ -1,0 +1,39 @@
+@use '../../../../_personnel-ui';
+
+.fortnight-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.fortnight-metrics > div {
+  padding-left: 1rem;
+  border-left: 2px solid #edf1f8;
+}
+
+.fortnight-metrics span {
+  display: block;
+  color: #8190a5;
+  font-size: .72rem;
+}
+
+.fortnight-metrics strong {
+  display: block;
+  margin-top: .5rem;
+  color: #344f77;
+  font-size: 1.3rem;
+  font-weight: 650;
+}
+
+@media (max-width: 767px) {
+  .fortnight-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 1rem;
+    gap: 1.5rem .75rem;
+  }
+
+  .fortnight-metrics strong {
+    font-size: 1.1rem;
+  }
+}

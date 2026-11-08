@@ -1,9 +1,23 @@
-<form [formGroup]="form">
+<form [formGroup]="form" (ngSubmit)="updateAddress()">
 
-    <app-address-form></app-address-form>
+    <app-address-form [presentation]="presentation"></app-address-form>
 
-    <app-button-save (click)="updateAddress()" [spinner]="loading" [disabled]="disabledButton">Guardar
+    @if (presentation === 'branch') {
+    <div class="address-modal-actions">
+        <span class="address-required-hint"><span>*</span> Campos obligatorios</span>
+        <div class="address-action-buttons">
+            <button type="button" class="btn address-cancel" [disabled]="loading" (click)="cancel.emit()">Cancelar</button>
+            <button type="submit" class="btn address-save" [disabled]="loading">
+                @if (loading) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> }
+                @else { <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i> }
+                {{ loading ? 'Guardando…' : 'Guardar cambios' }}
+            </button>
+        </div>
+    </div>
+    } @else {
+    <app-button-save (action)="updateAddress()" [spinner]="loading" [disabled]="disabledButton">Guardar
         cambios</app-button-save>
+    }
 
 
 </form>

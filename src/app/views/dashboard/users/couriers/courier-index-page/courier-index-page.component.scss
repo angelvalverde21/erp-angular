@@ -1,0 +1,9 @@
+.page-description { color: #7a869b; font-size: .85rem; margin-bottom: 1.5rem; }
+.courier-card { background: var(--cui-body-bg, #fff); border: 1px solid #dce2ec; border-radius: 16px; overflow: hidden; }
+.courier-toolbar { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 1rem; padding: 1.25rem; }
+.courier-toolbar label { display: block; font-size: .76rem; color: #738097; margin-bottom: .5rem; }
+.search-field { flex: 1; min-width: 210px; }
+.form-control, .form-select { border-radius: 8px; min-height: 40px; font-size: .85rem; }
+.empty-state { padding: 3.5rem 1.5rem; text-align: center; color: #7a869b; font-size: .85rem; }
+.empty-state strong { display: block; color: #526176; margin-bottom: .5rem; }
+.list-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; border-top: 1px solid #eef1f6; color: #7a869b; font-size: .78rem; flex-wrap: wrap; }

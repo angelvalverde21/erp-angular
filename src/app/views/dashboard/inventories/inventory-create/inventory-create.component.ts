@@ -1,86 +1,49 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { InventoryVariantSearchComponent } from '../variants/inventory-variant-search/inventory-variant-search.component';
-import { InventoryService } from '../inventory.service';
-import { Subject, takeUntil } from 'rxjs';
-import Swal from 'sweetalert2';
-
-@Component({
-  selector: 'app-inventory-create',
-  imports: [
-    InventoryVariantSearchComponent
-  ],
-  templateUrl: './inventory-create.component.html',
-  styleUrl: './inventory-create.component.scss'
-})
+import { WarehouseSelectComponent } from '../../warehouses/warehouse-select/warehouse-select.component';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { distinctUntilChanged, Subscription } from 'rxjs';
+import { InventoryOptions, InventoryPayload, InventoryScope, InventoryStatus, InventoryTarget } from 'src/app/interfaces/inventory.interface';
+import { BranchFieldValidationDirective } from '../../branches/branch-field-validation.directive';
+import { INVENTORY_STATUS_LABELS } from '../inventory-workflow';
+@Component({ selector: 'app-inventory-create', imports: [WarehouseSelectComponent, RouterLink, ReactiveFormsModule, BranchFieldValidationDirective], templateUrl: './inventory-create.component.html', styleUrl: './inventory-create.component.scss' })
 export class InventoryCreateComponent implements OnDestroy {
+  @Input() options: InventoryOptions | null = null;
+  @Input() saving = false;
+  editing = false;
+  scopeLocked = false;
+  cancelPath = ['../'];
+  statuses: InventoryStatus[] = ['draft'];
+  readonly labels = INVENTORY_STATUS_LABELS;
+  @Output() save = new EventEmitter<InventoryPayload>();
+  readonly form;
+  private readonly scopeChanges: Subscription;
 
-
-  loading: boolean = false;
-  inventories: any[] = [];
-
-  constructor(
-    private _inventory: InventoryService
-  ) {
-
-  }
-
-  @Output() emitInventoryCreate = new EventEmitter<any>();
-
-  receiveSearchSelectedVariants(event: any) {
-
-    Swal.fire({
-      title: 'Espere...',
-      html: 'Ingresando inventario',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    })
-    
-
-    console.log('Variantes seleccionadas:', event);
-
-    this.loading = true;
-
-    console.log('Variantes seleccionadas:', event);
-
-    this._inventory.batch(event).pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-
-        Swal.fire('Guardado', 'Inventario generado correctamente', 'success');
-        console.log(resp);
-        this.inventories = resp.data;
-        this.emitInventoryCreate.emit(resp.data);
-        this.loading = false;
-
-      },
-
-      error: (error: any) => {
-
-        Swal.fire({
-          title: "Los productos ya existen",
-          icon: "warning",
-          showCloseButton: true,
-          focusConfirm: false,
-        });
-
-        console.error(error);
-      },
-
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.nonNullable.group({ name: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(255)]], comment: ['', Validators.maxLength(5000)], inventoriable_type: ['' as InventoryScope | ''], inventoriable_id: [null as number | null], status: ['draft' as InventoryStatus] });
+    this.scopeChanges = this.form.controls.inventoriable_type.valueChanges.pipe(distinctUntilChanged()).subscribe(type => {
+      this.form.controls.inventoriable_id.setValue(null);
+      this.form.controls.inventoriable_id.setValidators(type ? Validators.required : null);
+      this.form.controls.inventoriable_id.updateValueAndValidity();
     });
-
-    // Aquí puedes manejar las variantes seleccionadas, por ejemplo, agregándolas a un formulario o a una lista.
   }
-
-  destroy$ = new Subject<void>();
-
-  ngOnDestroy(): void {
-
-    this.destroy$.next();
-    this.destroy$.complete();
-
+  get targets(): InventoryTarget[] {
+    const type = this.form.controls.inventoriable_type.value;
+    if (!this.options || !type) return [];
+    return type === 'branch' ? this.options.branches : type === 'warehouse' ? this.options.warehouses : this.options.locations;
   }
-
-
+  get targetOptions() {
+    return this.targets.map(target => ({
+      ...target,
+      contextName: target.warehouse?.name,
+      subtitle: target.subtitle ?? target.warehouse?.subtitle,
+    }));
+  }
+  submit(): void {
+    if (this.saving) return;
+    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    const value = this.form.getRawValue();
+    this.save.emit({ name: value.name.trim(), comment: value.comment.trim() || null, inventoriable_type: value.inventoriable_type || null, inventoriable_id: value.inventoriable_type ? value.inventoriable_id : null, ...(this.editing ? { status: value.status } : {}) });
+  }
+  ngOnDestroy(): void { this.scopeChanges.unsubscribe(); }
 }

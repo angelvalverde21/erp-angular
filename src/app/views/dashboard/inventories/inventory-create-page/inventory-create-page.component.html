@@ -1,13 +1,6 @@
-<app-head-page title="Crear Inventario">
-    <app-button-back></app-button-back>
-</app-head-page>
-
-<div class="card">
-
-    <div class="card-body">
-
-        <app-inventory-create></app-inventory-create>
-
-    </div>
-
+<div class="inventory-page ">
+  <app-inventory-section-header [sessions]="false" [inventory]="inventory" title="Crear inventario" description="Define el ámbito y las indicaciones del inventario."><a class="branch-back" [routerLink]="['../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver al listado</a></app-inventory-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} @if (!options) { <button type="button" class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button> }</div> }
+  @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando información…</div> }
+  @else if (options  ) { <section class="branch-panel inventory-form-panel mb-3"><app-inventory-create [options]="options" [saving]="saving"   (save)="save($event)"></app-inventory-create></section> }
 </div>

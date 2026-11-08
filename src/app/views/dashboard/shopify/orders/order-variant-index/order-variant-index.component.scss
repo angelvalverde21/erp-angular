@@ -1,4 +1,24 @@
-tr:hover {
-  background-color: #f8f9fa;
-  cursor: pointer;
+:host { display: block; }
+.order-variants-table-wrap { border-radius: 0 0 1rem 1rem; }
+.order-variants-table {
+    --bs-table-bg: transparent;
+    --cui-table-bg: transparent;
+    min-width: 680px;
+    color: var(--bs-body-color, var(--cui-body-color, #334155));
+    thead th {
+        padding: .9rem 1rem;
+        border-bottom: 1px solid var(--order-border, var(--cui-border-color, #e2e8f0));
+        background: var(--bs-tertiary-bg, var(--cui-tertiary-bg, #f8fafc));
+        color: var(--order-muted, var(--cui-secondary-color, #64748b));
+        font-size: .7rem;
+        font-weight: 600;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .variant-number-column { width: 3rem; text-align: center; }
+    .variant-quantity-column { width: 6.5rem; }
+    .variant-price-column { width: 10rem; }
+    .variant-total-column { width: 8rem; }
+    .variant-actions-column { width: 3.5rem; }
 }

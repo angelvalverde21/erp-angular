@@ -1,0 +1,18 @@
+<div class="branch-page section-branches">
+  @if (storeName) {
+    <section class="branch-store-context" aria-label="Store principal">
+      <span class="branch-store-icon" aria-hidden="true"><i class="fa-solid fa-store"></i></span>
+      <div><span class="branch-store-label">Store principal</span><h2>{{ storeName }}</h2></div>
+      <span class="branch-store-description">Sucursales de esta empresa</span>
+    </section>
+  }
+  <app-branch-section-header level="branches" title="Sucursales" description="Administra las sedes de tu empresa y accede a sus almacenes." [creating]="false" >
+    <a class="branch-action" [routerLink]="['./create']"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar sucursal</a>
+  </app-branch-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} <button type="button" class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button></div> }
+  <section class="section-collection" [attr.aria-busy]="loading">
+    @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando sucursales…</div> }
+    @else if (!error) { <app-branch-index [branches]="branches"></app-branch-index> }
+  </section>
+  @if (lastPage > 1) { <nav class="branch-pagination" aria-label="Paginación"><button class="branch-back" [disabled]="page <= 1 || loading" (click)="load(page - 1)">Anterior</button><span>{{ page }} de {{ lastPage }}</span><button class="branch-back" [disabled]="page >= lastPage || loading" (click)="load(page + 1)">Siguiente</button></nav> }
+</div>

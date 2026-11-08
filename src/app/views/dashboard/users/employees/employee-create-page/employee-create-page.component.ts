@@ -49,7 +49,7 @@ export class EmployeeCreatePageComponent implements OnInit, OnDestroy{
       },
 
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al listar los roles del sistema', 'error');
+        this.loading = false; Swal.fire('Error', 'No se pudieron cargar las áreas. Puedes completar el resto de la ficha.', 'error');
         console.error(error);
       },
 

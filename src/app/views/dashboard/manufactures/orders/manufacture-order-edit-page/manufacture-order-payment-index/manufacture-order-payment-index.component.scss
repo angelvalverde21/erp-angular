@@ -1,0 +1,6 @@
+@use '../../purchase-order-ui';
+:host ::ng-deep .purchase-order-payments app-payment-index > div:first-child { flex-wrap: wrap; gap: .75rem; }
+:host ::ng-deep .purchase-order-payments app-payment-index table { font-size: .875rem; min-width: 700px; }
+:host ::ng-deep .purchase-order-payments app-payment-index table th { font-size: .75rem; color: var(--cui-secondary-color, #64748b); font-weight: 600; }
+:host ::ng-deep .purchase-order-payments app-payment-index table th,
+:host ::ng-deep .purchase-order-payments app-payment-index table td { padding: .9rem 1rem; border-color: var(--cui-border-color, #e2e8f0); }

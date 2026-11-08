@@ -1,0 +1,150 @@
+
+<div class="barcode-search count-barcode">
+  @if (showLocationPicker) {
+  @if (!editing && !locationConfirmed) {
+    <form class="barcode-panel count-zone-picker" (submit)="confirmLocation($event)">
+      <div><h3>¿En qué zona vas a contar?</h3><p>Selecciona la zona una sola vez. Los siguientes conteos se registrarán allí.</p></div>
+      
+      <div class="count-zone-hierarchy">
+        <div><label for="count-branch">Sucursal *</label><select #branchInput id="count-branch" class="form-select" [value]="selectedBranchId ?? ''" (change)="selectBranch(branchInput.value)" [disabled]="readOnly" [class.is-invalid]="!selectedBranchId && form.controls.location_id.touched"><option value="">Selecciona una sucursal</option>@for (branch of branches; track branch.id) { <option [value]="branch.id">{{ branch.name }}</option> }</select></div>
+        <div><label for="count-warehouse">Almacén *</label><app-warehouse-select inputId="count-warehouse" [items]="warehouses" [value]="selectedWarehouseId" (valueChange)="selectWarehouse($event)" [disabled]="readOnly || !selectedBranchId" [class.is-invalid]="selectedBranchId && !selectedWarehouseId && form.controls.location_id.touched"></app-warehouse-select></div>
+        <div><label for="count-location">Zona *</label><select id="count-location" class="form-select" [formControl]="form.controls.location_id" [class.is-invalid]="form.controls.location_id.invalid && form.controls.location_id.touched" [attr.aria-invalid]="form.controls.location_id.invalid && form.controls.location_id.touched ? true : null" [attr.disabled]="readOnly || !selectedWarehouseId ? true : null">
+          <option [ngValue]="null">Selecciona una zona</option>
+          @for (location of zones; track location.id) { <option [ngValue]="location.id">{{ location.parent?.name ? location.parent?.name + ' / ' : '' }}{{ location.name }}{{ location.code ? ' · ' + location.code : '' }}</option> }
+        </select></div>
+      </div>
+      @if (selectedWarehouseId && !zones.length) { <p class="count-zone-empty" role="status"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Este almacén no tiene zonas finales disponibles para este inventario. Agrega una zona en la sección Sucursales para poder contar allí.</p> }
+      <div class="count-zone-controls">
+        <button type="submit" class="btn btn-dark text-white barcode-search-button" [disabled]="readOnly || saving"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Empezar conteo</button>
+      </div>
+    </form>
+  } @else {
+    <div class="count-zone-context"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>Zona de conteo <strong>{{ locationPath }}</strong>@if (warehouseSubtitle) { <small class="d-block">{{ warehouseSubtitle }}</small> }</span></div>
+  }
+
+  }
+
+  @if (!editing && (locationConfirmed || !showLocationPicker)) {
+  <form (submit)="requestSearch($event)" class="barcode-panel barcode-search-panel" [attr.aria-busy]="searching">
+    <label for="inventory-barcode-input">Código de barras</label>
+    <div class="barcode-search-controls">
+      <div class="barcode-input-wrap" [class.barcode-input-disabled]="searching || saving || readOnly || !locationConfirmed">
+        <i class="fa-solid" [class.fa-lock]="!locationConfirmed || readOnly" [class.fa-barcode]="locationConfirmed && !readOnly" aria-hidden="true"></i>
+        <input #barcodeInput id="inventory-barcode-input" [value]="searchTerm" (input)="searchTerm = barcodeInput.value" type="text" [placeholder]="locationConfirmed ? 'Escanea o escribe el código de la variante' : 'Selecciona una ubicación para escanear'" (click)="barcodeInput.select()"
+          autocomplete="off" autocapitalize="off" [spellcheck]="false" [disabled]="searching || saving || readOnly || !locationConfirmed" aria-describedby="inventory-barcode-help" />
+      </div>
+      <button type="submit" class="btn btn-dark text-white barcode-search-button" [disabled]="!canSearch">
+        @if (searching) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> }
+        @else { <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> }
+        {{ searching ? 'Buscando...' : 'Buscar producto' }}
+      </button>
+    </div>
+    <div id="inventory-barcode-help" class="barcode-input-help">
+      @if (!locationConfirmed) { <span><i class="fa-solid fa-lock" aria-hidden="true"></i>Selecciona una ubicación para habilitar el escáner.</span> }
+      @else if (readOnly) { <span><i class="fa-solid fa-lock" aria-hidden="true"></i>La sesión está disponible solo para consulta.</span> }
+      @else if (saving) { <span>Guardando el conteo…</span> }
+      @else if (searching) { <span>Consultando la variante…</span> }
+      @else { <span><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Compatible con lector de códigos de barras.</span><span>Presiona <kbd>Enter</kbd> para buscar</span> }
+    </div>
+  </form>
+
+    @if (searching) { <div class="barcode-state count-search-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><p>Buscando el producto…</p></div> }
+    @else if (searchError) { <div class="barcode-state barcode-state-error" role="alert"><span class="barcode-state-icon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></span><h3>No pudimos completar la búsqueda</h3><p>{{ searchError }}</p></div> }
+    @else if (!selectedVariant && locationConfirmed && hasSearched) { <div class="barcode-state" role="status"><span class="barcode-state-icon" aria-hidden="true"><i class="fa-solid fa-barcode"></i></span><h3>No encontramos el producto</h3><p>Revisa el código de la variante y vuelve a escanear.</p><button type="button" class="btn btn-outline-secondary" (click)="barcodeInput.focus(); barcodeInput.select()" [disabled]="readOnly">Ingresar código</button></div> }
+  }
+
+  @if (selectedVariant; as variant) {
+    <div class="barcode-workspace">
+      <section class="barcode-panel barcode-results" aria-label="Información de la variante">
+        <div class="barcode-product"><span class="barcode-product-image">@if (productImageUrl) { <app-image-preview [image]="variant.product?.image" [title]="variant.product?.name || 'Producto'" [height]="64" [width]="64" [previewSize]="600" (imageError)="imageUnavailable = true"></app-image-preview> } @else { <i class="fa-solid fa-box-open" aria-hidden="true"></i> }</span><div class="barcode-product-info"><strong>{{ variant.product?.name || 'Variante #' + variant.id }}</strong><div class="barcode-product-meta"><span>Código {{ variant.id }}</span><span>Variante #{{ variant.id }}</span>@if (variant.product?.id) { <span>Producto #{{ variant.product?.id }}</span> }@if (round) { <span>Ronda {{ round }}</span> }@if (recordStatus) { <span>{{ labels[recordStatus] }}</span> }</div>
+          @if (variant.variant_option_values?.length) {
+            <div class="barcode-variant-options" aria-label="Opciones de la variante">
+              @for (option of variant.variant_option_values; track option.id) { <span>{{ option.option?.label || option.option?.name || 'Opción' }}: <strong>{{ (option.option_value?.value || 'No especificado') | uppercase }}</strong></span> }
+            </div>
+          }
+        </div></div>
+        <dl class="barcode-details"><div><dt>SKU</dt><dd>{{ variant.sku || 'Sin SKU' }}</dd></div><div><dt>Precio</dt><dd>{{ variant.price == null ? 'Sin precio' : (variant.price | currency:'PEN':'symbol':'1.2-2':'es-PE') }}</dd></div><div><dt>Última actualización</dt><dd>{{ variant.updated_at ? (variant.updated_at | date:'dd/MM/yyyy, HH:mm') : 'No disponible' }}</dd></div></dl>
+      </section>
+
+      <form class="barcode-panel barcode-stock-form" [formGroup]="form" (ngSubmit)="submit()" [attr.aria-busy]="saving">
+      <header class="barcode-stock-header">
+        <div>
+          <h3>{{ hasQuantityChange ? 'Conteo al guardar' : editing ? 'Conteo actual' : 'Total contado en el inventario' }}</h3>
+          @if (hasQuantityChange) {
+            <p class="barcode-header-summary" role="status">{{ countSummary }}</p>
+            <span class="barcode-stock-status">Stock global de referencia: {{ variant.stock ?? '—' }} unidades</span>
+          } @else {
+            <p class="barcode-stock-product">{{ variant.product?.name || 'Variante #' + variant.id }}</p>
+            <div class="barcode-stock-variant">@for (option of variant.variant_option_values; track option.id) { <span>{{ option.option?.label || option.option?.name || 'Opción' }}: <strong>{{ (option.option_value?.value || 'No especificado') | uppercase }}</strong></span> }</div>
+            <span class="barcode-stock-status">{{ editing ? 'Cantidad registrada en este conteo' : 'Suma de capturas vigentes en todas las sesiones y ubicaciones' }}</span>
+          }
+        </div>
+        <strong class="barcode-stock-number">
+          {{ hasQuantityChange ? (editing ? initialQuantity : countedQuantity) : currentQuantity ?? '—' }}
+          @if (hasQuantityChange) { <i class="fa-solid fa-arrow-right" aria-label="cantidad a registrar"></i> {{ editing ? form.controls.quantity.value : countedQuantity + (form.controls.quantity.value ?? 0) }} }
+          <small>unidades</small>
+        </strong>
+      </header>
+        <fieldset class="barcode-stock-body count-fields" [disabled]="saving || readOnly">
+      <div class="barcode-stock-row row g-4 align-items-start mb-4">
+        @if (editing) {
+        <div class="col-12 col-sm-6">
+          <label for="count-change" class="d-block small mb-2">Agregar o retirar del conteo</label>
+          <input #countChangeInput id="count-change" type="number" step="1" inputmode="numeric" class="form-control form-control-lg" [value]="quantityChange" [attr.min]="-initialQuantity" (input)="updateQuantityFromChange(countChangeInput)" (wheel)="countChangeInput.blur()" (click)="countChangeInput.select()"
+            [class.is-invalid]="form.controls.quantity.invalid && (form.controls.quantity.dirty || form.controls.quantity.touched)" [attr.aria-invalid]="form.controls.quantity.invalid && (form.controls.quantity.dirty || form.controls.quantity.touched) ? true : null" (blur)="form.controls.quantity.markAsTouched()" aria-describedby="count-change-help" />
+          <p id="count-change-help" class="small text-body-secondary mt-2 mb-0">Corrige las unidades de este registro.</p>
+        </div>
+        }
+        <div class="col-12" [class.col-sm-6]="editing">
+          <label for="count-quantity" class="d-block small mb-2">{{ editing ? 'Total del conteo' : 'Cantidad de esta captura' }} *</label>
+          <input #quantityInput id="count-quantity" type="number" min="0" max="2147483647" step="1" inputmode="numeric" class="form-control form-control-lg" formControlName="quantity" (input)="registrationComplete = false" (wheel)="quantityInput.blur()" (click)="quantityInput.select()" (keydown)="preventInvalidQuantityKey($event)"
+            [class.is-invalid]="form.controls.quantity.invalid && (form.controls.quantity.dirty || form.controls.quantity.touched)" aria-describedby="count-quantity-help" />
+          <p id="count-quantity-help" class="small text-body-secondary mt-2 mb-0">{{ editing ? 'También puedes escribir el total físico de este registro.' : 'Ingresa solo las unidades encontradas en esta captura. Se sumarán al total contado.' }}</p>
+        </div>
+      </div>
+          @if (editing && !readOnly) { <div class="count-record-status"><label for="count-status">Estado del registro</label><select id="count-status" class="form-select" formControlName="status"><option value="valid">Vigente</option><option value="cancelled">Cancelar este registro</option></select></div> }
+          <div class="count-feedback"><p>Guardar registra el conteo físico. El stock se modifica al aplicar un ajuste aprobado.</p></div>
+          <div class="barcode-save-row">@if (embedded) { <button type="button" class="btn btn-outline-secondary barcode-product-link" (click)="nextProduct()" [disabled]="saving">Limpiar producto</button> } @else { <a class="btn btn-outline-secondary barcode-product-link" [routerLink]="saving ? null : cancelPath" [class.disabled]="saving">Volver al listado</a> }@if (!readOnly) { <button type="submit" class="btn btn-dark text-white barcode-search-button" [disabled]="saving || searching">@if (saving) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> } @else { <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i> }{{ saving ? 'Registrando…' : editing ? 'Guardar cambios' : 'Registrar conteo' }}</button> }</div>
+        </fieldset>
+        @if (registrationComplete) {
+          <div class="count-saved-actions" role="status">
+            <span><i class="fa-regular fa-circle-check" aria-hidden="true"></i>Conteo guardado correctamente</span>
+            <button type="button" class="btn btn-dark text-white barcode-search-button" (click)="nextProduct()" [disabled]="saving"><i class="fa-solid fa-barcode" aria-hidden="true"></i>Contar otro producto</button>
+          </div>
+        }
+      </form>
+    </div>
+  }
+
+  @if (!editing && showHistory) {
+    <section class="barcode-panel barcode-history" aria-labelledby="count-records-title">
+      <header class="barcode-history-header">
+        <div><h3 id="count-records-title">Historial de conteos</h3><p>Cantidades registradas en esta sesión. El más reciente aparece primero.</p></div>
+        <span>{{ historyRecords === null ? savedRecords.length : historyTotal }} registros</span>
+      </header>
+      @if (historyError) { <div class="count-history-error" role="alert">{{ historyError }}<button type="button" class="btn btn-outline-secondary btn-sm" (click)="historyPageChange.emit(historyPage)" [disabled]="historyLoading">Reintentar</button></div> }
+      <div class="count-history-scroll" [attr.aria-busy]="historyLoading" tabindex="0" aria-label="Historial de conteos registrados">
+        <table class="count-history-table">
+          <thead><tr><th>Producto / SKU</th><th>Ubicación</th><th>Cantidad</th><th>Ronda</th><th>Estado</th><th>Fecha</th></tr></thead>
+          <tbody>
+            @if (historyLoading) { <tr><td colspan="6"><div class="count-history-empty" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando conteos…</div></td></tr> }
+            @else {
+            @for (record of countHistory; track record.id) {
+              <tr>
+                <td><strong>{{ record.variant?.product?.name || 'Variante #' + record.variant_id }}</strong><small>{{ record.variant?.sku || 'Sin SKU' }} · #{{ record.id }}</small></td>
+                <td>{{ record.location?.name || 'Ubicación #' + record.location_id }}</td>
+                <td class="count-history-quantity">{{ record.quantity }}</td>
+                <td>{{ record.count_round }}</td>
+                <td><span [class.count-history-replaced]="record.status === 'replaced'">{{ labels[record.status] }}</span></td>
+                <td>{{ record.counted_at | date:'dd/MM/yyyy, HH:mm' }}</td>
+              </tr>
+            }
+            @empty { <tr><td colspan="6"><div class="count-history-empty"><span class="count-empty-icon" aria-hidden="true"><i class="fa-solid fa-list-check"></i></span><strong>{{ historyError ? 'Historial no disponible' : 'No hay conteos registrados' }}</strong><p>{{ historyError ? 'Vuelve a intentar cargar los registros.' : 'Los conteos de esta sesión aparecerán aquí.' }}</p></div></td></tr> }
+            }
+          </tbody>
+        </table>
+      </div>
+      @if (historyLastPage > 1) { <nav class="count-history-pagination" aria-label="Paginación de conteos"><button type="button" class="btn btn-outline-secondary btn-sm" (click)="historyPageChange.emit(historyPage - 1)" [disabled]="historyLoading || historyPage <= 1">Anterior</button><span>{{ historyPage }} de {{ historyLastPage }}</span><button type="button" class="btn btn-outline-secondary btn-sm" (click)="historyPageChange.emit(historyPage + 1)" [disabled]="historyLoading || historyPage >= historyLastPage">Siguiente</button></nav> }
+    </section>
+  }
+</div>

@@ -11,20 +11,20 @@ export const routes: Routes = [
   },
   {
     path: 'create',
-    loadComponent: () => import('./order-create/order-create.component').then(m => m.OrderCreateComponent),
+    loadComponent: () => import('./order-create-page/order-create-page.component').then(m => m.OrderCreatePageComponent),
     data: {
       title: 'Crear',
       name: 'order.create',
     }
   },
-  // {
-  //   path: 'search/:search',
-  //   loadComponent: () => import('./order-search/order-search.component').then(m => m.OrderSearchComponent),
-  //   data: {
-  //     title: 'Buscar',
-  //     name: 'order.search',
-  //   }
-  // },
+  {
+    path: 'search/:search',
+    loadComponent: () => import('./order-search/order-search.component').then(m => m.OrderSearchComponent),
+    data: {
+      title: 'Buscar',
+      name: 'order.search',
+    }
+  },
   {
     path: ':order_id',
     loadComponent: () => import('./order-edit-page/order-edit-page.component').then(m => m.OrderEditPageComponent),

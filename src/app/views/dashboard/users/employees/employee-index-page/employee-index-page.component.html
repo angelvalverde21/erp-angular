@@ -1,33 +1,27 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
+<header class="personnel-heading">
+  <div class="personnel-heading-title"><span class="personnel-icon"><i class="fa-solid fa-users" aria-hidden="true"></i></span>
+    <div><span class="personnel-eyebrow">Equipo de trabajo</span><h1>Empleados</h1><p>Administra sus fichas, horarios, asistencias y movimientos.</p></div>
+  </div>
+  @if (canEdit) { <a class="personnel-button personnel-primary" routerLink="create"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar empleado</a> }
+</header>
 
-<app-head-page title="Empleados" [export]="false">
-    <app-button-link [path]="['./create']">+ A&ntilde;adir</app-button-link>
-</app-head-page>
-
-<div class="card">
-
-    <div class="card-header py-3">
-
-        <app-head-search [show_date]="false" [is_redirect]="false" (emitSearchResult)="receiveSearchResult($event)" type="employee" />
-
+@if (loading) {
+  <div class="personnel-empty" role="status"><span class="spinner-border spinner-border-sm"></span>Cargando empleados…</div>
+} @else if (error) {
+  <div class="personnel-card personnel-empty" role="alert">{{ error }}<button class="personnel-button" (click)="employeesInit()">Reintentar</button></div>
+} @else {
+  <div class="personnel-stats">
+    <div class="personnel-stat"><span>Equipo registrado</span><strong>{{ employees.length }}</strong><small>Empleados de esta tienda</small></div>
+    <div class="personnel-stat"><span>Empleados activos</span><strong>{{ activeCount }}</strong><small>Personal disponible</small></div>
+    <div class="personnel-stat"><span>Identificación para marcaciones</span><strong>{{ clockCount }}</strong><small>Con documento o código biométrico</small></div>
+  </div>
+  <section class="personnel-card mb-3">
+    <header class="personnel-card-header"><div><h2>Directorio de empleados</h2><p>{{ filteredEmployees.length }} resultados</p></div></header>
+    <div class="personnel-filters">
+      <input class="form-control" [(ngModel)]="search" placeholder="Buscar por nombre, documento, teléfono o código" aria-label="Buscar empleados">
+      <select class="form-select" [(ngModel)]="status" aria-label="Filtrar por estado"><option value="">Todos los estados</option><option value="1">Activos</option><option value="0">Inactivos</option></select>
+      @if (search || status) { <button class="personnel-button" (click)="search = ''; status = ''">Limpiar</button> }
     </div>
-
-    <div class="card-body p-0">
-
-        @if(employees.length > 0){
-            <app-employee-index [employees]="employees"></app-employee-index>
-        }@else{
-            <p class="p-4">No se cuenta con registro de empleados   </p>
-        }
-
-    </div>
-
-    <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Total: {{ employees.length }}</small>
-    </div>
-
-</div>
-
+    <app-employee-index [employees]="filteredEmployees"></app-employee-index>
+  </section>
 }

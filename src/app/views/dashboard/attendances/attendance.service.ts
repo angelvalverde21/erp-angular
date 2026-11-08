@@ -15,6 +15,14 @@ export class AttendanceService extends BaseCrudDashboardService {
 
   }
 
+  list(page: number, filters: Record<string, string>) {
+    const params: Record<string, string | number> = { page };
+    for (const [key, value] of Object.entries(filters)) {
+      if (value) params[key] = value;
+    }
+    return this.http.get<any>(this.baseUrl, { params });
+  }
+
   //la variable this.baseUrl esta dentro de BaseCrudService que se llama con super
 
 }

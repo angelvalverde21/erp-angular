@@ -1,11 +1,12 @@
-<app-employee-form [form]="form" [roles]="roles"></app-employee-form>
-<!-- {{ form.value | json }} -->
-
-<div class="row mb-3">
-    <div class="col">
-
-        <app-button-save [disabled]="disabledButton" [spinner]="loadingIcon" (action)="create()">Crear
-            Empleado</app-button-save>
-            
-    </div>
-</div>
+<form (ngSubmit)="create()" [formGroup]="form" class="personnel-card mb-3">
+  <header class="personnel-card-header"><div><h2>Datos del empleado</h2><p>Completa su ficha y configura su cuenta de acceso al ERP.</p></div></header>
+  <div class="personnel-card-body"><app-employee-form [form]="form" [roles]="roles"></app-employee-form></div>
+  <footer class="personnel-card-footer">
+    @if (error) { <p class="personnel-error" role="alert">{{ error }}</p> }
+    <button class="personnel-button personnel-primary" type="submit" [disabled]="loadingIcon">
+      @if (loadingIcon) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> }
+      @else { <i class="fa-solid fa-user-plus" aria-hidden="true"></i> }
+      {{ loadingIcon ? 'Guardando…' : 'Crear empleado' }}
+    </button>
+  </footer>
+</form>

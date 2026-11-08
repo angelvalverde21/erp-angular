@@ -1,4 +1,3 @@
-<a data-fancybox="gallery" [attr.data-caption]="`${ title}`" [href]="image?.url_medium">
-    <img [src]="image?.url_thumbnail || 'assets/images/300x300.svg'" (error)="onImageError($event)" class="me-2"
-        [height]="height" alt="">
+<a class="image-preview-trigger" data-fancybox="gallery" data-type="image" [attr.data-caption]="title" [href]="previewUrl" [attr.aria-label]="'Ampliar imagen de ' + (title || 'producto')">
+  <img class="image-preview-thumbnail" [class.me-2]="width === null" [src]="thumbnailUrl" (error)="onImageError($event)" [height]="height" [attr.width]="width" [alt]="title || 'Producto'" loading="lazy" decoding="async">
 </a>

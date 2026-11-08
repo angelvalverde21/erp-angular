@@ -55,6 +55,8 @@ export class ScheduleEditComponent implements OnInit, OnDestroy {
   loading: boolean = false;
 
   update() {
+    if (this.loading) return;
+    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
 
     this.loading = true;
 
@@ -71,7 +73,8 @@ export class ScheduleEditComponent implements OnInit, OnDestroy {
       },
 
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
+        this.loading = false;
+        Swal.fire('Error', error.error?.errors ? Object.values(error.error.errors).flat().join(' ') : 'No se pudo guardar el horario.', 'error');
         this.loading = false;
         console.error(error);
       },

@@ -91,7 +91,7 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
 
     console.log(employee);
     
-    this.name = employee.user.name;
+    this.name = employee.name;
     this.employee_id = employee.id;
     this.onChangeCb?.(this.employee_id);
     this.showEmployees = true;
@@ -149,7 +149,7 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
       this._employee.get(this.employee_id).pipe(takeUntil(this.destroy$)).subscribe({
 
         next: (resp: any) => {
-          this.name = resp.data.user.name;
+          this.name = resp.data.name;
           console.log(resp.data);
         },
 

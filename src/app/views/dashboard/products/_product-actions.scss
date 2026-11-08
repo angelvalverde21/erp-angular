@@ -1,0 +1,15 @@
+.product-primary-action, .product-secondary-action {
+  display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+  min-height: 42px; padding: .65rem 1rem; border: 1px solid transparent;
+  border-radius: .65rem; font-size: .82rem; font-weight: 600; line-height: 1.25;
+  text-decoration: none; white-space: nowrap; transition: background .15s, border-color .15s;
+  &:focus-visible { outline: 2px solid #64748b; outline-offset: 3px; }
+}
+.product-primary-action {
+  color: #fff; background: #252b36; border-color: #252b36;
+  &:hover { color: #fff; background: #3b4453; border-color: #3b4453; }
+}
+.product-secondary-action {
+  color: var(--cui-body-color, #334155); background: var(--cui-body-bg, #fff); border-color: var(--cui-border-color, #dbe1e8);
+  &:hover { background: var(--cui-tertiary-bg, #f8fafc); border-color: #94a3b8; }
+}

@@ -1,0 +1,8 @@
+<div class="branch-page section-branches">
+  <app-branch-section-header level="branches" title="Agregar sucursal" description="Completa los datos para registrar una sucursal." [creating]="true" >
+    <a class="branch-back" [routerLink]="['../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver a sucursales</a>
+  </app-branch-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }}</div> }
+  @if (loading) { @if (!error) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Preparando formulario…</div> } }
+  @else { <section class="branch-panel branch-form-surface mb-3"><header class="branch-panel-heading"><h2>Datos de sucursal</h2><p>Los campos con * son obligatorios.</p></header><app-branch-create [saving]="saving" [addresses]="addresses" (save)="save($event)"></app-branch-create></section> }
+</div>

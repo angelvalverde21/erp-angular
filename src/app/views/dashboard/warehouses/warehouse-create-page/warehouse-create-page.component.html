@@ -1,0 +1,8 @@
+<div class="branch-page section-warehouses">
+  <app-branch-section-header level="warehouses" title="Agregar almacén" description="Completa los datos para registrar un almacén." [creating]="true" [branch]="context">
+    <a class="branch-back" [routerLink]="['../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver a almacenes</a>
+  </app-branch-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }}</div> }
+  @if (loading) { @if (!error) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Preparando formulario…</div> } }
+  @else { <section class="branch-panel branch-form-surface mb-3"><header class="branch-panel-heading"><h2>Datos de almacén</h2><p>Los campos con * son obligatorios.</p></header><app-warehouse-create [saving]="saving" [parentId]="parentId" [branchAddress]="context?.address ?? null"  (save)="save($event)"></app-warehouse-create></section> }
+</div>

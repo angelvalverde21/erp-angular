@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProductCreateComponent } from '../product-create/product-create.component'
-import { ButtonBackComponent } from '../../../shared/components/buttons/button-back/button-back.component';
 import { HeadPageComponent } from "../../../shared/components/head-page/head-page.component";
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductService } from '../product.service';
 import { Product } from '../../../../interfaces/product.interface'
 import { StoreService } from '../../../stores/store.service';
@@ -17,7 +16,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
   selector: 'app-product-create-page',
   imports: [
     ProductCreateComponent, 
-    ButtonBackComponent, 
+    RouterLink,
     HeadPageComponent,
     LoadingComponent
   ],
@@ -77,6 +76,7 @@ export class ProductCreatePageComponent implements OnInit, OnDestroy {
       },
 
       error: (error: any) => {
+        this.setupLoading = false;
         Swal.fire('Error', 'Ocurrió un problema al solicitar la informacion del producto. Inténtalo nuevamente.', 'error');
         console.error(error);
       },

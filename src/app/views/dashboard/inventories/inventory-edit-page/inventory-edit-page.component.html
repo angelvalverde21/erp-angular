@@ -1,14 +1,6 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-
-<app-head-page title="Inventario" [subtitle]="inventory.name" [export]="false">
-    <app-button-print-barcode [variants]="variants" class="me-2"></app-button-print-barcode>
-    <app-button-back></app-button-back>
-</app-head-page>
-
-
-
-<app-inventory-edit [inventory]="inventory"></app-inventory-edit>
-
-}
+<div class="inventory-page ">
+  <app-inventory-section-header [sessions]="false" [inventory]="inventory" title="Editar inventario" description="Define el ámbito y las indicaciones del inventario."><a class="branch-back" [routerLink]="['../../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver al listado</a></app-inventory-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} @if (!options) { <button type="button" class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button> }</div> }
+  @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando información…</div> }
+  @else if (options && inventory ) { <section class="branch-panel inventory-form-panel"><app-inventory-edit [options]="options" [saving]="saving" [inventory]="inventory!"  (save)="save($event)"></app-inventory-edit></section> }
+</div>

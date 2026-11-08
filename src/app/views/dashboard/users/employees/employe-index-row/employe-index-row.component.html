@@ -2,13 +2,13 @@
 
 <td class="text-center">{{ employee.id }}</td>
 <td>
-    <a href="" [routerLink]="firstLink">{{ employee.user.name }}</a>
+    <a href="" [routerLink]="firstLink">{{ employee.name }}</a>
 </td>
 <!-- <td>{{ user.category.name }}</td> -->
-<td class="d-none d-md-table-cell">{{ employee.user.document_number }}</td>
+<td class="d-none d-md-table-cell">{{ employee.document_number }}</td>
 <td class="d-none d-md-table-cell">{{ employee.salary }}</td>
 <td class="d-none d-md-table-cell">
-    @if(employee.user.status){
+    @if(employee.status){
     <span class="badge text-bg-secondary text-white">Activo</span>
     }@else{
     <span class="badge text-bg-danger text-white">Bloqueado</span>
@@ -16,7 +16,7 @@
 </td>
 <td class="d-none d-md-table-cell">
 
-    @for (rol of employee.user.roles; track rol.id) {
+    @for (rol of employee.roles; track rol.id) {
     <span class="badge text-bg-success text-white me-1">{{ rol.title }}</span>
     }
 

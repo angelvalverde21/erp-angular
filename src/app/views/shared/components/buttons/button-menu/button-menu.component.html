@@ -1,30 +1,26 @@
-<div ngbDropdown class="d-inline-block">
-
-    <app-button-edit id="dropdownBasic1" ngbDropdownToggle></app-button-edit>
-    <!-- <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
-                <fa-icon [icon]="faEllipsis"></fa-icon>
-            </button> -->
-    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-
-        @for (menu of menus; track $index) {
-
-        <button ngbDropdownItem [routerLink]="menu.routerLink">
-            <fa-icon [icon]="menu.icon" class="me-2"></fa-icon>
-            {{ menu.label }}
-        </button>
-
-        @if(menu.divider){
-            <div class="dropdown-divider"></div>
-        }
-
-        }
-
-        <div class="dropdown-divider"></div>
-
-        <!-- <button type="button" class="" ngbDropdownItem><fa-icon [icon]="faEdit" class="me-2"></fa-icon>Editar</button> -->
-        <button type="button" class="text-danger" ngbDropdownItem><fa-icon [icon]="faTrash"
-                class="me-2"></fa-icon>Borrar</button>
-
+<div ngbDropdown class="action-menu" [placement]="['bottom-end', 'top-end']" container="body">
+  <button type="button" class="action-menu-toggle" [id]="toggleId" ngbDropdownToggle [attr.aria-label]="context ? 'Más acciones de ' + context : 'Más acciones'" title="Más acciones">
+    <fa-icon [icon]="faEllipsis" aria-hidden="true"></fa-icon>
+  </button>
+  <div ngbDropdownMenu class="action-menu-panel" [attr.aria-labelledby]="toggleId">
+    <div class="action-menu-heading">
+      <span>Acciones</span>
+      @if (context) { <strong>{{ context }}</strong> }
     </div>
-
+    <div class="action-menu-items">
+      @for (menu of menus; track $index) {
+        <button type="button" class="action-menu-item" ngbDropdownItem [routerLink]="menu.routerLink">
+          <span class="action-menu-icon"><fa-icon [icon]="menu.icon" aria-hidden="true"></fa-icon></span>
+          <span class="action-menu-copy"><span class="action-menu-label">{{ menu.label }}</span>@if (menu.description) { <small>{{ menu.description }}</small> }</span>
+        </button>
+        @if (menu.divider && !$last) { <div class="action-menu-divider" role="separator"></div> }
+      }
+    </div>
+    <div class="action-menu-footer">
+      <button type="button" class="action-menu-item action-menu-danger" ngbDropdownItem>
+        <span class="action-menu-icon"><fa-icon [icon]="faTrash" aria-hidden="true"></fa-icon></span>
+        <span class="action-menu-label">Borrar</span>
+      </button>
+    </div>
+  </div>
 </div>

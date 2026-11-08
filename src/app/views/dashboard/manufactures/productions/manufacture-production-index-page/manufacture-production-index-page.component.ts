@@ -1,78 +1,76 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HeadPageComponent } from "@shared/components/head-page/head-page.component";
-import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
-import { Subject, takeUntil } from 'rxjs';
-import { faGears } from '@fortawesome/free-solid-svg-icons';
-import { HeadTableComponent } from '@shared/components/head-table/head-table.component';
 import { ManufactureProductionIndexComponent } from '../manufacture-production-index/manufacture-production-index.component';
 import { ManufactureProductionService } from '../manufacture.production.service';
-import { HeadSearchComponent } from 'src/app/views/shared/components/head-search/head-search.component';
+import { ManufactureSectionHeaderComponent } from '../../components/manufacture-section-header/manufacture-section-header.component';
+import { ManufactureIndexFiltersComponent, ManufactureListFilters } from '../../components/manufacture-index-filters/manufacture-index-filters.component';
 
 @Component({
   selector: 'app-manufacture-production-index-page',
-  imports: [
-    ManufactureProductionIndexComponent,
-    HeadPageComponent,
-    ButtonBackComponent,
-    LoadingComponent,
-    ButtonLinkComponent,
-    HeadSearchComponent,
-  ],
+  imports: [RouterLink, LoadingComponent, ManufactureProductionIndexComponent, ManufactureSectionHeaderComponent, ManufactureIndexFiltersComponent],
   templateUrl: './manufacture-production-index-page.component.html',
-  styleUrl: './manufacture-production-index-page.component.scss'
+  styleUrl: './manufacture-production-index-page.component.scss',
 })
-
 export class ManufactureProductionIndexPageComponent implements OnInit, OnDestroy {
+  @Input() createPath: string[] = ['./create'];
 
-  productions: any;
-  faGears = faGears;
-  loading: boolean = false;
+productions: any[] = [];
+  activeFilters: ManufactureListFilters | null = null;
+  error = '';
+  loading = false;
+
+  private readonly destroy$ = new Subject<void>();
+  private readonly cancelLoad$ = new Subject<void>();
 
   constructor(
-    private _manufactureProduction: ManufactureProductionService
-  ){
-  
-  }
-
-  receiveSearchResult(productions: any) {
-    this.productions = productions;
-  }
+    private _production: ManufactureProductionService,
+  ) {}
 
   ngOnInit(): void {
     this.productionsInit();
   }
 
-  productionsInit(){
+  applyFilters(filters: ManufactureListFilters): void {
+    this.activeFilters = filters;
+    this.productionsInit();
+  }
 
+  clearFilters(): void {
+    this.activeFilters = null;
+    this.productionsInit();
+  }
+
+  productionsInit(): void {
+    this.cancelLoad$.next();
+    this.error = '';
     this.loading = true;
 
-    this._manufactureProduction.index().pipe(takeUntil(this.destroy$)).subscribe({
-    
-      
-      next: (resp: any) => {
-        console.log(resp);
-        this.productions = resp.data;
-        this.loading = false;
-      },
-    
-      error: (error: any) => {
-        // Swal.fire('Error','Ocurrió un problema al traer los datos, intente nuevamente','error');
-        console.error(error);
-      },
-    
-    });
+    const request = this.activeFilters
+      ? this._production.search(this.activeFilters)
+      : this._production.index();
 
+    request
+      .pipe(
+        takeUntil(this.destroy$),
+        takeUntil(this.cancelLoad$),
+        finalize(() => this.loading = false),
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.productions = response.data ?? [];
+        },
+        error: (error: unknown) => {
+          this.error = 'No se pudo consultar el listado. Intenta nuevamente.';
+          console.error(error);
+        },
+      });
   }
 
-  destroy$ = new Subject<void>();
-  
   ngOnDestroy(): void {
-  
     this.destroy$.next();
     this.destroy$.complete();
-  
+    this.cancelLoad$.complete();
   }
-
 }

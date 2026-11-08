@@ -1,50 +1,15 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-
 <app-head-page title="Productos">
-    <app-button-link [path]="['./create']">Agregar Producto</app-button-link>
+  <a class="product-primary-action" [routerLink]="['./create']"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar producto</a>
 </app-head-page>
-
-<div class="card">
-
-    <div class="card-header py-3">
-
-        <!-- <div class="controls d-flex justify-content-between align-items-between">
-            <div class="left d-flex">
-                <button class="btn btn-secondary btn-sm me-1">Todos</button>
-                <button class="btn btn-light btn-sm me-1">Activos</button>
-                <button class="btn btn-light btn-sm me-1">Borrador</button>
-                <button class="btn btn-light btn-sm me-1">Archivados</button>
-            </div>
-            <div class="right d-flex justify-content-between align-items-between">
-                <app-button [icon]="faMagnifyingGlass" color="outline-secondary" class="me-1">Buscar</app-button>
-                <app-button [icon]="faFilter" color="outline-secondary" separation="0"></app-button>
-            </div>
-        </div> -->
-        <app-head-search (emitParams)="receiveParams($event)"></app-head-search>
-
-    </div>
-
-    <div class="card-body p-0">
-
-        <app-product-index [products]="products" (loadMore)="loadMoreProducts()"></app-product-index>
-
-        @if(loadingMore){
-        <div class="py-4 text-center">
-            <p>Cargando Productos...</p>
-            <app-loading></app-loading>
-        </div>
-        }
-
-    </div>
-
-    <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Total de productos: 2</small>
-    </div>
-
-</div>
-
-
-
-}
+<section class="card product-catalog-panel">
+  <div class="card-header product-search-header"><app-product-search (searchSubmit)="receiveParams($event)"></app-product-search></div>
+  <div class="card-body p-0" [attr.aria-busy]="loading || loadingMore">
+    <app-product-index [products]="products" [sortable]="true" [sortBy]="sortBy" [sortDirection]="sortDirection" [loading]="loading" (sortChange)="changeSort($event)" (loadMore)="loadMoreProducts()"></app-product-index>
+    @if (loadingMore) { <div class="product-loading-state" role="status"><app-loading></app-loading><p>Cargando más productos...</p></div> }
+    @if (error) { <div class="product-catalog-error" role="alert"><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary btn-sm" (click)="retry()">Reintentar</button></div> }
+  </div>
+  <footer class="product-catalog-footer">
+    <span>{{ products.length }} productos cargados@if (total !== null) { de {{ total }} }</span>
+    @if (!hasMore && products.length) { <span>Todos los productos cargados</span> }
+  </footer>
+</section>

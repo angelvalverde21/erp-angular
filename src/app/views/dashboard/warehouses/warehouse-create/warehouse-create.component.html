@@ -1,26 +1,24 @@
-<app-loading *ngIf="loading"></app-loading>
-
-<form [formGroup]="form" *ngIf="!loading">
-
-    <div class="row mb-3">
-        <div class="col-lg-12">
-            <app-input-group text="Nombre de Sucursal" [icon]="faPenToSquare">
-                <input formControlName="name" type="text" class="form-control" placeholder="Sucursal"
-                    aria-label="name" aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
+<form [formGroup]="form" (ngSubmit)="submit()" [attr.aria-busy]="saving">
+  <fieldset class="branch-form border-0 m-0" [disabled]="saving">
+    <div class="branch-form-intro"><h3>Identificación</h3><p>Nombre y código para reconocer el almacén.</p></div><div class="branch-field-row"><div class="branch-field"><label for="warehouse-name">Nombre *</label><input id="warehouse-name" formControlName="name" required maxlength="255" placeholder="Ej. Almacén principal"></div><div class="branch-field"><label for="warehouse-code">Código *</label><input id="warehouse-code" formControlName="code" maxlength="50" placeholder="Se genera desde el nombre"><small>Se genera desde el nombre. Puedes ajustarlo.</small></div></div>
+    <div class="branch-field">
+      <label for="warehouse-subtitle">Subtítulo <span class="text-body-secondary">(opcional)</span></label>
+      <input id="warehouse-subtitle" formControlName="subtitle" maxlength="255" placeholder="Ej. Showroom, punto de venta o depósito">
+      <small>Se muestra debajo del nombre de la tienda o almacén.</small>
     </div>
-
-    <div class="row mb-3">
-        <div class="col">
-
-            <app-button color="primary" [icon]="faSave" [disabled]="disabledButton"
-                [spinner]="loadingIcon" (action)="create()">Crear Sucursal</app-button>
+    <div class="warehouse-inherited-address" role="group" aria-labelledby="warehouse-address-label">
+      <div class="warehouse-address-heading"><span id="warehouse-address-label">Dirección de la sucursal</span><span class="warehouse-address-badge"><i class="fa-solid fa-link" aria-hidden="true"></i>Asociada a la sucursal</span></div>
+      <div class="warehouse-address-content">
+        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+        <div>
+          <p>{{ branchAddress?.primary || 'La sucursal aún no tiene una dirección asignada.' }}</p>
+          @if (branchAddress?.name) { <small>{{ branchAddress?.name }}</small> }
         </div>
+      </div>
+      <small class="warehouse-address-help">Esta dirección se administra desde «Editar sucursal» y se aplica a todos sus almacenes.</small>
     </div>
-
+    <label class="branch-option"><input type="checkbox" formControlName="is_active"><span><strong>Almacén activo</strong><small>Si desmarcas esta opción, el registro se identificará como inactivo.</small></span></label>
+    @if (form.invalid && form.touched) { <p class="branch-validation" role="alert">Completa los campos obligatorios y revisa la longitud del nombre y código.</p> }
+    <div class="branch-form-actions"><a class="branch-back" [routerLink]="cancelPath" [class.disabled]="saving" [attr.aria-disabled]="saving">Cancelar</a><button type="submit" class="branch-action" [disabled]="saving">@if (saving) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Guardando… } @else { <i class="fa-solid" [class.fa-plus]="!editing" [class.fa-floppy-disk]="editing" aria-hidden="true"></i>{{ submitLabel }} }</button></div>
+  </fieldset>
 </form>
-
-
-<!-- {{ form.value | json }} -->

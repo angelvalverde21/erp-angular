@@ -1,36 +1,45 @@
 <ng-container [formGroup]="formGroup">
 
-    <th class="text-center">
-        {{ data.sku }}
+    <td class="variant-row-number">{{ index + 1 }}</td>
+    <th scope="row" class="variant-product">
+        <span class="variant-product-name">{{ data.name }}</span>
+        <span class="variant-product-sku">SKU: {{ data.sku || 'Sin SKU' }}</span>
+        @if (data.variant_option_values?.length) {
+        <div class="variant-options">
+            @for (opt of data.variant_option_values; track opt.id) {
+            <span class="variant-option">{{ opt.option_value.value }}</span>
+            }
+        </div>
+        }
     </th>
 
-    <td class="text-center">
-        <input formControlName="quantity" class="form-control text-center mx-auto" style="width: 50px;" type="number">
+    <td>
+        <input #quantityInput formControlName="quantity" class="form-control variant-quantity-input" type="number"
+            min="1" step="1" [attr.aria-label]="'Cantidad de ' + data.name"
+            [class.is-invalid]="formGroup.get('quantity')?.invalid && formGroup.get('quantity')?.touched"
+            (focus)="quantityInput.select()" (click)="quantityInput.select()">
     </td>
 
     <td>
-        {{ data.name }}
+        <div class="variant-price-field">
+            <span aria-hidden="true">S/</span>
+            <input #priceInput formControlName="price" class="form-control" type="number" min="0" step="0.01" twoDecimals
+                [attr.aria-label]="'Precio unitario en soles de ' + data.name"
+                [class.is-invalid]="formGroup.get('price')?.invalid && formGroup.get('price')?.touched"
+                (focus)="priceInput.select()" (click)="priceInput.select()">
+        </div>
     </td>
 
 
-    @for (opt of data.variant_option_values; track opt.id) {
-    <td class="text-center">
-        {{ opt.option_value.value }}
-    </td>
-    }
-
-    <td class="text-center">
-        <input formControlName="price" class="form-control text-center mx-auto" style="width: 75px;" type="number" twoDecimals>
-    </td>
-
-
-    <td class="text-center fw-bold">
+    <td class="variant-line-total">
         {{ total | currency:'PEN':'symbol':'1.2-2':'es-PE' }}
     </td>
 
-    <td class="text-center">
-        <app-button-trash (click)="removeVariant(data.id)">
-        </app-button-trash>
+    <td class="variant-row-actions">
+        <button type="button" class="btn variant-remove-button" [attr.aria-label]="'Eliminar ' + data.name"
+            title="Eliminar producto" (click)="removeVariant(data.id)">
+            <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+        </button>
     </td>
 
 </ng-container>

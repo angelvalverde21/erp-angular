@@ -1,0 +1,26 @@
+@use '../product-actions';
+
+.product-create-editor {
+  display: grid; grid-template-columns: minmax(0, 1fr) 320px; align-items: start; gap: 1.5rem;
+  .product-create-card { min-width: 0; border: 1px solid var(--cui-border-color, #e2e8f0); border-radius: .85rem; background: var(--cui-body-bg, #fff); overflow: hidden; }
+  .product-create-card-heading { display: flex; align-items: center; gap: .8rem; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--cui-border-color, #e2e8f0); }
+  h2 { margin: 0; font-size: .95rem; font-weight: 600; }
+  .product-create-card-heading p { margin: .35rem 0 0; color: var(--cui-secondary-color, #64748b); font-size: .78rem; line-height: 1.5; }
+  .product-create-symbol { display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; border-radius: .65rem; color: var(--cui-secondary-color, #64748b); background: var(--cui-tertiary-bg, #f1f5f9); }
+  .product-create-fields { padding: 1.5rem; margin: 0; border: 0; min-width: 0; }
+  .product-create-sidebar { min-width: 0; }
+  .product-create-summary { padding: 1.5rem; }
+  .product-create-summary-label { color: var(--cui-secondary-color, #64748b); font-size: .75rem; }
+  .product-create-name { margin: .35rem 0 1.25rem; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+  .product-create-check { display: flex; align-items: center; gap: .65rem; margin-top: .75rem; color: var(--cui-secondary-color, #64748b); font-size: .8rem; }
+  .product-create-check i { width: 1rem; text-align: center; }
+  .product-create-check .fa-check { color: var(--cui-success-text-emphasis, #15805d); }
+  .product-create-save { border-top: 1px solid var(--cui-border-color, #e2e8f0); padding: 1.25rem 1.5rem; }
+  .product-create-save button { width: 100%; }
+  .product-create-save button:disabled { opacity: .5; cursor: not-allowed; }
+  .product-create-save p { margin: .85rem 0 0; color: var(--cui-secondary-color, #64748b); font-size: .75rem; line-height: 1.6; }
+  .product-create-tip { display: flex; gap: .65rem; padding: 1rem .5rem; margin: 0; color: var(--cui-secondary-color, #64748b); font-size: .78rem; line-height: 1.6; }
+  .product-create-tip i { margin-top: .2rem; }
+}
+@media (max-width: 991.98px) { .product-create-editor { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 575.98px) { .product-create-editor { gap: 1rem; .product-create-fields, .product-create-card-heading { padding: 1.1rem; } } }

@@ -56,7 +56,8 @@ export class ScheduleIndexRowComponent implements OnInit, OnDestroy {
   receiveUpdatedSchedule(event: any){
     console.log("receiveUpdatedSchedule");
     
-    this.schedule = event;
+    Object.assign(this.schedule, event);
+    this.closeModal();
   }
 
 }

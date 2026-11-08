@@ -1,0 +1,10 @@
+:host { display: block; }
+.option-value-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .5rem; }
+.form-control { min-width: 0; height: 2.4rem; padding: .5rem .7rem; border-radius: .45rem; font-size: .75rem; }
+.form-control::placeholder { color: var(--cui-secondary-color, #94a3b8); }
+.option-value-add { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: 2.4rem; padding: .5rem .7rem; border: 1px solid var(--cui-body-color, #182438); border-radius: .45rem; background: var(--cui-body-color, #182438); color: var(--cui-body-bg, #fff); font-size: .72rem; font-weight: 600; }
+.option-value-add:disabled { opacity: .45; }
+.option-value-add:hover:not(:disabled) { opacity: .85; }
+.option-value-add:focus-visible { outline: 2px solid var(--cui-primary, #5856d6); outline-offset: 2px; }
+.option-value-help { margin-top: .45rem; color: var(--cui-secondary-color, #64748b); font-size: .65rem; line-height: 1.5; }
+.option-value-error { margin: 0; color: var(--cui-danger-text-emphasis, #b42318); }

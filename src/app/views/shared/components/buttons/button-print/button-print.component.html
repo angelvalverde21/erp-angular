@@ -1,5 +1,12 @@
-<app-button [color]="'secondary'" mb="3" [me]="true" [icon]="faPrint"
+@if (toolbar) {
+<button type="button" class="btn print-toolbar-button" (click)="downloadPdf('voucher', 'Generando comprobante')">
+    <fa-icon [icon]="faPrint" aria-hidden="true"></fa-icon>
+    <span>Imprimir</span>
+</button>
+} @else {
+<app-button [color]="'secondary'" [mb]="mb" [me]="true" [icon]="faPrint"
     (click)="downloadPdf('voucher', 'Generado Voucher')">
     <ng-content>Imprimir</ng-content>
 
 </app-button>
+}

@@ -7,17 +7,20 @@ import { ManufactureVariantService } from '../../../../dashboard/manufactures/ma
 import { ManufactureService } from '../../../../dashboard/manufactures/manufacture.service';
 import { ButtonComponent } from '../button/button.component';
 import { faPrint } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-button-print',
   standalone: true,
-  imports: [NgbDropdownModule, ButtonComponent],
+  imports: [NgbDropdownModule, ButtonComponent, FontAwesomeModule],
   templateUrl: './button-print.component.html',
   styleUrl: './button-print.component.scss'
 })
 export class ButtonPrintComponent {
 
   @Input() manufacture_id: number = 0;
+  @Input() mb: string = '3';
+  @Input() toolbar: boolean = false;
 
   faPrint = faPrint;
   constructor(private _manufacture: ManufactureService) {

@@ -3,3 +3,51 @@ tr:hover {
   cursor: pointer;
 }
 
+.courier-office-table {
+  table-layout: fixed;
+  min-width: 980px;
+  --cui-table-bg: transparent;
+  --bs-table-bg: transparent;
+
+  .office-name-column { width: 22%; }
+  .office-address-column { width: 37%; }
+  .office-phone-column { width: 13%; }
+  .office-district-column { width: 17%; }
+  .office-action-column { width: 11%; }
+
+  thead th {
+    padding: .9rem 1.5rem;
+    background: #f7f9fc;
+    border-block: 1px solid #e9edf4;
+    color: #738198;
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  tbody tr { cursor: default; }
+  tbody tr:hover { background: #fafbfe; }
+  tbody th, tbody td {
+    padding: 1.2rem 1.5rem;
+    border-color: #eef1f6;
+    font-size: .78rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+  tbody tr:last-child > * { border-bottom: 0; }
+
+  .office-identity { display: flex; align-items: flex-start; gap: .75rem; }
+  .office-mark { display: grid; place-items: center; flex-shrink: 0; width: 32px; height: 34px; border-radius: 9px; background: #f0f3f9; color: #8491a8; font-size: .85rem; }
+  .office-name { font-weight: 600; color: #34435a; }
+  .office-address { color: #526176; }
+  .office-detail { display: block; color: #8a96a8; font-size: .72rem; font-weight: 400; margin-top: .2rem; }
+  .office-detail span { color: #76849a; }
+  .office-phone { color: #526176; text-decoration: none; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .office-phone:hover { text-decoration: underline; }
+  .office-district { color: #526176; font-size: .75rem; }
+  .office-edit-button { display: inline-flex; align-items: center; gap: .45rem; padding: .4rem .65rem; border: 1px solid #e2e7f0; border-radius: 8px; background: #fff; color: #63728a; font-size: .74rem; white-space: nowrap; }
+  .office-edit-button:hover { border-color: #b8c2d3; color: #2d3f5a; background: #f7f9fc; }
+}
+

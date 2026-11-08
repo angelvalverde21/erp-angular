@@ -1,0 +1,47 @@
+:host {
+  display: block;
+  --list-border: var(--cui-border-color, #e2e8f0);
+  --list-muted: var(--cui-secondary-color, #64748b);
+  --list-soft: var(--cui-tertiary-bg, #f8fafc);
+}
+.orders-table-container:focus-visible { outline: 2px solid var(--cui-primary, #5856d6); outline-offset: -2px; }
+.orders-table { min-width: 1000px; font-size: .78rem; }
+.orders-table thead th { padding: .9rem 1.1rem; font-size: .65rem; font-weight: 600; letter-spacing: .045em; color: var(--list-muted); background: var(--list-soft); border-bottom: 1px solid var(--list-border); white-space: nowrap; }
+.orders-table tbody td, .orders-table tbody th { padding: 1.15rem 1.1rem; border-bottom-color: var(--list-border); }
+.orders-table th:first-child, .orders-table td:first-child { padding-left: 1.5rem; }
+.orders-table th:last-child, .orders-table td:last-child { padding-right: 1.5rem; }
+.orders-table tbody tr:last-child > * { border-bottom: 0; }
+.order-id-cell { font-weight: 400; white-space: nowrap; }
+.order-number { display: inline-block; font-weight: 700; font-size: .83rem; letter-spacing: -.01em; color: inherit; text-decoration: none; }
+.order-number:hover { text-decoration: underline; text-underline-offset: .2em; }
+.order-date { display: block; color: var(--list-muted); font-size: .67rem; margin-top: .35rem; }
+.order-source { display: inline-block; margin-top: .45rem; padding: .12rem .35rem; border: 1px solid var(--list-border); border-radius: .25rem; font-size: .6rem; color: var(--list-muted); }
+.order-customer { display: flex; align-items: flex-start; gap: .65rem; }
+.order-customer-icon { display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border: 1px solid var(--list-border); border-radius: .65rem; flex-shrink: 0; background: var(--list-soft); color: var(--list-muted); font-size: .8rem; }
+.order-customer-details { min-width: 110px; max-width: 200px; }
+.order-customer-name { display: block; font-weight: 600; margin-bottom: .3rem; }
+.order-secondary { display: block; color: var(--list-muted); font-size: .68rem; line-height: 1.6; }
+.order-products-cell { min-width: 190px; max-width: 270px; }
+.order-product { display: flex; align-items: baseline; gap: .4rem; line-height: 1.5; font-size: .73rem; }
+.order-product + .order-product { margin-top: .25rem; }
+.order-quantity { display: inline-block; min-width: 1.6rem; border: 1px solid var(--list-border); border-radius: .25rem; text-align: center; padding: 0 .2rem; color: var(--list-muted); font-size: .63rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.order-units { margin-top: .45rem; }
+.order-delivery { display: flex; align-items: center; gap: .45rem; font-size: .73rem; white-space: nowrap; }
+.order-delivery i { color: var(--list-muted); font-size: .7rem; }
+.order-courier { margin-top: .35rem; max-width: 170px; }
+.order-status { display: inline-flex; align-items: center; gap: .4rem; padding: .4rem .6rem; border-radius: 2rem; font-weight: 500; font-size: .65rem; white-space: nowrap; }
+.order-status::before { content: ''; width: .3rem; height: .3rem; border-radius: 50%; background: currentColor; }
+.order-total { white-space: nowrap; font-size: .83rem; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -.015em; }
+.order-open { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; border: 1px solid var(--list-border); border-radius: .45rem; min-height: 2rem; padding: .35rem .6rem; font-size: .7rem; color: inherit; white-space: nowrap; }
+.order-open:hover { background: var(--list-soft); border-color: var(--list-muted); }
+.order-open i { font-size: .6rem; }
+.orders-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4rem 1.5rem; min-height: 260px; }
+.orders-empty-icon { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border: 1px solid var(--list-border); border-radius: 1rem; background: var(--list-soft); color: var(--list-muted); font-size: 1.35rem; margin-bottom: 1.1rem; }
+.orders-empty h3 { margin: 0 0 .45rem; font-size: .95rem; font-weight: 600; }
+.orders-empty p { max-width: 40ch; margin: 0; color: var(--list-muted); font-size: .78rem; line-height: 1.7; }
+.orders-load-trigger { height: 1px; }
+@media (max-width: 575.98px) {
+  .orders-empty { padding: 3rem 1rem; }
+  .orders-table th:first-child, .orders-table td:first-child { padding-left: 1rem; }
+  .orders-table th:last-child, .orders-table td:last-child { padding-right: 1rem; }
+}

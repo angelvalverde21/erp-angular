@@ -1,14 +1,11 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-
-<app-head-page title="Editar" [export]="false">
-
-</app-head-page>
-
-<div class="alert alert-info">{{ manufacture?.name }}</div>
-
-<app-production-widget [summary]="summary"></app-production-widget>
-
-<router-outlet></router-outlet>
-}
+<div class="production-page manufacture-theme-production">
+  <app-manufacture-section-header section="production" [title]="manufacture?.name || 'Detalle de producción'" [reference]="'Producción #' + manufacture_id" description="Planificación, costos y movimientos de fabricación." [backLink]="['../']" backLabel="Todas las producciones"></app-manufacture-section-header>
+  @if (loading) {
+  <div class="production-panel production-empty" role="status"><app-loading></app-loading><p>Cargando producción...</p></div>
+  } @else if (error) {
+  <div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar la producción</h3><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary" (click)="productionInit()">Reintentar</button></div>
+  } @else {
+  <app-production-widget [summary]="summary"></app-production-widget>
+  <router-outlet></router-outlet>
+  }
+</div>

@@ -1,25 +1,19 @@
-import { JsonPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 // import { ButtonComponent } from 'src/app/views/shared/components/buttons/button/button.component';
 import { OptionService } from '../option.service'
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { ButtonComponent } from '../../../../shared/components/buttons/button/button.component';
 @Component({
   selector: 'app-option-create',
   imports: [
-    ButtonComponent,
-    ReactiveFormsModule,
-    JsonPipe
+    ReactiveFormsModule
   ],
   templateUrl: './option-create.component.html',
   styleUrl: './option-create.component.scss'
 })
 export class OptionCreateComponent {
 
-  faPlus = faPlus;
 
   @Output() emitOption = new EventEmitter<any>();
   
@@ -49,6 +43,7 @@ export class OptionCreateComponent {
   }
 
   create() {
+    if (this.loading) return;
 
     if (!this.form.valid) {
       this.form.markAllAsTouched();
@@ -66,6 +61,7 @@ export class OptionCreateComponent {
         // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         console.log(resp);
         this.option = resp.data;
+        this.form.reset({ name: '' });
         this.emitOption.emit(this.option);
         this.loading = false;
       },

@@ -40,6 +40,7 @@ import { PaymentService } from '../../../payments/payment.service';
 export class PurchaseIndexHeadComponent implements OnInit{
 
   @Input() purchase: any;
+  @Input() actionsOnly = false;
   @Input() purchaseable_type: string = "";
   @Input() purchaseable_id: number = 0;
   @Output() emitRemovePurchase = new EventEmitter<number>();

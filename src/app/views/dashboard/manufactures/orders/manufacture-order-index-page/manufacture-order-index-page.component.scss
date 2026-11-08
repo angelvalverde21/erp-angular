@@ -1,0 +1,3 @@
+@use '../purchase-order-ui';
+.manufacture-list-heading { padding-block: 1rem; }
+.purchase-order-list-count { color: var(--cui-secondary-color, #64748b); background: rgba(100, 116, 139, .06); padding: .35rem .7rem; border-radius: 2rem; font-size: .75rem; }

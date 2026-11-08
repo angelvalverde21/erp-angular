@@ -1,0 +1,141 @@
+<main class="migration-page">
+  <nav class="migration-breadcrumb" aria-label="Navegación">
+    <span>Migración</span>
+    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    <span>Pedidos de Shopify</span>
+  </nav>
+
+  <header class="migration-heading">
+    <div class="migration-heading-title">
+      <span class="migration-icon"><i class="fa-solid fa-file-import" aria-hidden="true"></i></span>
+      <div>
+        <span class="migration-eyebrow">SHOPIFY → ERP</span>
+        <h1>Migración de pedidos</h1>
+        <p>Prepara el traslado del historial de Shopify a tus pedidos locales.</p>
+      </div>
+    </div>
+    <span class="migration-status"><i aria-hidden="true"></i>{{ latestStatus }}</span>
+  </header>
+
+  <section class="migration-overview">
+    <div>
+      <span class="migration-card-label">ORIGEN</span>
+      <h2><i class="fa-brands fa-shopify" aria-hidden="true"></i>Shopify</h2>
+      <p>Historial completo de pedidos, incluyendo cancelados y cerrados.</p>
+    </div>
+    <span class="migration-transfer" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
+    <div>
+      <span class="migration-card-label">DESTINO</span>
+      <h2><i class="fa-solid fa-database" aria-hidden="true"></i>{{ preparation?.store?.name || 'Pedidos del ERP' }}</h2>
+      <p>Pedidos, artículos, direcciones y datos de origen asociados.</p>
+    </div>
+  </section>
+
+  <div class="migration-content">
+    <section class="migration-card">
+      <header class="migration-card-heading">
+        <div>
+          <h2>Revisión de preparación</h2>
+          <p>Esta revisión utiliza únicamente la configuración local.</p>
+        </div>
+        <button type="button" class="migration-button" [disabled]="loading" (click)="refresh()">
+          <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Revisar
+        </button>
+      </header>
+      @if (loading) {
+        <div class="migration-empty" role="status">
+          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Revisando preparación…
+        </div>
+      } @else if (error) {
+        <div class="migration-empty" role="alert">
+          {{ error }}
+          <button type="button" class="migration-button" (click)="refresh()">Reintentar</button>
+        </div>
+      } @else if (preparation) {
+        <ul class="migration-checks">
+          @for (check of preparation.checks; track check.label) {
+            <li>
+              <i class="fa-solid" [class.fa-circle-check]="check.ready" [class.fa-circle-minus]="!check.ready"
+                [class.ready]="check.ready" aria-hidden="true"></i>
+              <span>{{ check.label }}</span>
+              <small [class.ready]="check.ready">{{ check.ready ? 'Listo' : 'Pendiente' }}</small>
+            </li>
+          }
+        </ul>
+        <div class="migration-history-note">
+          <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+          <p>Para acceder a todo el historial, la app de Shopify necesita acceso a pedidos anteriores a 60 días.
+            Los permisos se comprobarán al ejecutar.</p>
+        </div>
+      }
+    </section>
+
+    <aside class="migration-card migration-plan">
+      <h2>Qué incluirá la migración</h2>
+      <ul>
+        <li><i class="fa-solid fa-check" aria-hidden="true"></i>Pedidos con sus fechas, importes y estados.</li>
+        <li><i class="fa-solid fa-check" aria-hidden="true"></i>Todas las líneas, incluso sin variante local.</li>
+        <li><i class="fa-solid fa-check" aria-hidden="true"></i>Direcciones de envío y facturación.</li>
+        <li><i class="fa-solid fa-check" aria-hidden="true"></i>Monedas, notas, etiquetas y datos de origen.</li>
+      </ul>
+      <div class="migration-protection">
+        <strong>Reanudable y sin duplicados</strong>
+        <p>Los pedidos ya importados se omiten. Los registros del catálogo y del inventario se conservan.</p>
+      </div>
+      <button type="button" class="migration-start" disabled>
+        <i class="fa-solid fa-lock" aria-hidden="true"></i>Importación pendiente de ejecución
+      </button>
+      <small class="migration-start-help">La descarga y el guardado se ejecutan desde Laravel cuando se habilite el proceso.</small>
+    </aside>
+  </div>
+
+  <section class="migration-card migration-runs">
+    <header class="migration-card-heading">
+      <div>
+        <h2>Ejecuciones</h2>
+        <p>Seguimiento y resultados de cada importación.</p>
+      </div>
+    </header>
+    @if (loading) {
+      <div class="migration-empty" role="status">Cargando historial local…</div>
+    } @else if (error) {
+      <div class="migration-empty">El historial no está disponible. Revisa la preparación para volver a intentarlo.</div>
+    } @else if (preparation?.runs?.length) {
+      <div class="table-responsive">
+        <table class="table mb-0 align-middle">
+          <thead>
+            <tr><th>Fecha</th><th>Estado</th><th>Importados</th><th>Ya existentes</th><th>Por revisar</th></tr>
+          </thead>
+          <tbody>
+            @for (run of preparation!.runs; track run.id) {
+              <tr>
+                <td>{{ run.created_at | date:'dd/MM/yyyy HH:mm' }}<small>{{ run.id }}</small></td>
+                <td>{{ statuses[run.status] || run.status }}@if (run.error_code) { <small>{{ run.error_code }}</small> }</td>
+                <td>{{ run.imported_orders | number }}</td>
+                <td>{{ run.skipped_orders | number }}</td>
+                <td>{{ run.unmatched_variants }} variantes · {{ run.unresolved_addresses }} direcciones</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else if (preparation) {
+      <div class="migration-empty">
+        <span class="migration-empty-icon"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span>
+        <strong>Todavía no hay ejecuciones</strong>
+        <p>Aún no se ha descargado ni importado ningún pedido desde esta sección.</p>
+      </div>
+    }
+  </section>
+
+  @if (preparation) {
+    <details class="migration-command">
+      <summary><i class="fa-solid fa-terminal" aria-hidden="true"></i>Comando de Laravel preparado</summary>
+      <div>
+        <p>Disponible para el siguiente paso, después de aplicar la estructura y habilitar la ejecución.</p>
+        <code>{{ preparation.command }}</code>
+        <small>Sin <code>--execute</code>, el comando solo muestra la preparación local.</small>
+      </div>
+    </details>
+  }
+</main>

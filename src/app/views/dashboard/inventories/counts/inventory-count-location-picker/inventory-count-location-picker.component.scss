@@ -1,0 +1,7 @@
+:host { display: block; margin-bottom: 1.25rem; }
+.count-location-picker { padding: 1.25rem; border: 1px solid var(--cui-border-color, #e2e8f0); border-radius: .8rem; background: var(--cui-body-bg, #fff); header { display: flex; align-items: flex-start; gap: .7rem; margin-bottom: 1.2rem; > i { color: var(--section-accent, #865a27); margin-top: .15rem; } } h2 { margin: 0; font-size: .9rem; font-weight: 600; } p { margin: .35rem 0 0; color: var(--cui-secondary-color, #64748b); font-size: .75rem; line-height: 1.5; } }
+.picker-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; label { display: block; margin-bottom: .5rem; font-size: .75rem; font-weight: 500; } select { min-height: 3rem; border-radius: .6rem; font-size: .82rem; } select:focus { border-color: var(--section-accent, #865a27); box-shadow: 0 0 0 .2rem var(--section-tint, rgba(134, 90, 39, .08)); } select.is-invalid { border-color: var(--cui-danger, #dc3545); } }
+.count-location-picker .picker-empty { margin-top: .8rem; }
+.picker-fields.warehouse-only { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.fixed-branch { display: flex; flex-direction: column; justify-content: center; gap: .5rem; span { color: var(--cui-secondary-color, #64748b); font-size: .75rem; } strong { font-size: .9rem; font-weight: 600; } }
+@media (max-width: 767.98px) { .picker-fields, .picker-fields.warehouse-only { grid-template-columns: 1fr; } }

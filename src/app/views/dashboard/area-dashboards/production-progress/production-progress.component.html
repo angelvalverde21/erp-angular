@@ -1,0 +1,66 @@
+<section class="production-monitor">
+  <header class="monitor-heading">
+    <div class="monitor-heading-title">
+      <span class="monitor-icon"><i class="fa-solid fa-industry" aria-hidden="true"></i></span>
+      <div><span class="monitor-eyebrow">CONTROL DE PRODUCCIÓN</span><h2>Avance de las producciones</h2><p>Del plan de unidades a la recepción de prendas.</p></div>
+    </div>
+    <a class="monitor-link" [routerLink]="link()">Ver producciones<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+  </header>
+  @if (!summary.available) {
+    <div class="monitor-empty"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><p>{{ summary.note }}</p></div>
+  } @else {
+    <div class="monitor-stats">
+      <div><span>Por completar</span><strong>{{ summary.active_count | number }}</strong><small>Con unidades pendientes</small></div>
+      <div><span>Completadas</span><strong>{{ summary.completed_count | number }}</strong><small>Recepción cubierta por variante</small></div>
+      <div><span>Unidades pendientes</span><strong>{{ summary.pending_units | number }}</strong><small>Para completar los planes</small></div>
+      <div><span>Sin meta definida</span><strong>{{ summary.unplanned_count | number }}</strong><small>Requieren cantidades planificadas</small></div>
+    </div>
+    @if (summary.total_count) {
+      <div class="monitor-total">
+        <div><span>Avance acumulado</span><strong>{{ summary.progress_percent !== null ? (summary.progress_percent | number:'1.0-1') + '%' : 'Sin meta' }}</strong></div>
+        @if (summary.progress_percent !== null) {
+          <div class="monitor-track" role="progressbar" aria-label="Avance acumulado de producciones"
+            aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="summary.progress_percent">
+            <span [style.width.%]="summary.progress_percent"></span>
+          </div>
+        }
+        <small>{{ summary.completed_units | number }} de {{ summary.planned_units | number }} unidades del plan recibidas · {{ summary.total_count | number }} producciones</small>
+      </div>
+    }
+    <div class="monitor-list">
+      @for (production of summary.items; track production.id) {
+        <article class="monitor-row">
+          <div class="monitor-row-header">
+            <div><a [routerLink]="link(production.path)">{{ production.name }}<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+              <small>#{{ production.id }} · Creada el {{ production.created_at | date:'dd/MM/yyyy' }}</small></div>
+            <span class="monitor-status" [class.completed]="production.status === 'completed'" [class.in-progress]="production.status === 'in_progress'"
+              [class.unplanned]="production.status === 'unplanned'">{{ labels[production.status] }}</span>
+          </div>
+          @if (production.progress_percent !== null) {
+            <div class="monitor-row-progress">
+              <div class="monitor-track" [class.completed]="production.status === 'completed'" role="progressbar"
+                [attr.aria-label]="'Avance de ' + production.name" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="production.progress_percent">
+                <span [style.width.%]="production.progress_percent"></span>
+              </div>
+              <strong>{{ production.progress_percent | number:'1.0-1' }}%</strong>
+            </div>
+            <div class="monitor-row-details"><span>{{ production.completed_units | number }} / {{ production.planned_units | number }} unidades del plan</span>
+              <span [class.pending]="production.pending_units > 0">{{ production.pending_units | number }} pendientes</span></div>
+          } @else {
+            <p class="monitor-unplanned">Define las cantidades por variante para medir su avance.</p>
+          }
+          @if (production.extra_units) { <small class="monitor-alert">{{ production.extra_units | number }} unidades adicionales o sin plan; no compensan faltantes de otras variantes.</small> }
+          @if (production.needs_review) { <small class="monitor-alert">Revisar movimientos: hay variantes con salidas superiores a sus entradas.</small> }
+        </article>
+      } @empty {
+        <div class="monitor-empty"><i class="fa-regular fa-circle-check" aria-hidden="true"></i>
+          <strong>{{ summary.total_count ? 'No hay producciones pendientes ni completadas recientes' : 'Aún no hay producciones registradas' }}</strong>
+          <p>El avance aparecerá al registrar el plan y las recepciones.</p></div>
+      }
+    </div>
+    @if ((summary.visible_count || 0) > summary.items.length) {
+      <div class="monitor-more"><span>Mostrando {{ summary.items.length }} de {{ summary.visible_count }} producciones pendientes y recientes</span><a [routerLink]="link()">Ver todas</a></div>
+    }
+    <footer class="monitor-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><p>{{ summary.note }}</p></footer>
+  }
+</section>

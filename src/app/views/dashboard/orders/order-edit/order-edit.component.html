@@ -1,1 +1,196 @@
-<p>order-edit works!</p>
+<div class="order-editor" [formGroup]="form" [class.has-product-changes]="hasProductChanges || saving">
+  <header class="editor-header">
+    <div>
+      <span class="eyebrow">DETALLE DEL PEDIDO</span>
+      <h2>Pedido #{{ order.number ?? order_id }}</h2>
+      <p>@if (order.created_at) { Creado el {{ order.created_at | date:'dd/MM/yyyy, HH:mm' }} · }{{ units }} artículos</p>
+    </div>
+    <div class="editor-actions" role="group" aria-label="Acciones del pedido">
+      <button type="button" class="btn btn-dark text-white">
+        <i class="fa-solid fa-print" aria-hidden="true"></i>
+        Etiqueta de envío
+      </button>
+      <button type="button" class="btn btn-dark text-white">
+        Acciones Shopify
+        <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+      </button>
+    </div>
+  </header>
+
+  <app-order-status-stepper [status]="progress" [cancelled]="!!order.cancelled_at || order.status === 'cancelado'"
+    [onHold]="order.status === 'en_espera'"></app-order-status-stepper>
+
+  <div class="editor-layout">
+    <fieldset class="editor-main" [disabled]="saving">
+      <section class="editor-panel address-panel" aria-labelledby="edit-address-title">
+        <div class="panel-heading"><h3 id="edit-address-title">Cliente y dirección</h3></div>
+        <dl class="detail-grid panel-body address-details">
+          <div><dt>Nombre</dt><dd>{{ address?.name || 'No especificado' }}</dd></div>
+          <div><dt>Documento</dt><dd>@if (address?.identity?.name) { {{ address.identity.name }} · }{{ address?.document_number || 'No especificado' }}</dd></div>
+          <div><dt>Celular</dt><dd>{{ address?.phone || 'No especificado' }}</dd></div>
+          <div><dt>Distrito</dt><dd>{{ address?.district?.name || address?.district_id || 'No especificado' }}</dd></div>
+          <div><dt>Dirección principal</dt><dd>{{ address?.primary || 'No especificada' }}</dd></div>
+          <div><dt>Dirección secundaria</dt><dd>{{ address?.secondary || 'No especificada' }}</dd></div>
+          <div class="detail-wide"><dt>Referencias</dt><dd>{{ address?.references || 'Sin referencias' }}</dd></div>
+        </dl>
+      </section>
+
+      <section class="editor-panel" aria-labelledby="edit-products-title">
+        <div class="panel-heading">
+          <div class="heading-copy">
+            <span class="panel-icon" aria-hidden="true"><i class="fa-solid fa-box-open"></i></span>
+            <div><h3 id="edit-products-title">Productos <span class="count">{{ variants.length }}</span></h3><p>Ajusta las cantidades y los precios del pedido.</p></div>
+          </div>
+          <button type="button" class="btn btn-outline-primary btn-sm" [disabled]="saving" (click)="openProducts(products)">
+            <i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Agregar productos
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle mb-0 product-table">
+            <thead><tr><th scope="col">Producto</th><th scope="col">Cantidad</th><th scope="col">Precio (S/)</th><th scope="col" class="text-end">Importe</th><th scope="col"><span class="visually-hidden">Acciones</span></th></tr></thead>
+            <tbody>
+              @for (variant of variants.controls; track variant; let index = $index) {
+              <tr [formGroup]="variant">
+                <td><strong>{{ variant.get('name')?.value }}</strong><small>SKU {{ variant.get('sku')?.value || '—' }} @if (optionLabel(variant)) { · {{ optionLabel(variant) }} }</small></td>
+                <td><input type="number" class="form-control form-control-sm" formControlName="quantity" min="1" step="1"
+                  [attr.aria-label]="'Cantidad de ' + variant.get('name')?.value" [class.is-invalid]="variant.get('quantity')?.invalid && variant.get('quantity')?.touched"></td>
+                <td><input type="number" class="form-control form-control-sm" formControlName="price" min="0" step="0.01"
+                  [attr.aria-label]="'Precio de ' + variant.get('name')?.value" [class.is-invalid]="variant.get('price')?.invalid && variant.get('price')?.touched"></td>
+                <td class="text-end text-nowrap fw-semibold">{{ variant.get('quantity')?.value * variant.get('price')?.value | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+                <td><button type="button" class="btn btn-sm btn-link text-danger" [disabled]="saving" (click)="removeVariant(index)"
+                  [attr.aria-label]="'Quitar ' + variant.get('name')?.value"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button></td>
+              </tr>
+              } @empty {
+              <tr><td colspan="5" class="text-center py-5 text-body-secondary">Agrega al menos un producto al pedido.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="editor-panel shipping-panel" aria-labelledby="edit-shipping-title">
+        <div class="panel-heading"><div class="heading-copy">
+          <span class="panel-icon" aria-hidden="true"><i [class]="isPickup ? 'fa-solid fa-store' : 'fa-solid fa-truck'"></i></span>
+          <div><h3 id="edit-shipping-title">{{ deliveryLabel }}</h3></div>
+        </div></div>
+        <dl class="detail-grid panel-body shipping-details">
+
+
+
+          @if (order.courier_address?.addressable?.name) {
+          <div><dt>{{ isPickup ? 'Tienda' : 'Courier' }}</dt><dd>{{ order.courier_address.addressable.name }}</dd></div>
+          }
+          <div><dt>{{ isPickup ? 'Punto de recojo' : 'Sucursal' }}</dt><dd>{{ order.courier_address?.name || (order.courier_address_id ? 'Sucursal #' + order.courier_address_id : 'No especificado') }}</dd></div>
+          @if (!isPickup) {
+          <div><dt>Costo de envío</dt><dd>{{ (order.delivery_cost ?? 0) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd></div>
+          }
+          @if (order.courier_address?.primary) {
+          <div class="detail-wide"><dt>{{ isPickup ? 'Dirección de recojo' : 'Dirección de la sucursal' }}</dt><dd>{{ order.courier_address.primary }}</dd></div>
+          }
+          @if (order.courier_address?.secondary) {
+          <div class="detail-wide"><dt>Dirección secundaria</dt><dd>{{ order.courier_address.secondary }}</dd></div>
+          }
+          @if (order.courier_address?.district?.name || order.courier_address?.district_id) {
+          <div><dt>Distrito de la sucursal</dt><dd>{{ order.courier_address.district?.name || order.courier_address.district_id }}</dd></div>
+          }
+          @if (order.courier_address?.phone || order.courier_address?.addressable?.phone) {
+          <div><dt>Teléfono de contacto</dt><dd>{{ order.courier_address.phone || order.courier_address.addressable.phone }}</dd></div>
+          }
+          @if (order.courier_address?.references) {
+          <div class="detail-wide"><dt>Referencias de la sucursal</dt><dd>{{ order.courier_address.references }}</dd></div>
+          }
+          @if (isPickup && order.courier_address?.reception_hours) {
+          <div><dt>Horario de recojo</dt><dd>{{ order.courier_address.reception_hours }}</dd></div>
+          }
+          @if (isPickup && order.courier_address?.sunday_hours) {
+          <div><dt>Horario de domingos</dt><dd>{{ order.courier_address.sunday_hours }}</dd></div>
+          }
+          @if (!isPickup) {
+          <div><dt>Pago del envío en destino</dt><dd>{{ order.freight_collect == null ? 'No especificado' : order.freight_collect ? 'Sí' : 'No' }}</dd></div>
+          <div><dt>Cobro contra entrega</dt><dd>{{ order.is_cod == null ? 'No especificado' : order.is_cod ? 'Sí' : 'No' }}</dd></div>
+          }
+        </dl>
+      </section>
+      <section class="editor-panel activity-panel" aria-labelledby="edit-receipts-title">
+        <div class="panel-heading">
+          <div class="heading-copy">
+            <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+            <h3 id="edit-receipts-title">Comprobantes <span class="activity-count">{{ receipts.length }}</span></h3>
+          </div>
+        </div>
+        <ul class="activity-list" aria-label="Comprobantes del pedido">
+          @for (receipt of receipts; track $index) {
+          <li class="receipt-item">
+            <i class="fa-regular fa-file" aria-hidden="true"></i>
+            <div>
+              <p>{{ receipt.name || receipt.number || 'Comprobante' }}</p>
+              @if (receipt.created_at) { <time [attr.datetime]="receipt.created_at">{{ receipt.created_at | date:'dd/MM/yyyy, HH:mm' }}</time> }
+            </div>
+            @if (receipt.url) { <a [href]="receipt.url" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary btn-sm" [attr.aria-label]="'Ver comprobante ' + (receipt.name || receipt.number || '')">Ver</a> }
+          </li>
+          } @empty {
+          <li class="activity-empty"><i class="fa-regular fa-file-lines" aria-hidden="true"></i><p>Sin comprobantes registrados.</p></li>
+          }
+        </ul>
+      </section>
+    </fieldset>
+
+    <aside class="editor-summary" aria-labelledby="edit-summary-title">
+      <section class="editor-panel summary-panel">
+        <div class="panel-heading"><h3 id="edit-summary-title">Resumen del pedido</h3></div>
+
+        <dl class="summary-totals">
+          <div><dt>Productos</dt><dd>{{ units }} artículos</dd></div>
+          <div><dt>Subtotal</dt><dd>{{ subtotal | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd></div>
+          <div><dt>IGV</dt><dd>{{ igv | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd></div>
+          <div><dt>Envío</dt><dd>{{ form.controls.delivery_cost.value | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd></div>
+          <div class="grand-total"><dt>Total</dt><dd>{{ total | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd></div>
+        </dl>
+        <p class="save-note">Los importes se muestran en soles (PEN).</p>
+      </section>
+      <section class="editor-panel activity-panel" aria-labelledby="edit-notes-title">
+        <div class="panel-heading">
+          <div class="heading-copy">
+            <i class="fa-regular fa-note-sticky" aria-hidden="true"></i>
+            <h3 id="edit-notes-title">Notas <span class="activity-count">{{ notes.length }}</span></h3>
+          </div>
+        </div>
+        <ul class="activity-list" aria-label="Notas del pedido">
+          @for (note of notes; track $index) {
+          <li>
+            <p class="note-content">{{ note.content || 'Sin contenido' }}</p>
+            @if (note.user?.name || note.created_at) {
+            <div class="activity-meta">
+              @if (note.user?.name) { <span>{{ note.user.name }}</span> }
+              @if (note.created_at) { <time [attr.datetime]="note.created_at">{{ note.created_at | date:'dd/MM/yyyy, HH:mm' }}</time> }
+            </div>
+            }
+          </li>
+          } @empty {
+          <li class="activity-empty"><i class="fa-regular fa-note-sticky" aria-hidden="true"></i><p>Sin notas registradas.</p></li>
+          }
+        </ul>
+      </section>
+    </aside>
+  </div>
+  @if (hasProductChanges || saving) {
+  <div class="product-save-bar" role="region" aria-label="Guardar cambios de productos" [attr.aria-busy]="saving">
+    <div class="product-save-message">
+      <span>Hay cambios en los productos</span>
+      @if (error) { <p class="text-danger" role="alert">{{ error }}</p> }
+      @else if (variants.invalid) { <p class="text-danger" role="alert">Revisa las cantidades y los precios. El pedido debe tener al menos un producto.</p> }
+      @else if (form.invalid) { <p class="text-danger" role="alert">El pedido tiene datos obligatorios incompletos.</p> }
+    </div>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="saving || form.invalid">
+      @if (saving) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> }
+      @else { <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i> }
+      {{ saving ? 'Guardando...' : 'Guardar cambios' }}
+    </button>
+  </div>
+  }
+</div>
+
+<ng-template #products let-modal>
+  <div class="modal-header"><h2 class="modal-title fs-5">Agregar productos al pedido</h2><button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button></div>
+  <div class="modal-body"><app-variant-search (emitVariantsSelected)="receiveVariants($event)"></app-variant-search></div>
+</ng-template>

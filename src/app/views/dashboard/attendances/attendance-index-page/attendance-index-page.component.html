@@ -1,76 +1,58 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
+<header class="personnel-heading">
+  <div class="personnel-heading-title"><span class="personnel-icon"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i></span>
+    <div><span class="personnel-eyebrow">Control de personal</span><h1>Asistencias</h1><p>Revisa las marcaciones del equipo y carga archivos del reloj biométrico.</p></div>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <button class="personnel-button" type="button" (click)="open(importer)"><i class="fa-solid fa-file-arrow-up" aria-hidden="true"></i>Importar CSV</button>
+    <button class="personnel-button personnel-primary" type="button" (click)="open(creator)"><i class="fa-solid fa-plus" aria-hidden="true"></i>Registrar asistencia</button>
+  </div>
+</header>
+@if (importResult) { <div class="personnel-note mb-3" role="status"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>{{ importResult }}</div> }
 
-<app-head-page title="Lista de asistencias" [icon]="faClipboardUser" [export]="false">
-    <button class="btn btn-outline-dark btn-sm d-flex justify-content-between align-items-center me-1"
-        (click)="openVerticallyCentered(content)">
-        <fa-icon [icon]="faUpload" class="me-1"></fa-icon>
-        <span>Upload</span>
-    </button>
-    <app-button-back></app-button-back>
-</app-head-page>
+<section class="personnel-card mb-3">
+  <header class="personnel-card-header"><div><h2>Registro de marcaciones</h2><p>{{ meta.total }} registros coincidentes · 20 por página</p></div></header>
+  <form class="personnel-filters" (ngSubmit)="load()">
+    <input class="form-control" name="search" [(ngModel)]="filters.search" aria-label="Buscar empleado" placeholder="Nombre, documento o código biométrico">
+    <label>Desde<input class="form-control mt-1" name="start" type="date" [(ngModel)]="filters.start_date"></label>
+    <label>Hasta<input class="form-control mt-1" name="end" type="date" [(ngModel)]="filters.end_date"></label>
+    <button type="submit" class="personnel-button" [disabled]="loading"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>Filtrar</button>
+    @if (filters.search || filters.start_date || filters.end_date) {
+      <button type="button" class="personnel-button" [disabled]="loading" (click)="filters = {search: '', start_date: '', end_date: ''}; load()">Limpiar</button>
+    }
+  </form>
+  @if (loading) { <div class="personnel-empty" role="status"><span class="spinner-border spinner-border-sm"></span>Cargando asistencias…</div> }
+  @else if (error) { <div class="personnel-empty" role="alert">{{ error }}<button class="personnel-button" (click)="load()">Reintentar</button></div> }
+  @else { <app-attendance-index [attendances]="attendances" (attendanceChanged)="load(meta.current_page)"></app-attendance-index> }
+  <footer class="personnel-card-footer">
+    <span class="personnel-muted">Página {{ meta.current_page }} de {{ meta.last_page }}</span>
+    <button class="personnel-button" [disabled]="loading || meta.current_page <= 1" (click)="load(meta.current_page - 1)">Anterior</button>
+    <button class="personnel-button" [disabled]="loading || meta.current_page >= meta.last_page" (click)="load(meta.current_page + 1)">Siguiente</button>
+  </footer>
+</section>
 
-<div class="card">
-
-    <div class="card-header py-3 bg-dark text-white">
-        Lista de Asistencia
+<ng-template #importer let-modal>
+  <div class="modal-header"><div><h2 class="modal-title fs-5">Importar marcaciones</h2><p class="personnel-muted mt-1">Archivo CSV del reloj biométrico</p></div>
+    <button type="button" class="btn-close" aria-label="Cerrar" [disabled]="uploading" (click)="modal.dismiss()"></button>
+  </div>
+  <form (ngSubmit)="submit()">
+    <div class="modal-body p-4">
+      <div class="personnel-note mb-3"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        <p>Se omiten las dos primeras filas de encabezado. Usa columnas separadas por punto y coma:
+          número, código o documento, nombre y fecha (<strong>dd/mm/aaaa hh:mm</strong>).
+          Los códigos deben estar registrados en la ficha del empleado.</p>
+      </div>
+      <label class="personnel-field">Archivo CSV o TXT <small>Máximo 10 MB</small>
+        <input class="form-control" type="file" accept=".csv,.txt" (change)="onFileChange($event)" [disabled]="uploading">
+      </label>
+      @if (uploading) { <div class="personnel-note mt-3" role="status"><span class="spinner-border spinner-border-sm"></span>Cargando y procesando archivo… {{ progress }}%</div> }
+      @if (uploadError) { <p class="personnel-error mt-3" role="alert">{{ uploadError }}</p> }
     </div>
-
-    <div class="card-body">
-
-        <app-attendance-index [attendances]="attendances"></app-attendance-index>
-
+    <div class="modal-footer"><button class="personnel-button" type="button" [disabled]="uploading" (click)="modal.dismiss()">Cancelar</button>
+      <button class="personnel-button personnel-primary" type="submit" [disabled]="!file || uploading">{{ uploading ? 'Procesando…' : 'Importar marcaciones' }}</button>
     </div>
-
-</div>
-
-
-<ng-template #content let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title">Archivo de asistencia</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-
-
-        <form [formGroup]="form" (ngSubmit)="submit()">
-
-            <div class="modal-body">
-
-                <div class="mb-3">
-                    <label class="form-label">Subir Archivo CSV</label>
-
-                    <input type="file" class="form-control" accept=".csv" (change)="onFileChange($event)">
-
-                </div>
-
-                <!-- Barra de progreso -->
-                @if(uploading){
-                <div class="progress mt-3">
-                    <div class="progress-bar" role="progressbar" [style.width.%]="progress"
-                        [attr.aria-valuenow]="progress" aria-valuemin="0" aria-valuemax="100">
-                        {{ progress }}%
-                    </div>
-                </div>
-                }
-
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">
-                    Cancel
-                </button>
-
-                <button type="submit" class="btn btn-dark" [disabled]="form.invalid || uploading">
-                    {{ uploading ? 'Subiendo...' : 'Upload' }}
-                </button>
-            </div>
-
-        </form>
-
-    </div>
-
+  </form>
 </ng-template>
-
-}
+<ng-template #creator let-modal>
+  <div class="modal-header"><h2 class="modal-title fs-5">Registrar asistencia</h2><button class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button></div>
+  <div class="modal-body p-4"><app-attendance-create (emitAttendanceCreate)="created()"></app-attendance-create></div>
+</ng-template>

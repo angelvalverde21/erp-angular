@@ -1,0 +1,13 @@
+<div class="inventory-page adjustment-page">
+  <app-inventory-section-header [sessions]="true" workspace="adjustments" [inventory]="inventory" [session]="session" title="Ajustes" description="Revisa las diferencias antes de aprobar y aplicar cambios al stock.">
+    <a class="branch-back" [routerLink]="['../sessions']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Sesiones</a>
+    @if (editable) { <a class="branch-action" [routerLink]="['./create']"><i class="fa-solid fa-plus" aria-hidden="true"></i>Generar ajuste</a> }
+  </app-inventory-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} @if (!inventory) { <button class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button> }</div> }
+  @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando información…</div> }
+  @else if (inventory && !error ) {
+    @if (!editable) { <p class="workflow-note">Los ajustes al stock global requieren un inventario de toda la empresa que siga abierto. Los inventarios parciales conservan sus conteos sin modificar el stock global.</p> }
+    <p class="inventory-caption">{{ total }} registros encontrados</p><app-inventory-adjustment-index [records]="records"></app-inventory-adjustment-index>
+  }
+  @if (lastPage > 1) { <nav class="branch-pagination" aria-label="Paginación"><button class="branch-back" (click)="load(page - 1)" [disabled]="page <= 1 || loading">Anterior</button><span>{{ page }} de {{ lastPage }}</span><button class="branch-back" (click)="load(page + 1)" [disabled]="page >= lastPage || loading">Siguiente</button></nav> }
+</div>

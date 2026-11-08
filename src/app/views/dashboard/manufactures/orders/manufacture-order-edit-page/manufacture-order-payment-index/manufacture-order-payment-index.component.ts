@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { PaymentIndexComponent } from 'src/app/views/dashboard/payments/payment-index/payment-index.component';
-import { HeadTableComponent } from 'src/app/views/shared/components/head-table/head-table.component';
 import { LoadingComponent } from 'src/app/views/shared/components/loading/loading.component';
 import Swal from 'sweetalert2';
 import { ManufacturePaymentService } from './manufacture.payment.service';
@@ -10,7 +9,6 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-manufacture-order-payment-index',
   imports: [
-    HeadTableComponent,
     PaymentIndexComponent,
     LoadingComponent
   ],
@@ -33,10 +31,16 @@ export class ManufactureOrderPaymentIndexComponent implements OnInit, OnDestroy 
   }
 
   loading: boolean = true;
+  error = '';
 
   payments: any[] = [];
 
   ngOnInit(): void {
+    this.loadPayments();
+  }
+
+  loadPayments(): void {
+    this.error = '';
     // Simulación de carga de datos
 
     this.loading = true;
@@ -54,6 +58,8 @@ export class ManufactureOrderPaymentIndexComponent implements OnInit, OnDestroy 
       },
 
       error: (error: any) => {
+        this.loading = false;
+        this.error = 'No se pudieron cargar los pagos. Intenta nuevamente.';
         Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         console.error(error);
       },

@@ -1,0 +1,26 @@
+@use '../../branches/branch-ui';
+@use '../../branches/organization-record';
+
+.location-forest { margin-left: 6rem; }
+.location-delete-button { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; min-height: 40px; padding: .55rem .8rem; border-radius: .5rem; font-size: .75rem; font-weight: 500; }
+.location-selection { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; padding: .85rem 1rem; border-radius: .6rem; background: var(--section-tint); color: var(--cui-secondary-color, #64748b); font-size: .8rem; }
+.location-selection > i { color: var(--section-accent); font-size: 1.15rem; }
+.location-selection strong { display: block; margin-bottom: .3rem; color: var(--section-accent); font-size: .75rem; }
+.location-selection-path { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; i { font-size: .55rem; } button { border: 0; padding: .15rem 0; background: transparent; color: inherit; font-size: .82rem; text-align: left; } button[aria-current] { font-weight: 700; color: var(--cui-body-color, #1e293b); } }
+.location-name-button { border: 0; padding: .15rem 0; background: transparent; color: inherit; font: inherit; text-align: left; overflow-wrap: anywhere; &:hover { color: var(--section-accent); text-decoration: underline; } }
+.location-name-button:focus-visible, .location-selection-path button:focus-visible { outline: 2px solid var(--section-accent); outline-offset: 3px; border-radius: .2rem; }
+.organization-record.location-current { background: var(--section-tint); border-color: var(--section-accent); box-shadow: 0 0 0 1px var(--section-accent); }
+.location-current .record-icon { background: var(--section-accent); color: #fff; }
+.location-current-label { display: inline-flex; align-items: center; gap: .4rem; padding: .4rem .65rem; border-radius: .4rem; background: var(--section-accent); color: #fff; font-size: .75rem; font-weight: 600; }
+.organization-record.location-ancestor { border-left-color: var(--section-accent); background: color-mix(in srgb, var(--section-tint) 40%, var(--cui-body-bg, #fff)); }
+.location-tree > li.is-current-path::before, .location-tree > li.is-current-path::after { border-color: var(--section-accent); }
+.location-tree { list-style: none; padding: 0; margin: 0; }
+.location-tree > li { position: relative; padding-bottom: .75rem; }
+.location-tree > li::before { content: ''; position: absolute; left: -1rem; top: -.75rem; width: 1rem; height: 3.25rem; border-left: 2px solid var(--cui-border-color, #cbd5e1); border-bottom: 2px solid var(--cui-border-color, #cbd5e1); border-bottom-left-radius: .5rem; pointer-events: none; }
+.location-tree > li:not(:last-child)::after { content: ''; position: absolute; left: -1rem; top: 2.5rem; bottom: 0; border-left: 2px solid var(--cui-border-color, #cbd5e1); pointer-events: none; }
+.location-children { margin-left: 2rem; padding-top: .75rem; }
+.location-toggle { display: flex; align-items: center; gap: .5rem; margin-top: .5rem; padding: .25rem 0; border: 0; background: transparent; color: var(--section-accent); font-size: .75rem; font-weight: 600; }
+.location-add-child { flex: 1 1 100%; padding-top: .6rem; border-top: 1px solid var(--cui-border-color, #e2e8f0); text-align: right; }
+.location-add-child a { display: inline-flex; align-items: center; gap: .5rem; padding: .25rem 0; color: var(--section-accent); text-decoration: none; font-size: .76rem; font-weight: 600; &:hover { text-decoration: underline; } }
+.location-toggle:focus-visible, .location-add-child a:focus-visible { outline: 2px solid var(--section-accent); outline-offset: 3px; }
+@media (max-width: 767.98px) { .location-forest { margin-left: 4rem; } .location-children { margin-left: 1rem; } }

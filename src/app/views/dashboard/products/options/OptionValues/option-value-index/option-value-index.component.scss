@@ -1,0 +1,17 @@
+:host { display: block; min-width: 0; }
+.option-values-heading { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .8rem; }
+.option-values-title { display: flex; align-items: center; gap: .55rem; min-width: 0; }
+.option-kind-icon { display: grid; place-items: center; width: 1.8rem; height: 1.8rem; flex-shrink: 0; border-radius: .5rem; background: color-mix(in srgb, var(--cui-primary, #5856d6) 7%, var(--cui-body-bg, #fff)); color: var(--cui-primary, #5856d6); font-size: .75rem; }
+h3 { margin: 0; font-size: .8rem; font-weight: 650; overflow-wrap: anywhere; }
+.option-values-count { flex-shrink: 0; color: var(--cui-secondary-color, #64748b); font-size: .65rem; font-variant-numeric: tabular-nums; }
+.option-heading-actions { display: flex; align-items: center; gap: .65rem; }
+.option-remove-block { display: inline-flex; align-items: center; gap: .3rem; padding: .3rem .4rem; border: 0; border-radius: .35rem; color: var(--cui-secondary-color, #64748b); background: transparent; font-size: .65rem; }
+.option-remove-block:hover:not(:disabled) { color: var(--cui-danger-text-emphasis, #b42318); background: var(--cui-danger-bg-subtle, #fcebea); }
+.option-remove-block:focus-visible { outline: 2px solid var(--cui-primary, #5856d6); outline-offset: 2px; }
+.option-values-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; margin: .85rem 0 0; padding: 0; list-style: none; }
+.option-value-pill { display: inline-flex; align-items: center; justify-content: space-between; gap: .6rem; max-width: 100%; min-height: 2.15rem; padding: .3rem .35rem .3rem .75rem; border: 1px solid var(--cui-border-color, #e2e8f0); border-radius: .5rem; background: var(--cui-tertiary-bg, #f8fafc); font-size: .76rem; font-weight: 600; }
+.option-value-pill > span { overflow-wrap: anywhere; min-width: 0; }
+.option-value-pill > button { display: inline-grid; place-items: center; flex-shrink: 0; width: 1.4rem; height: 1.4rem; padding: 0; border: 0; border-radius: .3rem; background: transparent; color: var(--cui-secondary-color, #64748b); font-size: .65rem; }
+.option-value-pill > button:hover { background: var(--cui-danger-bg-subtle, #fcebea); color: var(--cui-danger-text-emphasis, #b42318); }
+.option-value-pill > button:focus-visible { outline: 2px solid var(--cui-primary, #5856d6); outline-offset: 2px; }
+.option-values-empty { padding: .25rem 0; color: var(--cui-secondary-color, #64748b); font-size: .7rem; }

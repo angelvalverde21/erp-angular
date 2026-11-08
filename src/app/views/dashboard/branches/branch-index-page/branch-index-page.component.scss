@@ -1,0 +1,19 @@
+@use '../../branches/branch-ui';
+
+.branch-store-context {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--branch-border, #e2e8f0);
+  border-left: 3px solid var(--section-accent, #385a9b);
+  border-radius: .85rem;
+  background: var(--cui-body-bg, #fff);
+
+  h2 { margin: .2rem 0 0; font-size: 1rem; font-weight: 650; }
+}
+.branch-store-icon { display: grid; place-items: center; flex-shrink: 0; width: 42px; height: 42px; border-radius: 11px; background: var(--section-tint); color: var(--section-accent); }
+.branch-store-label { color: var(--branch-muted); font-size: .7rem; }
+.branch-store-description { margin-left: auto; color: var(--branch-muted); font-size: .77rem; }
+@media (max-width: 575px) { .branch-store-context { padding: 1rem; } .branch-store-description { display: none; } }

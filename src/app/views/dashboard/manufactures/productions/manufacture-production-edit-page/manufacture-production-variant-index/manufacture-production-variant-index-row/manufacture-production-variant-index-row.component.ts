@@ -1,30 +1,18 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, OnInit, TemplateRef, ViewEncapsulation, ElementRef } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import Swal from 'sweetalert2';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { InputGroupComponent } from '@shared/components/form/input-group/input-group.component';
-import { JsonPipe } from '@angular/common';
-import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { Fancybox } from '@fancyapps/ui';
-import { ShopifyImageThumbnailPipe } from '@shared/pipes/shopify/shopify-image-thumbnail.pipe';
-import { ShopifyImageMediumPipe } from '@shared/pipes/shopify/shopify-image-medium.pipe';
 import { ManufactureVariantService } from '../../../../manufacture.variants.service';
 
 @Component({
   selector: 'tr[app-manufacture-production-variant-index-row]',
   imports: [
     FontAwesomeModule,
-    ButtonComponent,
     ReactiveFormsModule,
-    InputGroupComponent,
-    JsonPipe,
-    LoadingComponent,
-    ShopifyImageThumbnailPipe,
-    ShopifyImageMediumPipe
   ],
   templateUrl: './manufacture-production-variant-index-row.component.html',
   styleUrl: './manufacture-production-variant-index-row.component.scss',

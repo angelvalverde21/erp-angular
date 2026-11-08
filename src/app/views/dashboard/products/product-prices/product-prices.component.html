@@ -1,0 +1,91 @@
+<section class="prices-card" aria-labelledby="product-prices-title">
+  <header class="prices-heading">
+    <div class="prices-identity">
+      <span class="prices-icon" aria-hidden="true"><i class="fa-solid fa-tags"></i></span>
+      <div>
+        <div class="prices-title-line"><h2 id="product-prices-title">Precios por cantidad</h2>@if (!loading) { <span class="prices-count">{{ rows.length }}</span> }</div>
+        <p>Un precio para cada forma de comprar.</p>
+      </div>
+    </div>
+    <button type="button" class="prices-add" (click)="add()" [disabled]="loading || !!loadError"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar precio</button>
+  </header>
+
+  <datalist [id]="'price-label-suggestions-' + productId">
+    @for (label of labelSuggestions; track label.id) { <option [value]="label.name">{{ label.code }}</option> }
+  </datalist>
+
+  @if (loading) {
+    <div class="prices-feedback" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando precios...</div>
+  } @else if (loadError) {
+    <div class="prices-feedback prices-feedback-error" role="alert"><p>{{ loadError }}</p><button type="button" class="btn btn-outline-danger btn-sm" (click)="load()">Reintentar</button></div>
+  } @else {
+    @if (rows.length) {
+      <div class="prices-toolbar">
+        <div class="price-filter-group">
+          <i class="fa-solid fa-filter" aria-hidden="true"></i>
+          <label class="visually-hidden" [for]="'price-label-filter-' + productId">Filtrar por etiqueta</label>
+          <select #labelFilter class="price-filter-select" [id]="'price-label-filter-' + productId" [value]="selectedLabelCode" (change)="selectedLabelCode = labelFilter.value">
+            <option value="">Todas las etiquetas</option>
+            @for (label of availableLabels; track label.id) { <option [value]="label.code">{{ label.name }}</option> }
+          </select>
+        </div>
+        <span class="prices-calculation"><i class="fa-solid fa-calculator" aria-hidden="true"></i>Total calculado automáticamente</span>
+      </div>
+    }
+    @if (labelSearchError) { <p class="prices-error" role="alert">{{ labelSearchError }}</p> }
+
+    <div class="prices-body">
+      @if (rows.length) {
+        <div class="price-column-headings" aria-hidden="true"><span>Etiqueta del precio</span><span>Cantidad</span><span>Precio unitario</span><span>Total</span><span class="visually-hidden">Acciones</span></div>
+      }
+      @for (row of rows; track row; let i = $index) {
+        <form class="price-entry" [class.price-entry-pending]="row.form.dirty || !row.id" [formGroup]="row.form" (ngSubmit)="save(row)" [hidden]="!!selectedLabelCode && row.label?.code !== selectedLabelCode" [attr.aria-label]="'Precio ' + (row.form.value.name || 'nuevo')">
+          <fieldset class="price-row" [disabled]="row.busy">
+            <div class="price-field price-name">
+              <label [for]="'price-name-' + i">Etiqueta del precio</label>
+              <input #priceName class="price-input" [id]="'price-name-' + i" formControlName="name" maxlength="255" placeholder="Ej. Precio mayorista" autocomplete="off" [attr.list]="'price-label-suggestions-' + productId" (input)="searchLabels(priceName.value)" (focus)="searchLabels(priceName.value)" [attr.aria-invalid]="row.form.get('name')?.invalid && row.form.get('name')?.touched" />
+              <span class="price-state" [class.price-state-pending]="row.form.dirty || !row.id" role="status">
+                @if (row.busy) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Procesando }
+                @else if (!row.id) { <span class="price-state-dot" aria-hidden="true"></span>Nuevo precio }
+                @else if (row.form.dirty) { <span class="price-state-dot" aria-hidden="true"></span>Sin guardar }
+                @else { <i class="fa-solid fa-check" aria-hidden="true"></i>{{ row.saved ? 'Precio guardado' : 'Guardado' }} }
+              </span>
+            </div>
+            <div class="price-field price-quantity-field">
+              <label [for]="'price-quantity-' + i">Cantidad</label>
+              <input class="price-input price-number" [id]="'price-quantity-' + i" type="number" min="0.001" max="999999999.999" step="0.001" formControlName="quantity" [attr.aria-invalid]="row.form.get('quantity')?.invalid && row.form.get('quantity')?.touched" />
+            </div>
+            <div class="price-field price-unit-field">
+              <label [for]="'price-unit-' + i">Precio unitario</label>
+              <div class="price-money"><span aria-hidden="true">S/</span><input class="price-input price-number" [id]="'price-unit-' + i" type="number" min="0" max="999999999999.99" step="0.01" formControlName="price" placeholder="0.00" [attr.aria-invalid]="row.form.get('price')?.invalid && row.form.get('price')?.touched" /></div>
+            </div>
+            <div class="price-field price-total-field">
+              <label [for]="'price-total-' + i">Total</label>
+              <div class="price-money price-total-money"><span aria-hidden="true">S/</span><input class="price-input price-total" [id]="'price-total-' + i" type="text" [value]="row.form.get('total')?.value | number:'1.2-2'" readonly aria-label="Total en soles, calculado como cantidad por precio" /></div>
+            </div>
+            <div class="price-actions">
+              <button type="submit" class="btn btn-dark btn-sm price-save" [class.price-save-saved]="!!row.id && !row.form.dirty && !row.busy && !row.error" [disabled]="row.busy || (!row.form.dirty && !!row.id)" [attr.aria-label]="(row.busy ? 'Guardando precio ' : row.id && !row.form.dirty && !row.error ? 'Precio guardado: ' : 'Guardar precio ') + (row.form.value.name || 'nuevo')">
+                @if (row.busy) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Procesando... }
+                @else if (row.id && !row.form.dirty && !row.error) { <i class="fa-solid fa-check" aria-hidden="true"></i>Listo }
+                @else { <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>Guardar }
+              </button>
+              <button type="button" class="price-action price-delete" (click)="remove(row)" [disabled]="row.busy" [attr.aria-label]="'Eliminar precio ' + (row.form.value.name || i + 1)" title="Eliminar precio"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button>
+            </div>
+          </fieldset>
+          @if (row.form.invalid && row.form.touched) { <p class="prices-error" role="alert">Ingresa un nombre, una cantidad mayor que cero (hasta 3 decimales) y un precio válido (hasta 2 decimales).</p> }
+          @if (row.error) { <p class="prices-error" role="alert">{{ row.error }}</p> }
+        </form>
+      } @empty {
+        <div class="prices-empty">
+          <span class="prices-empty-icon" aria-hidden="true"><i class="fa-solid fa-tags"></i></span>
+          <h3>Define el primer precio</h3>
+          <p>Ofrece precios distintos por unidad, por mayor o por paquete.</p>
+          <button type="button" class="prices-empty-action" (click)="add()"><i class="fa-solid fa-plus" aria-hidden="true"></i>Crear primer precio</button>
+        </div>
+      }
+    </div>
+    @if (rows.length) {
+      <footer class="prices-footer"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i>Escribe una etiqueta para ver sugerencias o crear una nueva al guardar.</footer>
+    }
+  }
+</section>

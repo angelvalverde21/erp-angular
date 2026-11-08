@@ -17,12 +17,13 @@ export class VariantIndexComponent implements OnInit {
 
 
   @Input() variants: any[] = [];
+  @Input() selectionView = false;
   @Output() variantAdded = new EventEmitter<any>();
 
   @Output() variantArraySelected = new EventEmitter<any>();
   @Output() emitVariantsSelected = new EventEmitter<any>();
 
-  variant_select: any;
+  variant_select: Record<number, boolean> = {};
 
   faBarcode = faBarcode;
   faCheck = faCheck;

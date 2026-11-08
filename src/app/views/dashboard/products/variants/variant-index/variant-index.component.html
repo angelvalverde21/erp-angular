@@ -1,3 +1,43 @@
+@if (selectionView) {
+<div class="variant-picker-table table-responsive">
+  <table class="table align-middle mb-0">
+    <caption class="visually-hidden">Variantes encontradas. Selecciona las que deseas agregar.</caption>
+    <thead><tr><th scope="col">Producto y variante</th><th scope="col" class="text-center">Stock</th><th scope="col" class="text-end">Selección</th></tr></thead>
+    <tbody>
+      @for (variant of variants; track variant.id) {
+      <tr [class.is-selected]="variant_select[variant.id]">
+        <th scope="row">
+          <div class="variant-picker-product">
+            <span class="variant-picker-image">
+              @if (variant?.product?.image?.url_thumbnail) {
+                <img [src]="variant.product.image.url_thumbnail" alt="" loading="lazy" />
+              } @else { <fa-icon [icon]="faBarcode" aria-hidden="true"></fa-icon> }
+            </span>
+            <div class="variant-picker-description">
+              <span class="variant-picker-name">{{ variant?.product?.name }}</span>
+              <span class="variant-picker-sku">SKU: {{ variant.sku || variant.id }}</span>
+              <div class="variant-picker-options">
+                @for (option of variant.variant_option_values; track option.id) {
+                  <span>{{ option.option_value.value }}</span>
+                }
+              </div>
+            </div>
+          </div>
+        </th>
+        <td class="text-center"><span class="variant-picker-stock">{{ variant.stock ?? '—' }}</span></td>
+        <td class="text-end">
+          <label class="variant-picker-choice" [class.is-selected]="variant_select[variant.id]">
+            <input type="checkbox" [checked]="!!variant_select[variant.id]" (change)="addVariant(variant.id)"
+              [attr.aria-label]="'Seleccionar ' + variant?.product?.name + ', SKU ' + (variant.sku || variant.id)" />
+            <span>{{ variant_select[variant.id] ? 'Seleccionado' : 'Seleccionar' }}</span>
+          </label>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+} @else {
 <div class="table-responsive mb-3">
   <table class="table table-striped table-bordered mb-0 align-middle">
     <!-- <thead>
@@ -40,3 +80,5 @@
     </tbody>
   </table>
 </div>
+
+}

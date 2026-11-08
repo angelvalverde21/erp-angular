@@ -1,31 +1,36 @@
-<div class="row mb-3" [formGroup]="form">
+<div class="product-details-form" [formGroup]="form">
 
-  <div class="col-lg-12 col-md-12 col-sm-12">
-    <app-input-group text="Titulo (*)" [icon]="faEdit">
-      <input formControlName="name" type="text" class="form-control" [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched" placeholder="Nombre del producto" aria-label="name"
-        aria-describedby="basic-name" />
-    </app-input-group>
+  @if (section !== 'category') {
+
+  <div class="product-details-field">
+    <label for="product-form-name">Nombre del producto <span aria-hidden="true">*</span></label>
+    <input id="product-form-name" formControlName="name" type="text" class="form-control" required [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched" placeholder="Ej. Sweater Sienna color vino" aria-describedby="product-name-help" />
+    <small id="product-name-help">Elige un nombre que permita identificarlo en el catálogo.</small>
+    @if (form.get('name')?.invalid && form.get('name')?.touched) { <span class="product-details-error" role="alert">Ingresa el nombre del producto.</span> }
   </div>
 
-  <div class="col-lg-12 col-12 mb-3">
-    <label class="mb-2">Descripcion</label>
+  <div class="product-details-field">
+    <label for="product-form-description">Descripción <span class="product-details-optional">Opcional</span></label>
     <!-- <quill-editor class="w-100" formControlName="body" [modules]="modules" theme="snow"
       [style.height.px]="100"></quill-editor> -->
-    <textarea class="form-control" formControlName="body"></textarea>
+    <textarea id="product-form-description" class="form-control" formControlName="body" rows="5" placeholder="Describe las características principales del producto…"></textarea>
   </div>
 
-  <div class="col-lg-12 col-12 mb-3">
-    <label class="mb-2">Categorias</label>
-    <div class="controsl d-flex justify-content-between align-items-center">
+  }
+  @if (section !== 'basic') {
+  <div class="product-details-field">
+    <label for="SubCategories">Categoría <span aria-hidden="true">*</span></label>
+    <div class="product-category-control">
 
       <app-category-selected [categories]="categories" formControlName="category_id"
-        (emitCategorySelected)="categorySelected($event)" class="w-100 me-2"></app-category-selected>
-      <app-button [icon]="faPlus" color="outline-dark" (click)="openVerticallyCentered(content)">Crear</app-button>
+        (emitCategorySelected)="categorySelected($event)"></app-category-selected>
+      <button type="button" class="product-category-add" (click)="openVerticallyCentered(content)"><i class="fa-solid fa-plus" aria-hidden="true"></i>Nueva categoría</button>
 
     </div>
+    @if (form.get('category_id')?.invalid && form.get('category_id')?.touched) { <span class="product-details-error" role="alert">Selecciona una categoría para el producto.</span> }
   </div>
 
-  <!-- {{ form.status | json }} -->
+  }
 
 </div>
 

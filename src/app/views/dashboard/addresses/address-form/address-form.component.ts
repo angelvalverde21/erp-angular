@@ -26,6 +26,7 @@ import { IdentitySelectedComponent } from '../../identities/identity-selected/id
   ]
 })
 export class AddressFormComponent {
+  @Input() presentation: 'default' | 'branch' = 'default';
 
   faUser = faUser;
   faHome = faHome;

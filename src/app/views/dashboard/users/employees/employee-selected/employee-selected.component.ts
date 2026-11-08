@@ -64,8 +64,9 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
 
   setEmployee(employee: any) {
 
-    this.employee_id = employee.id;
-    this.onChangeCb?.(employee.id);
+    this.employee_id = employee?.id ?? null;
+    this.onChangeCb?.(this.employee_id);
+    this.onTouchedCb?.();
 
   }
 
@@ -114,6 +115,7 @@ export class EmployeeSelectedComponent implements ControlValueAccessor, OnInit, 
   onTouchedCb?: () => void;
 
   writeValue(employee_id: number | null): void {
+    if (employee_id == null) this.employee_id = null;
     this.pendingEmployeeId = employee_id;
     this.trySetEmployee();
   }

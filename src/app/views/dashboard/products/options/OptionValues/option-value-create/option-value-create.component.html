@@ -1,29 +1,18 @@
-<form [formGroup]="form" action="" class="content-variants d-flex justify-content-between align-items-center">
-
-    <!-- <select class="form-select me-2" [ngClass]="{'d-none': option_selected !== ''}"
-    
-        [class.is-invalid]="form.get('option_id')?.invalid && form.get('option_id')?.touched"
-        aria-label="Default select example" formControlName="option_id">
-        <option value="">Variantes</option>
-        @for (option of options; track option.id) {
-        <option [value]="option.id">{{ option.name }}</option>
-        }
-
-    </select> -->
-
-    <app-input-group [mb]="0" class="w-100">
-        <input formControlName="value" type="text" class="form-control me-2 w-100" [placeholder]="text_selected"
-            [class.is-invalid]="form.get('value')?.invalid && form.get('value')?.touched" aria-label="option_valuename"
-            aria-describedby="basic-option_valuename" UpperCase />
-    </app-input-group>
-    <!-- <button type="button" (click)="create()" class="btn"
-        [ngClass]="form.valid ? 'btn-dark' : 'btn-outline-dark'">Agregar</button> -->
-
-    <app-button [color]="form.valid ? 'dark' : 'outline-dark'" [icon]="faPlus" [disabled]="loading" [spinner]="loading"
-        (action)="create()">Agregar</app-button>
-
-    <!-- {{ form.value | json }} -->
+<form [formGroup]="form" (ngSubmit)="create()" class="option-value-form">
+  <label class="visually-hidden" [for]="'new-option-value-' + option_id">Nuevo valor de la opción</label>
+  <input [id]="'new-option-value-' + option_id" formControlName="value" type="text" class="form-control" [placeholder]="text_selected" maxlength="255" [class.is-invalid]="form.get('value')?.invalid && form.get('value')?.touched" [attr.aria-describedby]="'option-value-help-' + option_id" UpperCase />
+  <button type="submit" class="option-value-add" [disabled]="loading" aria-label="Agregar valor">
+    @if (loading) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> }
+    @else { <i class="fa-solid fa-plus" aria-hidden="true"></i> }
+    Agregar
+  </button>
 </form>
-
-
-<!-- <app-option-value-index [option]="option"></app-option-value-index> -->
+<div [id]="'option-value-help-' + option_id" class="option-value-help">
+  @if (form.get('value')?.touched && form.get('value')?.hasError('duplicate')) {
+    <p class="option-value-error" role="alert">Este valor ya existe en esta opción.</p>
+  } @else if (form.get('value')?.touched && form.get('value')?.hasError('server')) {
+    <p class="option-value-error" role="alert">{{ form.get('value')?.getError('server') }}</p>
+  } @else if (form.get('value')?.touched && form.get('value')?.invalid) {
+    <p class="option-value-error" role="alert">Ingresa un valor válido, sin comas.</p>
+  } @else { <span>Presiona Enter para agregar un valor.</span> }
+</div>

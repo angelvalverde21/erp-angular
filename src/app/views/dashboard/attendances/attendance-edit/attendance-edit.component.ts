@@ -1,136 +1,57 @@
-import { JsonPipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; //Colocar esto arriba en los imports
-import { Subject, takeUntil } from 'rxjs';
-import { ButtonSaveComponent } from 'src/app/views/shared/components/buttons/button-save/button-save.component';
-import { InputGroupComponent } from 'src/app/views/shared/components/form/input-group/input-group.component';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { AttendanceService } from '../attendance.service';
-import Swal from 'sweetalert2';
+import { EmployeeSelectedComponent } from '../../users/employees/employee-selected/employee-selected.component';
 
 @Component({
   selector: 'app-attendance-edit',
-  imports: [
-    ReactiveFormsModule,
-    InputGroupComponent,
-    ButtonSaveComponent,
-    JsonPipe
-  ],
+  imports: [ReactiveFormsModule, EmployeeSelectedComponent],
   templateUrl: './attendance-edit.component.html',
-  styleUrl: './attendance-edit.component.scss'
+  styleUrl: './attendance-edit.component.scss',
 })
-export class AttendanceEditComponent implements OnInit {
-
-  constructor(
-    private fb: FormBuilder,
-    private _attendance: AttendanceService
-  ) { }
-
-
+export class AttendanceEditComponent implements OnInit, OnDestroy {
   @Input() attendance: any;
-
   @Output() emitAttendanceUpdate = new EventEmitter<any>();
-
   form!: FormGroup;
+  loading = false;
+  error = '';
+  private readonly destroy$ = new Subject<void>();
+
+  constructor(private fb: FormBuilder, private service: AttendanceService) {}
 
   ngOnInit(): void {
-    console.log(this.attendance);
-    console.log(this.attendance?.id);
-
-    this.formInit();
-    this.form.patchValue(this.attendance);
-  }
-
-  formInit() {
     this.form = this.fb.group({
-      date: [{ value: '', disabled: true }],
-      check_in: ['', Validators.required],
-      check_out: ['', Validators.required],
-      employee_id: [this.attendance.employee_id, Validators.required],
-      comment: [''],
+      date: [this.attendance?.date ?? '', Validators.required],
+      employee_id: [this.attendance?.employee_id ?? null, Validators.required],
+      check_in: [this.attendance?.check_in ?? ''],
+      check_out: [this.attendance?.check_out ?? ''],
+      comment: [this.attendance?.comment ?? '', Validators.maxLength(250)],
     });
   }
 
-  loading: boolean = false;
-
-  createOrUpdate() {
-
-    console.log(this.form.getRawValue());
-    
-    if (!this.form.valid) {
+  createOrUpdate(): void {
+    if (this.loading) return;
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-
-    console.log("createOrUpdate");
-    
-
-    if (this.attendance?.id === null) {
-      this.create();
-    }else{
-      this.update();
-    }
-
-  }
-
-  update() {
-
     this.loading = true;
-    
-
-    this._attendance.update(this.attendance.id, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        Swal.fire('Guardado', 'El registro ha sido actualizado', 'success');
-        console.log(resp);
-        this.attendance = resp.data;
-        this.loading = false;
-
-        this.emitAttendanceUpdate.emit(this.attendance);
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al actualizar. Inténtalo nuevamente.', 'error');
-        console.error(error);
-        this.loading = false;
-      },
-
-    });
-
-  }
-
-  create() {
-
-    this.loading = true;
-
-    this._attendance.store(this.form.getRawValue()).pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        Swal.fire('Guardado', 'El registro ha sido creado', 'success');
-        console.log(resp);
-        this.attendance = resp.data;
-        this.loading = false;
-
-        this.emitAttendanceUpdate.emit(this.attendance);
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al actualizar. Inténtalo nuevamente.', 'error');
-        console.error(error);
-        this.loading = false;
-      },
-
+    this.error = '';
+    const values = Object.fromEntries(Object.entries(this.form.getRawValue()).map(([key, value]) => [key, value === '' ? null : value]));
+    const operation = this.attendance?.id
+      ? this.service.update(this.attendance.id, values)
+      : this.service.store(values);
+    operation.pipe(takeUntil(this.destroy$), finalize(() => this.loading = false)).subscribe({
+      next: (response: any) => this.emitAttendanceUpdate.emit(response.data),
+      error: error => this.error = error.error?.errors
+        ? Object.values(error.error.errors).flat().join(' ')
+        : 'No se pudo guardar la asistencia. Inténtalo nuevamente.',
     });
   }
-
-  destroy$ = new Subject<void>();
 
   ngOnDestroy(): void {
-
     this.destroy$.next();
     this.destroy$.complete();
-
   }
-
 }
-

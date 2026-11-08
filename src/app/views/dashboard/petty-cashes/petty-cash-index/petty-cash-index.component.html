@@ -18,7 +18,7 @@
             @for (petty_cashe of petty_cashes; track petty_cashe.id) {
                 <tr>
                     <th class="text-center" scope="row">{{ petty_cashe.id }}</th>
-                    <td class="text-center">{{ petty_cashe?.employee?.user?.name }}</td>
+                    <td class="text-center">{{ petty_cashe?.employee?.name }}</td>
                     <td class="text-center">{{ petty_cashe?.amount_assigned }}</td>
                     <td class="text-center">{{ petty_cashe?.gateway?.title }}</td>
                     <td class="text-center">Abierto o Cerrado</td>

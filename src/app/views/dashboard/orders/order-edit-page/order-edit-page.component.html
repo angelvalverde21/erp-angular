@@ -1,1 +1,16 @@
-<p>order-edit-page works!</p>
+<a routerLink="../" class="btn btn-link px-0 mb-3 text-decoration-none">
+  <i class="fa-solid fa-arrow-left me-2" aria-hidden="true"></i>Todos los pedidos
+</a>
+@if (loading) {
+<div class="card p-5 text-center" role="status">
+  <span class="spinner-border mx-auto mb-3" aria-hidden="true"></span>
+  Cargando pedido…
+</div>
+} @else if (error) {
+<div class="alert alert-danger" role="alert">
+  <p>{{ error }}</p>
+  <button type="button" class="btn btn-outline-danger" (click)="loadOrder()">Reintentar</button>
+</div>
+} @else if (order) {
+<app-order-edit [order_id]="order_id" [order]="order"></app-order-edit>
+}

@@ -1,0 +1,7 @@
+:host { display: block; }
+.options-workspace { display: grid; gap: 1.35rem; border: 0; padding: 0; margin: 0; min-width: 0; }
+.option-groups { display: grid; gap: 1.5rem; }
+.options-empty { display: grid; justify-items: center; padding: .75rem .25rem; color: var(--cui-secondary-color, #64748b); text-align: center; }
+.options-empty > i { margin-bottom: .75rem; font-size: 1.15rem; }
+.options-empty p { margin: 0 0 .35rem; font-size: .8rem; font-weight: 600; color: var(--cui-body-color, #334155); }
+.options-empty span { font-size: .72rem; line-height: 1.6; }

@@ -7,6 +7,12 @@ import { BaseService } from '../../../base.service';
 import { Observable } from 'rxjs';
 import { API, environment } from '../../../../environments/environment';
 
+export interface OptionRemoval {
+  option_id: number;
+  archived: boolean;
+  hidden_variant_ids: number[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -37,10 +43,10 @@ export class OptionService {
   }
 
   // Generic method to delete an item by ID
-  destroy(option_id: number, product_id: number = 0): Observable<any> {
+  destroy(option_id: number, product_id: number = 0): Observable<{ data: OptionRemoval }> {
     const url = `${this.baseUrl}/${product_id}/options/${option_id}`;
     console.log(url);
-    return this.http.delete(`${url}`);
+    return this.http.delete<{ data: OptionRemoval }>(`${url}`);
   }
 
 }

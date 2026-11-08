@@ -1,0 +1,11 @@
+:host { display: block; }
+.total-count-panel { padding: 1.25rem; border: 1px solid var(--cui-border-color, #e2e8f0); border-radius: .85rem; }
+.total-count-table { max-height: 32rem; overflow: auto; }
+.total-count-table table { min-width: 650px; }
+.total-count-table thead th { position: sticky; top: 0; z-index: 1; background: var(--cui-tertiary-bg, #f8fafc); font-size: .7rem; }
+.total-count-table td, .total-count-table th { padding: .85rem; }
+.total-count-table input[type=number] { width: 8rem; }
+.total-count-intro { display: grid; justify-items: center; text-align: center; padding: 3rem 1rem; color: var(--cui-secondary-color, #64748b); }
+.total-count-intro > i { font-size: 2rem; margin-bottom: 1rem; }
+.total-count-intro p { font-size: .9rem; font-weight: 500; margin-bottom: .5rem; }
+.total-count-intro span { max-width: 48ch; font-size: .8rem; line-height: 1.6; }

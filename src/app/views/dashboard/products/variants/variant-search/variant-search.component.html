@@ -1,25 +1,54 @@
-<form [formGroup]="form">
-  <div class="py-3 mx-3">
-    <app-input-group [icon]="faMagnifyingGlass" text="">
-      <input formControlName="search" type="text" class="form-control" placeholder="Busca Productos" aria-label="name" aria-describedby="basic-name" />
-    </app-input-group>
+<div [formGroup]="form" class="variant-search">
+  <div class="variant-search-toolbar">
+    <label [for]="searchId" class="variant-search-label">Buscar productos</label>
+    <div class="variant-search-field">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input [id]="searchId" formControlName="search" type="search" class="form-control"
+        placeholder="Escribe el nombre o SKU del producto" autocomplete="off"
+        [attr.aria-describedby]="searchId + '-help'" (keydown.enter)="$event.preventDefault(); getSearch()" />
+      @if (form.get('search')?.value) {
+        <button type="button" class="variant-search-clear" aria-label="Limpiar búsqueda" (click)="clearSearch()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      }
+    </div>
+    <p [id]="searchId + '-help'" class="variant-search-help">Busca y selecciona las variantes que deseas agregar.</p>
   </div>
 
-  @if (loading) {
-    <app-loading></app-loading>
-  } @else {
-    @if (variants?.length > 0) {
+  <div class="variant-search-results" [attr.aria-busy]="loading">
+    @if (loading) {
+      <div class="variant-search-state" role="status"><app-loading size="sm"></app-loading><p>Buscando productos…</p></div>
+    } @else if (searchError) {
+      <div class="variant-search-state" role="alert">
+        <span class="variant-search-state-icon" aria-hidden="true"><i class="fa-solid fa-circle-exclamation"></i></span>
+        <h3>No pudimos cargar los productos</h3><p>Intenta realizar la búsqueda nuevamente.</p>
+        <button type="button" class="btn btn-outline-dark btn-sm" (click)="getSearch()">Reintentar</button>
+      </div>
+    } @else if (variants.length > 0) {
+      <div class="variant-search-results-heading">
+        <h3>Resultados <span>{{ variants.length }}</span></h3>
+        <span>{{ type_form ? 'Completa cantidades y precios' : 'Puedes seleccionar varias variantes' }}</span>
+      </div>
       @if (type_form) {
-        <app-variant-index-form [variants]="variants" (formValuesChanged)="receiveValues($event)" (formValuesChanged)="receiveFormValuesChanged($event)"></app-variant-index-form>
+        <app-variant-index-form [variants]="variants" (formValuesChanged)="receiveFormValuesChanged($event)"></app-variant-index-form>
       } @else {
-        <app-variant-index [variants]="variants" (variantArraySelected)="receiveSelectedVariants($event)" (emitVariantsSelected)="receiveVariantsSelected($event)"></app-variant-index>
+        <app-variant-index [variants]="variants" [selectionView]="true"
+          (variantArraySelected)="receiveSelectedVariants($event)" (emitVariantsSelected)="receiveVariantsSelected($event)"></app-variant-index>
       }
-      <!-- <app-variant-index-selected [products]="products"></app-variant-index-selected> -->
-
-      <app-button [color]="'dark'" mb="3" [disabled]="buttonDisabled" (click)="addVariants()">{{ title }}</app-button>
-      
     } @else {
-      <app-void-index [title]="'No se encontraron variantes'" [subtitle]="'Comienza la busqueda'"></app-void-index>
+      <div class="variant-search-state">
+        <span class="variant-search-state-icon" aria-hidden="true"><i [class]="form.get('search')?.value?.trim() ? 'fa-solid fa-magnifying-glass' : 'fa-solid fa-box-open'"></i></span>
+        <h3>{{ form.get('search')?.value?.trim() ? 'Sin resultados' : 'Encuentra los productos del pedido' }}</h3>
+        <p>{{ form.get('search')?.value?.trim() ? 'Prueba con otro nombre o SKU.' : 'Escribe en el buscador para consultar las variantes disponibles.' }}</p>
+      </div>
     }
-  }
-</form>
+  </div>
+
+  <div class="variant-search-footer">
+    <span class="variant-search-selection" aria-live="polite">
+      @if (type_form) { {{ buttonDisabled ? 'Completa los datos para continuar' : 'Selección lista para agregar' }} }
+      @else { <strong>{{ variantsSelected?.length || 0 }}</strong> {{ variantsSelected?.length === 1 ? 'variante seleccionada' : 'variantes seleccionadas' }} }
+    </span>
+    <button type="button" class="btn btn-dark text-white variant-search-add" [disabled]="buttonDisabled || loading" (click)="addVariants()">
+      <i class="fa-solid fa-plus me-2" aria-hidden="true"></i>{{ title }}
+    </button>
+  </div>
+</div>

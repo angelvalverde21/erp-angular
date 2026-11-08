@@ -1,0 +1,13 @@
+<div class="inventory-page progress-page">
+  <app-inventory-section-header [sessions]="true" workspace="progress" [inventory]="inventory" [session]="session" title="Editar ubicación" description="Controla el avance de las ubicaciones finales del inventario.">
+    <a class="branch-back" [routerLink]="['../../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver al listado</a>
+    
+  </app-inventory-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} @if (!inventory) { <button class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button> }</div> }
+  @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando información…</div> }
+  @else if (inventory && options && record) {
+    @if (!editable) { <p class="workflow-note">El inventario o la sesión están cerrados. Los registros se muestran para consulta.</p> }
+    <section class="branch-panel workspace-form"><app-inventory-location-progress-edit [options]="options" [saving]="saving" [readOnly]="!editable" [record]="record!"  (save)="save($event)" ></app-inventory-location-progress-edit></section>
+  }
+  
+</div>

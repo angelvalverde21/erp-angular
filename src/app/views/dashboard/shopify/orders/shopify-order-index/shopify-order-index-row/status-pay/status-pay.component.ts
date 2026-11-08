@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { paymentState } from '../../../shared/order-status-stepper/order-status.model';
 
 @Component({
   selector: 'app-status-pay',
@@ -8,4 +9,8 @@ import { Component, Input } from '@angular/core';
 })
 export class StatusPayComponent {
   @Input() status: any;
+
+  get payment() {
+    return paymentState(this.status);
+  }
 }

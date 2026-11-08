@@ -1,8 +1,6 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-
-<app-manufacture-variant-index [manufacture_id]="manufacture_id"
-    (emitSumManufactureVariant)="receiveSumManufactureVariant($event)" [sum_variants]="sum_variants"
-    [manufacture_variants]="manufacture_variants"></app-manufacture-variant-index>
+@if (loading) { <app-loading></app-loading> } @else if (error) {
+<div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar los productos</h3><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary" (click)="kardexesInit()">Reintentar</button></div>
+} @else {
+<app-manufacture-variant-index [manufacture_id]="manufacture_id" text_button="Agregar productos"
+  (emitSumManufactureVariant)="receiveSumManufactureVariant($event)" [sum_variants]="sum_variants" [manufacture_variants]="manufacture_variants"></app-manufacture-variant-index>
 }

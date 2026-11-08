@@ -1,10 +1,14 @@
-@if(loading){
-    <app-loading></app-loading>
-}@else{
-<app-manufacture-production-form [form]="form"></app-manufacture-production-form>
-
-<app-button-save (click)="createProduction()" color="dark" [spinner]="loading" [disabled]="disabledButton">Guardar
-    cambios</app-button-save>
-
-<!-- {{ form.value | json }} -->
+@if (loading) {
+<app-loading></app-loading>
+} @else {
+<form [formGroup]="form" (ngSubmit)="createProduction()">
+  <app-manufacture-production-form [form]="form"></app-manufacture-production-form>
+  <div class="production-form-actions">
+    <p>Podrás completar el resto de la información en el detalle.</p>
+    <button type="submit" class="manufacture-primary-action" [disabled]="disabledButton">
+      @if (disabledButton) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }
+      {{ disabledButton ? 'Creando...' : 'Crear producción' }}
+    </button>
+  </div>
+</form>
 }

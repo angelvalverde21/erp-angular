@@ -1,11 +1,16 @@
-@if(loading){
-    <app-loading></app-loading>
-}@else{
-
-<app-manufacture-order-form [form]="form" [suppliers]="suppliers"></app-manufacture-order-form>
-
-<app-button-save (click)="update()" [spinner]="loading" [disabled]="disabledButton">Guardar
-    cambios</app-button-save>
-
-<!-- {{ form.value | json }} -->
+@if (loading) { <app-loading></app-loading> } @else if (error) {
+<div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar los proveedores</h3><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary" (click)="suppliersInit()">Reintentar</button></div>
+} @else {
+<section class="production-panel">
+  <header class="production-section-heading"><div><h2>Información general</h2><p>Actualiza el nombre, el proveedor y las fechas de esta orden de compra.</p></div></header>
+  <form class="production-panel-body" [formGroup]="form" (ngSubmit)="update()">
+    <app-manufacture-order-form [form]="form" [suppliers]="suppliers"></app-manufacture-order-form>
+    <div class="production-form-actions">
+      <button type="submit" class="manufacture-primary-action" [disabled]="disabledButton">
+        @if (disabledButton) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }
+        {{ disabledButton ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
+    </div>
+  </form>
+</section>
 }

@@ -1,18 +1,9 @@
-@if(loading){
-    <app-loading></app-loading>
-}@else{
-
-<app-head-page title="Crear Orden de Compra">
-    <!-- <app-button-link [path]="['./create']">Agregar manufacture</app-button-link> -->
-    <app-button-back></app-button-back>
-</app-head-page>
-
-<div class="card">
-
-    <div class="card-body">
-        <app-manufacture-order-create (emitCreateManufacture)="receiveManufactureCreate($event)"></app-manufacture-order-create>
-    </div>
-
+<div class="production-page manufacture-theme-order">
+  <app-manufacture-section-header section="order" title="Nueva orden de compra" description="Define el pedido a un proveedor y acuerda sus fechas de entrega." [backLink]="['../']" backLabel="Volver a órdenes de compra"></app-manufacture-section-header>
+  @if (loading) { <app-loading></app-loading> } @else {
+  <section class="production-panel">
+    <header class="production-section-heading"><div><h2>Información de la orden</h2><p>Después podrás agregar variantes, registrar pagos y controlar las recepciones.</p></div></header>
+    <div class="production-panel-body"><app-manufacture-order-create (emitCreateManufacture)="receiveManufactureCreate($event)"></app-manufacture-order-create></div>
+  </section>
+  }
 </div>
-
-}

@@ -1,7 +1,4 @@
-<app-courier-form [form]="form" [show_roles]="false"></app-courier-form>
-
-<div class="text-end">
-    <app-button-save (click)="create()" [disabled]="form.invalid"
-        [spinner]="loadingIcon">{{ button_text }}</app-button-save>
+<app-courier-form [form]="form"></app-courier-form>
+<div class="d-flex justify-content-end mt-4 pt-3 border-top">
+  <app-button-save (action)="create()" [disabled]="loadingIcon" [spinner]="loadingIcon">{{ button_text }}</app-button-save>
 </div>
-

@@ -1,7 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
-import { ButtonSaveComponent } from '@shared/components/buttons/button-save/button-save.component';
 import Swal from 'sweetalert2';
 import { Subject, takeUntil } from 'rxjs';
 import { SupplierService } from '@dashboard/users/suppliers/supplier.service';
@@ -14,8 +12,6 @@ import { ManufactureProductionFormComponent } from '../manufacture-production-fo
   imports: [
     ManufactureProductionFormComponent,
     ReactiveFormsModule,
-    JsonPipe,
-    ButtonSaveComponent,
     LoadingComponent
   ],
   templateUrl: './manufacture-production-create.component.html',
@@ -68,6 +64,8 @@ export class ManufactureProductionCreateComponent implements OnInit, OnDestroy {
 
   createProduction() {
 
+    if (this.disabledButton) return;
+
     console.log(this.form.value);
 
 
@@ -77,7 +75,7 @@ export class ManufactureProductionCreateComponent implements OnInit, OnDestroy {
     }
 
     this.loading = false;
-    this.disabledButton = false;
+    this.disabledButton = true;
 
     Swal.fire({
       title: 'Espere...',

@@ -1,0 +1,23 @@
+.branch-address-fields {
+  .address-section-heading { margin-bottom: 1.2rem; }
+  h3 { margin: 0 0 .3rem; color: #34435a; font-size: .87rem; font-weight: 650; }
+  p { margin: 0; color: #8a96a8; font-size: .75rem; }
+  label { display: block; margin-bottom: .5rem; color: #526176; font-size: .78rem; font-weight: 500; }
+  .required-mark { color: #b66767; }
+  .optional-field { margin-left: .35rem; color: #9aa5b5; font-size: .7rem; font-weight: 400; }
+  .form-control { min-height: 44px; border-color: #dfe5ee; border-radius: 9px; padding: .65rem .85rem; font-size: .8rem; }
+  .form-control::placeholder { color: #a0aabb; }
+  .form-control:focus { border-color: #8da6cf; box-shadow: 0 0 0 3px rgba(56, 90, 155, .1); }
+  textarea.form-control { min-height: 74px; resize: vertical; }
+  small { display: block; margin-top: .4rem; color: #9aa5b5; font-size: .69rem; }
+}
+.address-contact-details { margin-top: 1.4rem; border: 1px solid #e5eaf2; border-radius: 10px; background: #fafbfd; }
+.address-contact-details summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .95rem 1rem; color: #63728a; font-size: .78rem; cursor: pointer; list-style: none; }
+.address-contact-details summary::-webkit-details-marker { display: none; }
+.address-contact-details summary > span { display: inline-flex; align-items: center; gap: .65rem; }
+.address-contact-details .contact-optional { font-size: .7rem; color: #97a2b4; }
+.contact-optional i { font-size: .65rem; transition: transform .15s; }
+.address-contact-details[open] .contact-optional i { transform: rotate(180deg); }
+.contact-fields { margin: 0; padding: 0 .1rem 1rem; }
+:host ::ng-deep .branch-address-fields app-input-district-id .input-group { margin-bottom: 0; }
+:host ::ng-deep .branch-address-fields app-input-district-id input { min-height: 44px; font-size: .8rem; }

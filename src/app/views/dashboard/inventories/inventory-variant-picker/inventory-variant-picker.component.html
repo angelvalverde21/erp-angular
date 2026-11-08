@@ -1,0 +1,11 @@
+<div class="variant-picker" [class.picker-invalid]="invalid">
+  @if (selected) { <div class="variant-selected"><i class="fa-solid fa-box" aria-hidden="true"></i><div><strong>{{ selected.product?.name || 'Variante #' + selected.id }}</strong><small>SKU: {{ selected.sku || 'Sin SKU' }} · Variante #{{ selected.id }}</small></div><i class="fa-solid fa-check" aria-hidden="true"></i></div> }
+  @if (!disabled) {
+    <label class="variant-search-label" for="inventory-variant-search">{{ selected ? 'Buscar otra variante' : 'Buscar variante por nombre, SKU o código' }}</label>
+    <div class="variant-search"><input #query id="inventory-variant-search" type="search" [value]="term" (input)="term = query.value" (keydown.enter)="$event.preventDefault(); submit()" placeholder="Escribe el nombre o escanea el código" [disabled]="loading"><button type="button" (click)="submit()" [disabled]="loading || !term.trim()">{{ loading ? 'Buscando…' : 'Buscar' }}</button></div>
+    @if (error) { <p class="variant-error" role="alert">{{ error }}</p> }
+    @if (searched && !loading && !error) {
+      <ul class="variant-results" aria-label="Variantes encontradas">@for (variant of variants; track variant.id) { <li><button type="button" (click)="choose.emit(variant)"><span><strong>{{ variant.product?.name || 'Variante #' + variant.id }}</strong><small>{{ variant.sku || 'Sin SKU' }} · #{{ variant.id }}</small></span><span>Seleccionar</span></button></li> } @empty { <li class="variant-no-results">No hay resultados para esta búsqueda.</li> }</ul>
+    }
+  }
+</div>

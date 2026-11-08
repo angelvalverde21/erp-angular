@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { ButtonComponent } from '@buttons/button/button.component';
-import { ButtonAddComponent } from '@buttons/button-add/button-add.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faInbox } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -12,18 +10,14 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ManufactureProductionVariantIndexRowComponent } from './manufacture-production-variant-index-row/manufacture-production-variant-index-row.component';
 import { ManufactureService } from '../../../manufacture.service';
 import { ManufactureVariantService } from '../../../manufacture.variants.service';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-manufacture-production-variant-index',
   imports: [
-    ButtonComponent,
     ManufactureProductionVariantIndexRowComponent,
-    ButtonAddComponent,
     FontAwesomeModule,
     VariantSearchComponent,
     LoadingComponent,
-    JsonPipe
   ],
   templateUrl: './manufacture-production-variant-index.component.html',
   styleUrl: './manufacture-production-variant-index.component.scss',
@@ -68,6 +62,7 @@ export class ManufactureProductionVariantIndexComponent implements OnInit {
 
   productionVariantsInit() {
 
+    this.error = '';
     this.loading = true;
 
     this._manufactureVariant.setManufactureId(this.manufacture_id);
@@ -80,6 +75,8 @@ export class ManufactureProductionVariantIndexComponent implements OnInit {
         this.sumQuantity();
       },
       error: (error: any) => {
+        this.loading = false;
+        this.error = 'No se pudieron cargar los productos. Intenta nuevamente.';
         console.error('Error fetching production variants:', error);
       }
     });
@@ -133,6 +130,7 @@ export class ManufactureProductionVariantIndexComponent implements OnInit {
   }
 
   loading: boolean = false;
+  error = '';
 
   receiveSearchSelectedVariants(variants: any) {
 
@@ -161,6 +159,7 @@ export class ManufactureProductionVariantIndexComponent implements OnInit {
         Swal.fire('Guardado', 'Las variantes han sido agregadas', 'success');
         console.log(resp);
         this.manufacture_variants = [...this.manufacture_variants, ...resp.data];
+        this.sumQuantity();
         this.loading = false;
         this.modal.close();
       },

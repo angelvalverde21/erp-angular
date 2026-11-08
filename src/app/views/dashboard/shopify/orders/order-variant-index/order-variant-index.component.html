@@ -1,18 +1,18 @@
-<div class="table-responsive">
-    <table class="table table-hover table-striped mb-0 align-middle">
-        <thead class="table-light">
+<div class="order-variants-table-wrap table-responsive">
+    <table class="table order-variants-table align-middle mb-0">
+        <caption class="visually-hidden">Productos del pedido. Edita la cantidad o el precio para actualizar el total.</caption>
+        <thead>
             <tr>
-                <th scope="col" class="text-center">#</th>
-                <th scope="col" class="text-center">Qty</th>
-                <th scope="col">Name</th>
-                <th scope="col" class="text-center">Variante</th>
-                <th scope="col" class="text-center">Price</th>
-                <th scope="col" class="text-center">Total</th>
-                <th scope="col" class="text-center" style="width: 75px;">Actions</th>
+                <th scope="col" class="variant-number-column">#</th>
+                <th scope="col">Producto</th>
+                <th scope="col" class="text-center variant-quantity-column">Cantidad</th>
+                <th scope="col" class="text-end variant-price-column">Precio unitario</th>
+                <th scope="col" class="text-end variant-total-column">Importe</th>
+                <th scope="col" class="variant-actions-column"><span class="visually-hidden">Acciones</span></th>
             </tr>
         </thead>
-        <tbody formArrayName="variants">
-            @for (control of variants.controls; let i = $index; track i) {
+        <tbody>
+            @for (control of variants.controls; let i = $index; track control) {
             <tr app-order-variant-row [formGroup]="control" [index]="i">
             </tr>
             }

@@ -1,32 +1,48 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
 <app-head-page title="Couriers">
-    <app-button-link [path]="['./create']">Agregar Courier</app-button-link>
+  <app-button-link [path]="['./create']">+ Nuevo courier</app-button-link>
 </app-head-page>
+<p class="page-description">Gestiona tus empresas de envío, condiciones de pago y oficinas.</p>
 
-<div class="card">
-
-    <div class="card-header py-3">
-
-        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)" type="courier"></app-user-head-table>
-
+<div class="courier-card">
+  <form class="courier-toolbar" (ngSubmit)="load()">
+    <div class="search-field">
+      <label for="courier-search">Buscar courier</label>
+      <input id="courier-search" class="form-control" type="search" name="search" [(ngModel)]="search" placeholder="Nombre o teléfono">
     </div>
-
-    <div class="card-body p-0">
-
-        @if(couriers.length > 0){
-        <app-courier-index [couriers]="couriers"></app-courier-index>
-        }@else{
-        <p class="p-4">No se cuenta con registro de couriers</p>
-        }
-
+    <div>
+      <label for="courier-type-filter">Tipo de entrega</label>
+      <select id="courier-type-filter" name="deliveryType" class="form-select" [(ngModel)]="deliveryType" (ngModelChange)="load()">
+        <option value="">Todos los servicios</option><option value="agency">Por agencia</option>
+        <option value="express">Express</option><option value="store_pickup">Recojo en tienda</option>
+      </select>
     </div>
-
-    <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Total: {{ couriers.length }}</small>
+    <div>
+      <label for="courier-status-filter">Estado</label>
+      <select id="courier-status-filter" name="status" class="form-select" [(ngModel)]="status" (ngModelChange)="load()">
+        <option value="">Todos</option><option value="1">Activos</option><option value="0">Bloqueados</option>
+      </select>
     </div>
+    <button class="btn btn-dark" type="submit">Buscar</button>
+  </form>
 
+  @if (loading) {
+    <div class="empty-state" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Cargando couriers…</div>
+  } @else if (error) {
+    <div class="empty-state" role="alert"><p>{{ error }}</p><button class="btn btn-outline-secondary btn-sm" (click)="load(page)">Reintentar</button></div>
+  } @else if (couriers.length) {
+    <app-courier-index [couriers]="couriers"></app-courier-index>
+  } @else {
+    <div class="empty-state"><strong>No hay couriers para mostrar</strong><p>Agrega un courier o cambia los filtros de búsqueda.</p></div>
+  }
+
+  <div class="list-footer">
+    <span>{{ total }} {{ total === 1 ? 'courier encontrado' : 'couriers encontrados' }}</span>
+    @if (lastPage > 1) {
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-sm btn-outline-secondary" [disabled]="page <= 1 || loading" (click)="load(page - 1)">Anterior</button>
+        <span>{{ page }} de {{ lastPage }}</span>
+        <button class="btn btn-sm btn-outline-secondary" [disabled]="page >= lastPage || loading" (click)="load(page + 1)">Siguiente</button>
+      </div>
+    }
+  </div>
 </div>
-
-}

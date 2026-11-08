@@ -102,7 +102,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
     // this.initBrands();
 
 
-    this.form.statusChanges.subscribe((status) => {
+    this.form.statusChanges.pipe(takeUntil(this.destroy$)).subscribe((status) => {
       console.log(status);
 
       if (status === 'VALID') {
@@ -144,6 +144,11 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
 
 
   create() {
+    if (this.loadingIcon) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.loadingIcon = true;
     this.disabledButton = true;
 

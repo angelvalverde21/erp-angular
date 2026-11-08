@@ -1,0 +1,11 @@
+<div class="branch-page section-warehouses">
+  <app-branch-section-header level="warehouses" title="Tiendas o almacenes" description="Gestiona las tiendas y los almacenes de esta sucursal." [creating]="false" [branch]="context">
+    <a class="branch-back" [routerLink]="['../../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Sucursales</a><a class="branch-action" [routerLink]="['./create']"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar almacén</a>
+  </app-branch-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} <button type="button" class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button></div> }
+  <section class="section-collection" [attr.aria-busy]="loading">
+    @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando almacenes…</div> }
+    @else if (!error) { <app-warehouse-index [warehouses]="warehouses"></app-warehouse-index> }
+  </section>
+  @if (lastPage > 1) { <nav class="branch-pagination" aria-label="Paginación"><button class="branch-back" [disabled]="page <= 1 || loading" (click)="load(page - 1)">Anterior</button><span>{{ page }} de {{ lastPage }}</span><button class="branch-back" [disabled]="page >= lastPage || loading" (click)="load(page + 1)">Siguiente</button></nav> }
+</div>

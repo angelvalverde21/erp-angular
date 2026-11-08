@@ -1,1 +1,9 @@
-<p>location-create works!</p>
+<form [formGroup]="form" (ngSubmit)="submit()" [attr.aria-busy]="saving">
+  <fieldset class="branch-form border-0 m-0" [disabled]="saving">
+    <div class="branch-form-intro"><h3>Identificación</h3><p>Nombre y código para reconocer la ubicación.</p></div><div class="branch-field-row"><div class="branch-field"><label for="location-name">Nombre *</label><input id="location-name" formControlName="name" required maxlength="255" placeholder="Ej. Estante A"></div><div class="branch-field"><label for="location-code">Código (opcional)</label><input id="location-code" formControlName="code" maxlength="255" placeholder="Se genera desde el nombre"><small>Se genera desde el nombre. Puedes ajustarlo.</small></div></div>
+    <div class="branch-field"><label for="location-parent">Ubicación superior <span class="text-body-secondary">(opcional)</span></label><select id="location-parent" formControlName="parent_id"><option [ngValue]="null">Sin ubicación superior</option>@for (parent of parents; track parent.id) { <option [ngValue]="parent.id">{{ parent.name }}{{ parent.code ? ' · ' + parent.code : '' }}</option> }</select><small>Permite organizar, por ejemplo, un estante dentro de una zona.</small></div>
+    <label class="branch-option"><input type="checkbox" formControlName="is_active"><span><strong>Ubicación activa</strong><small>Si desmarcas esta opción, el registro se identificará como inactivo.</small></span></label>
+    @if (form.invalid && form.touched) { <p class="branch-validation" role="alert">Completa los campos obligatorios y revisa la longitud del nombre y código.</p> }
+    <div class="branch-form-actions"><a class="branch-back" [routerLink]="cancelPath" [class.disabled]="saving" [attr.aria-disabled]="saving">Cancelar</a><button type="submit" class="branch-action" [disabled]="saving">@if (saving) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Guardando… } @else { <i class="fa-solid" [class.fa-plus]="!editing" [class.fa-floppy-disk]="editing" aria-hidden="true"></i>{{ submitLabel }} }</button></div>
+  </fieldset>
+</form>

@@ -1,18 +1,9 @@
-@if(loading){
-    <app-loading></app-loading>
-}@else{
-
-<app-head-page title="Crear">
-    <!-- <app-button-link [path]="['./create']">Agregar production</app-button-link> -->
-    <app-button-back></app-button-back>
-</app-head-page>
-
-<div class="card">
-
-    <div class="card-body">
-        <app-manufacture-production-create (emitCreateProduction)="receiveProductionCreate($event)"></app-manufacture-production-create>
-    </div>
-
+<div class="production-page manufacture-theme-production">
+  <app-manufacture-section-header section="production" title="Nueva producción" description="Organiza la fabricación de un lote y sus costos de producción." [backLink]="['../']" backLabel="Volver a producciones"></app-manufacture-section-header>
+  @if (loading) { <app-loading></app-loading> } @else {
+  <section class="production-panel">
+    <header class="production-section-heading"><div><h2>Información de la producción</h2><p>Después podrás agregar productos, registrar compras y controlar las recepciones.</p></div></header>
+    <div class="production-panel-body"><app-manufacture-production-create (emitCreateProduction)="receiveProductionCreate($event)"></app-manufacture-production-create></div>
+  </section>
+  }
 </div>
-
-}

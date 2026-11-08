@@ -1,3 +1,50 @@
+@if (productionView) {
+<section class="production-expenses" aria-labelledby="production-expenses-title">
+  <header class="production-expenses-heading">
+    <div><span class="production-expenses-eyebrow">COSTOS DE FABRICACIÓN</span><h2 id="production-expenses-title">Compras y gastos</h2><p>Materiales, insumos y servicios asociados a esta producción.</p></div>
+    <button type="button" class="production-expense-primary" (click)="openVerticallyCentered(content)"><i class="fa-solid fa-plus" aria-hidden="true"></i>Registrar compra o gasto</button>
+  </header>
+  <dl class="production-expenses-summary">
+    <div class="production-expenses-total"><dt>Gasto acumulado</dt><dd>{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd><dd class="production-expenses-note">Suma de las compras y gastos registrados</dd></div>
+    <div><dt>Registros</dt><dd>{{ purchases.length }}</dd><dd class="production-expenses-note">Compras y gastos</dd></div>
+    <div><dt>Conceptos</dt><dd>{{ conceptCount }}</dd><dd class="production-expenses-note">Materiales o servicios registrados</dd></div>
+  </dl>
+  @for (purchase of purchases; track purchase.id; let first = $first) {
+  <article class="production-expense-card" [attr.aria-label]="'Compra o gasto #' + purchase.id">
+    <header class="production-expense-card-header">
+      <span class="production-expense-icon" aria-hidden="true"><i class="fa-solid fa-receipt"></i></span>
+      <div class="production-expense-identity">
+        <h3>{{ purchase.supplier?.user?.name || purchase.supplier?.name || 'Compra sin proveedor' }}</h3>
+        <div class="production-expense-meta"><span>Registro #{{ purchase.id }}</span><span>{{ purchase.created_at ? (purchase.created_at | DateShopify) : 'Sin fecha' }}</span></div>
+      </div>
+      <div class="production-expense-amount"><span>Importe</span><strong>{{ sum_purchase(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></div>
+      <app-purchase-index-head [actionsOnly]="true" [purchase]="purchase" [purchaseable_type]="purchaseable_type"
+        [purchaseable_id]="purchaseable_id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)" (emitRemovePurchase)="receiveRemovePurchase($event)"></app-purchase-index-head>
+    </header>
+    <details class="production-expense-details" [open]="first">
+      <summary><span>Detalle de conceptos <small>{{ purchase.items?.length ?? 0 }}</small></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
+      <div class="table-responsive" tabindex="0" role="region" aria-label="Conceptos de la compra">
+        <table class="table production-expense-table align-middle mb-0">
+          <caption class="visually-hidden">Conceptos, precios e importes de la compra</caption>
+          <thead><tr><th scope="col" class="text-end">Cantidad</th><th scope="col">Unidad</th><th scope="col">Concepto</th><th scope="col" class="text-end">Precio unitario</th><th scope="col" class="text-end">Importe</th></tr></thead>
+          <tbody>
+            @for (item of purchase.items; track item.id) {
+            <tr><td class="text-end production-expense-number">{{ item.quantity }}</td><td>{{ item.unit?.name || '—' }}</td><td class="production-expense-description">{{ item.name }}</td><td class="text-end production-expense-number">{{ (item.price ?? 0) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td><td class="text-end production-expense-number fw-semibold">{{ itemTotal(item) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td></tr>
+            } @empty { <tr><td colspan="5" class="text-center text-body-secondary py-4">Este registro no tiene conceptos.</td></tr> }
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </article>
+  } @empty {
+  <div class="production-expenses-empty">
+    <span aria-hidden="true"><i class="fa-solid fa-receipt"></i></span>
+    <h3>Aún no hay compras ni gastos</h3><p>Registra materiales, insumos o servicios para empezar a conocer el costo de fabricación.</p>
+    <button type="button" class="production-expense-secondary" (click)="openVerticallyCentered(content)">Registrar el primer gasto<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+  </div>
+  }
+</section>
+} @else {
 <!-- ── HEADER ── -->
 <div class="card rounded-3 mb-4">
     <div class="card-body d-flex justify-content-between align-items-center py-3 px-4">
@@ -90,7 +137,7 @@
 </div>
 
 }
-
+}
 <ng-template #content let-modal>
     <div class="modal-header">
         <h6 class="modal-title">Registrar Compra</h6>

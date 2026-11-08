@@ -1,0 +1,69 @@
+@if (active) {
+<section class="total-count-panel" aria-labelledby="total-count-title" [attr.aria-busy]="busy">
+  <header class="d-flex flex-wrap align-items-start justify-content-between gap-3">
+    <div>
+      <h3 id="total-count-title" class="fs-6 fw-semibold mb-2">Conteo total del inventario</h3>
+      <p class="small text-body-secondary mb-0">Empieza con cantidades en cero, cuenta cada variante y revisa las diferencias antes de aplicar.</p>
+    </div>
+    @if (!rows.length || finished || needsStockReview) {
+    <button type="button" class="btn btn-dark btn-sm" (click)="startCount(needsStockReview)" [disabled]="busy">
+      @if (loading) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }
+      {{ loading ? 'Cargando catálogo...' : needsStockReview ? 'Volver a consultar stock' : finished ? 'Iniciar otro conteo' : 'Iniciar conteo total' }}
+    </button>
+    }
+  </header>
+  @if (error) { <p class="alert alert-danger small mt-3 mb-0" role="alert">{{ error }}</p> }
+  @if (reviewNotice) { <p class="alert alert-info small mt-3 mb-0" role="status">{{ reviewNotice }}</p> }
+  @if (loading) {
+    <p class="small text-body-secondary mt-3" role="status">{{ loadedCount }} variantes cargadas@if (expectedCount !== null) { de {{ expectedCount }} }. Se está preparando el catálogo completo.</p>
+  } @else if (rows.length) {
+    <div class="my-3" aria-label="Progreso del conteo">
+      <div class="d-flex flex-wrap justify-content-between gap-2 small mb-2"><span><strong>{{ counted }} de {{ rows.length }}</strong> variantes contadas</span><span class="text-body-secondary">{{ differences }} con diferencias</span></div>
+      <progress class="w-100" [value]="counted" [max]="rows.length" aria-label="Variantes contadas"></progress>
+    </div>
+    @if (finished) {
+    <p class="alert alert-success small" role="status">{{ savedMovements ? 'Inventario actualizado. Se corrigió el stock de ' + savedMovements + ' variantes.' : 'El conteo coincide con el inventario actual. No hay cantidades por corregir.' }}</p>
+    } @else {
+    <p class="small text-body-secondary">Escribe las unidades que encontraste de cada variante. Si contaste cero unidades, marca «Contado». Al terminar podrás revisar y guardar todo el inventario.</p>
+    }
+    <label for="total-count-filter" class="small mb-2">Buscar en el catálogo</label>
+    <input #filter id="total-count-filter" class="form-control form-control-sm mb-3" type="search" placeholder="Código, SKU, producto o talla" [value]="query" (input)="query = filter.value" />
+    <div class="total-count-table table-responsive">
+      <table class="table table-hover align-middle small mb-0">
+        <thead><tr><th scope="col">Producto / variante</th><th scope="col" class="text-end">Stock actual</th><th scope="col">Unidades que contaste</th><th scope="col" class="text-end">Diferencia</th><th scope="col" class="text-center">Confirmación</th></tr></thead>
+        <tbody>
+          @for (row of visibleRows; track row.variant.id) {
+          <tr [class.table-active]="row.counted && validRow(row)">
+            <td><strong class="d-block">{{ row.variant.product?.name || 'Variante #' + row.variant.id }}</strong><span class="text-body-secondary">#{{ row.variant.id }} · {{ row.variant.sku || 'Sin SKU' }}</span>
+              @for (option of row.variant.variant_option_values || []; track option.id) { <span class="ms-2">{{ option.option_value?.value }}</span> }
+            </td>
+            <td class="text-end">{{ row.initialStock }}</td>
+            <td><input #countInput type="number" min="0" step="1" class="form-control form-control-sm" [formControl]="row.quantity" [readonly]="busy || finished" (wheel)="countInput.blur()"
+              (input)="markCounted(row)" [class.is-invalid]="row.counted && !validRow(row)" [attr.aria-label]="'Cantidad contada de la variante ' + row.variant.id" /></td>
+            <td class="text-end">{{ row.counted && validRow(row) ? row.quantity.value! - row.initialStock : '—' }}</td>
+            <td class="text-center"><label class="d-inline-flex align-items-center gap-2"><input #checked type="checkbox" class="form-check-input m-0" [checked]="row.counted" [disabled]="busy || finished" (change)="markCounted(row, checked.checked)" [attr.aria-label]="'Confirmar conteo de la variante ' + row.variant.id" />Contado</label></td>
+          </tr>
+          } @empty { <tr><td colspan="5" class="text-center py-4 text-body-secondary">No hay coincidencias con el filtro.</td></tr> }
+        </tbody>
+      </table>
+    </div>
+    <footer class="d-flex flex-wrap align-items-center justify-content-between gap-3 mt-3">
+      <span class="small text-body-secondary">{{ visibleRows.length }} de {{ rows.length }} variantes visibles.
+        @if (!finished) { {{ counted === rows.length ? 'Todo el catálogo está contado. Ya puedes revisar y guardar.' : 'Faltan ' + (rows.length - counted) + ' variantes por confirmar.' }} }
+      </span>
+      @if (!finished) {
+      <button type="button" class="btn btn-dark" [disabled]="!canFinish" (click)="finishCount()">
+        @if (saving || confirming) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }
+        {{ saving ? 'Aplicando conteo...' : 'Revisar y finalizar conteo' }}
+      </button>
+      }
+    </footer>
+  } @else if (!loading && !error) {
+    <div class="total-count-intro">
+      <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+      <p>{{ catalogLoaded ? 'No hay variantes en el catálogo' : 'Un conteo para todo tu catálogo' }}</p>
+      <span>{{ catalogLoaded ? 'Registra productos y variantes antes de realizar un conteo total.' : 'Al iniciar se cargarán todas las variantes. Elegir esta opción no modifica el stock.' }}</span>
+    </div>
+  }
+</section>
+}

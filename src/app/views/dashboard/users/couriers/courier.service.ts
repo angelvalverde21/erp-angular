@@ -13,6 +13,25 @@ import { Observable } from 'rxjs';
 
 export class CourierService extends BaseCrudDashboardService {
 
+  override index(page = 1, status?: string): Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl, {
+      params: { page, with_addresses: '1', ...(status && { status }) }
+    });
+  }
+
+  addresses(courierId: number, page = 1, search = ''): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/${courierId}/addresses`,
+      { params: { page, search: search.trim() } },
+    );
+  }
+
+  list(page = 1, search = '', status = '', deliveryType = ''): Observable<any> {
+    return this.http.get(this.baseUrl, {
+      params: { page, search: search.trim(), status, delivery_type: deliveryType }
+    });
+  }
+
   constructor(http: HttpClient) {
 
     super(http, 'couriers');

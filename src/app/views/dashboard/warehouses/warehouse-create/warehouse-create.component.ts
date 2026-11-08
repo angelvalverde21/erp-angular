@@ -1,85 +1,42 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { WarehouseService } from '../warehouse.service';
-// fuentes
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faPenToSquare,
-  faSave,
-  faIdBadge,
-} from '@fortawesome/free-solid-svg-icons';
-import { LoadingComponent } from '../../../shared/components/loading/loading.component';
-import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
-import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { BranchFieldValidationDirective } from '../../branches/branch-field-validation.directive';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { WarehousePayload } from 'src/app/interfaces/warehouse.interface';
+import { bindAutomaticCode } from '../../branches/automatic-code';
 import { Subscription } from 'rxjs';
+import { BranchAddress } from 'src/app/interfaces/branch.interface';
+@Component({ selector: 'app-warehouse-create', imports: [RouterLink, ReactiveFormsModule, BranchFieldValidationDirective], templateUrl: './warehouse-create.component.html', styleUrl: './warehouse-create.component.scss' })
+export class WarehouseCreateComponent implements OnDestroy {
+  @Input() saving = false;
+  @Input() editing = false;
+  @Input() cancelPath = ['../'];
+  @Input() submitLabel = 'Crear almacén';
+  @Input() parentId = 0;
+  @Input() branchAddress: BranchAddress | null = null;
+  
+  @Output() save = new EventEmitter<WarehousePayload>();
+  readonly form;
+  private readonly codeSubscription: Subscription;
 
-@Component({
-  selector: 'app-warehouse-create',
-  imports: [
-    LoadingComponent,
-    FontAwesomeModule,
-    ReactiveFormsModule,
-    InputGroupComponent,
-    ButtonComponent,
-    CommonModule,
-    JsonPipe
-  ],
-  templateUrl: './warehouse-create.component.html',
-  styleUrl: './warehouse-create.component.scss',
-})
-export class WarehouseCreateComponent {
-  faPenToSquare = faPenToSquare;
-  faIdBadge = faIdBadge;
-  faSave = faSave;
-  subscription!: Subscription;
-
-  @Output() emitWarehouse = new EventEmitter<[]>();
-
-  constructor(private fb: FormBuilder, private _warehouse: WarehouseService) {}
-
-  success: boolean = false;
-  disabledButton: boolean = true;
-  loadingIcon: boolean = false;
-  loading: boolean = false;
-
-  warehouse: any;
-
-  ngOnInit(): void {
-    
-    this.formInit();
-
-    this.form.statusChanges.subscribe((status) => {
-      console.log(status);
-
-      if (status === 'VALID') {
-        this.disabledButton = false;
-      } else {
-        this.disabledButton = true;
-      }
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.nonNullable.group({
+      name: ['', [Validators.required, Validators.maxLength(255), Validators.pattern(/\S/)]],
+      subtitle: ['', Validators.maxLength(255)],
+      code: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(50)]],
+      is_active: [true],
     });
+    this.codeSubscription = bindAutomaticCode(this.form.controls.name, this.form.controls.code);
   }
 
-  form!: FormGroup;
-
-  private formInit(): void {
-    this.form = this.fb.group({
-      name: ['', [Validators.required]],
-    });
+  ngOnDestroy(): void {
+    this.codeSubscription.unsubscribe();
   }
 
-  create() {
-    this.subscription = this._warehouse
-      .store(this.form.value)
-      .subscribe((resp: any) => {
-        console.log(resp);
-        this.warehouse = resp.data;
-        this.emitWarehouse.emit(resp.data);
-      });
+  submit(): void {
+    if (this.saving) return;
+    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    const values = this.form.getRawValue();
+    this.save.emit({ ...values, name: values.name.trim(), subtitle: values.subtitle.trim() || null, code: values.code.trim(), branch_id: this.parentId });
   }
 }

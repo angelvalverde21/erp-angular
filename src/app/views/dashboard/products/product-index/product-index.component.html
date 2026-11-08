@@ -10,22 +10,63 @@
         <span class="product-list-count">{{ products.length }} {{ products.length === 1 ? 'producto cargado' : 'productos cargados' }}</span>
     </div>
 
-    <table class="table table-hover mb-0 align-middle product-table">
-        <caption class="visually-hidden">Catálogo de productos con categoría, precio en soles, fecha de creación y acceso a edición.</caption>
+    <div class="table-responsive product-table-scroll" tabindex="0" role="region" aria-label="Productos y controles de orden">
+    <table class="table table-hover mb-0 align-middle product-table" [class.product-table-sortable]="sortable">
+        <caption class="visually-hidden">Catálogo de productos con categoría, stock, precio en soles, fecha de creación y acceso a edición.</caption>
         <thead>
             <tr>
-                <th scope="col" class="text-center d-none d-lg-table-cell product-code">Código</th>
-                <th scope="col">Producto</th>
-                <th scope="col" class="d-none d-md-table-cell product-category">Categoría</th>
-                <th scope="col" class="text-end product-price">Precio <span>PEN</span></th>
-                <th scope="col" class="d-none d-xl-table-cell product-created">Fecha de creación</th>
+                <th scope="col" class="text-center product-code" [class.d-none]="!sortable" [class.d-lg-table-cell]="!sortable" [attr.aria-sort]="columnSort('id')">
+                    @if (sortable) {
+                    <button type="button" class="product-column-sort" [class.product-column-sort-active]="sortBy === 'id'" (click)="sortChange.emit('id')" aria-label="Ordenar por código">
+                        Código<i [class]="sortIcon('id')" aria-hidden="true"></i>
+                    </button>
+                    } @else { Código }
+                </th>
+                <th scope="col" [attr.aria-sort]="columnSort('name')">
+                    @if (sortable) {
+                    <button type="button" class="product-column-sort" [class.product-column-sort-active]="sortBy === 'name'" (click)="sortChange.emit('name')" aria-label="Ordenar por producto">
+                        Producto<i [class]="sortIcon('name')" aria-hidden="true"></i>
+                    </button>
+                    } @else { Producto }
+                </th>
+                <th scope="col" class="product-category" [class.d-none]="!sortable" [class.d-md-table-cell]="!sortable" [attr.aria-sort]="columnSort('category')">
+                    @if (sortable) {
+                    <button type="button" class="product-column-sort" [class.product-column-sort-active]="sortBy === 'category'" (click)="sortChange.emit('category')" aria-label="Ordenar por categoría">
+                        Categoría<i [class]="sortIcon('category')" aria-hidden="true"></i>
+                    </button>
+                    } @else { Categoría }
+                </th>
+                <th scope="col" class="text-end product-stock" [attr.aria-sort]="columnSort('stock_total')">
+                    @if (sortable) {
+                    <button type="button" class="product-column-sort" [class.product-column-sort-active]="sortBy === 'stock_total'" (click)="sortChange.emit('stock_total')" aria-label="Ordenar por stock">
+                        Stock<i [class]="sortIcon('stock_total')" aria-hidden="true"></i>
+                    </button>
+                    } @else { Stock }
+                </th>
+                <th scope="col" class="text-end product-price" [attr.aria-sort]="columnSort('price')">
+                    @if (sortable) {
+                    <button type="button" class="product-column-sort" [class.product-column-sort-active]="sortBy === 'price'" (click)="sortChange.emit('price')" aria-label="Ordenar por precio">
+                        Precio <span>PEN</span><i [class]="sortIcon('price')" aria-hidden="true"></i>
+                    </button>
+                    } @else { Precio <span>PEN</span> }
+                </th>
+                <th scope="col" class="product-created" [class.d-none]="!sortable" [class.d-xl-table-cell]="!sortable" [attr.aria-sort]="columnSort('created_at')">
+                    @if (sortable) {
+                    <button type="button" class="product-column-sort" [class.product-column-sort-active]="sortBy === 'created_at'" (click)="sortChange.emit('created_at')" aria-label="Ordenar por fecha de creación">
+                        Fecha de creación<i [class]="sortIcon('created_at')" aria-hidden="true"></i>
+                    </button>
+                    } @else { Fecha de creación }
+                </th>
                 <th scope="col" class="text-center product-actions">Acciones</th>
             </tr>
         </thead>
         <tbody>
+            @if (loading) {
+            <tr><td colspan="7" class="product-table-loading"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span><span role="status">Cargando productos...</span></td></tr>
+            } @else {
             @for (product of products; track product.id) {
             <tr class="product-row" (click)="getProduct(product.id)">
-                <td class="text-center d-none d-lg-table-cell product-id">#{{ product.id }}</td>
+                <td class="text-center product-id" [class.d-none]="!sortable" [class.d-lg-table-cell]="!sortable">#{{ product.id }}</td>
                 <td>
                     <div class="product-identity">
                         <span class="product-thumbnail" aria-hidden="true">
@@ -39,13 +80,16 @@
                             <button type="button" class="product-name" (click)="$event.stopPropagation(); getProduct(product.id)">
                                 {{ product.name || 'Producto sin nombre' }}
                             </button>
-                            <span class="product-mobile-category d-md-none">{{ product.category?.name || 'Sin categoría' }}</span>
-                            <span class="product-mobile-code d-lg-none">#{{ product.id }}</span>
+                            <span class="product-mobile-category d-md-none" [class.d-none]="sortable">{{ product.category?.name || 'Sin categoría' }}</span>
+                            <span class="product-mobile-code d-lg-none" [class.d-none]="sortable">#{{ product.id }}</span>
                         </div>
                     </div>
                 </td>
-                <td class="d-none d-md-table-cell">
+                <td [class.d-none]="!sortable" [class.d-md-table-cell]="!sortable">
                     <span class="product-category-badge">{{ product.category?.name || 'Sin categoría' }}</span>
+                </td>
+                <td class="text-end product-stock">
+                    <span class="product-stock-value" [class.product-stock-available]="(product.stock_total ?? 0) > 0">{{ product.stock_total ?? '—' }}</span>
                 </td>
                 <td class="text-end product-amount">
                     @if (product.price !== null && product.price !== undefined) {
@@ -54,25 +98,33 @@
                     <span class="product-missing-price">Sin precio</span>
                     }
                 </td>
-                <td class="d-none d-xl-table-cell product-date">{{ (product.created_at | DateShopify) || 'Sin fecha' }}</td>
+                <td class="product-date" [class.d-none]="!sortable" [class.d-xl-table-cell]="!sortable">{{ (product.created_at | DateShopify) || 'Sin fecha' }}</td>
                 <td class="text-center">
                     <button type="button" class="btn btn-outline-secondary product-edit"
                         [attr.aria-label]="'Editar ' + (product.name || 'producto ' + product.id)"
                         title="Editar producto" (click)="$event.stopPropagation(); getProduct(product.id)">
                         <i class="fa-solid fa-pen" aria-hidden="true"></i>
                     </button>
+                    <button type="button" class="btn btn-outline-secondary product-edit ms-1"
+                        [attr.aria-label]="'Duplicar ' + (product.name || 'producto ' + product.id)"
+                        [disabled]="duplicating" title="Duplicar producto"
+                        (click)="$event.stopPropagation(); duplicateProduct(product)">
+                        <i class="fa-regular fa-copy" aria-hidden="true"></i>
+                    </button>
                 </td>
             </tr>
             } @empty {
             <tr>
-                <td colspan="6" class="product-empty">
+                <td colspan="7" class="product-empty">
                     <span class="product-empty-icon" aria-hidden="true"><i class="fa-solid fa-box-open"></i></span>
                     <h3>No hay productos para mostrar</h3>
                     <p>Los productos registrados aparecerán aquí. Si realizaste una búsqueda, prueba con otro término.</p>
                 </td>
             </tr>
             }
+            }
         </tbody>
     </table>
+    </div>
     <div #bottom class="product-load-trigger" aria-hidden="true"></div>
 </section>

@@ -1,25 +1,4 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-
-
-<div class="card mb-3">
-
-    <!-- <div class="card-header">
-        Horarios de Trabajo
-    </div> -->
-
-    <div class="card-body px-0">
-        <app-schedule-index [employee_id]="employee_id" [schedules]="schedules"></app-schedule-index>
-    </div>
-
-    <div class="card-footer" style="border-top: 0;">
-        <div class="d-flex justify-content-end align-items-center">
-            <span class="text-muted me-2">Total Horas:</span>
-            <span class="text-muted"></span>
-        </div>
-    </div>
-
-</div>
-
-}
+<section class="personnel-card mb-3">
+  <header class="personnel-card-header"><div><h2>Horario semanal</h2><p>Define los días presenciales, remotos y de descanso del empleado.</p></div></header>
+  <app-schedule-index [employee_id]="employee_id" [schedules]="schedules || []"></app-schedule-index>
+</section>

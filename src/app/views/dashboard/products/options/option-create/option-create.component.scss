@@ -1,0 +1,9 @@
+:host { display: block; }
+.option-create-form { padding: .9rem; border-radius: .65rem; background: var(--cui-tertiary-bg, #f8fafc); }
+.option-create-form > label { display: block; margin-bottom: .55rem; font-size: .7rem; font-weight: 650; color: var(--cui-secondary-color, #64748b); }
+.option-create-controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .5rem; }
+.form-select { min-width: 0; height: 2.4rem; padding-left: .65rem; border-radius: .45rem; font-size: .75rem; }
+.option-add-button { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: 2.4rem; padding: .5rem .65rem; border: 1px solid var(--cui-border-color, #dbe1e8); border-radius: .45rem; background: var(--cui-body-bg, #fff); color: var(--cui-body-color, #334155); font-size: .72rem; font-weight: 600; }
+.option-add-button:disabled { opacity: .45; cursor: default; }
+.option-add-button:hover:not(:disabled) { background: var(--cui-secondary-bg, #f1f5f9); }
+.option-add-button:focus-visible { outline: 2px solid var(--cui-primary, #5856d6); outline-offset: 2px; }

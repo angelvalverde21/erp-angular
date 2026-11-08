@@ -1,104 +1,53 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
-import { CourierService } from '../courier.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subject, finalize, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { faSave } from '@fortawesome/free-solid-svg-icons';
-import { phoneValidator } from '../../../../shared/validators/phone.validator';
+import { CourierService } from '../courier.service';
 import { CourierFormComponent } from '../courier-form/courier-form.component';
 import { ButtonSaveComponent } from 'src/app/views/shared/components/buttons/button-save/button-save.component';
+import { Courier, createCourierForm, courierErrorMessage } from '../courier.model';
 
 @Component({
   selector: 'app-courier-create',
-  imports: [
-    ReactiveFormsModule,
-    JsonPipe,
-    CourierFormComponent,
-    ButtonSaveComponent,
-  ],
+  imports: [CourierFormComponent, ButtonSaveComponent],
   templateUrl: './courier-create.component.html',
   styleUrl: './courier-create.component.scss'
 })
-export class CourierCreateComponent {
-
-  constructor(
-    private fb: FormBuilder,
-    private _courier: CourierService
-  ) { }
-
-  @Output() emitCourierCreate = new EventEmitter<any>();
-  @Input() button_text: string = 'Guardar';
-
-  faSave = faSave;
-
-  disabledButton: boolean = false;
-  loadingIcon: boolean = false;
+export class CourierCreateComponent implements OnInit, OnDestroy {
+  @Output() emitCourierCreate = new EventEmitter<Courier>();
+  @Input() button_text = 'Crear courier';
 
   form!: FormGroup;
-  @Input() roles: any[] = [];
+  loadingIcon = false;
+  private destroy$ = new Subject<void>();
+
+  constructor(private fb: FormBuilder, private courierService: CourierService) {}
 
   ngOnInit(): void {
-    this.formInit();
+    this.form = createCourierForm(this.fb);
   }
 
-  courier: any;
-
-  create() {
-
-    if (!this.form.valid) {
+  create(): void {
+    if (this.loadingIcon) return;
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    Swal.fire({
-      title: 'Espere...',
-      html: 'Registrando courier',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    })
-
-
     this.loadingIcon = true;
-    this.disabledButton = true;
-
-    this._courier.store(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
-      next: (resp: any) => {
-        Swal.fire('Guardado', 'El courier ha sido creado correctamente', 'success');
-        console.log(resp);
-        this.courier = resp.data;
-        this.loadingIcon = false;
-        this.emitCourierCreate.emit(resp.data);
-        this.disabledButton = false;
+    this.courierService.store(this.form.getRawValue()).pipe(
+      takeUntil(this.destroy$),
+      finalize(() => this.loadingIcon = false),
+    ).subscribe({
+      next: (response) => {
+        this.emitCourierCreate.emit(response.data);
       },
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrio un problema al crear. Intentalo nuevamente.', 'error');
-        console.error(error);
-        this.loadingIcon = false;
-        this.disabledButton = false;
-      },
+      error: (error) => Swal.fire('No se pudo crear', courierErrorMessage(error), 'error'),
     });
   }
-
-  destroy$ = new Subject<void>();
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
-  private formInit(): void {
-    this.form = this.fb.group({
-      name: ['', [Validators.required]],
-      phone: ['', phoneValidator],
-      email: [''],
-      document_number: [''],
-      is_cash_on_delivery: [null, [Validators.required]],
-      is_freight_collect: [null, [Validators.required]],
-      is_express_shipping: [null, [Validators.required]],
-    });
-  }
-
 }

@@ -1,52 +1,41 @@
-<div class="">
-  <table class="table table-hover mb-0 align-middle">
-    <thead class="table-light">
-      <tr>
-        <th scope="col" class="text-center">Dia</th>
-        <th scope="col" class="text-center">Fecha</th>
-        <th scope="col" class="text-center">Nombre</th>
-        <th scope="col" class="text-center">Entrada</th>
-        <th scope="col" class="text-center">Salida</th>
-        <!-- <th scope="col" class="text-center">Horas</th> -->
-        <th scope="col" class="text-center">Almuerzo</th>
-        <th scope="col" class="text-center">Horas Laborados</th>
-        <!-- <th scope="col" class="text-center">Horas Ideales</th> -->
-        <th scope="col" class="text-center">Descuentos / Extra</th>
-        <th scope="col" class="text-center" style="width: 250px">Observ.</th>
-        <!-- <th scope="col" class="text-center">Asistencia</th>/ -->
-        <!-- <th scope="col" class="text-center"></th> -->
-        <th scope="col" class="text-center"></th>
-      </tr>
-    </thead>
-
+@if (employee) {
+  <div class="personnel-filters">
+    <span class="personnel-badge active">{{ duration(workedMinutes) }} computados</span>
+    <span class="personnel-badge warning">{{ lateCount }} tardanzas</span>
+    <span class="personnel-badge danger">{{ missingCount }} faltas</span>
+  </div>
+}
+<div class="table-responsive">
+  <table class="table personnel-table">
+    <thead><tr><th>Fecha</th><th>Empleado</th><th>Entrada</th><th>Salida</th><th>Estado</th><th>Tiempo computado</th><th class="text-end">Acción</th></tr></thead>
     <tbody>
-      @for (attendance of attendances; track $index) {
-        <tr app-attendance-index-row [attendance]="attendance" [class.table-danger]="attendance.missing"></tr>
+      @for (row of attendances; track $index) {
+        <tr>
+          <td><strong>{{ row.date | date:'dd MMM yyyy' }}</strong><small>{{ row.date | date:'EEEE' }}</small></td>
+          <td><strong>{{ row.employee_name || 'Empleado sin asignar' }}</strong>
+            @if (row.comment) { <small>{{ row.comment }}</small> }
+          </td>
+          <td>{{ row.check_in?.slice(0, 5) || '—' }}</td>
+          <td>{{ row.check_out?.slice(0, 5) || '—' }}</td>
+          <td><span class="personnel-badge" [class.active]="!row.missing && !row.is_late && !row.incomplete"
+            [class.warning]="row.is_late || row.incomplete" [class.danger]="row.missing">{{ state(row) }}</span></td>
+          <td>{{ duration(row.paid_minutes ?? row.minutes_computed) }}</td>
+          <td class="text-end"><button type="button" class="personnel-button" (click)="edit(row, editor)">
+            <i class="fa-solid" [class.fa-pen]="row.id" [class.fa-plus]="!row.id" aria-hidden="true"></i>{{ row.id ? 'Editar' : 'Registrar' }}
+          </button></td>
+        </tr>
+      } @empty {
+        <tr><td colspan="7"><div class="personnel-empty"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+          <strong>No hay asistencias para mostrar</strong><p>Selecciona otro período o registra una asistencia.</p>
+        </div></td></tr>
       }
-      <tr>
-        <td colspan="5"></td>
-        <td class="text-center">
-          @if (employee?.type == 'partime') {
-          } @else {
-            {{ sum_minutes_break | minutesToHours }}
-          }
-        </td>
-        <td class="text-center">
-          <h6>{{ sum_minutes_worked | minutesToHours }}</h6>
-        </td>
-        <!-- <td class="text-center">{{ sum_minutes_ideal | minutesToHours }}</td> -->
-        <td class="text-center">{{ sum_salary_extra | pen }}</td>
-        <!-- <td class="text-center">{{ employee.salary/2 + sum_salary_extra | pen }}</td> -->
-        <td colspan="5"></td>
-      </tr>
-
-      <tr>
-        <td colspan="14" class="text-center">
-          <h4 class="py-3">
-            <span class="text-secondary">{{ employee?.salary / 2 | pen }} {{ sum_salary_extra | pen }}</span> = {{ employee?.salary / 2 + sum_salary_extra | pen }}
-          </h4>
-        </td>
-      </tr>
     </tbody>
   </table>
 </div>
+<ng-template #editor let-modal>
+  <div class="modal-header"><div><h2 class="modal-title fs-5">{{ editing?.id ? 'Editar asistencia' : 'Registrar asistencia' }}</h2>
+    <p class="personnel-muted mt-1">Revisa el empleado y sus marcaciones.</p></div>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body p-4"><app-attendance-edit [attendance]="editing" (emitAttendanceUpdate)="updated($event)"></app-attendance-edit></div>
+</ng-template>

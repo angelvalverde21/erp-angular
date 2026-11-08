@@ -2,7 +2,7 @@
     <input 
         [(ngModel)]="name" (keyup)="keyUpSearch($event)" 
         type="text" class="form-control is-required"
-        placeholder="* Distrito" aria-label="address"
+        [id]="inputId || null" [placeholder]="placeholder" aria-label="Distrito"
         aria-describedby="Distrito"
         [disabled]="isDisabled"
         (blur)="onTouchedCb?.()"

@@ -1,11 +1,30 @@
-<form [formGroup]="form" (ngSubmit)="create()">
-
-
-  <app-product-form [form]="form" [categories]="categories" [brands]="brands"></app-product-form>
-
-  <app-button color="dark" [icon]="faPlus" [disabled]="disabledButton" [spinner]="loadingIcon"
-    (action)="create()">Crear Producto</app-button>
-
-  <!-- {{ form.value | json }} -->
-
+<form class="product-create-editor" [formGroup]="form" (ngSubmit)="create()" [attr.aria-busy]="loadingIcon">
+  <section class="product-create-card" aria-labelledby="create-product-information">
+    <header class="product-create-card-heading">
+      <span class="product-create-symbol" aria-hidden="true"><i class="fa-solid fa-box-open"></i></span>
+      <div><h2 id="create-product-information">Información del producto</h2><p>Los campos con un asterisco son obligatorios.</p></div>
+    </header>
+    <fieldset class="product-create-fields" [disabled]="loadingIcon">
+      <app-product-form [form]="form" [categories]="categories" [brands]="brands"></app-product-form>
+    </fieldset>
+  </section>
+  <aside class="product-create-sidebar">
+    <section class="product-create-card" aria-labelledby="create-product-save">
+      <header class="product-create-card-heading"><div><h2 id="create-product-save">Crear en el catálogo</h2><p>Revisa los datos antes de continuar.</p></div></header>
+      <div class="product-create-summary">
+        <span class="product-create-summary-label">Nombre del producto</span>
+        <p class="product-create-name">{{ form.get('name')?.value || 'Tu nuevo producto' }}</p>
+        <div class="product-create-check"><i class="fa-solid" [class.fa-check]="form.get('name')?.valid" [class.fa-minus]="form.get('name')?.invalid" aria-hidden="true"></i><span>Nombre {{ form.get('name')?.valid ? 'completo' : 'pendiente' }}</span></div>
+        <div class="product-create-check"><i class="fa-solid" [class.fa-check]="form.get('category_id')?.valid" [class.fa-minus]="form.get('category_id')?.invalid" aria-hidden="true"></i><span>Categoría {{ form.get('category_id')?.valid ? 'seleccionada' : 'pendiente' }}</span></div>
+      </div>
+      <div class="product-create-save">
+        <button class="product-primary-action" type="submit" [disabled]="form.invalid || loadingIcon">
+          @if (loadingIcon) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Creando producto… }
+          @else { <i class="fa-solid fa-plus" aria-hidden="true"></i>Crear producto }
+        </button>
+        <p>Al crear el producto podrás agregar imágenes, precios y variantes.</p>
+      </div>
+    </section>
+    <p class="product-create-tip"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i><span>Usa un nombre claro y una categoría precisa para encontrarlo fácilmente.</span></p>
+  </aside>
 </form>

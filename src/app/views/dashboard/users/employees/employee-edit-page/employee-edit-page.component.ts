@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { Component, effect, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { EmployeeEditComponent } from './employee-edit/employee-edit.component';
 import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
@@ -73,6 +73,12 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
       this.employee_id = params['employee_id'];
     });
 
+    effect(() => {
+      const employee = this._employee.receiveSignal();
+      if (!employee || Number(employee.id) !== Number(this.employee_id)) return;
+      this.employee = employee;
+      this.is_sales = (employee.roles ?? []).includes('sales') || !!employee.tag_sales;
+    });
     config.backdrop = 'static';
     config.keyboard = false;
     
@@ -83,7 +89,7 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.employeeInit();
-    this.rolesInit();
+    
 
   }
 
@@ -103,12 +109,12 @@ export class EmployeeEditPageComponent implements OnInit, OnDestroy {
         console.log(resp);
         this._employee.setSignal(this.employee);
         this.summary.sum_payments = this.employee.balance;
-        this.is_sales = this.employee.user.roles.includes('sales');
+        this.is_sales = (this.employee.roles ?? []).includes('sales') || !!this.employee.tag_sales;
         this.loading = false
       },
 
       error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al traer los datos del empleado. Inténtalo nuevamente.', 'error');
+        this.loading = false; Swal.fire('Error', 'No se pudo cargar el empleado. Inténtalo nuevamente.', 'error');
         console.error(error);
       },
 

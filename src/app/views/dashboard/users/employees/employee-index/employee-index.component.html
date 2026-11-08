@@ -1,38 +1,24 @@
-<div>
-    <table class="table table-hover mb-0 align-middle">
-        <thead class="table-light">
-            <tr>
-                <th class="text-center">#</th>
-                <th style="width: 125px;">Nombre</th>
-                <th class="d-none d-md-table-cell">DNI</th>
-                <th style="width: 125px;" class="d-none d-md-table-cell">Sueldo</th>
-                <th class="d-none d-md-table-cell">Status</th>
-                <th class="d-none d-md-table-cell">Roles</th>
-                <th class="text-center d-none d-md-table-cell">Comision</th>
-                <th>Minutos</th>
-                <th>Sueldo</th>
-
-                <!-- <th class="text-center">Fecha de ingreso</th> -->
-                <th class="text-center">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @for (employee of employees; track employee.id) {
-
-            <!-- {{ employee | json }} -->
-
-                <tr app-employe-index-row [employee]="employee"></tr>
-            }
-
-            <!-- <tr>
-                <td colspan="7"></td>
-                <td></td>
-                <td>S/. </td>
-                <td></td>
-
-            </tr> -->
-
-        </tbody>
-    </table>
+<div class="table-responsive">
+  <table class="table personnel-table">
+    <thead><tr><th>Empleado</th><th>Documento</th><th>Jornada / áreas</th><th>Sueldo mensual</th><th>Marcación</th><th>Estado</th><th class="text-end">Acción</th></tr></thead>
+    <tbody>
+      @for (employee of employees; track employee.id) {
+        <tr>
+          <td><a class="personnel-person" [routerLink]="[employee.id]">
+            <span class="personnel-avatar">{{ initials(employee.name) }}</span>
+            <span><strong>{{ employee.name }}</strong><small>{{ employee.email || employee.account?.email || employee.phone || 'Sin contacto registrado' }}</small></span>
+          </a></td>
+          <td>{{ employee.document_number || '—' }}<small>{{ employee.phone || 'Sin teléfono' }}</small></td>
+          <td>{{ employee.type === 'partime' ? 'Tiempo parcial' : employee.type === 'fulltime' ? 'Tiempo completo' : 'Sin definir' }}
+            <small>{{ (employee.roles || []).join(' · ') || 'Sin áreas asignadas' }}</small></td>
+          <td>{{ employee.salary !== null ? (employee.salary | currency:'PEN':'symbol':'1.2-2') : 'Sin definir' }}</td>
+          <td>{{ employee.biometric_code || 'Sin código' }}<small>{{ employee.attendances_count || 0 }} registros</small></td>
+          <td><span class="personnel-badge" [class.active]="employee.status">{{ employee.status ? 'Activo' : 'Inactivo' }}</span></td>
+          <td class="text-end"><a class="personnel-button" [routerLink]="[employee.id]" [attr.aria-label]="'Abrir ficha de ' + employee.name">Ver ficha<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></td>
+        </tr>
+      } @empty {
+        <tr><td colspan="7"><div class="personnel-empty"><i class="fa-solid fa-users" aria-hidden="true"></i><strong>No se encontraron empleados</strong><p>Prueba otra búsqueda o agrega un empleado.</p></div></td></tr>
+      }
+    </tbody>
+  </table>
 </div>

@@ -23,6 +23,7 @@ export class ManufactureOrderVariantIndexComponent implements OnInit, OnDestroy 
   manufacture_id: number = 0;
   purchases: any;
   loading: boolean = false;
+  error = '';
 
   constructor(
     private _manufactureVariantService: ManufactureVariantService,
@@ -51,6 +52,7 @@ export class ManufactureOrderVariantIndexComponent implements OnInit, OnDestroy 
 
   kardexesInit() {
 
+    this.error = '';
     this.loading = true;
     //seteamos el id de la orden de compra para que el servicio lo use en sus llamadas
 
@@ -66,6 +68,8 @@ export class ManufactureOrderVariantIndexComponent implements OnInit, OnDestroy 
       },
 
       error: (error: any) => {
+        this.loading = false;
+        this.error = 'No se pudieron cargar los productos. Intenta nuevamente.';
         Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         console.error(error);
       },

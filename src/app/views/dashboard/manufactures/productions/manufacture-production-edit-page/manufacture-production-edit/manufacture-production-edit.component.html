@@ -1,19 +1,14 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-
-<div class="card">
-
-
-    <div class="card-body">
-
-        <app-manufacture-production-form [form]="form"></app-manufacture-production-form>
-
-        <app-button-save (click)="update()" [spinner]="disabledButton" [disabled]="disabledButton">Guardar
-            cambios</app-button-save>
-
+@if (loading) { <app-loading></app-loading> } @else {
+<section class="production-panel">
+  <header class="production-section-heading"><div><h2>Información general</h2><p>Actualiza el nombre con el que identificas esta producción.</p></div></header>
+  <form class="production-panel-body" [formGroup]="form" (ngSubmit)="update()">
+    <app-manufacture-production-form [form]="form"></app-manufacture-production-form>
+    <div class="production-form-actions">
+      <button type="submit" class="manufacture-primary-action" [disabled]="disabledButton">
+        @if (disabledButton) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }
+        {{ disabledButton ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
     </div>
-
-</div>
-<!-- {{ form.value | json }} -->
+  </form>
+</section>
 }

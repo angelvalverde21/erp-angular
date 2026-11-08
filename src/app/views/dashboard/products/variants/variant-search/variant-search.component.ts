@@ -1,44 +1,36 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { InputGroupComponent } from '@shared/components/form/input-group/input-group.component';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { VariantIndexComponent } from '../variant-index/variant-index.component';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, Subject, Subscription, takeUntil } from 'rxjs';
 import { ProductService } from '../../../products/product.service';
-import Swal from 'sweetalert2';
-import { ButtonComponent } from '@shared/components/buttons/button/button.component';
-import { VoidIndexComponent } from '@shared/components/void-index/void-index.component';
-import { VariantIndexSelectedComponent } from '../variant-index-selected/variant-index-selected.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { VariantIndexFormComponent } from '../variant-index-form/variant-index-form.component';
 
 @Component({
   selector: 'app-variant-search',
   imports: [
-    InputGroupComponent,
     VariantIndexComponent,
-    FormsModule,
-    ButtonComponent,
     ReactiveFormsModule,
-    VoidIndexComponent,
-    VariantIndexSelectedComponent,
     LoadingComponent,
     VariantIndexFormComponent,
   ],
   templateUrl: './variant-search.component.html',
   styleUrl: './variant-search.component.scss'
 })
-export class VariantSearchComponent implements OnInit {
+export class VariantSearchComponent implements OnInit, OnDestroy {
 
-  search$ = new Subject<string>();
-  products: any;
-  variants: any;
+  private static nextId = 0;
+  readonly searchId = `variant-search-${VariantSearchComponent.nextId++}`;
+  private searchRequest?: Subscription;
+  searchError = false;
+  products: any[] = [];
+  variants: any[] = [];
   @Output() emitVariantsSelected = new EventEmitter<any[]>();
 
   @Input() type_form: boolean = false; //indica que el tipo de listado que desplegara sera del tipo formulario para que el cliente pueda seleccionar la cantidad de cada variante que desea agregar al lote, en lugar de solo seleccionar las variantes.
 
-  @Input() title: string = 'Buscar Variantes';
-  
+  @Input() title: string = 'Agregar seleccionados';
+
   buttonDisabled: boolean = true;
 
   form!: FormGroup;
@@ -53,75 +45,45 @@ export class VariantSearchComponent implements OnInit {
   loading: boolean = false;
 
   ngOnInit(): void {
-
-    this.form = this.fb.group({
-      search: ['']
-    });
-
-    // this.search$
-    //   .pipe(debounceTime(300))
-    //   .subscribe(value => {
-    //     this.getSearch(value);
-    //   });
-
-    this.form.get('search')?.valueChanges.pipe(debounceTime(300)).subscribe(value => {
-
-      this.getSearch();
-
-    });
-
-
-    
-
+    this.form = this.fb.group({ search: [''] });
+    this.form.get('search')!.valueChanges.pipe(
+      debounceTime(300), takeUntil(this.destroy$),
+    ).subscribe(() => this.getSearch());
   }
 
-  faMagnifyingGlass = faMagnifyingGlass;
-
-  search: string = '';
-
-  // onSearchChange(value: string) {
-  //   this.search$.next(value);
-  // }
-
-  receiveFormValuesChanged(data: any){
-    console.log("data desde receiveFormValue");
-    
-    console.log(data);
-
-    if (data.status === "VALID") {
-
-      this.buttonDisabled = false;
-    }else{
-      this.buttonDisabled = true; 
-    }
-    
+  receiveFormValuesChanged(data: any): void {
+    this.buttonDisabled = data.status !== 'VALID';
   }
 
-  getSearch() {
+  clearSearch(): void {
+    this.form.get('search')!.setValue('', { emitEvent: false });
+    this.getSearch();
+  }
 
-    if (!this.form.get('search')?.value) {
-      this.products = [];
-      this.variants = [];
+  getSearch(): void {
+    this.searchRequest?.unsubscribe();
+    this.products = [];
+    this.variants = [];
+    this.selected_variants = {};
+    this.variantsSelected = [];
+    this.buttonDisabled = true;
+    this.searchError = false;
+    const search = String(this.form.get('search')?.value ?? '').trim();
+    if (!search) {
+      this.loading = false;
       return;
     }
-
     this.loading = true;
-
-    this._product.search(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
-
+    this.searchRequest = this._product.search({ ...this.form.value, search }).pipe(takeUntil(this.destroy$)).subscribe({
       next: (resp: any) => {
-        console.log(resp);
-        this.products = resp.data;
-        this.variants = this.products.flatMap((product: any) => product.variants);
-        // this.variants = this.products;
+        this.products = resp.data ?? [];
+        this.variants = this.products.flatMap((product: any) => product.variants ?? []);
         this.loading = false;
       },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
-        console.error(error);
+      error: () => {
+        this.searchError = true;
+        this.loading = false;
       },
-
     });
   }
 
@@ -137,8 +99,6 @@ export class VariantSearchComponent implements OnInit {
   selected_variants: any = {};
 
   receiveSelectedVariants(variants: any) {
-
-    console.log("Selected variants:", variants);
     this.selected_variants = variants;
 
     if (Object.keys(variants).length > 0) {
@@ -154,25 +114,19 @@ export class VariantSearchComponent implements OnInit {
     if (this.buttonDisabled) {
       return;
     } else {
-      console.log("Adding variants:", this.selected_variants);
-      console.log("Adding variants:", this.variantsSelected);
+
       this.emitVariantsSelected.emit(this.variantsSelected);
     }
 
   }
 
-  variantsSelected: any;
+  variantsSelected: any = [];
 
   receiveVariantsSelected(variantsSelected: any){
-    // this.emitVariantsSelected.emit(variantsSelected);
-    console.log("Received variants selected:", variantsSelected);
     this.variantsSelected = variantsSelected;
   }
 
 
-  receiveValues(values: any){
-    console.log(values);
-    
-  }
+
 
 }

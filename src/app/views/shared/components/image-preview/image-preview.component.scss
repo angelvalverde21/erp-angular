@@ -1,0 +1,24 @@
+:host {
+  display: inline-block;
+  max-width: 100%;
+  line-height: 0;
+}
+
+.image-preview-trigger {
+  display: inline-flex;
+  max-width: 100%;
+  border-radius: inherit;
+  cursor: zoom-in;
+
+  &:focus-visible {
+    outline: 2px solid var(--cui-primary, #6941c6);
+    outline-offset: 3px;
+  }
+}
+
+.image-preview-thumbnail {
+  display: block;
+  max-width: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}

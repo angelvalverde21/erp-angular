@@ -1,19 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faScissors, faTape, faEdit,
   faGears, faBoxesStacked, faPlus, faMinus,
   faArrowRightArrowLeft, faTrash, faCartFlatbed,
   faMoneyBill1, faSackDollar
 } from '@fortawesome/free-solid-svg-icons';
-import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
-import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import { DateShopifyPipe } from '@shared/pipes/date-shopify.pipe';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { KardexRegisterInComponent } from '../../../kardex/kardex-register-in/kardex-register-in.component';
-import { KardexRegisterOutComponent } from '../../../kardex/kardex-register-out/kardex-register-out.component';
 import { BaseService } from 'src/app/views/base.service';
 import { ButtonMenuComponent } from 'src/app/views/shared/components/buttons/button-menu/button-menu.component';
 
@@ -21,14 +15,8 @@ import { ButtonMenuComponent } from 'src/app/views/shared/components/buttons/but
   selector: '[app-manufacture-order-index-row]',
   imports: [
     DateShopifyPipe,
-    ButtonComponent,
-    FontAwesomeModule,
     CommonModule,
-    KardexRegisterInComponent,
-    KardexRegisterOutComponent,
-    NgbDropdownModule,
     RouterModule,
-    NgbProgressbarModule,
     ButtonMenuComponent
   ],
   templateUrl: './manufacture-order-index-row.component.html',

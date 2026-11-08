@@ -1,0 +1,4 @@
+@use '../purchase-order-ui';
+.purchase-order-detail-meta { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; color: var(--cui-secondary-color, #64748b); font-size: .8rem; margin: -.5rem 0 1.5rem; }
+.purchase-order-detail-meta:empty { display: none; }
+.purchase-order-detail-meta span { display: inline-flex; align-items: center; gap: .5rem; }

@@ -66,7 +66,7 @@
   .product-category { width: 160px; }
   .product-price { width: 130px; }
   .product-created { width: 160px; }
-  .product-actions { width: 90px; }
+  .product-actions { width: 115px; }
 }
 
 .product-row { cursor: pointer; }
@@ -104,6 +104,17 @@
 .product-mobile-category, .product-mobile-code { display: block; margin-top: .2rem; color: var(--product-muted); font-size: .7rem; }
 .product-category-badge { display: inline-block; padding: .3rem .65rem; border-radius: .4rem; background: var(--product-soft); color: var(--product-muted); font-size: .75rem; }
 .product-amount { font-size: .85rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.product-stock { width: 85px; white-space: nowrap; }
+.product-column-sort { display: inline-flex; align-items: center; gap: .45rem; padding: .35rem 0; border: 0; background: transparent; color: inherit; font: inherit; font-weight: inherit; text-align: inherit; cursor: pointer; }
+.product-column-sort i { color: var(--product-muted); font-size: .7rem; opacity: .55; }
+.product-column-sort:hover, .product-column-sort-active { color: var(--cui-primary, #5856d6); }
+.product-column-sort-active i { color: inherit; opacity: 1; }
+.product-column-sort:focus-visible { outline: 2px solid var(--cui-primary, #5856d6); outline-offset: 3px; border-radius: .2rem; }
+.product-table-sortable { min-width: 900px; }
+.product-table-sortable .product-code { width: 85px; }
+.product-table .product-table-loading { padding: 2.5rem 1rem; text-align: center; color: var(--product-muted); font-size: .85rem; }
+.product-stock-value { display: inline-block; min-width: 2.5rem; padding: .3rem .55rem; border-radius: .4rem; background: var(--product-soft); color: var(--product-muted); font-size: .8rem; font-weight: 600; font-variant-numeric: tabular-nums; text-align: center; }
+.product-stock-available { background: var(--cui-success-bg-subtle, #e8f5ee); color: var(--cui-success-text-emphasis, #166534); }
 .product-missing-price { color: var(--product-muted); font-size: .75rem; font-weight: 400; }
 .product-date { color: var(--product-muted); font-size: .75rem; line-height: 1.5; }
 .product-edit { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: .5rem; font-size: .75rem; }
@@ -124,7 +135,8 @@
     thead th { padding: .75rem .5rem; font-size: .65rem; }
     td { padding: .85rem .5rem; }
     .product-price { width: 95px; }
-    .product-actions { width: 65px; }
+    .product-stock { width: 60px; }
+    .product-actions { width: 90px; }
   }
   .product-identity { gap: .5rem; }
   .product-thumbnail { width: 34px; height: 34px; }

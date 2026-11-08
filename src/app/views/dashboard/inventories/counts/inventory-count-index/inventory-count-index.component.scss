@@ -1,0 +1,36 @@
+@use '../../inventory-table';
+:host { display: block; margin-left: 0; }
+.quantity-cell { font-variant-numeric: tabular-nums; font-weight: 600; }
+@media (max-width: 767.98px) { :host { margin-left: 0; } }
+
+.quantity-positive { color: var(--cui-success-text-emphasis, #166534); }
+.quantity-negative { color: var(--cui-danger-text-emphasis, #b42318); }
+.count-group-row { background: var(--section-tint, rgba(134, 90, 39, .05)); }
+.count-group-row .quantity-cell > strong { font-size: 1.1rem; }
+.count-captures-label, .count-capture-label { color: var(--cui-secondary-color, #64748b); font-size: .78rem; }
+.count-capture-label { display: flex; align-items: center; gap: .7rem; padding-left: .75rem; }
+
+.count-variant-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-top: .65rem;
+
+  > span {
+    display: inline-flex;
+    align-items: baseline;
+    gap: .35rem;
+    padding: .3rem .55rem;
+    border: 1px solid var(--cui-border-color, #e2e8f0);
+    border-radius: .45rem;
+    background: var(--cui-body-bg, #fff);
+    color: var(--cui-secondary-color, #64748b);
+    font-size: .73rem;
+    line-height: 1.4;
+  }
+
+  b {
+    color: var(--cui-body-color, #334155);
+    font-weight: 650;
+  }
+}

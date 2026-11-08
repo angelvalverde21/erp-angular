@@ -1,0 +1,13 @@
+<div class="inventory-page adjustment-page">
+  <app-inventory-section-header [sessions]="true" workspace="adjustments" [inventory]="inventory" [session]="session" title="Revisar ajuste" description="Revisa las diferencias antes de aprobar y aplicar cambios al stock.">
+    <a class="branch-back" [routerLink]="['../../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver al listado</a>
+    
+  </app-inventory-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} @if (!inventory) { <button class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button> }</div> }
+  @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando información…</div> }
+  @else if (inventory && options && record) {
+    @if (!editable) { <p class="workflow-note">Los ajustes al stock global requieren un inventario de toda la empresa que siga abierto. Los inventarios parciales conservan sus conteos sin modificar el stock global.</p> }
+    <section class="branch-panel workspace-form"><app-inventory-adjustment-edit [options]="options" [saving]="saving" [readOnly]="!editable" [record]="record!" [variants]="variants" [searching]="searching" [searchError]="searchError" (searchVariants)="searchVariants($event)" (save)="save($event)" (action)="transition($event)"></app-inventory-adjustment-edit></section>
+  }
+  
+</div>

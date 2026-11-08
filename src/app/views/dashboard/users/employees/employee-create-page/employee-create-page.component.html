@@ -1,22 +1,8 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-<app-head-page title="Agregar Empleado">
-    <app-button-back></app-button-back>
-</app-head-page>
-
-
-<div class="card">
-
-    <div class="card-body">
-
-        <app-employee-create [roles]="roles" (emitEmployeeCreate)="receiveEmployeeCreate($event)"></app-employee-create>
-
-    </div>
-    <!-- 
-    <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Total de productos: 2</small>
-    </div> -->
-
-</div>
-}
+<header class="personnel-heading">
+  <div class="personnel-heading-title"><span class="personnel-icon"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></span>
+    <div><span class="personnel-eyebrow">Equipo de trabajo</span><h1>Agregar empleado</h1><p>Registra sus datos y configura su jornada.</p></div>
+  </div>
+  <app-button-back></app-button-back>
+</header>
+@if (loading) { <div class="personnel-empty" role="status"><span class="spinner-border spinner-border-sm"></span>Cargando formulario…</div> }
+@else { <app-employee-create [roles]="roles" (emitEmployeeCreate)="receiveEmployeeCreate($event)"></app-employee-create> }

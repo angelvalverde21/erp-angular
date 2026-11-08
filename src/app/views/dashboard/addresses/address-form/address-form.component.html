@@ -1,3 +1,54 @@
+@if (presentation === 'branch') {
+<div class="branch-address-fields" [formGroup]="form">
+    <section>
+        <div class="address-section-heading"><h3>Ubicación de la sucursal</h3><p>Ingresa los datos necesarios para ubicar este local.</p></div>
+        <div class="row g-3">
+            <div class="col-12">
+                <label for="branch-address-name">Nombre de la dirección <span class="required-mark">*</span></label>
+                <input id="branch-address-name" class="form-control" formControlName="name" maxlength="255"
+                    placeholder="Ej. Local Miraflores" [class.is-invalid]="isInvalid('name')" ngbAutofocus>
+                @if (isInvalid('name')) { <div class="invalid-feedback">Ingresa un nombre para identificar la dirección.</div> }
+            </div>
+            <div class="col-12">
+                <label for="branch-address-primary">Dirección principal <span class="required-mark">*</span></label>
+                <input id="branch-address-primary" class="form-control" formControlName="primary" maxlength="255"
+                    placeholder="Avenida, calle o jirón y número" autocomplete="address-line1" [class.is-invalid]="isInvalid('primary')">
+                @if (isInvalid('primary')) { <div class="invalid-feedback">Ingresa la dirección del local.</div> }
+            </div>
+            <div class="col-md-6">
+                <label for="branch-address-district">Distrito <span class="required-mark">*</span></label>
+                <app-input-district-id formControlName="district_id" inputId="branch-address-district" placeholder="Busca y selecciona un distrito"
+                    [isInvalid]="isInvalid('district_id')"></app-input-district-id>
+                <small>Busca por distrito y elige una coincidencia.</small>
+            </div>
+            <div class="col-md-6">
+                <label for="branch-address-secondary">Complemento <span class="optional-field">Opcional</span></label>
+                <input id="branch-address-secondary" class="form-control" formControlName="secondary" maxlength="255"
+                    placeholder="Piso, oficina, interior o urbanización" autocomplete="address-line2">
+            </div>
+            <div class="col-12">
+                <label for="branch-address-reference">Referencia <span class="optional-field">Opcional</span></label>
+                <textarea id="branch-address-reference" class="form-control" formControlName="references" rows="2" maxlength="255"
+                    placeholder="Ej. Frente al parque, al lado de la farmacia"></textarea>
+            </div>
+        </div>
+    </section>
+    <details class="address-contact-details">
+        <summary><span><i class="fa-regular fa-address-card" aria-hidden="true"></i>Datos de contacto</span><span class="contact-optional">Opcional<i class="fa-solid fa-chevron-down" aria-hidden="true"></i></span></summary>
+        <div class="contact-fields row g-3">
+            <div class="col-12">
+                <label for="branch-address-phone">Teléfono de contacto</label>
+                <input id="branch-address-phone" class="form-control" type="tel" formControlName="phone" maxlength="30" placeholder="Ej. 999 999 999" autocomplete="tel">
+            </div>
+            <div class="col-md-6"><label>Tipo de documento</label><app-identity-selected formControlName="identity_id"></app-identity-selected></div>
+            <div class="col-md-6">
+                <label for="branch-address-document">Número de documento</label>
+                <input id="branch-address-document" class="form-control" formControlName="document_number" maxlength="11" placeholder="Ingresa el número de documento">
+            </div>
+        </div>
+    </details>
+</div>
+} @else {
 <form [formGroup]="form">
     <div class="row">
 
@@ -27,9 +78,10 @@
 
         <div class="col-lg-12 col-12">
             <app-input-group [icon]="faPhone">
-                <input type="number" class="form-control is-required"
-                    [ngClass]="isInvalid('phone') ? 'is-invalid' : '' " placeholder="* Celular" formControlName="phone"
-                    required />
+                <input type="tel" class="form-control"
+                    [ngClass]="isInvalid('phone') ? 'is-invalid' : '' "
+                    [placeholder]="['courier', 'store'].includes(form.get('addressable_type')?.value) ? 'Teléfono (opcional)' : '* Celular'"
+                    formControlName="phone" [required]="!['courier', 'store'].includes(form.get('addressable_type')?.value)" />
             </app-input-group>
 
         </div>
@@ -65,3 +117,4 @@
     </div>
 
 </form>
+}

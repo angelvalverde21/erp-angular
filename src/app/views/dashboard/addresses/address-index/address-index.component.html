@@ -1,3 +1,46 @@
+@if (addressable_type === 'courier') {
+<div class="table-responsive">
+    <table class="table courier-office-table align-middle mb-0">
+        <caption class="visually-hidden">Oficinas y agencias del courier</caption>
+        <colgroup><col class="office-name-column"><col class="office-address-column"><col class="office-phone-column"><col class="office-district-column"><col class="office-action-column"></colgroup>
+        <thead><tr>
+            <th scope="col">Oficina / agencia</th>
+            <th scope="col">Dirección</th>
+            <th scope="col">Teléfono</th>
+            <th scope="col">Distrito</th>
+            <th scope="col"><span class="visually-hidden">Acciones</span></th>
+        </tr></thead>
+        <tbody>
+            @for (address of addresses; track address.id) {
+            <tr>
+                <th scope="row">
+                    <div class="office-identity">
+                        <span class="office-mark" aria-hidden="true"><i class="fa-regular fa-building"></i></span>
+                        <span class="office-name">{{ address.name }}</span>
+                    </div>
+                </th>
+                <td>
+                    <div class="office-address">{{ address.primary || 'Sin dirección registrada' }}</div>
+                    @if (address.secondary) { <small class="office-detail">{{ address.secondary }}</small> }
+                    @if (address.references) { <small class="office-detail"><span>Ref.</span> {{ address.references }}</small> }
+                </td>
+                <td>
+                    @if (address.phone) {
+                        <a class="office-phone" [href]="'tel:' + address.phone">{{ address.phone }}</a>
+                    } @else { <span class="office-detail">Sin teléfono</span> }
+                </td>
+                <td><span class="office-district">{{ address.district?.name || 'Sin distrito' }}</span><small class="office-detail">Ubigeo {{ address.district_id }}</small></td>
+                <td class="text-end">
+                    <button type="button" class="btn office-edit-button" (click)="openVerticallyCentered(content, address.id)" [attr.aria-label]="'Editar oficina ' + address.name">
+                        <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i><span>Editar</span>
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+} @else {
 <div class="table-responsive">
     <table class="table table-hover mb-0 align-middle">
         <thead class="table-light">
@@ -28,6 +71,7 @@
         </tbody>
     </table>
 </div>
+}
 
 <ng-template #content let-modal>
     <div class="modal-header">

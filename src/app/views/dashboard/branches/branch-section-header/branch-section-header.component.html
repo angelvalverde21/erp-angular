@@ -1,0 +1,43 @@
+<nav class="section-breadcrumb" aria-label="Ubicación en la organización">
+  @if (level === 'branches' && !creating) { <span aria-current="page">Sucursales</span> }
+  @else { <a [routerLink]="root">Sucursales</a> }
+  @if (level !== 'branches') {
+    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span>{{ currentBranch?.name || 'Sucursal' }}</span>
+    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    @if (level === 'warehouses' && !creating) { <span aria-current="page">Tiendas o almacenes</span> }
+    @else if (currentBranch || warehouse) { <a [routerLink]="warehousePath">Almacenes</a> }
+    @else { <span>Almacenes</span> }
+  }
+  @if (level === 'locations') {
+    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span class="warehouse-breadcrumb-name">{{ warehouse?.name || 'Almacén' }}@if (warehouse?.subtitle) { <small>{{ warehouse?.subtitle }}</small> }</span>
+    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    @if (!creating) { <span aria-current="page">Ubicaciones</span> }
+    @else if (warehouse) { <a [routerLink]="locationPath">Ubicaciones</a> }
+    @else { <span>Ubicaciones</span> }
+  }
+  @if (creating) { <i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span aria-current="page">{{ editing ? 'Editar registro' : 'Nuevo registro' }}</span> }
+</nav>
+
+@if (level !== 'branches') {
+  <div class="section-context" aria-label="Contexto de navegación">
+    <div class="context-item context-branch">
+      <span class="context-icon" aria-hidden="true"><i class="fa-solid fa-building"></i></span>
+      <div class="context-name"><small>Sucursal</small><strong>{{ currentBranch?.name || 'Cargando sucursal…' }}</strong>@if (currentBranch) { <div class="context-links"><a [routerLink]="branchEditPath">Editar sucursal</a>@if (level === 'locations' || creating) { <a [routerLink]="warehousePath">Ver almacenes</a> }</div> }</div>
+      @if (currentBranch?.code) { <div class="context-code"><small>Código de sucursal</small><code>{{ currentBranch?.code }}</code></div> }
+    </div>
+    @if (level === 'locations') {
+      <div class="context-item context-warehouse">
+        <span class="context-icon" aria-hidden="true"><i class="fa-solid fa-warehouse"></i></span>
+        <div class="context-name"><small>Almacén</small><strong>{{ warehouse?.name || 'Cargando almacén…' }}</strong>@if (warehouse?.subtitle) { <small>{{ warehouse?.subtitle }}</small> }@if (warehouse) { <div class="context-links"><a [routerLink]="warehouseEditPath">Editar almacén</a>@if (creating) { <a [routerLink]="locationPath">Ver ubicaciones</a> }</div> }</div>
+        @if (warehouse?.code) { <div class="context-code"><small>Código de almacén</small><code>{{ warehouse?.code }}</code></div> }
+      </div>
+    }
+  </div>
+}
+<header class="section-heading" [class.heading-warehouses]="level === 'warehouses'" [class.heading-locations]="level === 'locations'" aria-current="page">
+  <div class="section-identity">
+    <span class="section-icon" aria-hidden="true"><i class="fa-solid" [class.fa-building]="level === 'branches'" [class.fa-warehouse]="level === 'warehouses'" [class.fa-layer-group]="level === 'locations'"></i></span>
+    <div><span class="section-label"><span class="section-current-label">Sección actual</span> · {{ level === 'branches' ? 'Sedes de la empresa' : level === 'warehouses' ? 'Almacenamiento por sucursal' : 'Distribución dentro del almacén' }}</span><h1>{{ title }}</h1><p>{{ description }}</p></div>
+  </div>
+  <div class="section-actions"><ng-content></ng-content></div>
+</header>

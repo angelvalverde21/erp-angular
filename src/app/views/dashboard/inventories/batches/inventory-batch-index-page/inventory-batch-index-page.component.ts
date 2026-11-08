@@ -7,7 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { InventoryService } from '../../inventory.service';
 import Swal from 'sweetalert2';
 import { LoadingComponent } from 'src/app/views/shared/components/loading/loading.component';
-import { InventoryCreateComponent } from '../../inventory-create/inventory-create.component';
+import { InventoryBatchCreateComponent } from '../inventory-batch-create/inventory-batch-create.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InventoryBatchIndexComponent } from '../inventory-batch-index/inventory-batch-index.component';
 import { HeadTableComponent } from '@shared/components/head-table/head-table.component';
@@ -20,7 +20,7 @@ import { HeadTableComponent } from '@shared/components/head-table/head-table.com
     InventoryBatchIndexComponent,
     ButtonAddComponent,
     LoadingComponent,
-    InventoryCreateComponent,
+    InventoryBatchCreateComponent,
     HeadTableComponent
   ],
   templateUrl: './inventory-batch-index-page.component.html',

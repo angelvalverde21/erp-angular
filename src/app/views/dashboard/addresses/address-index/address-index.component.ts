@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { AddressEditComponent } from '../address-edit/address-edit.component';
 import { JsonPipe } from '@angular/common';
@@ -20,6 +20,7 @@ export class AddressIndexComponent implements OnInit, OnDestroy {
   @Input() user_id: number = 0;
   @Input() addressable_id: number = 0;
   @Input() addressable_type: string = '';
+  @Output() emitUpdateAddress = new EventEmitter<any>();
 
   modal: any;
   current_address: any;
@@ -47,12 +48,19 @@ export class AddressIndexComponent implements OnInit, OnDestroy {
     this.addresses = this.addresses.map(address =>
       address.id === updatedAddress.id ? updatedAddress : address
     );
+    if (this.addressable_type === 'courier') {
+      this.modal?.close();
+    }
+    this.emitUpdateAddress.emit(updatedAddress);
   }
 
   ngOnInit(): void {
   }
 
   ngOnDestroy(): void {
+    if (this.addressable_type === 'courier') {
+      this.modal?.dismiss();
+    }
   }
 
   closeModal() {

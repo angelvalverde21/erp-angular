@@ -1,6 +1,4 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
-import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { Router, RouterModule } from '@angular/router';
 import { faBarcode, faBagShopping, faCalculator, faRightLeft, faSackDollar, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -12,8 +10,6 @@ import { BaseService } from 'src/app/views/base.service';
 @Component({
   selector: 'app-order-widget',
   imports: [
-    HeadPageComponent,
-    ButtonLinkComponent,
     RouterModule,
     FontAwesomeModule,
     CommonModule,
@@ -81,17 +77,17 @@ export class OrderWidgetComponent implements OnInit {
 
     this.widgets = [
       {
-        title: 'Inicio',
-        subtitle: '',
-        value: `${this.summary?.created_at}`,
+        title: 'Resumen',
+        subtitle: 'Fecha de creación',
+        value: this.summary?.created_at ?? null,
         link: ['./'],
         exact: true,
         icon: faCalendar,
         type: 'date'
       },
       {
-        title: 'Pedido Inicial',
-        subtitle: `${this.summary?.count_variants} Variantes`,
+        title: 'Productos',
+        subtitle: `${this.summary?.count_variants ?? 0} variantes · Unidades pedidas`,
         value: this.summary?.sum_variants ? this.summary?.sum_variants : 0,
         link: ['./variants'],
         icon: faCalculator,
@@ -99,7 +95,7 @@ export class OrderWidgetComponent implements OnInit {
       },
       {
         title: 'Pagos',
-        subtitle: `${this.summary?.count_payments} Pagos`,
+        subtitle: `${this.summary?.count_payments ?? 0} pagos registrados`,
         value: this.summary?.sum_payments ? this.summary?.sum_payments : 0,
         link: ['./payments'],
         icon: faSackDollar,
@@ -107,7 +103,7 @@ export class OrderWidgetComponent implements OnInit {
       },
       {
         title: 'Recepción',
-        subtitle: 'Recibidos',
+        subtitle: 'Unidades recibidas',
         value: this.summary?.sum_kardexes ? this.summary?.sum_kardexes : 0,
         link: ['./kardexes'],
         icon: faRightLeft,

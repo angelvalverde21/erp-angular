@@ -1,27 +1,12 @@
-import { CommonModule, JsonPipe } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { faHome, faUser, faPhone, faImagePortrait, faLocationDot, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { InputGroupComponent } from '@shared/components/form/input-group/input-group.component';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TwoDecimalsDirective } from 'src/app/core/directives/two-decimals.directive';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { ButtonComponent } from '@shared/components/buttons/button/button.component';
-import { SupplierCreateComponent } from '@dashboard/users/suppliers/supplier-create/supplier-create.component';
-import { SupplierSelectedComponent } from '@dashboard/users/suppliers/supplier-selected/supplier-selected.component';
-import { InputDistrictIdComponent } from '@dashboard/addresses/input-district-id/input-district-id.component';
 
 @Component({
   selector: 'app-manufacture-production-form',
   imports: [
-    InputGroupComponent,
-    CommonModule,
-    InputDistrictIdComponent,
     ReactiveFormsModule,
-    JsonPipe,
-    TwoDecimalsDirective,
-    SupplierSelectedComponent,
-    ButtonComponent,
-    SupplierCreateComponent
   ],
   templateUrl: './manufacture-production-form.component.html',
   styleUrl: './manufacture-production-form.component.scss',

@@ -1,40 +1,25 @@
 <div class="table-responsive">
-    <table class="table table-hover mb-0 align-middle">
-        <thead class="table-light">
-            <tr>
-                <th class="text-center">#</th>
-                <th>Nombre</th>
-                <th>DNI</th>
-                <th>Telefono</th>
-                <th>Status</th>
-                <th>Creado</th>
-                <th class="text-center">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @for (courrier of couriers; track courrier.user.id) {
-
-            <tr (click)="getCourierId(courrier.id)">
-                <td class="text-center">{{ courrier.id }}</td>
-                <td>{{ courrier.user.name }}</td>
-                <td>{{ courrier.user.document_number }}</td>
-                <td>{{ courrier.user.phone }}</td>
-                                <td>
-                    @if(courrier.user.status){
-                        <span class="badge text-bg-secondary text-white">Activo</span>
-                    }@else{
-                        <span class="badge text-bg-danger text-white">Bloqueado</span>
-                    }
-                </td>
-                <td>{{ courrier.user.created_at | DateShopify }}</td>
-                <td class="text-center">
-                    <div class="controls d-flex justify-content-center align-items-center">
-                    </div>
-                </td>
-            </tr>
-            }
-
-        </tbody>
-    </table>
+  <table class="table align-middle mb-0 courier-table">
+    <thead><tr>
+      <th>Courier</th><th>Tipo de entrega</th><th>Condiciones de pago</th><th>Oficinas</th><th>Estado</th><th><span class="visually-hidden">Acciones</span></th>
+    </tr></thead>
+    <tbody>
+      @for (courier of couriers; track courier.id) {
+        <tr>
+          <td><div class="courier-identity"><span class="courier-avatar" aria-hidden="true">{{ courier.name.slice(0, 1) }}</span>
+            <div><a [routerLink]="[courier.id]" class="courier-name">{{ courier.name }}</a><small>{{ courier.phone || 'Sin teléfono de contacto' }}</small></div>
+          </div></td>
+          <td><span class="delivery-badge">{{ deliveryLabels[courier.delivery_type] }}</span></td>
+          <td><div class="payment-badges">
+            @if (courier.is_cod) { <span>Contra entrega</span> }
+            @if (courier.freight_collect) { <span>Flete por cobrar</span> }
+            @if (!courier.is_cod && !courier.freight_collect) { <small class="text-muted">Pago anticipado</small> }
+          </div></td>
+          <td>{{ courier.addresses_count ?? courier.addresses?.length ?? 0 }}</td>
+          <td><span class="status-badge" [class.blocked]="courier.status !== 1"><i aria-hidden="true"></i>{{ courier.status === 1 ? 'Activo' : 'Bloqueado' }}</span></td>
+          <td class="text-end"><a [routerLink]="[courier.id]" class="btn btn-sm btn-outline-secondary" [attr.aria-label]="'Editar ' + courier.name">Editar</a></td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>

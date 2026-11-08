@@ -1,37 +1,17 @@
 import { Component, Input } from '@angular/core';
-import { DateShopifyPipe } from '../../../../shared/pipes/date-shopify.pipe';
-import { ActivatedRoute, Router } from '@angular/router';
-import { JsonPipe, PercentPipe } from '@angular/common';
-import { faPen, faEllipsis } from '@fortawesome/free-solid-svg-icons';
-import { ButtonEditComponent } from '@buttons/button-edit/button-edit.component';
-import { EmployeIndexRowComponent } from '../employe-index-row/employe-index-row.component';
+import { CurrencyPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-employee-index',
-  imports: [
-    DateShopifyPipe,
-    JsonPipe,
-    ButtonEditComponent,
-
-    EmployeIndexRowComponent
-  ],
+  imports: [CurrencyPipe, RouterLink],
   templateUrl: './employee-index.component.html',
-  styleUrl: './employee-index.component.scss'
+  styleUrl: './employee-index.component.scss',
 })
 export class EmployeeIndexComponent {
-
   @Input() employees: any[] = [];
 
-  faPen = faEllipsis;
-
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
-
+  initials(name: string): string {
+    return name.split(' ').filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
   }
-
-  // getEmployeeId(id: number = 0) {
-  //   this.router.navigate([id], { relativeTo: this.route });
-  // }
 }

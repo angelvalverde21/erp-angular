@@ -1,0 +1,19 @@
+.address-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e9edf4;
+}
+.address-required-hint { color: #8a96a9; font-size: .73rem; }
+.address-required-hint > span { color: #b66767; }
+.address-action-buttons { display: flex; align-items: center; gap: .65rem; }
+.address-action-buttons .btn { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 42px; padding: .6rem 1rem; border-radius: 9px; font-size: .8rem; font-weight: 600; }
+.address-cancel { color: #65738b; background: #fff; border: 1px solid #dfe5ee; }
+.address-cancel:hover { background: #f7f9fc; color: #34435a; }
+.address-save { background: #385a9b; border: 1px solid #385a9b; color: #fff; }
+.address-save:hover { background: #2e4c85; color: #fff; }
+@media (max-width: 575px) { .address-action-buttons { width: 100%; } .address-action-buttons .btn { flex: 1; } }

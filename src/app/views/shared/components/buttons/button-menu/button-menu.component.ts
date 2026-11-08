@@ -1,27 +1,24 @@
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { ButtonEditComponent } from "../button-edit/button-edit.component";
-
-
 @Component({
   selector: 'app-button-menu',
   imports: [
     NgbDropdownModule,
     RouterModule,
-    FontAwesomeModule,
-    ButtonEditComponent
-],
+    FontAwesomeModule
+  ],
   templateUrl: './button-menu.component.html',
   styleUrl: './button-menu.component.scss'
 })
 export class ButtonMenuComponent {
+  private static nextId = 0;
+  readonly toggleId = `action-menu-${ButtonMenuComponent.nextId++}`;
+  readonly faEllipsis = faEllipsis;
+  readonly faTrash = faTrash;
 
-  faEdit = faEdit;
-  faTrash = faTrash;
-
-  @Input() menus: any[] = []; 
-
+  @Input() menus: any[] = [];
+  @Input() context = '';
 }

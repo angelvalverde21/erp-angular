@@ -1,55 +1,16 @@
-<div class="widgets mb-3">
-    <div class="row">
-
-        @for (widget of widgets; track $index) {
-
-        <div class="col-lg-3 col-md-3 col-6">
-
-            <a [routerLink]="widget.link">
-
-                <div class="widget-manufacture mb-3 card text-white" routerLinkActive="bg-primary"
-                    [routerLinkActiveOptions]="{ exact: widget.exact ?? false }">
-
-                    <div class="card-header">
-                        <h6 class="my-0 widget-title">
-                            <fa-icon [icon]="widget.icon" class="me-2"></fa-icon>
-                            {{ widget.title }}
-                        </h6>
-                    </div>
-
-                    <div class="card-body">
-
-
-                        @switch (widget.type) {
-                        @case ('currency') {
-                        <h5>{{ widget.value | pen }}</h5>
-                        }
-
-                        @case ('units') {
-                        <h5>{{ widget.value }}</h5>
-                        }
-
-                        @case ('date') {
-                        <h5>{{ widget.value | date:'dd/MM/yyyy' }}</h5>
-                        }
-
-                        @default {
-                        <h5>{{ widget.value }}</h5>
-                        }
-
-                        }
-
-
-                        <small class="text-white-75">{{ widget.subtitle }}</small>
-                    </div>
-
-                </div>
-
-            </a>
-
-        </div>
-
-        }
-
-    </div>
-</div>
+<nav class="purchase-order-navigation" aria-label="Secciones de la orden de compra">
+  @for (widget of widgets; track widget.title) {
+  <a class="purchase-order-metric" [routerLink]="widget.link" routerLinkActive="purchase-order-metric-active"
+    [routerLinkActiveOptions]="{ exact: widget.exact ?? false }" ariaCurrentWhenActive="page">
+    <div class="purchase-order-metric-label"><span><fa-icon [icon]="widget.icon" aria-hidden="true"></fa-icon>{{ widget.title }}</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></div>
+    <strong>
+      @switch (widget.type) {
+      @case ('currency') { {{ widget.value | pen }} }
+      @case ('date') { {{ widget.value ? (widget.value | date:'dd/MM/yyyy') : 'Sin fecha' }} }
+      @default { {{ widget.value }} }
+      }
+    </strong>
+    <span class="purchase-order-metric-subtitle">{{ widget.subtitle }}</span>
+  </a>
+  }
+</nav>

@@ -1,102 +1,45 @@
-<div class="card mb-3">
+<header class="personnel-heading">
+  <div><span class="personnel-eyebrow">Últimas 3 quincenas</span><h1>Resumen laboral</h1>
+    <p>Quincenas del 1 al 15 y del 16 al último día de cada mes.</p></div>
+  <button class="personnel-button" type="button" [disabled]="loading" (click)="load()"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Actualizar</button>
+</header>
+@if (loading) {
+  <div class="personnel-card personnel-empty mb-3" role="status"><span class="spinner-border spinner-border-sm"></span>Consultando quincenas…</div>
+} @else if (error) {
+  <div class="personnel-card personnel-empty mb-3" role="alert">{{ error }}<button class="personnel-button" (click)="load()">Reintentar</button></div>
+} @else if (employee) {
+  <div class="personnel-note mb-3"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+    <p>Sueldo mensual registrado: <strong>{{ employee.salary !== null ? (employee.salary | currency:'PEN':'symbol':'1.2-2') : 'Sin definir' }}</strong>.
+      La quincena en curso se calcula hasta hoy. Las faltas se identifican según el horario configurado y las marcaciones disponibles.</p>
+  </div>
 
-    <div class="card-body">
-        <app-head-table type="employee_attendance" [is_redirect]="false"
-            (emitSearchResult)="receive($event)"></app-head-table>
-    </div>
-
-</div>
-
-<div ngbAccordion [closeOthers]="true">
-    <div ngbAccordionItem>
-        <h2 ngbAccordionHeader>
-            <button ngbAccordionButton>Resumen de Asistencias</button>
-        </h2>
-        <div ngbAccordionCollapse>
-            <div ngbAccordionBody>
-                <ng-template>
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
-                    wolf moon
-                    officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                    Brunch 3
-                    wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch
-                    et.
-                    Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad
-                    vegan
-                    excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth
-                    nesciunt
-                    you probably haven't heard of them accusamus labore sustainable VHS.
-                </ng-template>
-            </div>
+  @for (period of periods; track period.id) {
+    <section class="personnel-card fortnight-card mb-3">
+      <header class="personnel-card-header">
+        <div>
+          <span class="personnel-eyebrow">{{ period.label }}</span>
+          <h2 class="mt-2">{{ period.start_date | date:'dd MMM yyyy' }} — {{ period.end_date | date:'dd MMM yyyy' }}</h2>
+          <p>Calculado hasta el {{ period.computed_through | date:'dd/MM/yyyy' }}</p>
         </div>
-    </div>
-
-    <div ngbAccordionItem>
-        <h2 ngbAccordionHeader>
-            <button ngbAccordionButton>Resumen de Adelantos</button>
-        </h2>
-        <div ngbAccordionCollapse>
-            <div ngbAccordionBody>
-                <ng-template>
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
-                    wolf moon
-                    officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                    Brunch 3
-                    wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch
-                    et.
-                    Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad
-                    vegan
-                    excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth
-                    nesciunt
-                    you probably haven't heard of them accusamus labore sustainable VHS.
-                </ng-template>
-            </div>
-        </div>
-    </div>
-
-    <div ngbAccordionItem [collapsed]="false">
-        <h2 ngbAccordionHeader>
-            <button ngbAccordionButton>Detalles de pago</button>
-        </h2>
-        <div ngbAccordionCollapse>
-            <div ngbAccordionBody class="p-0">
-                <ng-template>
-                    <ul class="list-group list-group-flush" style="border-radius: 0.5rem;">
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>Sueldo Base ({{ employee.type }})</span>
-                            <h6>{{ employee?.salary | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</h6>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>Horas Laboradas</span>
-                            <h6>0</h6>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>Adelantos</span>
-                            <h6 class="text-danger">- {{ '0' | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</h6>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>Pago por hora (S/. 565/78h)</span>
-                            <h6>{{ 7.24 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>Comisiones de venta ({{ employee?.comission }}%)</span>
-                            <h6>{{ 7.24 | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h6>
-                        </li>
-
-                        <li
-                            class="list-group-item bg-dark text-white py-3 d-flex justify-content-between align-items-center">
-                            <span>Total a Pagar (Partime)</span>
-                            <!-- <h3>{{ 7.24 * hoursDecimal | currency:'PEN':'symbol':'1.2-2':'es-PE'}}</h3> -->
-                        </li>
-
-                    </ul>
-                </ng-template>
-            </div>
-        </div>
-    </div>
-</div>
+        <span class="personnel-badge" [class.active]="period.is_current">{{ period.is_current ? 'En curso' : 'Período anterior' }}</span>
+      </header>
+      <div class="fortnight-metrics">
+        <div><span>Tiempo computado</span><strong>{{ duration(period.worked_minutes) }}</strong></div>
+        <div><span>Días con marcación</span><strong>{{ period.recorded_days }}</strong></div>
+        <div><span>Tardanzas</span><strong [class.text-warning]="period.late_days">{{ period.late_days }}</strong></div>
+        <div><span>Faltas</span><strong [class.text-danger]="period.missing_days">{{ period.missing_days }}</strong></div>
+      </div>
+      <footer class="personnel-card-footer">
+        <span class="personnel-muted me-auto">{{ period.remote_days }} días remotos · {{ period.incomplete_days }} marcaciones incompletas</span>
+        <button class="personnel-button" type="button" (click)="toggle(period.id)" [attr.aria-expanded]="openPeriod === period.id"
+          [attr.aria-controls]="'fortnight-' + period.id">
+          {{ openPeriod === period.id ? 'Ocultar detalle' : 'Ver asistencias' }}
+          <i class="fa-solid" [class.fa-chevron-up]="openPeriod === period.id" [class.fa-chevron-down]="openPeriod !== period.id" aria-hidden="true"></i>
+        </button>
+      </footer>
+      @if (openPeriod === period.id) {
+        <div [id]="'fortnight-' + period.id"><app-attendance-index [attendances]="period.attendances" (attendanceChanged)="load()"></app-attendance-index></div>
+      }
+    </section>
+  }
+}

@@ -1,0 +1,16 @@
+<form class="catalog-search" role="search" aria-label="Buscar productos" (submit)="submit($event)">
+  <div class="catalog-search-heading">
+    <label for="catalog-search-input">Encuentra un producto</label>
+    <span>Busca por nombre en tu catálogo</span>
+  </div>
+  <div class="catalog-search-controls">
+    <div class="catalog-search-field">
+      <fa-icon [icon]="searchIcon" aria-hidden="true"></fa-icon>
+      <input #searchInput id="catalog-search-input" type="search" name="search" placeholder="Escribe el nombre del producto…" autocomplete="off" [value]="term" (input)="term = searchInput.value">
+      @if (term) {
+        <button type="button" class="catalog-search-clear" aria-label="Limpiar búsqueda" (click)="clear(searchInput)"><fa-icon [icon]="clearIcon"></fa-icon></button>
+      }
+    </div>
+    <button type="submit" class="catalog-search-submit">Buscar</button>
+  </div>
+</form>

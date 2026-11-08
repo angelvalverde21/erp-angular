@@ -1,0 +1,8 @@
+<div class="branch-page section-branches">
+  <app-branch-section-header level="branches" title="Editar sucursal" description="Actualiza los datos del registro seleccionado." [creating]="true" [editing]="true" >
+    <a class="branch-back" [routerLink]="['../../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver al listado</a>
+  </app-branch-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} @if (!record) { <button type="button" class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button> }</div> }
+  @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando registro…</div> }
+  @else if (record) { <section class="branch-panel branch-form-surface mb-3"><header class="branch-panel-heading"><h2>{{ record.name }}</h2><p>Edita los campos y guarda los cambios.</p></header><app-branch-edit [record]="record" [saving]="saving" [addresses]="addresses"  (save)="save($event)"></app-branch-edit></section> }
+</div>

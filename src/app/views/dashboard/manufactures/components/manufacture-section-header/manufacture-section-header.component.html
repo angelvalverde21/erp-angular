@@ -1,0 +1,24 @@
+<header class="manufacture-section-header">
+  @if (backLink) {
+  <a class="manufacture-back-link" [routerLink]="backLink"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>{{ backLabel }}</a>
+  }
+  <div class="manufacture-heading-row">
+    <div class="manufacture-heading-identity">
+      <span class="manufacture-heading-icon" aria-hidden="true"><i class="fa-solid" [class.fa-gears]="section === 'production'" [class.fa-cart-flatbed]="section === 'order'"></i></span>
+      <div>
+        <div class="manufacture-context"><span>{{ section === 'production' ? 'Fabricación' : 'Abastecimiento' }}</span>@if (reference) { <span class="manufacture-reference">{{ reference }}</span> }</div>
+        <h1>{{ title }}</h1>
+        @if (description) { <p>{{ description }}</p> }
+      </div>
+    </div>
+    @if (actionLink) {
+    <a class="manufacture-primary-action" [routerLink]="actionLink"><i class="fa-solid fa-plus" aria-hidden="true"></i>{{ actionLabel }}</a>
+    }
+  </div>
+  @if (showNavigation) {
+  <nav class="manufacture-section-switch" aria-label="Secciones de fabricación y abastecimiento">
+    <a [routerLink]="['/', store, 'dashboard', 'manufactures', 'productions']" [class.manufacture-section-current]="section === 'production'" [attr.aria-current]="section === 'production' ? 'page' : null"><i class="fa-solid fa-gears" aria-hidden="true"></i>Producciones</a>
+    <a [routerLink]="['/', store, 'dashboard', 'manufactures', 'orders']" [class.manufacture-section-current]="section === 'order'" [attr.aria-current]="section === 'order' ? 'page' : null"><i class="fa-solid fa-cart-flatbed" aria-hidden="true"></i>Órdenes de compra</a>
+  </nav>
+  }
+</header>

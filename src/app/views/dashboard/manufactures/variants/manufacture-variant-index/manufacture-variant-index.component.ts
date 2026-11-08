@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { ButtonComponent } from '@buttons/button/button.component';
-import { ButtonAddComponent } from '@buttons/button-add/button-add.component';
 import { ManufactureVariantRowComponent } from '../manufacture-variant-row/manufacture-variant-row.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faInbox } from '@fortawesome/free-solid-svg-icons';
@@ -14,9 +12,7 @@ import { ButtonPrintComponent } from '../../../../shared/components/buttons/butt
 @Component({
   selector: 'app-manufacture-variant-index',
   imports: [
-    ButtonComponent,
     ManufactureVariantRowComponent,
-    ButtonAddComponent,
     FontAwesomeModule,
     VariantSearchComponent,
     ButtonPrintComponent
@@ -127,6 +123,7 @@ export class ManufactureVariantIndexComponent implements OnInit {
         Swal.fire('Guardado', 'Las variantes han sido agregadas', 'success');
         console.log(resp);
         this.manufacture_variants = [...this.manufacture_variants, ...resp.data];
+        this.sumQuantity();
         this.loading = false;
         this.modal.close();
       },

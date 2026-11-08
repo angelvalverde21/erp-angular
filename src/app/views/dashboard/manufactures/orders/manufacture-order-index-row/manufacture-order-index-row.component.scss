@@ -1,31 +1,15 @@
-.table tbody tr tr{
-  font-size: 1rem !important;
-}
-
-button[ngbDropdownToggle]::after {
-  display: none !important;
-}
-
-.date-main {
-  font-weight: 400;
-  color: #344054;
-  font-size: 1rem;
-}
-.date-sub {
-  color: #9ca3af;
-  font-size: 0.73rem;
-}
-
-.avatar-circle {
-  width: 34px;
-  height: 34px;
-  font-size: 13px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  flex-shrink: 0;
-}
+:host { vertical-align: middle; }
+td { padding: 1.1rem 1rem; border-color: var(--cui-border-color, #e2e8f0); font-size: .875rem; }
+.purchase-order-name-cell { min-width: 250px; }
+.purchase-order-name { color: inherit; text-decoration: none; font-weight: 600; }
+.purchase-order-name:hover { text-decoration: underline; }
+.manufacture-row-actions { display: flex; align-items: center; justify-content: flex-end; gap: .5rem; }
+.manufacture-row-open { display: inline-flex; align-items: center; gap: .5rem; padding: .45rem .7rem; border: 1px solid var(--cui-border-color, #e2e8f0); border-radius: .5rem; color: var(--manufacture-accent, #087f76); font-size: .8rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.manufacture-row-open:hover { border-color: var(--manufacture-accent, #087f76); background: rgba(var(--manufacture-accent-rgb, 8, 127, 118), .06); }
+.manufacture-row-open:focus-visible { outline: 2px solid var(--manufacture-accent, #087f76); outline-offset: 2px; }
+.purchase-order-row-meta { display: flex; flex-wrap: wrap; gap: .3rem .8rem; color: var(--cui-secondary-color, #64748b); font-size: .75rem; margin-top: .4rem; }
+.purchase-order-number { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.purchase-order-received { display: inline-block; min-width: 2.5rem; padding: .3rem .6rem; border-radius: .4rem; background: var(--cui-success-bg-subtle, #e8f5ee); color: var(--cui-success-text-emphasis, #166534); font-weight: 600; font-variant-numeric: tabular-nums; }
+.purchase-order-date { font-size: .8rem; color: var(--cui-secondary-color, #64748b); min-width: 140px; }
 
 

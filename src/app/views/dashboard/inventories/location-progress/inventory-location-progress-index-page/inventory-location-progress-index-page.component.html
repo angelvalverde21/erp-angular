@@ -1,0 +1,13 @@
+<div class="inventory-page progress-page">
+  <app-inventory-section-header [sessions]="true" workspace="progress" [inventory]="inventory" [session]="session" title="Avance por ubicación" description="Controla el avance de las ubicaciones finales del inventario.">
+    <a class="branch-back" [routerLink]="['../sessions']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Sesiones</a>
+    @if (editable) { <a class="branch-action" [routerLink]="['./create']"><i class="fa-solid fa-plus" aria-hidden="true"></i>Registrar ubicación</a> }
+  </app-inventory-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} @if (!inventory) { <button class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button> }</div> }
+  @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando información…</div> }
+  @else if (inventory && !error ) {
+    @if (!editable) { <p class="workflow-note">El inventario o la sesión están cerrados. Los registros se muestran para consulta.</p> }
+    <p class="inventory-caption">{{ total }} registros encontrados</p><app-inventory-location-progress-index [records]="records"></app-inventory-location-progress-index>
+  }
+  @if (lastPage > 1) { <nav class="branch-pagination" aria-label="Paginación"><button class="branch-back" (click)="load(page - 1)" [disabled]="page <= 1 || loading">Anterior</button><span>{{ page }} de {{ lastPage }}</span><button class="branch-back" (click)="load(page + 1)" [disabled]="page >= lastPage || loading">Siguiente</button></nav> }
+</div>

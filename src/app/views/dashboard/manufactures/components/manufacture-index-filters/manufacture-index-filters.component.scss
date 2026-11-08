@@ -1,0 +1,17 @@
+@use '../../manufacture-theme';
+.manufacture-filters { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--cui-border-color, #e2e8f0); background: rgba(100, 116, 139, .025); }
+.manufacture-filter-grid { display: grid; grid-template-columns: minmax(15rem, 1fr) minmax(9rem, .42fr) minmax(9rem, .42fr) auto; gap: 1rem; align-items: end; }
+.manufacture-filter-grid label { display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
+.manufacture-filter-grid label > span:first-child { font-size: .75rem; font-weight: 600; }
+.manufacture-filter-grid input { min-height: 2.8rem; border-radius: .6rem; font-size: .875rem; color: var(--cui-body-color, #334155); }
+.manufacture-search-input { display: flex; align-items: center; gap: .6rem; padding-inline: .85rem; background: var(--cui-body-bg, #fff); border: 1px solid var(--cui-border-color, #dfe4eb); border-radius: .6rem; }
+.manufacture-search-input i { color: var(--cui-secondary-color, #64748b); font-size: .85rem; }
+.manufacture-search-input input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; }
+.manufacture-search-input:focus-within { outline: 2px solid rgba(var(--manufacture-accent-rgb), .35); outline-offset: 1px; }
+.manufacture-filter-grid .form-control:focus { border-color: var(--manufacture-accent); box-shadow: 0 0 0 .2rem rgba(var(--manufacture-accent-rgb), .12); }
+.manufacture-filter-actions { display: flex; gap: .5rem; }
+.manufacture-filter-help, .manufacture-filter-error { display: flex; align-items: center; gap: .45rem; font-size: .75rem; margin: .85rem 0 0; line-height: 1.6; }
+.manufacture-filter-help { color: var(--cui-secondary-color, #64748b); }
+.manufacture-filter-error { color: var(--cui-danger-text-emphasis, #b42318); }
+@media (max-width: 1199.98px) { .manufacture-filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .manufacture-search-field { grid-column: 1 / -1; } .manufacture-filter-actions { grid-column: 1 / -1; justify-content: flex-end; } }
+@media (max-width: 575.98px) { .manufacture-filters { padding: 1rem; } .manufacture-filter-grid { gap: .85rem; } .manufacture-filter-grid input { font-size: 1rem; } .manufacture-filter-actions > button { flex: 1; } }

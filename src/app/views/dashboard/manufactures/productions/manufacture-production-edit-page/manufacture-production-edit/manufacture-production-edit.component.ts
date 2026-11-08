@@ -1,12 +1,8 @@
 import { Component, effect, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
-import { ButtonSaveComponent } from '@shared/components/buttons/button-save/button-save.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { SupplierSelectedComponent } from '@dashboard/users/suppliers/supplier-selected/supplier-selected.component';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ManufactureProductionFormComponent } from '../../manufacture-production-form/manufacture-production-form.component';
 import { ManufactureProductionService } from '../../manufacture.production.service';
 import { ManufactureOrderService } from '../../../orders/manufacture.order.service';
@@ -19,11 +15,7 @@ import { ManufactureService } from '../../../manufacture.service';
   imports: [
     ManufactureProductionFormComponent,
     ReactiveFormsModule,
-    ButtonSaveComponent,
-    JsonPipe,
     LoadingComponent,
-    SupplierSelectedComponent,
-    FontAwesomeModule
   ],
   templateUrl: './manufacture-production-edit.component.html',
   styleUrl: './manufacture-production-edit.component.scss'
@@ -86,6 +78,8 @@ export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
   }
 
   update() {
+
+    if (this.disabledButton) return;
 
     console.log("click ok");
 

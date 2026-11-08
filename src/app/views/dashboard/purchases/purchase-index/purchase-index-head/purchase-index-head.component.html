@@ -1,5 +1,6 @@
 <div class="d-flex justify-content-between align-items-center">
 
+    @if (!actionsOnly) {
     <div class="d-flex align-items-center gap-2 flex-wrap">
 
         @if(purchase?.supplier?.user){
@@ -8,17 +9,20 @@
         <span class="text-provider"><i class="fas fa-user-tie me-1"></i>Sin proveedor</span>
         }
     </div>
+    }
 
     <div class="d-flex align-items-center gap-3">
-        <small class="fw-semibold text-dark"><i class="far fa-clock me-1 text-secondary"></i>
+        @if (!actionsOnly) {
+        <small class="fw-semibold text-body"><i class="far fa-clock me-1 text-secondary"></i>
             {{ purchase?.created_at | DateShopify }}
         </small>
+        }
 
         <div ngbDropdown class="d-inline-block">
-            <button type="button" class="btn btn-outline-dark btn-sm" id="dropdownBasic1" ngbDropdownToggle>
+            <button type="button" class="btn btn-outline-secondary btn-sm" [id]="'purchase-actions-' + purchase.id" [attr.aria-label]="'Acciones de la compra #' + purchase.id" ngbDropdownToggle>
                 <i class="fas fa-ellipsis-h"></i>
             </button>
-            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <div ngbDropdownMenu [attr.aria-labelledby]="'purchase-actions-' + purchase.id">
                 <button ngbDropdownItem class="btn-sm" (click)="openVerticallyCentered(content)">
                     <i class="fas fa-edit me-2 text-success"></i>Editar
                 </button>

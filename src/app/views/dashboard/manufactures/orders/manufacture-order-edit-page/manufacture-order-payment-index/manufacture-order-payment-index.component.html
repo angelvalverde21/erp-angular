@@ -1,10 +1,8 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-
-<!-- <app-user-head-table (emitSearchResult)="receiveSearchResult($event)" type=""></app-user-head-table> -->
-
-
-<app-payment-index [paymentable_type]="'manufacture'" [paymentable_id]="manufacture_id" [payments]="payments"></app-payment-index>
-
+@if (loading) { <app-loading></app-loading> } @else if (error) {
+<div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar los pagos</h3><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary" (click)="loadPayments()">Reintentar</button></div>
+} @else {
+<section class="production-panel purchase-order-payments">
+  <header class="production-section-heading"><div><h2>Pagos de la orden</h2><p>Registra los abonos y consulta las transacciones asociadas a este pedido.</p></div><span class="production-meta">{{ payments.length }} registros</span></header>
+  <div class="production-panel-body"><app-payment-index paymentable_type="manufacture" [paymentable_id]="manufacture_id" [payments]="payments"></app-payment-index></div>
+</section>
 }

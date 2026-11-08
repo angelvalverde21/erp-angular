@@ -1,0 +1,30 @@
+<main class="dash-page" [style.--area-accent]="definition.accent" [style.--area-tint]="definition.tint">
+  <nav class="dash-breadcrumb" aria-label="Navegación"><a [routerLink]="link('panels')">Dashboards</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span>{{ definition.name }}</span></nav>
+  <header class="dash-hero"><div class="dash-hero-title"><span class="dash-area-icon"><i class="fa-solid" [class]="definition.icon" aria-hidden="true"></i></span><div><span class="dash-eyebrow">{{ definition.key === 'ceo' ? 'DIRECCIÓN GENERAL' : 'MI EQUIPO' }}</span><h1>{{ definition.key === 'ceo' ? 'Vista ejecutiva' : definition.name }}</h1><p>{{ definition.description }}</p></div></div><button type="button" class="dash-refresh" [disabled]="loading" (click)="refresh()"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Actualizar</button></header>
+  <div class="dash-toolbar"><nav class="dash-tabs" aria-label="Dashboards disponibles">@for (area of availableAreas; track area.key) { <a [routerLink]="link('panels/' + area.key)" [class.active]="area.key === definition.key" [attr.aria-current]="area.key === definition.key ? 'page' : null">{{ area.name }}</a> }</nav><div class="dash-periods" aria-label="Periodo del reporte">@for (period of periods; track period) { <button type="button" [class.active]="days === period" [attr.aria-pressed]="days === period" (click)="changePeriod(period)">{{ period }} días</button> }</div></div>
+  @if (loading && !report) { <div class="dash-loading" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Preparando tu dashboard…</div> }
+  @else if (error && !report) { <div class="dash-empty" role="alert"><strong>{{ error }}</strong><button type="button" class="dash-refresh mt-3" (click)="refresh()">Reintentar</button></div> }
+  @else if (report) {
+    <div class="dash-report-meta"><span><i class="fa-solid fa-store" aria-hidden="true"></i>{{ report.store.name }}</span><span>{{ report.range.from | date:'dd/MM/yyyy' }} — {{ report.range.to | date:'dd/MM/yyyy' }}</span><span>Actualizado {{ report.updated_at | date:'HH:mm':'-0500' }} · Lima</span></div>
+    @if (error) { <div class="dash-refresh-warning" role="alert">{{ error }} Se conserva la última actualización.<button type="button" class="dash-refresh" (click)="refresh()">Reintentar</button></div> }
+    @if (report.area === 'ceo') {
+      <p class="dash-data-note mb-3"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Actualización automática cada 60 segundos mientras esta pestaña esté visible.</p>
+      @if (report.production_progress) { <app-production-progress [summary]="report.production_progress" [store]="base.store || ''"></app-production-progress> }
+    }
+    @for (section of report.sections; track section.key) {
+      <section class="dash-section" [style.--section-accent]="accent(section.key)">
+        <header class="dash-section-heading"><div><span class="dash-section-kicker"><i class="fa-solid" [class]="icon(section.key)" aria-hidden="true"></i>{{ section.title }}</span><h2>{{ section.description }}</h2></div>@if (!section.available) { <span class="dash-config-badge">Por configurar</span> } @else { <span class="dash-live-badge"><i aria-hidden="true"></i>Datos del ERP</span> }</header>
+        <div class="dash-metrics">@for (metric of section.metrics; track metric.label) { <article class="dash-metric"><span>{{ metric.label }}</span><strong>@if (metric.value === null) { — } @else if (metric.format === 'money') { {{ metric.value | currency:'PEN':'symbol':'1.2-2' }} } @else { {{ metric.value | number:'1.0-0' }} }</strong><small>{{ metric.hint || (metric.value === null ? 'Pendiente de configuración' : 'Datos registrados en el ERP') }}</small></article> }</div>
+        @if (section.trend?.length) { <article class="dash-chart"><header><div><h3>Evolución de pedidos</h3><p>Importe registrado por día</p></div><span>Últimos {{ days }} días</span></header><div class="dash-chart-bars" role="img" aria-label="Importe diario de pedidos">@for (point of section.trend; track point.date) { <div class="dash-chart-column" [title]="point.date + ': S/ ' + point.value"><div class="dash-chart-bar" [style.height.%]="barHeight(section, point.value)"></div></div> }</div><footer><span>{{ report.range.from | date:'dd MMM' }}</span><span>{{ report.range.to | date:'dd MMM' }}</span></footer></article> }
+        @if (section.available) {
+          <article class="dash-worklist"><header><h3>{{ section.items_title }}</h3><div>@for (action of section.actions; track action.path) { <a [routerLink]="link(action.path)">{{ action.label }}<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a> }</div></header>
+            @for (item of section.items; track item.id) { <a class="dash-work-row" [routerLink]="link(item.path)"><span class="dash-work-icon"><i class="fa-solid" [class]="section.key === 'marketing' ? 'fa-image' : 'fa-bag-shopping'" aria-hidden="true"></i></span><div><strong>{{ item.title }}</strong><small>{{ section.key === 'marketing' ? item.subtitle : (item.subtitle | date:'dd/MM/yyyy HH:mm') }}</small></div>@if (item.status) { <span class="dash-order-status">{{ statusLabels[item.status] || item.status }}</span> }@if (item.value !== null) { <span class="dash-work-amount">{{ item.value | currency:'PEN':'symbol':'1.2-2' }}</span> }<i class="fa-solid fa-chevron-right dash-row-chevron" aria-hidden="true"></i></a> }
+            @empty { <div class="dash-list-empty"><i class="fa-regular fa-circle-check" aria-hidden="true"></i><strong>{{ section.key === 'marketing' ? 'No hay productos por completar' : section.key === 'packing' ? 'No hay pedidos en la cola de preparación' : 'Todavía no hay pedidos en este periodo' }}</strong><span>Los nuevos registros aparecerán aquí.</span></div> }
+          </article>
+        }
+        <p class="dash-data-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>{{ section.note }}</p>
+      </section>
+    }
+    <footer class="dash-source-note">Primera versión · Datos locales de {{ report.store.name }} · {{ report.range.timezone }}</footer>
+  }
+</main>

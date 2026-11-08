@@ -11,6 +11,7 @@ export interface Product {
   slug: string;             // varchar, no nullable
   body?: string | null;     // text, nullable
   price?: number | null;    // decimal, nullable
+  stock_total?: number | null;
   user_id?: number | null;  // bigint, nullable
   store_id?: number | null; // bigint, nullable
   created_at?: string | null; // timestamp, nullable → se puede usar string o Date

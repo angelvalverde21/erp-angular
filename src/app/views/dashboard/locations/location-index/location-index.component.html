@@ -1,0 +1,29 @@
+@if (locations.length) {
+  <div class="location-forest" aria-label="Jerarquía de ubicaciones del almacén">
+    @if (trail.length) { <div class="location-selection" role="status">
+      <i class="fa-solid fa-location-crosshairs" aria-hidden="true"></i>
+      @if (trail.length) {
+        <div><strong>Ubicación seleccionada</strong><div class="location-selection-path">@for (location of trail; track location.id; let last = $last) { <button type="button" (click)="selectLocation.emit(location.id)" [attr.aria-current]="last ? 'location' : null">{{ location.name }}</button>@if (!last) { <i class="fa-solid fa-chevron-right" aria-hidden="true"></i> } }</div></div>
+      }
+    </div> }
+    <ng-container [ngTemplateOutlet]="locationTree" [ngTemplateOutletContext]="{ $implicit: nodes }"></ng-container>
+  </div>
+} @else { <div class="branch-state"><i class="fa-solid fa-layer-group" aria-hidden="true"></i><strong>Aún no hay ubicaciones</strong><p>Agrega una ubicación para comenzar.</p><a class="branch-action" [routerLink]="['./create']">Agregar ubicación</a></div> }
+
+<ng-template #locationTree let-items>
+  <ul class="location-tree">
+    @for (item of items; track item.id) {
+      <li [class.is-current-path]="ancestorIds.has(item.id) || item.id === selectedLocationId">
+        <article class="organization-record record-location" [class.location-current]="item.id === selectedLocationId" [class.location-ancestor]="ancestorIds.has(item.id)">
+          <span class="record-icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+          <div class="record-details"><small class="record-label">{{ item.parent_id ? 'Sububicación' : 'Ubicación del almacén' }}</small><h2><button type="button" class="location-name-button" (click)="selectLocation.emit(item.id)" [attr.aria-current]="item.id === selectedLocationId ? 'location' : null">{{ item.name }}</button></h2>@if (item.code) { <code>{{ item.code }}</code> }@if (item.children.length) { <button type="button" class="location-toggle" (click)="toggle(item.id)" [attr.aria-expanded]="!collapsed.has(item.id)" [attr.aria-controls]="'location-children-' + item.id"><i class="fa-solid" [class.fa-chevron-down]="!collapsed.has(item.id)" [class.fa-chevron-right]="collapsed.has(item.id)" aria-hidden="true"></i>{{ collapsed.has(item.id) ? 'Mostrar' : 'Ocultar' }} {{ item.children.length }} sububicaciones<span class="visually-hidden"> de {{ item.name }}</span></button> }</div>
+          <div class="record-actions">@if (item.id === selectedLocationId) { <span class="location-current-label"><i class="fa-solid fa-location-crosshairs" aria-hidden="true"></i>Seleccionada</span> }<span class="branch-badge" [class.active]="item.is_active" [attr.aria-label]="item.is_active ? 'Estado operativo: activa' : 'Estado operativo: inactiva'">{{ item.is_active ? 'Activa' : 'Inactiva' }}</span><a class="branch-edit-link" [routerLink]="['./', item.id, 'edit']"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>Editar ubicación<span class="visually-hidden"> {{ item.name }}</span></a><button type="button" class="btn btn-outline-danger btn-sm location-delete-button" (click)="deleteLocation.emit(item)" [disabled]="deletingId !== null || item.children.length > 0" [title]="item.children.length ? 'Elimina primero sus sububicaciones' : 'Eliminar ubicación'">@if (deletingId === item.id) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> } @else { <i class="fa-regular fa-trash-can" aria-hidden="true"></i> }Eliminar ubicación<span class="visually-hidden"> {{ item.name }}</span></button></div>
+          <div class="location-add-child"><a [routerLink]="['./create']" [queryParams]="{ parent_id: item.id }"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar sububicación<span class="visually-hidden"> dentro de {{ item.name }}</span></a></div>
+        </article>
+        @if (item.children.length) {
+          <div class="location-children" [id]="'location-children-' + item.id" [hidden]="collapsed.has(item.id)"><ng-container [ngTemplateOutlet]="locationTree" [ngTemplateOutletContext]="{ $implicit: item.children }"></ng-container></div>
+        }
+      </li>
+    }
+  </ul>
+</ng-template>

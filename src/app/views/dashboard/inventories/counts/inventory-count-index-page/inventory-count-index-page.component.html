@@ -1,0 +1,82 @@
+<div class="inventory-page count-page">
+  <app-inventory-section-header [sessions]="true" workspace="counts" [inventory]="inventory" [session]="session" title="Conteos" description="Registra cantidades físicas por variante, ubicación y ronda.">
+    <a class="branch-back" [routerLink]="['../../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Sesiones</a>
+  </app-inventory-section-header>
+  @if (session) {
+    <section class="count-session-location" [class.capture-ready]="locationLocked" [class.capture-readonly]="!editable" aria-label="Ubicación de captura">
+      <div class="session-warehouse-summary">
+        <div class="warehouse-symbol"><i class="fa-solid fa-warehouse" aria-hidden="true"></i></div>
+        <div class="session-warehouse-name">
+          <span class="capture-eyebrow">Almacén de la sesión</span>
+          <strong>{{ session.warehouse?.name || 'Almacén #' + session.warehouse_id }}</strong>
+          @if (session.warehouse?.subtitle) { <p class="warehouse-subtitle">{{ session.warehouse?.subtitle }}</p> }
+          @if (session.warehouse?.branch?.name) {
+            <span class="warehouse-branch"><i class="fa-regular fa-building" aria-hidden="true"></i>{{ session.warehouse?.branch?.name }}</span>
+          }
+        </div>
+      </div>
+      @if (editable) {
+        <div class="capture-workspace">
+          <div class="capture-heading">
+            <div>
+              <h2>{{ locationLocked ? 'Ubicación del conteo' : '¿Dónde vas a contar?' }}</h2>
+              <p>{{ locationLocked ? 'Las siguientes capturas se registrarán en esta ubicación.' : 'Elige la zona y después la fila del rack.' }}</p>
+            </div>
+            <span class="capture-status" [class.is-ready]="locationLocked"><i [class]="locationLocked ? 'fa-solid fa-circle-check' : 'fa-regular fa-circle'" aria-hidden="true"></i>{{ locationLocked ? 'Captura activa' : 'Por seleccionar' }}</span>
+          </div>
+          @if (locationLocked) {
+            <div class="capture-location capture-current" aria-live="polite">
+              <div class="capture-current-path">
+                <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                <div><strong>{{ selectedLocationLabel }}</strong>@if (selectedLocation?.code) { <small>{{ selectedLocation?.code }}</small> }</div>
+              </div>
+              <button type="button" class="branch-back capture-finish" (click)="finishCount()" [disabled]="savingCount"><i class="fa-solid fa-check" aria-hidden="true"></i>Finalizar captura</button>
+            </div>
+          } @else {
+            <div class="capture-location capture-location-fields">
+              @for (level of locationLevels; track $index; let depth = $index) {
+                <div class="capture-field">
+                  <label [for]="'count-capture-location-' + depth"><span class="capture-step" aria-hidden="true">{{ depth + 1 }}</span>{{ depth === 0 ? 'Zona o ubicación' : 'Fila o sububicación' }} <span class="capture-required" aria-hidden="true">*</span></label>
+                  <select #locationInput [id]="'count-capture-location-' + depth" class="form-select" [value]="level.selectedId ?? ''" (change)="chooseLocation(locationInput.value, depth)" [disabled]="loading || savingCount" required aria-describedby="capture-location-help">
+                    <option value="">{{ depth === 0 ? 'Selecciona una zona' : 'Selecciona una fila o sububicación' }}</option>
+                    @for (location of level.choices; track location.id) {
+                      <option [value]="location.id">{{ location.name }}</option>
+                    }
+                  </select>
+                </div>
+              }
+            </div>
+            <p id="capture-location-help" class="location-selection-help" role="status"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+              @if (!locationLevels.length) { Este almacén no tiene ubicaciones disponibles para contar. }
+              @else if (selectedLocationPath.length && !selectedLocation) { Selecciona la fila para habilitar el escáner. Cada captura quedará asociada a esa sububicación. }
+              @else { El escáner se habilitará al completar la selección de ubicación. }
+            </p>
+          }
+        </div>
+      }
+    </section>
+  }
+  @if (options && editable) {
+    <app-inventory-count-entry [inventoryId]="inventoryId" [sessionId]="sessionId" [locationId]="locationLocked ? selectedLocation?.id ?? null : null" (busyChange)="savingCount = $event" [options]="options" [readOnly]="!editable" (saved)="onCountSaved()" (editExisting)="editCount($event)"></app-inventory-count-entry>
+  }
+
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} @if (!inventory) { <button class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button> }</div> }
+  @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando información…</div> }
+  @if (inventory && session && options && !error) {
+    @if (!editable) { <p class="workflow-note">El inventario o la sesión están cerrados. Los registros se muestran para consulta.</p> }
+    <div class="count-view-toolbar">
+      <div><strong>Conteos de la sesión</strong><p>Explora el rack por ubicación o consulta el historial de capturas.</p></div>
+      <div class="count-view-switch" role="group" aria-label="Vista de conteos">
+        <button type="button" [class.is-active]="viewMode === 'rack'" [attr.aria-pressed]="viewMode === 'rack'" [disabled]="loading" (click)="setViewMode('rack')"><i class="fa-solid fa-layer-group" aria-hidden="true"></i>Rack virtual</button>
+        <button type="button" [class.is-active]="viewMode === 'history'" [attr.aria-pressed]="viewMode === 'history'" [disabled]="loading" (click)="setViewMode('history')"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>Historial</button>
+      </div>
+    </div>
+    @if (viewMode === 'rack') {
+      <app-inventory-rack [inventoryId]="inventoryId" [sessionId]="sessionId" [warehouseId]="session.warehouse_id!" [options]="options" [activeLocationId]="locationLocked ? selectedLocationId : null"></app-inventory-rack>
+    } @else if (!loading) {
+      <p class="inventory-caption">{{ total }} variantes encontradas@if (selectedLocation) { en {{ selectedLocationLabel }} }</p>
+      <app-inventory-count-index [records]="records"></app-inventory-count-index>
+    }
+  }
+  @if (viewMode === 'history' && lastPage > 1) { <nav class="branch-pagination" aria-label="Paginación"><button class="branch-back" (click)="load(page - 1)" [disabled]="page <= 1 || loading">Anterior</button><span>{{ page }} de {{ lastPage }}</span><button class="branch-back" (click)="load(page + 1)" [disabled]="page >= lastPage || loading">Siguiente</button></nav> }
+</div>

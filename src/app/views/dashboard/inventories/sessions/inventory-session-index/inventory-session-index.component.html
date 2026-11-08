@@ -1,0 +1,39 @@
+<section class="inventory-list" aria-labelledby="session-list-title">
+  <header class="inventory-list-header">
+    <div class="inventory-list-heading"><span class="inventory-list-icon" aria-hidden="true"><i class="fa-solid fa-stopwatch"></i></span><div><h2 id="session-list-title">Sesiones de conteo</h2><p>Consulta las jornadas, sus responsables y el estado del trabajo.</p></div></div>
+    <span class="inventory-page-count">{{ sessions.length }} en esta página</span>
+  </header>
+  <div class="inventory-table-scroll" tabindex="0" role="region" aria-label="Tabla de sesiones del inventario">
+    <table class="inventory-table session-table" [class.inventory-table-empty]="!sessions.length">
+      <caption class="visually-hidden">Sesiones del inventario con código, responsable, estado, inicio, término, observaciones y acceso a edición o consulta.</caption>
+      <thead><tr>
+        <th scope="col" class="inventory-id-column">Código</th>
+        <th scope="col" class="session-user-column">Responsable</th>
+        <th scope="col">Almacén</th>
+        <th scope="col" class="session-quantity-column">Unidades contadas</th>
+        <th scope="col" class="inventory-status-column">Estado</th>
+        <th scope="col" class="inventory-date-column">Inicio</th>
+        <th scope="col" class="inventory-date-column">Término</th>
+        <th scope="col">Observaciones</th>
+        <th scope="col" class="inventory-actions-column">Acciones</th>
+      </tr></thead>
+      <tbody>
+        @for (item of sessions; track item.id) {
+          <tr>
+            <td class="inventory-id">#{{ item.id }}</td>
+            <td><a class="inventory-name" [routerLink]="['./', item.id, 'edit']">{{ item.user?.name || 'Responsable no disponible' }}</a></td>
+            <td>{{ item.warehouse?.name || 'Sin almacén' }}@if (item.warehouse?.subtitle) { <small class="inventory-secondary">{{ item.warehouse?.subtitle }}</small> }<small class="inventory-secondary">{{ item.warehouse?.branch?.name }}</small></td>
+            <td class="session-quantity-column"><strong class="session-counted-quantity">{{ item.counted_quantity ?? 0 }}</strong><small class="inventory-secondary">unidades</small></td>
+            <td><app-inventory-status [status]="item.status"></app-inventory-status></td>
+            <td class="inventory-created"><span>{{ item.started_at | date:'dd/MM/yyyy' }}</span><small class="inventory-secondary">{{ item.started_at | date:'HH:mm' }}</small></td>
+            <td class="inventory-created">@if (item.ended_at) { <span>{{ item.ended_at | date:'dd/MM/yyyy' }}</span><small class="inventory-secondary">{{ item.ended_at | date:'HH:mm' }}</small> } @else { <span class="session-pending">{{ item.status === 'open' ? 'En curso' : 'Sin registro' }}</span> }</td>
+            <td><p class="session-comment" [class.session-comment-empty]="!item.comment">{{ item.comment || 'Sin observaciones' }}</p></td>
+            <td><div class="inventory-row-actions"><a class="inventory-edit" [routerLink]="['./', item.id, 'edit']"><i class="fa-solid" [class.fa-pen-to-square]="item.status === 'open'" [class.fa-eye]="item.status !== 'open'" aria-hidden="true"></i>{{ item.status === 'open' ? 'Editar sesión' : 'Ver sesión' }}<span class="visually-hidden"> #{{ item.id }}</span></a><a class="inventory-view" [routerLink]="['./', item.id, 'counts']">{{ item.status === 'open' && item.counts_count === 0 ? 'Iniciar conteos' : 'Ver conteos' }}<i class="fa-solid" [class.fa-barcode]="item.status === 'open' && item.counts_count === 0" [class.fa-arrow-right]="item.status !== 'open' || item.counts_count !== 0" aria-hidden="true"></i><span class="visually-hidden"> de la sesión #{{ item.id }}</span></a></div></td>
+          </tr>
+        } @empty {
+          <tr><td colspan="9"><div class="inventory-empty"><span class="inventory-list-icon" aria-hidden="true"><i class="fa-solid fa-stopwatch"></i></span><strong>Este inventario aún no tiene sesiones</strong><p>Las jornadas de conteo registradas aparecerán aquí.</p></div></td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

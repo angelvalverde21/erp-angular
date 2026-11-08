@@ -5,7 +5,7 @@ import { BaseService } from '../base.service';
 import { API, environment } from '../../environments/environment';
 
 
-export abstract class BaseCrudDashboardService {
+export abstract class  BaseCrudDashboardService {
 
   private _base = inject(BaseService);
   // baseUrl: string;

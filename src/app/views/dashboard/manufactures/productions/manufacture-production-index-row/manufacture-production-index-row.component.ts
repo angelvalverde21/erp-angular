@@ -1,21 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faScissors, faTape, faEdit,
   faGears, faBoxesStacked, faPlus, faMinus,
   faArrowRightArrowLeft, faTrash, faCartFlatbed,
   faMoneyBill1
 } from '@fortawesome/free-solid-svg-icons';
-import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 
 
-import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import { DateShopifyPipe } from '@shared/pipes/date-shopify.pipe';
-import { KardexRegisterInComponent } from '@dashboard/kardex/kardex-register-in/kardex-register-in.component';
-import { KardexRegisterOutComponent } from '@dashboard/kardex/kardex-register-out/kardex-register-out.component';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { BaseService } from 'src/app/views/base.service';
 import { ButtonMenuComponent } from 'src/app/views/shared/components/buttons/button-menu/button-menu.component';
 
@@ -23,14 +17,8 @@ import { ButtonMenuComponent } from 'src/app/views/shared/components/buttons/but
   selector: '[app-manufacture-production-index-row]',
   imports: [
     DateShopifyPipe,
-    ButtonComponent,
-    FontAwesomeModule,
     CommonModule,
-    KardexRegisterInComponent,
-    KardexRegisterOutComponent,
-    NgbDropdownModule,
     RouterModule,
-    NgbProgressbarModule,
     ButtonMenuComponent
   ],
   templateUrl: './manufacture-production-index-row.component.html',
@@ -86,22 +74,26 @@ export class ManufactureProductionIndexRowComponent implements OnInit {
     this.menus = [
       {
         label: 'Editar',
+        description: 'Datos de la producción',
         icon: this.faGears,
         routerLink: this.link_base,
         divider: true
       },
       {
         label: 'Compras',
+        description: 'Compras y gastos asociados',
         icon: this.faMoneyBill1,
         routerLink: [...this.link_base, 'purchases']
       },
       {
-        label: 'Inventario Inicial',
+        label: 'Inventario inicial',
+        description: 'Variantes y unidades planificadas',
         icon: this.faScissors,
         routerLink: [...this.link_base, 'variants']
       },
       {
         label: 'Recepciones',
+        description: 'Entradas y salidas de unidades',
         icon: this.faArrowRightArrowLeft,
         routerLink: [...this.link_base, 'kardexes']
       }

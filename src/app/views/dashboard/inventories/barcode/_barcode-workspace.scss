@@ -1,0 +1,83 @@
+.barcode-search {
+  --barcode-border: var(--cui-border-color, #dfe4eb);
+  --barcode-muted: var(--cui-secondary-color, #64748b);
+  --barcode-surface: var(--cui-body-bg, #fff);
+  --barcode-tint: rgba(100, 116, 139, .045);
+  max-width: 1440px;
+  margin-inline: auto;
+}
+.barcode-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
+.barcode-eyebrow { color: var(--barcode-muted); font-size: .7rem; font-weight: 700; letter-spacing: .12em; }
+.barcode-heading h2 { margin: .35rem 0; font-size: 1.6rem; font-weight: 700; letter-spacing: -.035em; }
+.barcode-heading p { color: var(--barcode-muted); font-size: .9rem; margin: 0; }
+.barcode-heading-icon { font-size: 1.75rem; color: var(--barcode-muted); }
+.barcode-panel { border: 1px solid var(--barcode-border); border-radius: .9rem; background: var(--barcode-surface); box-shadow: 0 2px 6px rgba(15, 23, 42, .025); }
+.barcode-search-panel { padding: 1.25rem 1.5rem; }
+.barcode-search-panel > label { display: block; margin-bottom: .6rem; font-size: .875rem; font-weight: 600; }
+.barcode-search-controls { display: flex; gap: .75rem; }
+.barcode-input-wrap { display: flex; align-items: center; flex: 1; min-width: 0; gap: .85rem; padding-inline: 1rem; border: 1px solid var(--barcode-border); border-radius: .6rem; }
+.barcode-input-wrap:focus-within { outline: 2px solid var(--cui-primary, #5856d6); outline-offset: 2px; }
+.barcode-input-wrap > fa-icon { color: var(--barcode-muted); font-size: 1.2rem; }
+.barcode-input-wrap input { width: 100%; min-width: 0; height: 3.1rem; border: 0; outline: 0; background: transparent; color: inherit; font-size: 1rem; }
+.barcode-search-button, .barcode-print-button, .barcode-product-link { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 2.75rem; border-radius: .6rem; font-size: .875rem; font-weight: 600; padding-inline: 1.15rem; }
+.barcode-search-button { min-height: 3.1rem; white-space: nowrap; }
+.barcode-input-help { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; color: var(--barcode-muted); font-size: .75rem; }
+.barcode-input-help i { margin-right: .4rem; }
+.barcode-input-help kbd { border: 1px solid var(--barcode-border); background: var(--barcode-tint); color: inherit; border-radius: .25rem; }
+.barcode-workspace { display: grid; gap: 1rem; margin-top: 1.5rem; align-items: start; }
+.barcode-workspace > * { min-width: 0; }
+.barcode-stock-form { overflow: hidden; }
+.barcode-stock-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1.5rem; padding: 1.5rem; background: var(--barcode-tint); border-bottom: 1px solid var(--barcode-border); }
+.barcode-stock-header h3 { margin: 0 0 .5rem; font-size: .875rem; color: var(--barcode-muted); font-weight: 600; }
+.barcode-header-summary { margin: 0; font-size: .9rem; line-height: 1.6; }
+.barcode-stock-number i { font-size: .4em; vertical-align: middle; margin-inline: .15em; color: var(--barcode-muted); }
+.barcode-stock-product { margin: 0; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.barcode-stock-variant { display: flex; flex-wrap: wrap; gap: .25rem .75rem; font-size: .8rem; margin-top: .35rem; }
+.barcode-stock-status { display: block; font-size: .75rem; color: var(--barcode-muted); margin-top: .35rem; }
+.barcode-stock-number { flex-shrink: 0; font-size: clamp(2.5rem, 5vw, 3.5rem); line-height: 1; letter-spacing: -.045em; font-variant-numeric: tabular-nums; text-align: right; }
+.barcode-stock-number small { display: block; margin-top: .5rem; color: var(--barcode-muted); font-size: .8rem; font-weight: 400; letter-spacing: normal; }
+.barcode-stock-body { padding: 1.5rem; }
+.barcode-stock-form label { font-weight: 600; font-size: .875rem; }
+.barcode-stock-form .form-control-lg { min-height: 3.5rem; font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; border-radius: .6rem; }
+.barcode-stock-form .form-control:focus { border-color: var(--cui-primary, #5856d6); box-shadow: 0 0 0 .2rem rgba(var(--cui-primary-rgb, 88, 86, 214), .12); }
+.barcode-stock-row p { line-height: 1.5; font-size: .8rem; }
+.barcode-reason { color: var(--barcode-muted); font-size: .875rem; }
+.barcode-reason summary { cursor: pointer; width: fit-content; padding-block: .35rem; }
+.barcode-save-row { display: flex; justify-content: flex-end; align-items: center; gap: 1.25rem; border-top: 1px solid var(--barcode-border); padding-top: 1.25rem; }
+.barcode-save-row button { flex-shrink: 0; }
+.barcode-results { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 1.5rem; padding: 1rem 1.25rem; }
+.barcode-product { display: flex; align-items: center; gap: .85rem; flex: 1 1 19rem; min-width: 0; }
+.barcode-product-info { min-width: 0; }
+.barcode-product-image { display: grid; place-items: center; width: 4rem; height: 4rem; flex-shrink: 0; border: 1px solid var(--barcode-border); border-radius: .65rem; background: var(--barcode-tint); overflow: hidden; color: var(--barcode-muted); }
+.barcode-product-image img { width: 100%; height: 100%; object-fit: cover; }
+.barcode-product strong { font-size: 1rem; line-height: 1.5; overflow-wrap: anywhere; }
+.barcode-product-meta { display: flex; flex-wrap: wrap; gap: .2rem .75rem; margin-top: .2rem; font-size: .75rem; color: var(--barcode-muted); overflow-wrap: anywhere; }
+.barcode-variant-options { display: flex; flex-wrap: wrap; gap: .25rem .75rem; margin-top: .25rem; font-size: .8rem; }
+.barcode-variant-options strong { font-size: inherit; }
+.barcode-details { display: flex; flex-wrap: wrap; gap: .65rem 1.5rem; margin: 0; }
+.barcode-details dt { margin-bottom: .25rem; font-size: .75rem; font-weight: 400; color: var(--barcode-muted); }
+.barcode-details dd { margin: 0; font-size: .8rem; font-weight: 600; overflow-wrap: anywhere; }
+.barcode-results .barcode-print-button, .barcode-results .barcode-product-link { flex-shrink: 0; min-height: 2.5rem; font-size: .8rem; }
+.barcode-product-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.barcode-history { padding: 1.25rem; margin-top: 1.5rem; min-width: 0; }
+.barcode-history-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+.barcode-history-header h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+.barcode-history-header p { margin: .4rem 0 0; color: var(--barcode-muted); font-size: .8rem; }
+.barcode-history-header > span { color: var(--barcode-muted); font-size: .8rem; white-space: nowrap; }
+.barcode-state { display: flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center; padding: 3rem 1rem; }
+.barcode-state-icon { display: grid; place-items: center; width: 4rem; height: 4rem; border-radius: 1rem; background: var(--barcode-tint); color: var(--barcode-muted); font-size: 1.75rem; }
+.barcode-state h3 { margin: 0; font-size: 1.1rem; font-weight: 600; }
+.barcode-state p { max-width: 48ch; margin: 0; color: var(--barcode-muted); font-size: .9rem; line-height: 1.6; overflow-wrap: anywhere; }
+.barcode-state-error .barcode-state-icon { color: var(--cui-danger-text-emphasis, #b42318); }
+@media (max-width: 767.98px) {
+  .barcode-save-row { flex-direction: column; align-items: stretch; }
+}
+@media (max-width: 575.98px) {
+  .barcode-heading-icon { display: none; }
+  .barcode-search-controls { flex-direction: column; }
+  .barcode-input-help > span:last-child { display: none; }
+  .barcode-search-panel, .barcode-stock-header, .barcode-stock-body, .barcode-history { padding: 1rem; }
+  .barcode-stock-header { gap: .75rem; }
+  .barcode-stock-number { font-size: 2.5rem; }
+  .barcode-history-header { align-items: start; flex-direction: column; gap: .5rem; }
+}

@@ -1,1 +1,103 @@
-<p>order-index-page works!</p>
+<div class="orders-page-heading">
+  <div>
+    <span class="orders-eyebrow">VENTAS</span>
+    <h1>Órdenes</h1>
+    <p>Consulta los pedidos, sus importes y el estado de entrega.</p>
+  </div>
+  <a routerLink="./create" class="btn btn-dark text-white orders-create"><i class="fa-solid fa-plus me-2" aria-hidden="true"></i>Crear pedido</a>
+</div>
+
+<div class="row g-3 mb-4" aria-label="Resumen de pedidos" [attr.aria-busy]="loading">
+  @for (card of summaryCards; track card.label) {
+  <div class="col-6 col-xl-3">
+    <div class="summary-card h-100">
+        <div class="summary-card-heading">
+          <span class="summary-label">{{ card.label }}</span>
+          <span class="summary-icon" [class.summary-icon-warning]="$index === 1" [class.summary-icon-primary]="$index === 2" [class.summary-icon-success]="$index === 3">
+            <i [class]="'fa-solid ' + card.icon" aria-hidden="true"></i>
+          </span>
+        </div>
+        <strong class="summary-value">{{ loading ? '—' : card.value }}</strong>
+        <small class="summary-description">{{ card.description }}</small>
+    </div>
+  </div>
+  }
+</div>
+
+<section class="card orders-list-panel" aria-labelledby="orders-list-title" [attr.aria-busy]="isLoading">
+  <div class="card-header bg-transparent orders-list-header">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+      <div class="d-flex align-items-center gap-3">
+        <span class="orders-list-icon" aria-hidden="true"><i class="fa-solid fa-list-check"></i></span>
+        <div>
+          <h2 id="orders-list-title" class="h6 fw-bold mb-1">Listado de pedidos <span class="orders-count ms-1">{{ hasLocalFilters ? filteredOrders.length : total ?? orders.length }}</span></h2>
+          <p class="small text-body-secondary mb-0">Revisa tus ventas y encuentra el pedido que necesitas.</p>
+        </div>
+      </div>
+      <span class="orders-currency">Moneda <strong>PEN · S/</strong></span>
+    </div>
+
+    <div class="orders-filters"><div class="row g-3 align-items-end">
+      <div class="col-12 col-lg-5">
+        <label for="orders-search" class="orders-filter-label">Buscar pedido</label>
+        <div class="input-group orders-search">
+          <span class="input-group-text" aria-hidden="true"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input #searchInput id="orders-search" type="search" class="form-control" placeholder="Número, cliente, documento o teléfono"
+            [value]="search" [disabled]="loading" (input)="search = searchInput.value" aria-describedby="orders-filter-scope" />
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <label for="orders-status" class="orders-filter-label">Estado</label>
+        <select #statusFilter id="orders-status" class="form-select" [value]="status"
+          [disabled]="isLoading" (change)="changeStatus(statusFilter.value)">
+          <option value="">Todos los estados</option>
+          @for (option of statusOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-6 col-lg-3">
+        <label for="orders-delivery" class="orders-filter-label">Entrega</label>
+        <select #deliveryFilter id="orders-delivery" class="form-select" [value]="delivery"
+          [disabled]="loading" (change)="delivery = deliveryFilter.value" aria-describedby="orders-filter-scope">
+          <option value="">Todas las modalidades</option>
+          @for (option of deliveryOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-12 col-lg-1">
+        <button type="button" class="btn btn-outline-secondary orders-clear w-100" [disabled]="isLoading || !hasActiveFilters"
+          (click)="clearFilters()" aria-label="Limpiar filtros" title="Limpiar filtros">
+          <i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i><span class="d-lg-none ms-2">Limpiar filtros</span>
+        </button>
+      </div>
+    </div></div>
+    <div class="orders-filter-caption">
+      <span id="orders-filter-scope">Búsqueda y modalidad sobre los pedidos cargados.</span>
+      @if (hasActiveFilters) { <span class="orders-active-filter"><i class="fa-solid fa-filter me-1" aria-hidden="true"></i>Filtros activos</span> }
+    </div>
+  </div>
+  <div class="card-body p-0">
+    @if (error) {
+    <div class="alert alert-danger m-3" role="alert">
+      {{ error }} <button type="button" class="btn btn-sm btn-outline-danger ms-2" (click)="retry()">Reintentar</button>
+    </div>
+    }
+    @if (!loading) {
+    <app-order-index [orders]="filteredOrders" [loading]="loadingMore" [hasMore]="canLoadMore" (loadMore)="loadMoreOrders()"></app-order-index>
+    }
+    @if (isLoading) {
+    <div class="py-4 text-center" role="status">
+      <app-loading></app-loading>
+      <p class="small mt-2 mb-0">{{ loadingMore ? 'Cargando más pedidos...' : 'Cargando pedidos...' }}</p>
+    </div>
+    }
+  </div>
+  <div class="card-footer orders-list-footer bg-transparent">
+    <small class="text-body-secondary">{{ filteredOrders.length }} visibles de {{ orders.length }} cargados@if (total !== null) { · {{ total }} pedidos en total }</small>
+    @if (canLoadMore && !loading) {
+    <button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="loadingMore" (click)="loadMoreOrders()">Cargar más pedidos</button>
+    }
+  </div>
+</section>

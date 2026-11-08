@@ -1,0 +1,3 @@
+@use '../production-ui';
+.manufacture-list-heading { padding-block: 1rem; }
+.production-list-count { color: var(--cui-secondary-color, #64748b); background: rgba(100, 116, 139, .06); padding: .35rem .7rem; border-radius: 2rem; font-size: .75rem; }

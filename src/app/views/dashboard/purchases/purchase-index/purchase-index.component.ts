@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { PurchaseIndexRowComponent } from '../purchase-index-row/purchase-index-row.component';
 import { CapitalizePipe } from '@shared/pipes/capitalize.pipe';
@@ -36,7 +36,7 @@ import { PurchaseIndexHeadComponent } from './purchase-index-head/purchase-index
   styleUrl: './purchase-index.component.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class PurchaseIndexComponent implements OnInit, OnDestroy {
+export class PurchaseIndexComponent implements OnChanges, OnDestroy {
 
 
   faReceipt = faReceipt;
@@ -45,6 +45,11 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
   @Input() purchaseable_type: string = '';
   @Input() purchaseable_id: number = 0;
   @Input() sum_purchases: number = 0;
+  @Input() productionView = false;
+
+  get conceptCount(): number {
+    return this.purchases.reduce((total, purchase) => total + (purchase.items?.length ?? 0), 0);
+  }
   //
 
   constructor(
@@ -90,10 +95,8 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
     // return sum;
   }
 
-  ngOnInit(): void {
-
-    this.sumTotalAmount();
-
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['purchases']) this.sumTotalAmount();
   }
 
   ngOnDestroy(): void {
@@ -132,8 +135,6 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
     
     this.sumTotalAmount();
 
-    this.emitSumPurchases.emit(this.sum_purchases);
-
   }
 
   closeModal() {
@@ -145,12 +146,16 @@ export class PurchaseIndexComponent implements OnInit, OnDestroy {
     const items = purchase.items || [];
 
     return items.reduce((sum: number, item: any) => {
-      const quantity = Number(item.quantity) || 0;
-      const price = Number(item.price) || 0;
-      return sum + (quantity * price);
+      return sum + this.itemTotal(item);
     }, 0);
 
 
+  }
+
+  itemTotal(item: any): number {
+    const quantity = Number(item.quantity) || 0;
+    const price = Number(item.price) || 0;
+    return quantity * price;
   }
 
 }

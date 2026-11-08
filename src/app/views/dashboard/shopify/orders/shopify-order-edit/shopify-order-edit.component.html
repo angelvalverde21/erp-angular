@@ -1,0 +1,249 @@
+<!-- Maqueta de edición con datos de prueba. Conectar datos y acciones desde el componente. -->
+<div class="shopify-order-create shopify-order-edit pb-5">
+    <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+        <div>
+            <span class="small text-body-secondary fw-semibold">EDITAR PEDIDO</span>
+            <h2 class="h4 fw-bold mt-2 mb-2">Pedido #1001</h2>
+            <p class="text-body-secondary mb-0">Revisa los datos del cliente, los productos y la información del envío.</p>
+        </div>
+        <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill px-3 py-2">Registrado</span>
+    </div>
+
+    <nav aria-label="Estado del pedido" class="mb-4">
+        <ol class="row g-2 list-unstyled mb-0">
+            <li class="col-6 col-lg" aria-current="step"><div class="border border-primary bg-primary-subtle text-primary-emphasis rounded-3 p-3 fw-semibold"><i class="fa-solid fa-circle-check me-2" aria-hidden="true"></i>Registrado</div></li>
+            <li class="col-6 col-lg"><div class="border rounded-3 p-3 text-body-secondary">2. Pago recibido</div></li>
+            <li class="col-6 col-lg"><div class="border rounded-3 p-3 text-body-secondary">3. Pago confirmado</div></li>
+            <li class="col-6 col-lg"><div class="border rounded-3 p-3 text-body-secondary">4. En preparación</div></li>
+            <li class="col-6 col-lg"><div class="border rounded-3 p-3 text-body-secondary">5. Enviado</div></li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <div class="col-12 col-xl-8 d-flex flex-column gap-4">
+            <section class="card rounded-4 shadow-sm" aria-labelledby="edit-order-address-title">
+                <div class="card-header bg-transparent d-flex flex-wrap align-items-center gap-3 p-3 p-lg-4">
+                    <span class="bg-body-tertiary rounded-3 p-2" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+                    <div class="flex-grow-1">
+                        <h3 id="edit-order-address-title" class="h6 fw-bold mb-1">Dirección de envío</h3>
+                        <p class="small text-body-secondary mb-0">Datos del cliente y lugar de entrega.</p>
+                    </div>
+                    <!-- Pendiente: conectar la edición de la dirección. -->
+                    <button type="button" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-pen me-1" aria-hidden="true"></i> Editar</button>
+                </div>
+                <div class="card-body p-3 p-lg-4">
+                    <!-- Datos de prueba: reemplazar por shipping_address de la orden. -->
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                        <h4 class="h6 fw-bold mb-0">Angel Valverde</h4>
+                        <span class="badge text-bg-light border">Datos de prueba</span>
+                    </div>
+                    <dl class="row gy-2 mb-0 small">
+                        <dt class="col-sm-3 text-body-secondary fw-normal">Documento</dt><dd class="col-sm-9 mb-0">DNI 42412498</dd>
+                        <dt class="col-sm-3 text-body-secondary fw-normal">Teléfono</dt><dd class="col-sm-9 mb-0">943 402 809</dd>
+                        <dt class="col-sm-3 text-body-secondary fw-normal">Dirección</dt><dd class="col-sm-9 mb-0">Urb. Albino Herrera Mz. H Lt. 16, 1era etapa</dd>
+                        <dt class="col-sm-3 text-body-secondary fw-normal">Ubicación</dt><dd class="col-sm-9 mb-0">Callao, Callao, Callao · Perú</dd>
+                        <dt class="col-sm-3 text-body-secondary fw-normal">Referencia</dt><dd class="col-sm-9 mb-0">Altura de la cuadra 8 de avenida Pacasmayo</dd>
+                    </dl>
+                </div>
+            </section>
+
+            <section class="card rounded-4 shadow-sm" aria-labelledby="edit-order-products-title">
+                <div class="card-header bg-transparent d-flex flex-wrap align-items-center gap-3 p-3 p-lg-4">
+                    <span class="bg-body-tertiary rounded-3 p-2" aria-hidden="true"><i class="fa-solid fa-barcode"></i></span>
+                    <div class="flex-grow-1">
+                        <h3 id="edit-order-products-title" class="h6 fw-bold mb-1">Productos <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">2</span></h3>
+                        <p class="small text-body-secondary mb-0">Selecciona las variantes y ajusta sus cantidades.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Agregar productos</button>
+                </div>
+                <!-- Productos de prueba. Conectar búsqueda, cantidades y eliminación. -->
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light"><tr><th scope="col" class="ps-3">Producto</th><th scope="col">Precio</th><th scope="col">Cantidad</th><th scope="col">Total</th><th scope="col"><span class="visually-hidden">Acciones</span></th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td class="ps-3"><span class="fw-semibold d-block">Polo básico</span><span class="small text-body-secondary">Negro / M · SKU POLO-NEG-M</span></td>
+                                <td class="text-nowrap">S/ 59.00</td>
+                                <td><input type="number" class="form-control form-control-sm" style="width: 5rem;" min="1" step="1" value="2" aria-label="Cantidad de Polo básico Negro M" /></td>
+                                <td class="text-nowrap fw-semibold">S/ 118.00</td>
+                                <td><button type="button" class="btn btn-outline-danger btn-sm" aria-label="Eliminar Polo básico Negro M"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td class="ps-3"><span class="fw-semibold d-block">Gorra clásica</span><span class="small text-body-secondary">Azul / Única · SKU GOR-AZU-U</span></td>
+                                <td class="text-nowrap">S/ 39.00</td>
+                                <td><input type="number" class="form-control form-control-sm" style="width: 5rem;" min="1" step="1" value="1" aria-label="Cantidad de Gorra clásica Azul" /></td>
+                                <td class="text-nowrap fw-semibold">S/ 39.00</td>
+                                <td><button type="button" class="btn btn-outline-danger btn-sm" aria-label="Eliminar Gorra clásica Azul"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card rounded-4 shadow-sm" aria-labelledby="edit-order-shipping-title">
+                <div class="card-header bg-transparent d-flex align-items-center gap-3 p-3 p-lg-4">
+                    <span class="bg-body-tertiary rounded-3 p-2" aria-hidden="true"><i class="fa-solid fa-truck"></i></span>
+                    <div><h3 id="edit-order-shipping-title" class="h6 fw-bold mb-1">Envío o recojo</h3><p class="small text-body-secondary mb-0">Elige cómo llegará el pedido.</p></div>
+                </div>
+                <div class="card-body p-3 p-lg-4">
+                    <label for="edit-order-courier" class="form-label">Courier</label>
+                    <select id="edit-order-courier" class="form-select mb-3"><option selected>GAMA EXPRESS S.A.C. - Galería Gama</option></select>
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label for="edit-order-delivery-cost" class="form-label">Costo de envío</label>
+                            <div class="input-group"><span class="input-group-text" aria-hidden="true"><i class="fa-solid fa-truck"></i></span><input id="edit-order-delivery-cost" type="number" class="form-control" min="0" step="0.01" value="15.00" aria-label="Costo de envío en soles" /></div>
+                        </div>
+                        <!-- Pendiente: mostrar esta opción según freight_collect del courier. -->
+                        <div class="col-12 col-md-6">
+                            <span class="d-block mb-2">Pago del envío</span>
+                            <button type="button" class="btn btn-outline-secondary w-100" aria-pressed="false"><i class="fa-solid fa-circle-check me-2" aria-hidden="true"></i>Pago en destino</button>
+                            <p class="small text-body-secondary mt-2 mb-0">El costo del envío se paga al recibir el pedido.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card rounded-4 shadow-sm" aria-labelledby="edit-order-receipts-title">
+                <div class="card-header bg-transparent d-flex flex-wrap align-items-center gap-3 p-3 p-lg-4">
+                    <span class="bg-body-tertiary rounded-3 p-2" aria-hidden="true"><i class="fa-solid fa-file-invoice"></i></span>
+                    <div class="flex-grow-1"><h3 id="edit-order-receipts-title" class="h6 fw-bold mb-1">Comprobantes <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">3</span></h3><p class="small text-body-secondary mb-0">Documentos del pedido.</p></div>
+                    <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Agregar comprobante</button>
+                </div>
+                <!-- Ejemplos del respaldo. Conectar carga y consulta de comprobantes. -->
+                <ol class="list-group list-group-flush list-unstyled mb-0" aria-label="Comprobantes de ejemplo">
+                    <li class="list-group-item d-flex align-items-start gap-3 p-3">
+                        <span class="badge text-bg-light border mt-1">1</span>
+                        <span class="d-flex align-items-center justify-content-center bg-success-subtle text-success-emphasis rounded flex-shrink-0"
+                            style="width: 56px; height: 56px;" aria-hidden="true">
+                            <i class="fa-solid fa-file-image fs-3"></i>
+                        </span>
+                        <div class="flex-grow-1 small" style="min-width: 0;">
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                <span class="badge bg-success-subtle text-success-emphasis">Pago</span>
+                                <span class="badge text-bg-light">Ejemplo</span>
+                            </div>
+                            <p class="fw-semibold text-break mb-1">transferencia-adelanto.jpg</p>
+                            <p class="text-body-secondary mb-2">JPG · 245 KB · Adelanto del 50 %</p>
+                            <span class="text-body-secondary d-block">Carlos · Caja</span>
+                            <time class="text-body-secondary" datetime="2026-10-26T09:40:00-05:00">26 oct. 2026, 09:40</time>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex align-items-start gap-3 p-3">
+                        <span class="badge text-bg-light border mt-1">2</span>
+                        <span class="d-flex align-items-center justify-content-center bg-primary-subtle text-primary-emphasis rounded flex-shrink-0"
+                            style="width: 56px; height: 56px;" aria-hidden="true">
+                            <i class="fa-solid fa-file-pdf fs-3"></i>
+                        </span>
+                        <div class="flex-grow-1 small" style="min-width: 0;">
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                <span class="badge bg-primary-subtle text-primary-emphasis">Venta</span>
+                                <span class="badge text-bg-light">Ejemplo</span>
+                            </div>
+                            <p class="fw-semibold text-break mb-1">boleta-B001-000123.pdf</p>
+                            <p class="text-body-secondary mb-2">PDF · 128 KB · Boleta de venta</p>
+                            <span class="text-body-secondary d-block">María · Ventas</span>
+                            <time class="text-body-secondary" datetime="2026-10-26T10:00:00-05:00">26 oct. 2026, 10:00</time>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex align-items-start gap-3 p-3">
+                        <span class="badge text-bg-light border mt-1">3</span>
+                        <span class="d-flex align-items-center justify-content-center bg-info-subtle text-info-emphasis rounded flex-shrink-0"
+                            style="width: 56px; height: 56px;" aria-hidden="true">
+                            <i class="fa-solid fa-file-pdf fs-3"></i>
+                        </span>
+                        <div class="flex-grow-1 small" style="min-width: 0;">
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                <span class="badge bg-info-subtle text-info-emphasis">Envío</span>
+                                <span class="badge text-bg-light">Ejemplo</span>
+                            </div>
+                            <p class="fw-semibold text-break mb-1">guia-remision-T001-000045.pdf</p>
+                            <p class="text-body-secondary mb-2">PDF · 186 KB · Guía de remisión</p>
+                            <span class="text-body-secondary d-block">Ana · Despacho</span>
+                            <time class="text-body-secondary" datetime="2026-10-26T10:15:00-05:00">26 oct. 2026, 10:15</time>
+                        </div>
+                    </li>
+                </ol>
+            </section>
+        </div>
+
+        <aside class="col-12 col-xl-4 d-flex flex-column gap-4" aria-label="Resumen y notas del pedido">
+            <section class="card rounded-4 shadow-sm" aria-labelledby="edit-order-summary-title">
+                <div class="card-header bg-transparent p-3 p-lg-4"><h3 id="edit-order-summary-title" class="h6 fw-bold mb-1">Resumen de pagos</h3><p class="small text-body-secondary mb-0">Importes expresados en soles (PEN).</p></div>
+                <div class="card-body p-3 p-lg-4">
+                    <!-- Totales de prueba: subtotal sin IGV; productos con IGV incluido. -->
+                    <dl class="mb-0">
+                        <div class="d-flex justify-content-between gap-3 mb-3"><dt class="small text-body-secondary fw-normal">Subtotal</dt><dd class="mb-0">S/ 133.05</dd></div>
+                        <div class="d-flex justify-content-between gap-3 mb-3"><dt class="small text-body-secondary fw-normal">IGV</dt><dd class="mb-0">S/ 23.95</dd></div>
+                        <div class="d-flex justify-content-between gap-3 mb-3"><dt class="small text-body-secondary fw-normal">Envío</dt><dd class="mb-0">S/ 15.00</dd></div>
+                        <div class="d-flex justify-content-between align-items-baseline gap-3 border-top pt-3"><dt>Total del pedido</dt><dd class="fs-4 fw-bold mb-0">S/ 172.00</dd></div>
+                    </dl>
+                </div>
+            </section>
+
+            <section class="card rounded-4 shadow-sm" aria-labelledby="edit-order-notes-title">
+                <div class="card-header bg-transparent d-flex flex-wrap align-items-center gap-3 p-3 p-lg-4">
+                    <span class="bg-body-tertiary rounded-3 p-2" aria-hidden="true"><i class="fa-solid fa-note-sticky"></i></span>
+                    <div class="flex-grow-1"><h3 id="edit-order-notes-title" class="h6 fw-bold mb-1">Notas <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">3</span></h3><p class="small text-body-secondary mb-0">Observaciones del pedido.</p></div>
+                    <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Agregar nota</button>
+                </div>
+                <!-- Ejemplos del respaldo. Conectar gestión de notas. -->
+                <ol class="list-group list-group-flush list-unstyled mb-0" aria-label="Notas de ejemplo">
+                    <li class="list-group-item p-3">
+                        <div class="d-flex align-items-start gap-3">
+                            <span class="badge text-bg-light border mt-1">1</span>
+                            <div class="flex-grow-1" style="min-width: 0;">
+                                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                    <span class="badge bg-primary-subtle text-primary-emphasis"><i class="fa-solid fa-bag-shopping me-1" aria-hidden="true"></i>Venta</span>
+                                    <span class="badge text-bg-light">Ejemplo</span>
+                                </div>
+                                <p class="small text-break mb-2">El cliente solicita los productos en una sola caja y sin envolver para regalo.</p>
+                                <div class="small text-body-secondary">
+                                    <span class="d-block"><i class="fa-regular fa-user me-1" aria-hidden="true"></i>María · Ventas</span>
+                                    <time datetime="2026-10-26T09:15:00-05:00">26 oct. 2026, 09:15</time>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item p-3">
+                        <div class="d-flex align-items-start gap-3">
+                            <span class="badge text-bg-light border mt-1">2</span>
+                            <div class="flex-grow-1" style="min-width: 0;">
+                                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                    <span class="badge bg-success-subtle text-success-emphasis"><i class="fa-solid fa-wallet me-1" aria-hidden="true"></i>Pago</span>
+                                    <span class="badge text-bg-light">Ejemplo</span>
+                                </div>
+                                <p class="small text-break mb-2">Se recibió un adelanto del 50 %. El saldo se pagará antes del despacho.</p>
+                                <div class="small text-body-secondary">
+                                    <span class="d-block"><i class="fa-regular fa-user me-1" aria-hidden="true"></i>Carlos · Caja</span>
+                                    <time datetime="2026-10-26T09:40:00-05:00">26 oct. 2026, 09:40</time>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item p-3">
+                        <div class="d-flex align-items-start gap-3">
+                            <span class="badge text-bg-light border mt-1">3</span>
+                            <div class="flex-grow-1" style="min-width: 0;">
+                                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                    <span class="badge bg-info-subtle text-info-emphasis"><i class="fa-solid fa-truck me-1" aria-hidden="true"></i>Envío</span>
+                                    <span class="badge text-bg-light">Ejemplo</span>
+                                </div>
+                                <p class="small text-break mb-2">Llamar al cliente antes de entregar. Recibe en recepción de 2 a 6 p. m.</p>
+                                <div class="small text-body-secondary">
+                                    <span class="d-block"><i class="fa-regular fa-user me-1" aria-hidden="true"></i>Ana · Despacho</span>
+                                    <time datetime="2026-10-26T10:05:00-05:00">26 oct. 2026, 10:05</time>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ol>
+            </section>
+        </aside>
+    </div>
+
+    <!-- Barra inferior: conectar el guardado desde el componente. -->
+    <footer class="position-fixed bottom-0 bg-body border-top shadow-sm p-3 d-print-none" style="inset-inline-start: var(--cui-sidebar-occupy-start, 0); inset-inline-end: var(--cui-sidebar-occupy-end, 0); z-index: 1020; padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px)) !important;" aria-label="Acciones del pedido">
+        <div class="container-lg d-flex justify-content-end"><button type="button" class="btn btn-primary px-4"><i class="fa-solid fa-floppy-disk me-2" aria-hidden="true"></i>Guardar cambios</button></div>
+    </footer>
+    <div aria-hidden="true" style="height: calc(4rem + env(safe-area-inset-bottom, 0px));"></div>
+</div>

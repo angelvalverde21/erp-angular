@@ -1,29 +1,19 @@
-@if(loading){
-    <app-loading></app-loading>
-}@else{
-
-<app-head-page title="Ordenes de compra" [icon]="faBoxesStacked">
-    <app-button-link [path]="['./create']">+ Orden</app-button-link>
-</app-head-page>
-
-<div class="card">
-
-    <div class="card-header py-3">
-        <app-head-search (emitSearchResult)="receiveSearchResult($event)" [is_redirect]="false"  type="manufacture_order" [button_active]="false" />
-    </div>
-
-    <div class="card-body p-0">
-        @if(manufactures?.length > 0){
-            <app-manufacture-order-index [manufactures]="manufactures"></app-manufacture-order-index>
-        }@else{
-            <p class="p-4">No se cuenta con registro de ordenes de compra (Moip)</p>
-        }
-    </div>
-
-    <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Total: {{ manufactures?.length }}</small>
-    </div>
-
+<div class="production-page manufacture-theme-order">
+  <app-manufacture-section-header section="order" title="Órdenes de compra" description="Gestiona pedidos a proveedores, pagos y entregas de mercadería." actionLabel="Nueva orden de compra" [actionLink]="['./create']" [showNavigation]="true"></app-manufacture-section-header>
+  <section class="production-panel" aria-labelledby="order-list-title">
+    <header class="production-section-heading manufacture-list-heading">
+      <h2 id="order-list-title">Órdenes registradas</h2>
+      <span class="purchase-order-list-count">{{ manufactures.length }} {{ activeFilters ? 'resultados' : 'registros en esta vista' }}</span>
+    </header>
+    <app-manufacture-index-filters searchLabel="Buscar orden de compra" placeholder="Nombre o código de la orden" [busy]="loading" [hasAppliedFilters]="!!activeFilters" (applyFilters)="applyFilters($event)" (clearFilters)="clearFilters()"></app-manufacture-index-filters>
+    @if (loading) {
+    <div class="production-empty" role="status"><app-loading></app-loading><p>Cargando órdenes de compra...</p></div>
+    } @else if (error) {
+    <div class="production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar las órdenes</h3><p>{{ error }}</p><button type="button" class="manufacture-secondary-action" (click)="manufacturesInit()">Reintentar</button></div>
+    } @else if (manufactures.length) {
+    <app-manufacture-order-index [manufactures]="manufactures"></app-manufacture-order-index>
+    } @else {
+    <div class="production-empty"><i class="fa-solid fa-cart-flatbed" aria-hidden="true"></i><h3>No hay órdenes para mostrar</h3><p>Prueba con otros filtros o crea una orden de compra para comenzar.</p><a class="manufacture-primary-action" [routerLink]="['./create']">Crear orden de compra</a></div>
+    }
+  </section>
 </div>
-
-}

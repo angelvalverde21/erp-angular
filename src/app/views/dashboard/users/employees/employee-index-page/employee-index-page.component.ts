@@ -1,82 +1,59 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import Swal from 'sweetalert2';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { EmployeeService } from '../employee.service';
 import { EmployeeIndexComponent } from '../employee-index/employee-index.component';
-import { ButtonComponent } from "../../../../shared/components/buttons/button/button.component";
-import { ButtonLinkComponent } from "../../../../shared/components/buttons/button-link/button-link.component";
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
-import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
-import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
-import { UserHeadTableComponent } from '../../shared/user-head-table/user-head-table.component';
-import { HeadTableComponent } from 'src/app/views/shared/components/head-table/head-table.component';
-import { HeadSearchComponent } from 'src/app/views/shared/components/head-search/head-search.component';
+import { dashboardRoles, MANAGEMENT_ROLES } from '../../../area-dashboards/dashboard.model';
 
 @Component({
   selector: 'app-employee-index-page',
-  imports: [
-    EmployeeIndexComponent,
-    ButtonComponent,
-    ButtonLinkComponent,
-    LoadingComponent,
-    HeadPageComponent,
-    UserHeadTableComponent,
-    HeadTableComponent,
-    HeadSearchComponent
-    
-  ],
+  imports: [FormsModule, RouterLink, EmployeeIndexComponent],
   templateUrl: './employee-index-page.component.html',
-  styleUrl: './employee-index-page.component.scss'
+  styleUrl: './employee-index-page.component.scss',
 })
 export class EmployeeIndexPageComponent implements OnInit, OnDestroy {
+  employees: any[] = [];
+  search = '';
+  status = '';
+  loading = false;
+  error = '';
+  readonly canEdit = dashboardRoles().some(role => MANAGEMENT_ROLES.includes(role));
+  private readonly destroy$ = new Subject<void>();
 
-  faMagnifyingGlass = faMagnifyingGlass;
-  faFilter = faFilter;
-  
-  constructor(private _employee: EmployeeService) {
+  constructor(private service: EmployeeService) {}
 
+  get activeCount(): number {
+    return this.employees.filter(employee => employee.status).length;
+  }
+
+  get clockCount(): number {
+    return this.employees.filter(employee => employee.biometric_code || employee.document_number).length;
+  }
+
+  get filteredEmployees(): any[] {
+    const term = this.search.trim().toLocaleLowerCase();
+    return this.employees.filter(employee => (
+      !term || [employee.name, employee.email, employee.account?.email, employee.phone, employee.document_number, employee.biometric_code]
+        .some(value => String(value ?? '').toLocaleLowerCase().includes(term))
+    ) && (this.status === '' || Number(employee.status) === Number(this.status)));
   }
 
   ngOnInit(): void {
     this.employeesInit();
   }
 
-  employees: any[] = [];
-  loading: boolean = false;
-
-  employeesInit() {
-
+  employeesInit(): void {
     this.loading = true;
-
-    this._employee.index().pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
-        console.log(resp);
-        this.employees = resp.data;
-        this.loading = false;
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al traer los datos de los empleados', 'error');
-        console.error(error);
-      },
-
+    this.error = '';
+    this.service.index().pipe(takeUntil(this.destroy$), finalize(() => this.loading = false)).subscribe({
+      next: (response: any) => this.employees = response.data,
+      error: () => this.error = 'No se pudo cargar el equipo. Inténtalo nuevamente.',
     });
-
   }
-
-  destroy$ = new Subject<void>();
 
   ngOnDestroy(): void {
-
     this.destroy$.next();
     this.destroy$.complete();
-
   }
-
-    receiveSearchResult($event: any) {
-    this.employees = $event;
-  }
-
 }

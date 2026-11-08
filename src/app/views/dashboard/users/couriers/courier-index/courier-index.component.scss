@@ -1,5 +1,16 @@
-tr:hover {
-  background-color: #f8f9fa;
-  cursor: pointer;
-}
-
+.courier-table { white-space: nowrap; }
+th { padding: .9rem 1.25rem; background: #f8f9fc; color: #738097; font-size: .75rem; font-weight: 600; border-bottom: 1px solid #e8ecf3; }
+td { padding: 1.15rem 1.25rem; border-color: #eef1f6; font-size: .85rem; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: #fafbfe; }
+.courier-identity { display: flex; align-items: center; gap: .85rem; }
+.courier-avatar { display: grid; place-items: center; width: 40px; height: 40px; background: #eef1f8; color: #65718b; border-radius: 12px; font-weight: 650; }
+.courier-name { color: inherit; font-weight: 600; text-decoration: none; }
+.courier-name:hover { text-decoration: underline; }
+.courier-identity small { display: block; margin-top: .25rem; color: #8490a3; font-size: .75rem; }
+.delivery-badge { background: #f2f4f8; color: #526176; padding: .35rem .6rem; border-radius: 6px; font-size: .75rem; }
+.payment-badges { display: flex; gap: .35rem; flex-wrap: wrap; }
+.payment-badges span { font-size: .73rem; padding: .25rem .5rem; border: 1px solid #e2e7ef; border-radius: 6px; color: #657189; }
+.status-badge { display: inline-flex; align-items: center; gap: .4rem; color: #237754; font-size: .77rem; }
+.status-badge i { width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
+.status-badge.blocked { color: #9b6170; }

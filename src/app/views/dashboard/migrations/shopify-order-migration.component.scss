@@ -1,0 +1,439 @@
+:host {
+  display: block;
+}
+
+.migration-page {
+  padding-bottom: 1.5rem;
+  color: #34435a;
+}
+
+.migration-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  margin-bottom: 1.4rem;
+  color: #8b97aa;
+  font-size: .72rem;
+}
+
+.migration-breadcrumb i {
+  font-size: .55rem;
+}
+
+.migration-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.7rem;
+}
+
+.migration-heading-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.migration-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  background: #edf3f0;
+  color: #43866b;
+  border-radius: 15px;
+  font-size: 1.3rem;
+}
+
+.migration-eyebrow {
+  color: #43866b;
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+}
+
+h1 {
+  margin: .35rem 0 .4rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -.03em;
+}
+
+.migration-heading p {
+  margin: 0;
+  font-size: .82rem;
+  color: #8b97aa;
+}
+
+.migration-status {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .5rem .75rem;
+  border: 1px solid #e3e8ef;
+  border-radius: 8px;
+  background: #fff;
+  color: #8793a5;
+  font-size: .72rem;
+}
+
+.migration-status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #b69b6c;
+}
+
+.migration-overview {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: #fff;
+  border: 1px solid #dee5ee;
+  border-radius: 14px;
+  margin-bottom: 1.25rem;
+}
+
+.migration-card-label {
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .07em;
+  color: #9ba6b6;
+}
+
+.migration-overview h2 {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: .6rem 0;
+}
+
+.migration-overview h2 i {
+  color: #548b75;
+}
+
+.migration-overview p {
+  color: #8b97aa;
+  font-size: .76rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.migration-transfer {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e4e9ef;
+  border-radius: 50%;
+  color: #8e9db1;
+  font-size: .8rem;
+}
+
+.migration-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+  align-items: start;
+}
+
+.migration-card {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #dee5ee;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.migration-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+  padding: 1.25rem 1.4rem;
+  border-bottom: 1px solid #edf1f6;
+}
+
+.migration-card h2 {
+  font-size: .9rem;
+  font-weight: 650;
+  margin: 0;
+}
+
+.migration-card-heading p {
+  margin: .35rem 0 0;
+  font-size: .73rem;
+  color: #96a1b1;
+}
+
+.migration-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .5rem .7rem;
+  background: #fff;
+  border: 1px solid #dfe5ef;
+  border-radius: 8px;
+  color: #738198;
+  font-size: .73rem;
+}
+
+.migration-button:disabled {
+  opacity: .5;
+}
+
+.migration-checks {
+  list-style: none;
+  padding: .3rem 1.4rem;
+  margin: 0;
+}
+
+.migration-checks li {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0f3f7;
+  font-size: .77rem;
+}
+
+.migration-checks li:last-child {
+  border: 0;
+}
+
+.migration-checks li > i {
+  color: #bdc5d2;
+}
+
+.migration-checks small {
+  margin-left: auto;
+  color: #a3adbc;
+  font-size: .66rem;
+}
+
+.migration-checks .ready {
+  color: #41876a;
+}
+
+.migration-history-note {
+  display: flex;
+  gap: .6rem;
+  padding: 1rem 1.4rem;
+  background: #fafbf8;
+  color: #a09a80;
+  font-size: .7rem;
+  line-height: 1.6;
+}
+
+.migration-history-note > i {
+  margin-top: .2rem;
+}
+
+.migration-history-note p {
+  margin: 0;
+}
+
+.migration-plan {
+  padding: 1.4rem;
+}
+
+.migration-plan > ul {
+  list-style: none;
+  padding: .6rem 0;
+  margin: 0;
+}
+
+.migration-plan li {
+  display: flex;
+  align-items: flex-start;
+  gap: .6rem;
+  padding: .5rem 0;
+  font-size: .74rem;
+  line-height: 1.6;
+  color: #8793a5;
+}
+
+.migration-plan li > i {
+  margin-top: .25rem;
+  color: #77a18f;
+  font-size: .65rem;
+}
+
+.migration-protection {
+  padding: 1rem;
+  border-radius: 9px;
+  background: #f6f9f7;
+  border: 1px solid #e7eee9;
+}
+
+.migration-protection strong {
+  font-size: .75rem;
+  font-weight: 600;
+  color: #628574;
+}
+
+.migration-protection p {
+  font-size: .7rem;
+  margin: .4rem 0 0;
+  color: #8c9c92;
+  line-height: 1.7;
+}
+
+.migration-start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  width: 100%;
+  min-height: 42px;
+  margin-top: 1.25rem;
+  background: #e8ecf2;
+  border: 0;
+  border-radius: 9px;
+  color: #8f9bb0;
+  font-size: .75rem;
+  font-weight: 600;
+  cursor: default;
+}
+
+.migration-start-help {
+  display: block;
+  margin-top: .7rem;
+  color: #a3adbc;
+  font-size: .68rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.migration-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+  padding: 2.2rem 1.2rem;
+  color: #96a1b3;
+  font-size: .78rem;
+  text-align: center;
+}
+
+.migration-empty strong {
+  color: #7a879c;
+  font-size: .8rem;
+  font-weight: 500;
+}
+
+.migration-empty p {
+  margin: 0;
+  max-width: 440px;
+  font-size: .74rem;
+  line-height: 1.7;
+}
+
+.migration-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f1f4f8;
+  color: #9aa7bb;
+  font-size: 1.1rem;
+}
+
+.migration-runs th {
+  background: #f8fafd;
+  color: #8b97aa;
+  font-size: .69rem;
+  font-weight: 500;
+  padding: .8rem 1.3rem;
+  white-space: nowrap;
+}
+
+.migration-runs td {
+  font-size: .76rem;
+  padding: 1rem 1.3rem;
+}
+
+.migration-runs td small {
+  display: block;
+  margin-top: .3rem;
+  color: #a5aebb;
+  font-size: .63rem;
+}
+
+.migration-command {
+  margin-top: 1.25rem;
+  padding: 1.1rem 1.4rem;
+  border: 1px solid #dfe5ee;
+  border-radius: 11px;
+  color: #8b97aa;
+  background: #fff;
+}
+
+.migration-command summary {
+  font-size: .75rem;
+  cursor: pointer;
+}
+
+.migration-command summary i {
+  margin-inline: .25rem .4rem;
+}
+
+.migration-command > div {
+  margin-top: 1rem;
+}
+
+.migration-command p {
+  font-size: .74rem;
+}
+
+.migration-command > div > code {
+  display: block;
+  background: #f5f7fa;
+  border: 1px solid #e8ecf2;
+  color: #64758d;
+  border-radius: 7px;
+  padding: .9rem;
+  font-size: .73rem;
+  overflow-wrap: anywhere;
+}
+
+.migration-command small {
+  display: block;
+  margin-top: .7rem;
+  font-size: .68rem;
+}
+
+@media (max-width: 991px) {
+  .migration-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 575px) {
+  .migration-overview {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .migration-transfer {
+    transform: rotate(90deg);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .migration-icon {
+    display: none;
+  }
+  .migration-heading h1 {
+    font-size: 1.3rem;
+  }
+}
+

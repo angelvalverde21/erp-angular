@@ -23,6 +23,8 @@ export class AddressCreateComponent implements OnInit, OnDestroy {
   form!: FormGroup
 
   @Output() emitCreateAddress = new EventEmitter<any>();
+  @Output() cancel = new EventEmitter<void>();
+  @Input() presentation: 'default' | 'branch' = 'default';
   @Input() user_id: number = 0;
   @Input() addressable_type: string = '';
   @Input() addressable_id: number = 0;
@@ -59,13 +61,13 @@ export class AddressCreateComponent implements OnInit, OnDestroy {
       primary: ['', [Validators.required]],
       secondary: [''],
       district_id: ['', [Validators.required]],
-      phone: ['', [Validators.required]],
+      phone: ['', ['courier', 'store'].includes(this.addressable_type) ? [] : [Validators.required]],
       references: [''],
       document_number: [''],
       identity_id: [1],
-      user_id: [this.user_id, [Validators.required]],
       addressable_type: [this.addressable_type, [Validators.required]],
-      addressable_id: [this.addressable_id, [Validators.required]],
+      addressable_id: [this.addressable_type === 'store' ? null : this.addressable_id,
+        this.addressable_type === 'store' ? [] : [Validators.required]],
 
     });
 
@@ -79,6 +81,8 @@ export class AddressCreateComponent implements OnInit, OnDestroy {
   createAddress() {
 
     console.log("empezando la creacion de una direccion");
+
+    if (this.loading) return;
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();

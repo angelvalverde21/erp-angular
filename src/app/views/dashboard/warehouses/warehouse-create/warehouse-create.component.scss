@@ -1,0 +1,21 @@
+@use '../../branches/branch-ui';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.branch-form {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.warehouse-inherited-address { padding: 1.1rem 1.2rem; border: 1px solid #e0e7eb; border-radius: 11px; background: #f8fbfa; }
+.warehouse-address-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .6rem; margin-bottom: 1rem; font-size: .8rem; font-weight: 600; color: #526176; }
+.warehouse-address-badge { display: inline-flex; align-items: center; gap: .4rem; padding: .3rem .5rem; border-radius: 6px; background: #e9f3f0; color: #348174; font-size: .68rem; font-weight: 500; }
+.warehouse-address-content { display: flex; align-items: flex-start; gap: .75rem; }
+.warehouse-address-content > i { margin-top: .2rem; color: #348174; }
+.warehouse-address-content p { margin: 0; font-size: .85rem; color: #34435a; overflow-wrap: anywhere; }
+.warehouse-address-content small { display: block; margin-top: .25rem; color: #8491a4; font-size: .74rem; }
+.warehouse-address-help { display: block; margin-top: 1rem; color: #8491a4; font-size: .74rem; line-height: 1.6; }

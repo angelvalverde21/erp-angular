@@ -1,14 +1,14 @@
-<div class="card mb-3">
-
-
-    <div class="card-body">
-
-        <app-employee-form [form]="form" [roles]="roles"></app-employee-form>
-        <!-- {{ form.value | json }} -->
-
-        <app-user-controls-update type="employee" [formValue]="form.value"
-            [user_id]="employee.id"></app-user-controls-update>
-
-    </div>
-
-</div>
+<form [formGroup]="form" (ngSubmit)="save()" class="personnel-card mb-3">
+  <header class="personnel-card-header"><div><h2>Ficha del empleado</h2><p>Actualiza sus datos personales, laborales y de asistencia.</p></div></header>
+  <div class="personnel-card-body"><app-employee-form [form]="form" [roles]="roles"></app-employee-form></div>
+  <footer class="personnel-card-footer">
+    @if (error) { <p class="personnel-error" role="alert">{{ error }}</p> }
+    @if (canEdit) {
+      <button type="submit" class="personnel-button personnel-primary" [disabled]="loadingIcon">
+        @if (loadingIcon) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> }
+        @else { <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> }
+        {{ loadingIcon ? 'Guardando…' : 'Guardar cambios' }}
+      </button>
+    } @else { <small>Tu perfil tiene acceso de consulta a esta ficha.</small> }
+  </footer>
+</form>

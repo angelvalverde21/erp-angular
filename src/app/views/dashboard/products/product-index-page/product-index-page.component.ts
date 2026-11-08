@@ -1,113 +1,127 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ProductIndexComponent } from '../product-index/product-index.component';
-
-import { faMagnifyingGlass, faFilter, faTag } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { Subject, takeUntil } from 'rxjs';
-import { ProductService } from '../product.service'
-import Swal from 'sweetalert2';
-import { HeadPageComponent } from "@shared/components/head-page/head-page.component";
-import { ButtonComponent } from "@shared/components/buttons/button/button.component";
-import { ButtonLinkComponent } from "@shared/components/buttons/button-link/button-link.component";
-import { Product } from '../../../../interfaces/product.interface';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { Product } from 'src/app/interfaces/product.interface';
+import { ProductListResponse, ProductSort, ProductSortDirection } from 'src/app/interfaces/product-list.interface';
+import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { HeadTableComponent } from '@shared/components/head-table/head-table.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HeadSearchComponent } from 'src/app/views/shared/components/head-search/head-search.component';
+import { ProductSearchComponent } from '../product-search/product-search.component';
+import { ProductIndexComponent } from '../product-index/product-index.component';
+import { ProductService } from '../product.service';
 
 @Component({
   selector: 'app-product-index-page',
-  imports: [
-    ProductIndexComponent,
-    ButtonComponent,
-    FontAwesomeModule,
-    ButtonLinkComponent,
-    HeadPageComponent,
-    LoadingComponent,
-    HeadTableComponent,
-    HeadSearchComponent
-  ],
-
+  imports: [ProductIndexComponent, RouterLink, HeadPageComponent, LoadingComponent, ProductSearchComponent],
   templateUrl: './product-index-page.component.html',
-  styleUrl: './product-index-page.component.scss'
+  styleUrl: './product-index-page.component.scss',
 })
 export class ProductIndexPageComponent implements OnInit, OnDestroy {
-
-
   products: Product[] = [];
+  sortBy: ProductSort = 'created_at';
+  sortDirection: ProductSortDirection = 'desc';
+  page = 0;
+  total: number | null = null;
+  hasMore = true;
+  loading = false;
+  loadingMore = false;
+  error = '';
 
-  loading: boolean = false;
-
+  private readonly destroy$ = new Subject<void>();
+  private readonly cancelLoad$ = new Subject<void>();
 
   constructor(
     private _product: ProductService,
     private route: ActivatedRoute,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
-    this.loading = true;
     this.productsInit();
   }
 
-  productsInit() {
-
-    this._product.index(this.page).pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
-        console.log(resp);
-        this.products = [...this.products, ...resp.data];
-        this.loading = false;
-        this.loadingMore = false;
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al traer los productos. Inténtalo nuevamente.', 'error');
-        console.error(error);
-      },
-
-    });
-
+  productsInit(): void {
+    this.loadProducts(true);
   }
 
-  destroy$ = new Subject<void>();
-
-  ngOnDestroy(): void {
-
-    this.destroy$.next();
-    this.destroy$.complete();
-
-  }
-
-  faMagnifyingGlass = faMagnifyingGlass;
-  faFilter = faFilter;
-  faTag = faTag;
-
-  page: number = 1;
-  loadingMore: boolean = false;
-
-  loadMoreProducts() {
-
-    this.page++;
-    this.loadingMore = true;
-    console.log("Cargando más productos...");
+  changeSort(sortBy: ProductSort): void {
+    if (sortBy === this.sortBy) {
+      this.sortDirection = this.sortDirection === 'desc' ? 'asc' : 'desc';
+    } else {
+      this.sortDirection = ['name', 'category', 'price'].includes(sortBy) ? 'asc' : 'desc';
+    }
+    this.sortBy = sortBy;
     this.productsInit();
-
-    // this.loading = true;    
-    // 
   }
 
-  receiveSearchResult($event: any) {
+  loadMoreProducts(): void {
+    if (this.loading || this.loadingMore || !this.hasMore || this.error) return;
+    this.loadProducts(false);
   }
 
-  receiveParams($event: any) {
+  retry(): void {
+    if (this.loading || this.loadingMore) return;
+    this.loadProducts(this.page === 0);
+  }
+
+  private loadProducts(reset: boolean): void {
+    if (reset) {
+      this.cancelLoad$.next();
+      this.products = [];
+      this.page = 0;
+      this.total = null;
+      this.hasMore = true;
+    }
+
+    this.error = '';
+    this.loading = reset;
+    this.loadingMore = !reset;
+    const nextPage = this.page + 1;
+
+    this._product.getCatalog(nextPage, this.sortBy, this.sortDirection)
+      .pipe(
+        takeUntil(this.destroy$),
+        takeUntil(this.cancelLoad$),
+        finalize(() => {
+          this.loading = false;
+          this.loadingMore = false;
+        }),
+      )
+      .subscribe({
+        next: response => this.receiveProducts(response, nextPage),
+        error: (error: unknown) => {
+          this.error = 'No se pudieron cargar los productos. Intenta nuevamente.';
+          console.error(error);
+        },
+      });
+  }
+
+  private receiveProducts(response: ProductListResponse, page: number): void {
+    const incoming = response.data ?? [];
+    const loadedIds = new Set(this.products.map(product => product.id));
+    const added = incoming.filter(product => !loadedIds.has(product.id));
+    this.products = [...this.products, ...added];
+    this.page = page;
+    this.total = response.meta?.total ?? response.total ?? this.total;
+
+    const lastPage = response.meta?.last_page ?? response.last_page;
+    if (lastPage !== undefined) this.hasMore = page < lastPage;
+    else if (response.links && 'next' in response.links) this.hasMore = !!response.links.next;
+    else if ('next_page_url' in response) this.hasMore = !!response.next_page_url;
+    else this.hasMore = incoming.length > 0;
+
+    this.hasMore = this.hasMore && added.length > 0;
+  }
+
+  receiveParams(params: Record<string, unknown>): void {
     this.router.navigate(['search'], {
       relativeTo: this.route,
-      queryParams: $event  // 👈 Angular convierte cada propiedad del objeto en un query param
-    }).then(() => {
-      console.log('Nueva URL:', this.router.url);
+      queryParams: { ...params, sort_by: this.sortBy, sort_direction: this.sortDirection },
     });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.cancelLoad$.complete();
+  }
 }

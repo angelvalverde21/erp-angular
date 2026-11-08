@@ -1,0 +1,3 @@
+@if (error) { <div class="alert alert-danger" role="alert">{{ error }}</div> }
+@if (success) { <div class="alert alert-success" role="status"><i class="fa-regular fa-circle-check me-2" aria-hidden="true"></i>{{ success }}</div> }
+<app-inventory-count-create [options]="options" [initialLocationId]="locationId" [embedded]="true" [showLocationPicker]="false" [showHistory]="false" [saving]="saving" [readOnly]="readOnly || !!options.recording_locked" [variants]="variants" [countedQuantity]="countedQuantity" [searching]="searching" [searchError]="searchError" (searchVariants)="searchVariant($event)" (save)="save($event)" (editExisting)="openExisting($event)"></app-inventory-count-create>

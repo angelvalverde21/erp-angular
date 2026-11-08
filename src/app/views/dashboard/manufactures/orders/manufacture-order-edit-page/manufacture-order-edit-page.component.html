@@ -1,21 +1,15 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-
-<div class="alert alert-light"><span class="fw-bold">{{ manufacture?.name }}</span></div>
-
-<app-order-widget [summary]="summary"></app-order-widget>
-
-<div class="alert alert-info mb-3" role="alert">
-    Entrega: {{ manufacture?.manufacture_end | dateToString }}
+<div class="production-page manufacture-theme-order">
+  <app-manufacture-section-header section="order" [title]="manufacture?.name || 'Detalle de la orden'" [reference]="'Orden de compra #' + manufacture_id" description="Productos, pagos y entregas de tu proveedor." [backLink]="['../']" backLabel="Todas las órdenes de compra"></app-manufacture-section-header>
+  <div class="purchase-order-detail-meta">
+    @if (manufacture?.supplier?.user?.name || manufacture?.supplier?.name; as supplierName) { <span><i class="fa-regular fa-user" aria-hidden="true"></i>{{ supplierName }}</span> }
+    @if (manufacture?.manufacture_end) { <span><i class="fa-regular fa-calendar" aria-hidden="true"></i>Entrega: {{ manufacture.manufacture_end | dateToString }}</span> }
+  </div>
+  @if (loading) {
+  <div class="production-panel production-empty" role="status"><app-loading></app-loading><p>Cargando orden de compra...</p></div>
+  } @else if (error) {
+  <div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar la orden</h3><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary" (click)="manufactureInit()">Reintentar</button></div>
+  } @else {
+  <app-order-widget [summary]="summary"></app-order-widget>
+  <router-outlet></router-outlet>
+  }
 </div>
-
-<div class="card">
-
-    <div class="card-body">
-        <router-outlet></router-outlet>
-    </div>
-
-</div>
-
-}

@@ -1,0 +1,45 @@
+.production-expenses-heading { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+.production-expenses-eyebrow { color: var(--manufacture-accent, #6941c6); font-size: .65rem; font-weight: 700; letter-spacing: .09em; }
+.production-expenses-heading h2 { margin: .35rem 0; font-size: 1.2rem; font-weight: 700; letter-spacing: -.02em; }
+.production-expenses-heading p { margin: 0; color: var(--cui-secondary-color, #64748b); font-size: .85rem; line-height: 1.6; }
+.production-expense-primary, .production-expense-secondary { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 2.8rem; padding: .65rem 1rem; font-size: .85rem; font-weight: 600; border-radius: .6rem; text-decoration: none; }
+.production-expense-primary { flex-shrink: 0; color: #fff; background: var(--manufacture-accent, #6941c6); border: 1px solid var(--manufacture-accent, #6941c6); }
+.production-expense-primary:hover { background: var(--manufacture-accent-hover, #5330a3); }
+.production-expense-secondary { color: var(--manufacture-accent, #6941c6); border: 1px solid var(--cui-border-color, #e2e8f0); background: var(--cui-body-bg, #fff); }
+.production-expense-primary:focus-visible, .production-expense-secondary:focus-visible, .production-expense-details summary:focus-visible { outline: 3px solid rgba(var(--manufacture-accent-rgb, 105, 65, 198), .25); outline-offset: 2px; }
+.production-expenses-summary { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr)); background: var(--cui-body-bg, #fff); border: 1px solid var(--cui-border-color, #e2e8f0); border-radius: .85rem; margin: 0 0 1.5rem; overflow: hidden; }
+.production-expenses-summary > div { padding: 1.25rem 1.5rem; }
+.production-expenses-summary > div + div { border-left: 1px solid var(--cui-border-color, #e2e8f0); }
+.production-expenses-summary dt { color: var(--cui-secondary-color, #64748b); font-size: .8rem; font-weight: 500; }
+.production-expenses-summary dd { font-size: 1.8rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: .5rem 0 .3rem; letter-spacing: -.035em; overflow-wrap: anywhere; }
+.production-expenses-summary .production-expenses-note { color: var(--cui-secondary-color, #64748b); font-size: .75rem; font-weight: 400; line-height: 1.5; letter-spacing: normal; margin: 0; }
+.production-expenses-total { background: rgba(var(--manufacture-accent-rgb, 105, 65, 198), .04); }
+.production-expenses-total dd:first-of-type { color: var(--manufacture-accent, #6941c6); }
+.production-expense-card { background: var(--cui-body-bg, #fff); border: 1px solid var(--cui-border-color, #e2e8f0); border-radius: .85rem; margin-bottom: 1rem; }
+.production-expense-card-header { display: flex; align-items: center; gap: 1rem; padding: 1.15rem 1.25rem; }
+.production-expense-icon { display: grid; place-items: center; flex-shrink: 0; width: 2.75rem; height: 2.75rem; border-radius: .65rem; color: var(--manufacture-accent, #6941c6); background: rgba(var(--manufacture-accent-rgb, 105, 65, 198), .07); }
+.production-expense-identity { flex: 1; min-width: 0; }
+.production-expense-identity h3 { font-size: .9rem; font-weight: 600; margin: 0; overflow-wrap: anywhere; }
+.production-expense-meta { display: flex; flex-wrap: wrap; gap: .25rem .85rem; margin-top: .4rem; color: var(--cui-secondary-color, #64748b); font-size: .75rem; }
+.production-expense-amount { text-align: right; flex-shrink: 0; }
+.production-expense-amount > span { display: block; font-size: .7rem; color: var(--cui-secondary-color, #64748b); margin-bottom: .25rem; }
+.production-expense-amount strong { font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.production-expense-details { border-top: 1px solid var(--cui-border-color, #e2e8f0); }
+.production-expense-details summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem 1.25rem; cursor: pointer; list-style: none; font-size: .8rem; font-weight: 500; }
+.production-expense-details summary::-webkit-details-marker { display: none; }
+.production-expense-details summary:hover { background: rgba(100, 116, 139, .035); }
+.production-expense-details summary small { display: inline-block; margin-left: .4rem; padding: .1rem .45rem; background: rgba(100, 116, 139, .07); border-radius: 1rem; font-size: .7rem; }
+.production-expense-details summary > i { color: var(--cui-secondary-color, #64748b); font-size: .7rem; }
+.production-expense-details[open] summary > i { transform: rotate(180deg); }
+.production-expense-table { --cui-table-bg: transparent; --bs-table-bg: transparent; min-width: 620px; font-size: .85rem; }
+.production-expense-table th { padding: .8rem 1.25rem; color: var(--cui-secondary-color, #64748b); font-size: .7rem; font-weight: 600; background: rgba(100, 116, 139, .04); white-space: nowrap; }
+.production-expense-table td { padding: 1rem 1.25rem; border-color: var(--cui-border-color, #e2e8f0); }
+.production-expense-table tbody tr:last-child td { border-bottom: 0; }
+.production-expense-number { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.production-expense-description { min-width: 180px; overflow-wrap: anywhere; }
+.production-expenses-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .85rem; padding: 3rem 1.25rem; background: var(--cui-body-bg, #fff); border: 1px dashed var(--cui-border-color, #e2e8f0); border-radius: .85rem; }
+.production-expenses-empty > span { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; color: var(--manufacture-accent, #6941c6); background: rgba(var(--manufacture-accent-rgb, 105, 65, 198), .06); border-radius: .9rem; font-size: 1.3rem; }
+.production-expenses-empty h3 { margin: .25rem 0 0; font-size: 1rem; font-weight: 600; }
+.production-expenses-empty p { margin: 0; color: var(--cui-secondary-color, #64748b); font-size: .85rem; line-height: 1.6; max-width: 48ch; }
+@media (max-width: 767.98px) { .production-expenses-heading { flex-wrap: wrap; } .production-expenses-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } .production-expenses-summary .production-expenses-total { grid-column: 1 / -1; border-bottom: 1px solid var(--cui-border-color, #e2e8f0); } .production-expenses-summary > div:nth-child(2) { border-left: 0; } }
+@media (max-width: 575.98px) { .production-expenses-summary > div { padding: 1rem; } .production-expenses-summary dd { font-size: 1.5rem; } .production-expense-card-header { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: .75rem; padding: 1rem; } .production-expense-amount { grid-column: 2; text-align: left; } .production-expense-card-header app-purchase-index-head { grid-column: 3; grid-row: 1 / 3; } .production-expense-primary { width: 100%; } }

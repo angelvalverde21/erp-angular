@@ -1,1 +1,162 @@
-<p>order-create works!</p>
+﻿<form [formGroup]="form" (ngSubmit)="submitOrder()" class="order-create-form">
+    <div class="order-intro">
+        <div>
+            <!-- <span class="order-eyebrow">NUEVO PEDIDO</span> -->
+            <h2>NUEVO PEDIDO</h2>
+            <p>Completa los datos del cliente, agrega productos y elige cómo enviarlos.</p>
+        </div>
+        <span class="order-draft-status"><span aria-hidden="true"></span> Sin guardar</span>
+    </div>
+
+    <div class="order-layout">
+        <div class="order-main">
+            <section class="order-panel order-primary-panel" aria-labelledby="order-address-title">
+                <div class="order-panel-header">
+                    <span class="order-section-icon" aria-hidden="true"><fa-icon [icon]="faUser"></fa-icon></span>
+                    <div>
+                        <span class="order-card-step">01 · Cliente</span>
+                        <h3 id="order-address-title">Cliente y dirección</h3>
+                        <p>Indica quién recibirá el pedido y dónde entregarlo.</p>
+                    </div>
+                </div>
+                <div class="order-panel-body">
+                    <app-address-form></app-address-form>
+                </div>
+            </section>
+
+            <section class="order-panel order-primary-panel" aria-labelledby="order-products-title">
+                <div class="order-panel-header order-products-header">
+                    <span class="order-section-icon" aria-hidden="true"><fa-icon [icon]="faBarcode"></fa-icon></span>
+                    <div class="order-section-heading">
+                        <span class="order-card-step">02 · Productos</span>
+                        <h3 id="order-products-title">Productos <span class="order-count">{{ variants.length }}</span></h3>
+                        <p>Selecciona las variantes y ajusta sus cantidades.</p>
+                    </div>
+                    <button type="button" class="btn btn-dark text-white order-add-button" (click)="openVerticallyCentered(content)">
+                        <span aria-hidden="true">+</span> Agregar productos
+                    </button>
+                </div>
+                @if (variants.length === 0) {
+                <div class="order-empty">
+                    <span class="order-empty-icon" aria-hidden="true"><fa-icon [icon]="faDolly"></fa-icon></span>
+                    <h4>Tu pedido aún no tiene productos</h4>
+                    <p>Usa «Agregar productos» para buscar y seleccionar los artículos del pedido.</p>
+                </div>
+                } @else {
+                <div class="order-products-table">
+                    <app-order-variant-index [variants]="variants" (totalChange)="receiveVariantsTotal($event)"></app-order-variant-index>
+                </div>
+                }
+            </section>
+
+            <section class="order-panel order-primary-panel order-shipping-panel mb-3" aria-labelledby="order-shipping-title">
+                <div class="order-panel-header">
+                    <span class="order-section-icon" aria-hidden="true"><fa-icon [icon]="faTruck"></fa-icon></span>
+                    <div>
+                        <span class="order-card-step">03 · Entrega</span>
+                        <h3 id="order-shipping-title">Envío o recojo</h3>
+                        <p>Selecciona el servicio y el punto de entrega del pedido.</p>
+                    </div>
+                </div>
+                <div class="order-panel-body pb-4">
+                    <app-courier-selected formControlName="courier_address_id" presentation="cards" aria-labelledby="order-shipping-title"
+                        (emitCourierSelected)="receiveCourierSelected($event)"></app-courier-selected>
+                    <div class="order-shipping-options">
+                        @if (delivery_type === 'agency' || delivery_type === 'express') {
+                        <div class="order-shipping-cost">
+                            <app-input-group [icon]="faTruck" text="Costo de envío">
+                                <input #deliveryCostInput formControlName="delivery_cost" type="number" class="form-control" placeholder="0.00"
+                                    aria-label="Costo de envío en soles" twoDecimals
+                                    (focus)="deliveryCostInput.select()" (click)="deliveryCostInput.select()" />
+                            </app-input-group>
+                        </div>
+                        }
+                        @if (freight_collect) {
+                        <div class="order-freight-option">
+                            <span class="d-block mb-2">Pago del envío</span>
+                            <app-button-check formControlName="freight_collect" class="d-block w-100">
+                                Pago en destino
+                            </app-button-check>
+                            <p>El costo del envío se paga al recibir el pedido.</p>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <aside class="order-sidebar" aria-label="Resumen del pedido">
+            <section class="order-panel order-summary" aria-labelledby="order-summary-title">
+                <div class="order-panel-header">
+                    <div>
+                        <h3 id="order-summary-title">Resumen de pagos</h3>
+                        <p>Importes expresados en soles (PEN).</p>
+                    </div>
+                </div>
+                <div class="order-summary-context">
+                    <span class="order-summary-label">Pedido para</span>
+                    <p class="order-summary-customer">{{ form.get('name')?.value || 'Completa el nombre del cliente' }}</p>
+                    @if (form.get('phone')?.value) { <span class="order-summary-phone">{{ form.get('phone')?.value }}</span> }
+                    @if (form.get('primary')?.value) { <p class="order-summary-address">{{ form.get('primary')?.value }}</p> }
+                </div>
+                <dl class="order-totals">
+                    <div>
+                        <dt>Subtotal</dt>
+                        <dd>{{ summary?.subTotal ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd>
+                    </div>
+                    <div>
+                        <dt>IGV</dt>
+                        <dd>{{ summary?.igv ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Envío</dt>
+                        <dd>{{ summary?.delivery ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd>
+                    </div>
+                    <div class="order-total">
+                        <dt>Total del pedido</dt>
+                        <dd>{{ summary?.total ?? 0 | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd>
+                    </div>
+                </dl>
+                <div class="order-summary-checklist" aria-label="Datos necesarios para generar el pedido">
+                    @for (step of completionSteps; track $index) {
+                    <div [class.is-complete]="step.complete">
+                        <i [class]="step.complete ? 'fa-solid fa-circle-check' : 'fa-regular fa-circle'" aria-hidden="true"></i>
+                        <span>{{ step.label }}</span>
+                        <span class="order-check-status">{{ step.complete ? 'Listo' : 'Pendiente' }}</span>
+                    </div>
+                    }
+                </div>
+                <div class="order-summary-action">
+                    <p class="order-summary-action-help" aria-live="polite">{{ canGenerateOrder ? 'Todo listo. Revisa el total y genera el pedido.' : 'Completa cliente, productos y envío para generar el pedido.' }}</p>
+                    <button type="submit" class="btn btn-primary text-white order-generate-button w-100"
+                        [disabled]="loading || !canGenerateOrder" [attr.aria-busy]="loading">
+                        @if (loading) {
+                        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                        <span role="status">Generando pedido...</span>
+                        } @else {
+                        <fa-icon [icon]="faDolly" class="me-2" aria-hidden="true"></fa-icon>
+                        Generar pedido
+                        }
+                    </button>
+                </div>
+            </section>
+        </aside>
+    </div>
+
+</form>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h2 class="modal-title fs-5">
+            <fa-icon [icon]="faBarcode" class="me-2" aria-hidden="true"></fa-icon> Agregar productos
+        </h2>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <p class="text-body-secondary mb-3">Busca y selecciona los productos que deseas incluir en el pedido.</p>
+        <app-variant-search (emitVariantsSelected)="receiveVariantsSelected($event)"></app-variant-search>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Cerrar</button>
+    </div>
+</ng-template>

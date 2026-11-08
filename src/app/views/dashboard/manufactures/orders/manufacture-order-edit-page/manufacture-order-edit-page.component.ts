@@ -1,3 +1,4 @@
+import { ManufactureSectionHeaderComponent } from '../../components/manufacture-section-header/manufacture-section-header.component';
 import { Component, effect, OnInit } from '@angular/core';
 import { ManufactureOrderService } from '../order.service';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
@@ -8,18 +9,15 @@ import { OrderWidgetComponent } from './order-widget/order-widget.component';
 import { SupplierService } from '../../../users/suppliers/supplier.service';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
-import { CommonModule } from '@angular/common';
 import { DateToStringPipe } from 'src/app/views/shared/pipes/date-to-string.pipe';
 
 @Component({
   selector: 'app-manufacture-order-edit-page',
   imports: [
+    ManufactureSectionHeaderComponent,
     LoadingComponent,
     RouterModule,
     OrderWidgetComponent,
-    DateShopifyPipe,
-    CommonModule,
     DateToStringPipe
   ],
   templateUrl: './manufacture-order-edit-page.component.html',
@@ -29,6 +27,7 @@ import { DateToStringPipe } from 'src/app/views/shared/pipes/date-to-string.pipe
 export class ManufactureOrderEditPageComponent implements OnInit {
 
   loading: boolean = false;
+  error = '';
   manufacture: any = null;
   manufacture_id: number = 0;
 
@@ -77,6 +76,8 @@ export class ManufactureOrderEditPageComponent implements OnInit {
 
   manufactureInit() {
 
+    this.error = '';
+
     //primero iniciamos los suppliers
 
     this.loading = true;
@@ -107,6 +108,8 @@ export class ManufactureOrderEditPageComponent implements OnInit {
       },
 
       error: (error: any) => {
+        this.loading = false;
+        this.error = 'No se pudo consultar la orden. Intenta nuevamente.';
         Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
         console.error(error);
       },

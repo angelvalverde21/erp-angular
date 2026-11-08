@@ -1,7 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
-import { ButtonSaveComponent } from '@shared/components/buttons/button-save/button-save.component';
 import Swal from 'sweetalert2';
 import { Subject, takeUntil } from 'rxjs';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
@@ -13,8 +11,6 @@ import { ManufactureOrderFormComponent } from '../manufacture-order-form/manufac
   selector: 'app-manufacture-order-create',
   imports: [
     ReactiveFormsModule,
-    JsonPipe,
-    ButtonSaveComponent,
     LoadingComponent,
     ManufactureOrderFormComponent
   ],
@@ -29,6 +25,7 @@ export class ManufactureOrderCreateComponent implements OnInit, OnDestroy {
 
   loading: boolean = false;
   disabledButton: boolean = false;
+  error = '';
 
   constructor(
     private fb: FormBuilder,
@@ -69,6 +66,8 @@ export class ManufactureOrderCreateComponent implements OnInit, OnDestroy {
 
   createManufacture() {
 
+    if (this.disabledButton) return;
+
     console.log(this.form.value);
 
 
@@ -78,7 +77,7 @@ export class ManufactureOrderCreateComponent implements OnInit, OnDestroy {
     }
 
     this.loading = false;
-    this.disabledButton = false;
+    this.disabledButton = true;
 
     Swal.fire({
       title: 'Espere...',
@@ -116,6 +115,7 @@ export class ManufactureOrderCreateComponent implements OnInit, OnDestroy {
 
   suppliersInit(){
 
+    this.error = '';
     this.loading = true;
 
     this._supplier.index().pipe(takeUntil(this.destroy$)).subscribe({
@@ -129,6 +129,8 @@ export class ManufactureOrderCreateComponent implements OnInit, OnDestroy {
       },
     
       error: (error: any) => {
+        this.loading = false;
+        this.error = 'No se pudieron consultar los proveedores. Intenta nuevamente.';
         Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
         console.error(error);
       },

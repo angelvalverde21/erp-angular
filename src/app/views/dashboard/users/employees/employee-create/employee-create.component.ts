@@ -1,106 +1,49 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-//
-
-import { JsonPipe } from '@angular/common';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { EmployeeService } from '../employee.service';
-import { Subject, takeUntil } from 'rxjs';
-import Swal from 'sweetalert2';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
-import { faSave } from '@fortawesome/free-solid-svg-icons';
-import { ButtonSaveComponent } from 'src/app/views/shared/components/buttons/button-save/button-save.component';
+import { createEmployeeForm, employeeError, employeePayload } from '../employee-form.model';
 
 @Component({
   selector: 'app-employee-create',
-  imports: [
-    ReactiveFormsModule,
-    JsonPipe,
-    EmployeeFormComponent,
-    ButtonSaveComponent
-  ],
+  imports: [ReactiveFormsModule, EmployeeFormComponent],
   templateUrl: './employee-create.component.html',
-  styleUrl: './employee-create.component.scss'
+  styleUrl: './employee-create.component.scss',
 })
-export class EmployeeCreateComponent {
-
-  constructor(
-    private fb: FormBuilder,
-    private _employee: EmployeeService
-  ) {}
-
-  @Output() emitEmployeeCreate = new EventEmitter<any>();
-  
-  faSave = faSave;
-
-  disabledButton: boolean = false;
-  loadingIcon: boolean = false;
-
-  form!: FormGroup;
+export class EmployeeCreateComponent implements OnInit, OnDestroy {
   @Input() roles: any[] = [];
+  @Output() emitEmployeeCreate = new EventEmitter<any>();
+  form: FormGroup;
+  loadingIcon = false;
+  disabledButton = false;
+  error = '';
+  private readonly destroy$ = new Subject<void>();
 
-  private formInit(): void {
-    this.form = this.fb.group({
-      name: ['', [Validators.required]],
-      email: ['', [Validators.required]],
-      phone: ['', [Validators.required]],
-      identity_id: [null, [Validators.required]],
-      document_number: ['', [Validators.required]],
-      roles: ['', [Validators.required]],
-      salary: ['', [Validators.required]],
-      type: ['fulltime', [Validators.required]],
-      comission: [''],
-      tag_sales: [''],
-    });
+  constructor(fb: FormBuilder, private service: EmployeeService) {
+    this.form = createEmployeeForm(fb);
   }
 
-  ngOnInit(): void {
-    this.formInit();
-    // this.form.patchValue(this.form.value);
-  }
+  ngOnInit(): void {}
 
-  employee: any;
-
-  create(){
-
-    if (this.form.invalid) {
+  create(): void {
+    if (this.form.invalid || this.loadingIcon) {
       this.form.markAllAsTouched();
       return;
     }
-
-    this.loadingIcon = true;
-    this.disabledButton = true;
-
-    this._employee.store(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
-    
-      next: (resp: any) => {
-        Swal.fire('Guardado', 'El empleado ha sido creado correctamente', 'success');
-        console.log(resp);
-        this.employee = resp.data;
-        this.loadingIcon = false;
-
-        this.emitEmployeeCreate.emit(resp.data);
-
-        this.disabledButton = false;
-      },
-    
-      error: (error: any) => {
-        Swal.fire('Error','Ocurrió un problema al crear. Inténtalo nuevamente.','error');
-        console.error(error);
-        this.loadingIcon = false;
-        this.disabledButton = false;
-      },
-    
+    this.loadingIcon = this.disabledButton = true;
+    this.error = '';
+    this.service.store(employeePayload(this.form.getRawValue())).pipe(
+      takeUntil(this.destroy$),
+      finalize(() => this.loadingIcon = this.disabledButton = false),
+    ).subscribe({
+      next: (response: any) => this.emitEmployeeCreate.emit(response.data),
+      error: error => this.error = employeeError(error),
     });
-    
   }
 
-  destroy$ = new Subject<void>();
-  
   ngOnDestroy(): void {
-  
     this.destroy$.next();
     this.destroy$.complete();
-  
   }
-
 }

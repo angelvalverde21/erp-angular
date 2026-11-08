@@ -1,0 +1,46 @@
+@use '../../branches/branch-ui';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.branch-form {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.branch-address-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.branch-address-add {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .4rem .65rem;
+  border: 1px solid var(--branch-border, #e2e8f0);
+  border-radius: .5rem;
+  background: var(--cui-body-bg, #fff);
+  color: var(--section-accent, #385a9b);
+  font-size: .76rem;
+  font-weight: 600;
+
+  &:hover { background: var(--section-tint, #f4f6fa); }
+  &:disabled { opacity: .5; cursor: default; }
+}
+.branch-address-modal-icon { display: grid; place-items: center; flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px; background: #edf2fb; color: #385a9b; font-size: 1rem; }
+::ng-deep .branch-address-modal {
+  .modal-content { border: 1px solid #e1e6ef; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 70px rgba(25, 39, 62, .2); }
+  .modal-header { align-items: center; gap: .85rem; padding: 1.35rem 1.5rem; border-color: #edf0f5; }
+  .modal-title { color: #34435a; font-size: 1.05rem !important; font-weight: 650; }
+  .modal-header p { font-size: .76rem; color: #8a96a8 !important; }
+  .btn-close { margin-left: auto; padding: .55rem; border-radius: 8px; background-size: 11px; opacity: .55; }
+  .btn-close:hover { background-color: #f0f3f8; opacity: .9; }
+  .modal-body { padding: 1.5rem !important; }
+}

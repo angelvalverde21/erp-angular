@@ -1,1 +1,8 @@
-<p>location-edit-page works!</p>
+<div class="branch-page section-locations">
+  <app-branch-section-header level="locations" title="Editar ubicación" description="Actualiza los datos del registro seleccionado." [creating]="true" [editing]="true" [warehouse]="context">
+    <a class="branch-back" [routerLink]="['../../']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver al listado</a>
+  </app-branch-section-header>
+  @if (error) { <div class="branch-alert" role="alert">{{ error }} @if (!record) { <button type="button" class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button> }</div> }
+  @if (loading) { <div class="branch-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando registro…</div> }
+  @else if (record) { <section class="branch-panel branch-form-surface"><header class="branch-panel-heading"><h2>{{ record.name }}</h2><p>Edita los campos y guarda los cambios.</p></header><app-location-edit [record]="record" [saving]="saving" [parentId]="parentId" [parents]="parents" (save)="save($event)"></app-location-edit></section> }
+</div>

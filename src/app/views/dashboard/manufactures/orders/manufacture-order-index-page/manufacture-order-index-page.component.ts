@@ -1,78 +1,74 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HeadPageComponent } from "@shared/components/head-page/head-page.component";
-import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
+import { RouterLink } from '@angular/router';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { ButtonLinkComponent } from '@shared/components/buttons/button-link/button-link.component';
-import { Subject, takeUntil } from 'rxjs';
-import { ManufactureOrderService } from '../manufacture.order.service';
-import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons';
 import { ManufactureOrderIndexComponent } from '../manufacture-order-index/manufacture-order-index.component';
-import { HeadSearchComponent } from 'src/app/views/shared/components/head-search/head-search.component';
+import { ManufactureOrderService } from '../manufacture.order.service';
+import { ManufactureSectionHeaderComponent } from '../../components/manufacture-section-header/manufacture-section-header.component';
+import { ManufactureIndexFiltersComponent, ManufactureListFilters } from '../../components/manufacture-index-filters/manufacture-index-filters.component';
 
 @Component({
   selector: 'app-manufacture-order-index-page',
-  imports: [
-    HeadPageComponent,
-    ButtonBackComponent,
-    LoadingComponent,
-    ButtonLinkComponent,
-    ManufactureOrderIndexComponent,
-    HeadSearchComponent
-  ],
+  imports: [RouterLink, LoadingComponent, ManufactureOrderIndexComponent, ManufactureSectionHeaderComponent, ManufactureIndexFiltersComponent],
   templateUrl: './manufacture-order-index-page.component.html',
-  styleUrl: './manufacture-order-index-page.component.scss'
+  styleUrl: './manufacture-order-index-page.component.scss',
 })
-
 export class ManufactureOrderIndexPageComponent implements OnInit, OnDestroy {
+  manufactures: any[] = [];
+  activeFilters: ManufactureListFilters | null = null;
+  error = '';
+  loading = false;
 
-  manufactures: any;
-  faBoxesStacked = faBoxesStacked;
-  loading: boolean = false;
+  private readonly destroy$ = new Subject<void>();
+  private readonly cancelLoad$ = new Subject<void>();
 
   constructor(
-    private _manufactureOrder: ManufactureOrderService
-  ){
-  
-  }
-
-  receiveSearchResult(manufactures: any) {
-    console.log(manufactures);
-    
-    this.manufactures = manufactures;
-  }
+    private _order: ManufactureOrderService,
+  ) {}
 
   ngOnInit(): void {
     this.manufacturesInit();
   }
 
-  manufacturesInit(){
+  applyFilters(filters: ManufactureListFilters): void {
+    this.activeFilters = filters;
+    this.manufacturesInit();
+  }
 
+  clearFilters(): void {
+    this.activeFilters = null;
+    this.manufacturesInit();
+  }
+
+  manufacturesInit(): void {
+    this.cancelLoad$.next();
+    this.error = '';
     this.loading = true;
 
-    this._manufactureOrder.index().pipe(takeUntil(this.destroy$)).subscribe({
-    
-      next: (resp: any) => {
-        console.log(resp);
-        this.manufactures = resp.data;
-        this.loading = false;
-      },
-    
-      error: (error: any) => {
-        // Swal.fire('Error','Ocurrió un problema al traer los datos, intente nuevamente','error');
-        console.error(error);
-      },
-    
-    });
+    const request = this.activeFilters
+      ? this._order.search(this.activeFilters)
+      : this._order.index();
 
+    request
+      .pipe(
+        takeUntil(this.destroy$),
+        takeUntil(this.cancelLoad$),
+        finalize(() => this.loading = false),
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.manufactures = response.data ?? [];
+        },
+        error: (error: unknown) => {
+          this.error = 'No se pudo consultar el listado. Intenta nuevamente.';
+          console.error(error);
+        },
+      });
   }
 
-  destroy$ = new Subject<void>();
-  
   ngOnDestroy(): void {
-  
     this.destroy$.next();
     this.destroy$.complete();
-  
+    this.cancelLoad$.complete();
   }
-
 }

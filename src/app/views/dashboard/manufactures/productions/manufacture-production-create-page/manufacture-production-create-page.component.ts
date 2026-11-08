@@ -1,6 +1,5 @@
+import { ManufactureSectionHeaderComponent } from '../../components/manufacture-section-header/manufacture-section-header.component';
 import { Component } from '@angular/core';
-import { ButtonBackComponent } from '@shared/components/buttons/button-back/button-back.component';
-import { HeadPageComponent } from '@shared/components/head-page/head-page.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ManufactureProductionCreateComponent } from '../manufacture-production-create/manufacture-production-create.component';
@@ -8,8 +7,7 @@ import { ManufactureProductionCreateComponent } from '../manufacture-production-
 @Component({
   selector: 'app-manufacture-production-create-page',
   imports: [
-    ButtonBackComponent,
-    HeadPageComponent,
+    ManufactureSectionHeaderComponent,
     LoadingComponent,
     ManufactureProductionCreateComponent
   ],

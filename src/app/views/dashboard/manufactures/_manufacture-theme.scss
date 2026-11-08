@@ -1,0 +1,9 @@
+.manufacture-theme-production { --manufacture-accent: #6941c6; --manufacture-accent-hover: #5330a3; --manufacture-accent-rgb: 105, 65, 198; }
+.manufacture-theme-order { --manufacture-accent: #087f76; --manufacture-accent-hover: #06655e; --manufacture-accent-rgb: 8, 127, 118; }
+.manufacture-primary-action, .manufacture-secondary-action { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 2.8rem; padding: .65rem 1rem; border-radius: .6rem; font-size: .875rem; font-weight: 600; line-height: 1.4; text-decoration: none; transition: background-color .15s, border-color .15s; }
+.manufacture-primary-action { background: var(--manufacture-accent, #6941c6); border: 1px solid var(--manufacture-accent, #6941c6); color: #fff; }
+.manufacture-primary-action:hover { background: var(--manufacture-accent-hover, #5330a3); border-color: var(--manufacture-accent-hover, #5330a3); color: #fff; }
+.manufacture-secondary-action { background: var(--cui-body-bg, #fff); border: 1px solid var(--cui-border-color, #dfe4eb); color: var(--cui-body-color, #334155); }
+.manufacture-secondary-action:hover { background: rgba(100, 116, 139, .06); }
+.manufacture-primary-action:focus-visible, .manufacture-secondary-action:focus-visible { outline: 3px solid rgba(var(--manufacture-accent-rgb, 105, 65, 198), .25); outline-offset: 2px; }
+.manufacture-primary-action:disabled, .manufacture-secondary-action:disabled { opacity: .5; cursor: not-allowed; }

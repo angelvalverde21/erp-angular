@@ -1,0 +1,7 @@
+@use '../../branches/branch-ui';
+@use '../../branches/organization-record';
+.warehouse-subtitle { display: block; margin: .25rem 0 .55rem; color: var(--cui-secondary-color, #758298); font-size: .82rem; font-weight: 400; }
+.warehouse-tree { list-style: none; padding: 0; margin: 0 0 0 4rem; }
+.warehouse-tree > li { position: relative; padding-bottom: .75rem; }
+.warehouse-tree > li::before { content: ''; position: absolute; left: -1rem; top: -.75rem; width: 1rem; height: 3.25rem; border-left: 2px solid var(--cui-border-color, #cbd5e1); border-bottom: 2px solid var(--cui-border-color, #cbd5e1); border-bottom-left-radius: .5rem; pointer-events: none; }
+.warehouse-tree > li:not(:last-child)::after { content: ''; position: absolute; left: -1rem; top: 2.5rem; bottom: 0; border-left: 2px solid var(--cui-border-color, #cbd5e1); pointer-events: none; }

@@ -1,31 +1,27 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-
 <app-head-page title="Productos">
-    <app-button-link [path]="['./create']">Agregar Producto</app-button-link>
+    <a class="product-primary-action" [routerLink]="['../create']"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar producto</a>
 </app-head-page>
 
 <div class="card">
 
     <div class="card-header py-3">
 
-        <app-head-search (emitParams)="receiveParams($event)"></app-head-search>
+        <app-product-search [term]="params.search || ''" (searchSubmit)="receiveParams($event)"></app-product-search>
 
     </div>
 
     <div class="card-body p-0">
 
-        <app-product-index [products]="products"></app-product-index>
+        @if (loading) {
+            <div class="p-4 text-center" role="status"><app-loading></app-loading></div>
+        } @else {
+            <app-product-index [products]="products"></app-product-index>
+        }
 
     </div>
 
     <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Total de productos: 2</small>
+        <small class="text-muted">Productos encontrados: {{ products.length }}</small>
     </div>
 
 </div>
-
-
-
-}

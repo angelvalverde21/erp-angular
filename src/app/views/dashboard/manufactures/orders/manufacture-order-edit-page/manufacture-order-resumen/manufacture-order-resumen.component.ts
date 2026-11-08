@@ -1,26 +1,15 @@
 import { Component, effect, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { JsonPipe, CurrencyPipe } from '@angular/common';
-import { ButtonSaveComponent } from '@shared/components/buttons/button-save/button-save.component';
 import Swal from 'sweetalert2';
 import { Subject, switchMap, takeUntil } from 'rxjs';
-import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ManufactureOrderService } from '../../manufacture.order.service';
-import { ManufactureOrderFormComponent } from '../../manufacture-order-form/manufacture-order-form.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ManufactureService } from '@dashboard/manufactures/manufacture.service';
-import { ImagePreviewComponent } from '@shared/components/image-preview/image-preview.component';
-import { PenPipe } from '@shared/pipes/pen.pipe';
 import { ManufactureOrderEditComponent } from '../manufacture-order-edit/manufacture-order-edit.component';
 @Component({
   selector: 'app-manufacture-order-resumen',
   imports: [
     JsonPipe,
-    ButtonSaveComponent,
-    LoadingComponent,
-    ManufactureOrderFormComponent,
-    ImagePreviewComponent,
-    PenPipe,
-    RouterModule,
     ManufactureOrderEditComponent
 ],
   templateUrl: './manufacture-order-resumen.component.html',

@@ -1,0 +1,22 @@
+.print-toolbar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  height: 42px;
+  padding: 0 1rem;
+  border: 1px solid #d8dfeb;
+  border-radius: 10px;
+  background: var(--cui-body-bg, #fff);
+  color: #526176;
+  font-size: .85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color .15s, border-color .15s, color .15s;
+
+  &:hover {
+    background: #f3f5fa;
+    border-color: #adb9cd;
+    color: #27374e;
+  }
+}

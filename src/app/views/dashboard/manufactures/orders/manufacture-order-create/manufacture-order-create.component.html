@@ -1,11 +1,14 @@
-@if(loading){
-    <app-loading></app-loading>
-}@else{
-
-<app-manufacture-order-form [form]="form" [suppliers]="suppliers"></app-manufacture-order-form>
-
-<app-button-save (click)="createManufacture()" [spinner]="loading" [disabled]="disabledButton">Guardar
-    cambios</app-button-save>
-
-<!-- {{ form.value | json }} -->
+@if (loading) { <app-loading></app-loading> } @else if (error) {
+<div class="production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar los proveedores</h3><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary" (click)="suppliersInit()">Reintentar</button></div>
+} @else {
+<form [formGroup]="form" (ngSubmit)="createManufacture()">
+  <app-manufacture-order-form [form]="form" [suppliers]="suppliers"></app-manufacture-order-form>
+  <div class="production-form-actions">
+    <p>Los productos y pagos se gestionan desde el detalle de la orden.</p>
+    <button type="submit" class="manufacture-primary-action" [disabled]="disabledButton">
+      @if (disabledButton) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }
+      {{ disabledButton ? 'Creando...' : 'Crear orden de compra' }}
+    </button>
+  </div>
+</form>
 }

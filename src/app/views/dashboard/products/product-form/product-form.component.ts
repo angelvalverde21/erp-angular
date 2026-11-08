@@ -59,6 +59,7 @@ export class ProductFormComponent{
   faCircleDot = faCircleDot;
 
   @Input() form!: FormGroup;
+  @Input() section: 'all' | 'basic' | 'category' = 'all';
   @Input() categories: Category[] = [];
   @Input() brands: Brand[] = [];
   @Output() emitCategorySelected = new EventEmitter<Category>();

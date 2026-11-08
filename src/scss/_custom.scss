@@ -199,3 +199,12 @@ a{
 // .fancybox-overlay, .fancybox-bg {
 //   z-index: 9998 !important;
 // }
+// The viewer is appended to body, outside Angular's component styles.
+.image-preview-bounded .fancybox__content {
+  max-width: min(var(--image-preview-size, 600px), calc(100vw - 32px));
+  max-height: min(var(--image-preview-size, 600px), calc(100dvh - 96px));
+}
+
+.image-preview-bounded .fancybox__image {
+  object-fit: contain;
+}

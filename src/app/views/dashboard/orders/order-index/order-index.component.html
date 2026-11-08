@@ -1,71 +1,64 @@
-<div class="table-responsive">
-    <table class="table table-hover table-striped mb-0 align-middle">
-        <thead class="table-light">
-            <tr>
-                <th class="text-center">#</th>
-                <th style="width: 150px;">Creado</th>
-                <th>Articulos</th>
-                <th style="width: 100px;" class="text-center">Etiqueta</th>
-                <th class="text-center">Final</th>
-                <th class="text-center">Pago</th>
-                <th class="text-center">Envio</th>
-                <th class="text-center">Articulos</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @for (order of orders; track order.id) {
-
-            @let items = order?.lineItems ?? [];
-            <!-- @let sum = items.reduce((acc, item) => acc + item?.variant?.price, 0); -->
-
-            <tr>
-                <td class="text-center">
-                    {{ order?.name }}
-                </td>
-
-                <td>
-                    {{ order?.processedAt | DateShopify }}
-                </td>
-
-                <td>
-                    <!-- <ul class="list-group list-group-flush"> -->
-                    @for (item of items; track $index) {
-                    <li class="list-group-item">{{ item?.name }}</li>
-                    }
-                    <!-- </ul> -->
-                </td>
-
-                <td class="text-center">{{ getOrderSum(order) | pen }}</td>
-
-                <td class="text-center">
-                    {{ order?.totalPriceSet?.shopMoney?.amount | pen }}
-                </td>
-
-                <td class="text-center">
-                    {{ order?.totalShippingPriceSet?.shopMoney?.amount | pen }}
-                </td>
-
-                <td class="text-center">
-                    {{ order?.displayFinancialStatus }}
-                </td>
-
-                <td class="text-center">
-                    {{ items.length }}
-                </td>
-            </tr>
-            }
-
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="text-center">{{ getOrdersSum(orders) | pen }}</td>
-                <td></td>
-                <td></td>
-            </tr>
-
-        </tbody>
-    </table>
+@if (orders.length > 0) {
+<div class="table-responsive orders-table-container" role="region" aria-label="Listado de pedidos; desplazamiento horizontal disponible" tabindex="0">
+  <table class="table table-hover align-middle mb-0 orders-table">
+    <caption class="visually-hidden">Pedidos con cliente, productos, entrega, estado e importe total.</caption>
+    <thead>
+      <tr>
+        <th scope="col">Pedido</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Productos</th>
+        <th scope="col">Entrega</th>
+        <th scope="col">Estado</th>
+        <th scope="col" class="text-end">Total</th>
+        <th scope="col" class="text-end"><span class="visually-hidden">Acciones</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (order of orders; track order.id) {
+      @let customer = address(order);
+      <tr>
+        <th scope="row" class="order-id-cell">
+          <a [routerLink]="['/', base.store, 'dashboard', 'orders', order.id]" class="order-number">#{{ order.id }}</a>
+          @if (order.created_at) {
+          <time class="order-date" [attr.datetime]="order.created_at">{{ order.created_at | date:'dd MMM yyyy, HH:mm' }}</time>
+          }
+          <span class="order-source">{{ order.shopify_order_name ? 'Shopify ' + order.shopify_order_name : 'ERP' }}</span>
+        </th>
+        <td>
+          <div class="order-customer">
+            <span class="order-customer-icon" aria-hidden="true"><i class="fa-regular fa-user"></i></span>
+            <div class="order-customer-details">
+              <span class="order-customer-name">{{ customer?.name || 'Sin cliente' }}</span>
+              <span class="order-secondary">{{ customer?.phone || 'Sin teléfono' }}</span>
+              @if (customer?.district?.name) { <span class="order-secondary">{{ customer.district.name }}</span> }
+            </div>
+          </div>
+        </td>
+        <td class="order-products-cell">
+          @for (variant of (order.variants ?? []).slice(0, 2); track $index) {
+          <span class="order-product"><span class="order-quantity">{{ variant.quantity }}×</span><span>{{ variant.name }}</span></span>
+          }
+          <span class="order-secondary order-units">{{ units(order) }} unidades@if ((order.variants?.length ?? 0) > 2) { · {{ order.variants.length - 2 }} variantes más }</span>
+        </td>
+        <td>
+          <span class="order-delivery"><i [class]="order.courier_address?.addressable?.delivery_type == null ? 'fa-solid fa-store' : 'fa-solid fa-truck'" aria-hidden="true"></i>{{ deliveryLabel(order) }}</span>
+          <span class="order-secondary order-courier">{{ order.courier_address?.addressable?.name || order.courier_address?.name || 'Sin sucursal' }}</span>
+        </td>
+        <td><span [class]="'badge order-status ' + statusClass(order.status)">{{ statusLabel(order.status) }}</span></td>
+        <td class="order-total text-end">{{ order.total | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+        <td class="text-end">
+          <a [routerLink]="['/', base.store, 'dashboard', 'orders', order.id]" class="btn order-open" [attr.aria-label]="'Ver pedido ' + order.id">Ver<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
 </div>
+} @else {
+<div class="orders-empty" role="status">
+  <span class="orders-empty-icon" aria-hidden="true"><i class="fa-solid fa-bag-shopping"></i></span>
+  <h3>No hay pedidos para mostrar</h3>
+  <p>Revisa los filtros o carga más pedidos para ampliar los resultados.</p>
+</div>
+}
+<div #bottom class="orders-load-trigger" aria-hidden="true"></div>

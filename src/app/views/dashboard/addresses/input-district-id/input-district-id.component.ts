@@ -36,6 +36,8 @@ export class InputDistrictIdComponent implements ControlValueAccessor, OnInit, O
   
   @Input() isValid: boolean = false;
   @Input() isInvalid: boolean = false;
+  @Input() inputId: string = '';
+  @Input() placeholder: string = '* Distrito';
 
   isDisabled: boolean = false;
 

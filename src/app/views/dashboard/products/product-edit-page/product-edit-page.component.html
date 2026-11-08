@@ -1,116 +1,79 @@
-<!-- <app-form-search></app-form-search> -->
+@if (setupLoading || loadingProduct) {
+<div class="product-loading" role="status">
+  <app-loading></app-loading>
+  <p>Cargando información del producto...</p>
+</div>
+} @else if (setupError) {
+<div class="alert alert-danger" role="alert">
+  {{ setupError }}
+  <button type="button" class="btn btn-outline-danger btn-sm ms-2" (click)="productSetup()">Reintentar</button>
+</div>
+} @else if (product) {
+<div class="product-workspace">
+  <a routerLink="../" class="product-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Todos los productos</a>
 
-<!-- ProductEdit -->
-@if(setupLoading){
-<app-loading></app-loading>
-}@else{
-
-@if(loadingProduct){
-<app-loading></app-loading>
-}@else{
-
-<div class="row">
-  <div class="col-lg-12">
-    <app-head-page title="{{ product.name }}">
-      <app-button-back></app-button-back>
-    </app-head-page>
-
-
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="card mb-3">
-
-          <!-- {{ product | json }} -->
-
-          <div class="card-body">
-            <app-product-edit [product]="product" [categories]="categories" [brands]="brands"
-              (emitCategorySelected)="categorySelected($event)"></app-product-edit>
-          </div>
-
-        </div>
-
-        <!-- {{ product.i}} -->
-        <!-- 
-        <app-head-page title="Tallas">
-        </app-head-page>
-
-
-        <div class="card">
-          <div class="card-body">
-            <app-option-value-create [options]="product.options" option_selected="Talla"
-              text_selected="Agregar talla"></app-option-value-create>
-          </div>
-        </div> -->
-
-
-      </div>
-
-      <div class="col-lg-12">
-
-        <app-head-page title="Agregar Opciones">
-        </app-head-page>
-
-        <div class="card mb-3">
-          <div class="card-body">
-
-            <app-option-index [options_init]="product.options_init" [options]="product.options"
-              [product_id]="product.id"></app-option-index>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="col-lg-12">
-        <div class="card">
-
-          <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <span>Codigo de barras</span>
-            <app-button [icon]="faBarcode" [me]="true" (click)="openVerticallyCentered(content)"> Imprimir</app-button>
-          </div>
-
-          <div class="card-body p-0">
-            <app-variant-index [variants]="product.variants"></app-variant-index>
-          </div>
-
-          <div class="card-footer text-end" style="border-top: 0;">
-            <small class="text-muted">Total: {{ product.variants?.length }}</small>
-          </div>
-
+  <header class="product-page-header">
+    <div class="product-page-identity">
+      <span class="product-page-thumbnail" aria-hidden="true">
+        @if (product.image?.url_thumbnail) { <img [src]="product.image?.url_thumbnail" alt="" width="56" height="56" /> }
+        @else { <i class="fa-solid fa-box-open"></i> }
+      </span>
+      <div>
+        <span class="product-eyebrow">CATÁLOGO / EDICIÓN</span>
+        <h1>{{ product.name || 'Producto sin nombre' }}</h1>
+        <div class="product-page-meta">
+          <span>Producto #{{ product.id }}</span>
+          @if (product.category?.name) { <span>{{ product.category?.full_name || product.category?.name }}</span> }
+          @if (product.created_at) { <span>Creado el {{ product.created_at | date:'dd/MM/yyyy' }}</span> }
         </div>
       </div>
-
     </div>
+    <button type="button" class="btn btn-outline-secondary product-print" (click)="openVerticallyCentered(content)" [disabled]="!product.variants?.length">
+      <i class="fa-solid fa-barcode" aria-hidden="true"></i> Imprimir etiquetas
+    </button>
+  </header>
 
-
-    <!-- Variantes -->
-    <!-- <app-head-page title="Inventario">
-    </app-head-page>
-
-    <div class="card mb-3">
-
-      <div class="card-body">
-
+  <app-product-edit [product]="product" [categories]="categories" [brands]="brands"
+    (emitCategorySelected)="categorySelected($event)" (emitProductUpdated)="productUpdated($event)">
+    <app-product-prices product-prices [productId]="product.id"></app-product-prices>
+    <section product-options class="product-page-card" aria-labelledby="product-options-title">
+      <div class="product-card-heading">
+        <span class="product-card-icon" aria-hidden="true"><i class="fa-solid fa-sliders"></i></span>
+        <div><h2 id="product-options-title">Opciones del producto</h2><p>Organiza las tallas, colores y otras opciones.</p></div>
       </div>
+      <div class="product-options-body">
+        <app-option-index [options_init]="product.options_init || []" [options]="product.options || []" [product_id]="product.id" (valueDeleted)="optionValueDeleted($event)" (blockRemoved)="optionBlockRemoved($event)"></app-option-index>
+      </div>
+    </section>
+  <div product-details class="product-main-details">
 
-    </div> -->
-
+  <section class="product-page-card product-variants" aria-labelledby="product-variants-title">
+    <div class="product-card-heading product-variants-heading">
+      <div class="product-heading-group">
+        <span class="product-card-icon" aria-hidden="true"><i class="fa-solid fa-barcode"></i></span>
+        <div><h2 id="product-variants-title">Variantes e inventario <span class="product-counter">{{ product.variants?.length || 0 }}</span></h2><p>Consulta los SKU y el stock de cada variante.</p></div>
+      </div>
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="openVerticallyCentered(content)" [disabled]="!product.variants?.length">
+        <i class="fa-solid fa-print me-2" aria-hidden="true"></i>Imprimir códigos
+      </button>
+    </div>
+    @if (product.variants?.length) {
+    <div class="product-variants-body"><app-variant-index [variants]="product.variants"></app-variant-index></div>
+    } @else {
+    <div class="product-page-empty"><i class="fa-solid fa-barcode" aria-hidden="true"></i><p>Este producto todavía no tiene variantes.</p><span>Agrega opciones para organizar sus presentaciones.</span></div>
+    }
+    <div class="product-card-footer">{{ product.variants?.length || 0 }} variantes registradas</div>
+  </section>
   </div>
-
+  </app-product-edit>
 </div>
 
 <ng-template #content let-modal>
   <div class="modal-header">
-    <h4 class="modal-title">Imprimir codigo de barras</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    <h2 class="modal-title fs-5">Imprimir códigos de barras</h2>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button>
   </div>
-  <div class="modal-body">
-    <app-barcode-index [variants]="product.variants"></app-barcode-index>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-  </div>
+  <div class="modal-body"><app-barcode-index [variants]="product.variants"></app-barcode-index></div>
+  <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Cerrar</button></div>
 </ng-template>
-
-}
-
 }

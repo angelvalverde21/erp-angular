@@ -30,7 +30,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <app-inventory-create (emitInventoryCreate)="receiveInventoryCreate($event)"></app-inventory-create>
+        <app-inventory-batch-create (emitInventoryCreate)="receiveInventoryCreate($event)"></app-inventory-batch-create>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>

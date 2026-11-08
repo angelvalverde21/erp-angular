@@ -1,23 +1,4 @@
-    @switch (status) {
-      @case ('PAID') {
-        <span class="badge bg-success">Pagado</span>
-      }
-
-      @case ('PENDING') {
-        <span class="badge bg-warning">Pendiente</span>
-      }
-
-      @case ('EXPIRED') {
-        <span class="badge bg-danger">Rechazado</span>
-      }
-      @case ('VOIDED') {
-        <span class="badge bg-secondary">Anulado</span>
-      }
-      @case ('REFUNDED') {
-        <span class="badge bg-danger">Reembolsado</span>
-      }
-
-      @default {
-        <!-- {{ order.status }} -->
-      }
-    }
+﻿@let info = payment;
+<span class="badge" [class.text-bg-success]="info.tone === 'success'"
+  [class.text-bg-warning]="info.tone === 'warning'" [class.text-bg-danger]="info.tone === 'danger'"
+  [class.text-bg-secondary]="info.tone === 'neutral'" [title]="info.description">{{ info.label }}</span>

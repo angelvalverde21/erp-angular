@@ -101,7 +101,7 @@ export class EmployeeAttendanceIndexComponent implements OnInit, OnDestroy {
   receiveAttendanceCreate(event: any){
     console.log(event);
     
-    this.attendances = [...this.attendances, event];
+    this.attendances = [...this.attendances.filter(row => !(row.employee_id === event.employee_id && row.date === event.date)), event];
     this.closeModal();
   }
 

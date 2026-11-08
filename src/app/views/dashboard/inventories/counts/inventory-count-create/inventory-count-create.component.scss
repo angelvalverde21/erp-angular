@@ -1,0 +1,36 @@
+@use '../../barcode/barcode-workspace';
+
+:host { display: block; }
+.count-barcode .barcode-input-wrap.barcode-input-disabled { background: var(--cui-tertiary-bg, #eef0f3); border-color: var(--cui-border-color, #cbd5e1); border-style: dashed; cursor: not-allowed; i, input { color: var(--barcode-muted); } input { cursor: not-allowed; opacity: 1; } input::placeholder { color: var(--barcode-muted); opacity: 1; } &:focus-within { outline: none; } }
+.count-duplicate { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; padding: 1.25rem; border-color: var(--cui-warning, #d4a03d); > i { color: var(--cui-warning-text-emphasis, #865a27); font-size: 1.4rem; } > div { flex: 1; min-width: 200px; } h3 { margin: 0 0 .4rem; font-size: .95rem; font-weight: 600; } p { margin: 0 0 .5rem; color: var(--barcode-muted); font-size: .8rem; line-height: 1.5; } span { font-size: .76rem; font-weight: 600; } }
+.count-zone-picker { padding: 1.25rem 1.5rem; h3 { margin: 0; font-size: 1rem; font-weight: 600; } p { margin: .4rem 0 1.25rem; font-size: .8rem; color: var(--barcode-muted); } label { display: block; font-size: .8rem; margin-bottom: .5rem; font-weight: 500; } }
+.count-zone-controls { display: flex; gap: .75rem; select { flex: 1; min-width: 0; } }
+.count-zone-hierarchy { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1.25rem; select { min-height: 3.1rem; } }
+@media (max-width: 767.98px) { .count-zone-hierarchy { grid-template-columns: 1fr; } }
+.count-zone-context { display: flex; align-items: center; gap: .7rem; margin-bottom: 1rem; padding: .8rem 1rem; border: 1px solid var(--barcode-border); border-radius: .6rem; background: var(--barcode-surface); color: var(--barcode-muted); font-size: .78rem; strong { color: var(--cui-body-color, #1e293b); margin-left: .5rem; } }
+@media (max-width: 575.98px) { .count-zone-controls { flex-direction: column; } }
+.count-history-scroll { overflow: auto; max-height: 440px; margin: 0 1.25rem 1.25rem; border: 1px solid var(--barcode-border); border-radius: .7rem; }
+.count-history-empty { display: grid; justify-items: center; align-content: center; gap: .8rem; min-height: 220px; padding: 2rem 1rem; text-align: center; color: var(--barcode-muted); strong { color: var(--cui-body-color, #1e293b); } p { margin: 0; font-size: .75rem; } }
+.count-empty-icon { display: grid; place-items: center; width: 46px; height: 46px; border-radius: .75rem; background: var(--barcode-tint); font-size: 1rem; }
+.count-history-pagination, .count-history-error { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: .75rem; padding: 0 1.25rem 1.25rem; font-size: .78rem; color: var(--barcode-muted); }
+.count-history-error { color: var(--cui-danger-text-emphasis, #b42318); }
+.count-history-table { width: 100%; min-width: 700px; border-collapse: collapse; font-size: .8rem; th { padding: .8rem 1.25rem; font-size: .7rem; font-weight: 600; color: var(--barcode-muted); background: var(--barcode-tint); text-align: left; border-block: 1px solid var(--barcode-border); } td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--barcode-border); vertical-align: middle; } tbody tr:last-child td { border-bottom: 0; } strong { display: block; font-size: .82rem; font-weight: 600; } small { display: block; color: var(--barcode-muted); margin-top: .3rem; } }
+.count-history-quantity { font-weight: 700; font-variant-numeric: tabular-nums; }
+.count-history-replaced { color: var(--barcode-muted); }
+.count-saved-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding: 1rem 1.25rem; border-top: 1px solid var(--barcode-border); span { color: var(--cui-success-text-emphasis, #166534); font-size: .85rem; } i { margin-right: .4rem; } }
+@media (max-width: 575.98px) { .count-saved-actions .barcode-search-button { width: 100%; } }
+.count-barcode { --barcode-tint: rgba(100, 116, 139, .045); }
+.count-barcode .barcode-workspace { margin-top: 1rem; }
+.count-barcode .barcode-input-wrap > i { color: var(--barcode-muted); font-size: 1.25rem; }
+.count-search-state { padding: 1.5rem 1rem; }
+.count-matches { padding: 1rem 1.25rem; margin-top: 1rem; }
+.count-matches h3 { font-size: .85rem; font-weight: 600; margin: 0 0 .75rem; }
+.count-matches button { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; padding: .9rem .5rem; border: 0; border-top: 1px solid var(--barcode-border); background: transparent; text-align: left; color: inherit; &:hover { background: var(--barcode-tint); } strong { font-size: .85rem; font-weight: 600; } small { display: block; color: var(--barcode-muted); font-size: .73rem; margin-top: .25rem; } > span:last-child { color: var(--section-accent); font-size: .75rem; font-weight: 600; white-space: nowrap; } }
+.count-fields { margin: 0; border: 0; min-width: 0; }
+.count-location-row { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--barcode-border); label { font-size: .78rem; font-weight: 600; } select { flex: 1; min-width: 200px; max-width: 500px; font-size: .82rem; } }
+.count-registration-options { margin-bottom: 1.25rem; font-size: .78rem; color: var(--barcode-muted); summary { cursor: pointer; padding-block: .35rem; span { margin-left: .65rem; text-decoration: underline; } } .count-mode { margin: .75rem 0 0; display: grid; gap: .85rem; label { display: flex; gap: .65rem; align-items: flex-start; } input { margin-top: .2rem; } strong { color: var(--cui-body-color, #334155); font-weight: 500; } small { display: block; margin-top: .2rem; font-weight: 400; } } }
+.count-mode { border: 0; padding: 0; margin: 0 0 1.25rem; min-width: 0; legend { float: none; width: auto; margin-bottom: .75rem; font-size: .85rem; font-weight: 600; } }
+.count-record-status { max-width: 450px; margin-bottom: 1rem; label { display: block; margin-bottom: .5rem; } }
+.count-feedback { margin-bottom: 1rem; p { margin: .4rem 0 0; color: var(--barcode-muted); font-size: .78rem; line-height: 1.6; } }
+.count-barcode .form-control.is-invalid, .count-barcode .form-select.is-invalid { border-color: var(--cui-danger, #dc3545); }
+@media (max-width: 575.98px) { .count-matches { padding: 1rem; } .count-matches button { align-items: flex-start; flex-direction: column; gap: .5rem; } }

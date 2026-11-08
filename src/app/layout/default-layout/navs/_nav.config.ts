@@ -66,25 +66,5 @@ export const navConfig: CustomNavData[] = [
         ],
         roles: ['master', 'ceo']
     },
-    {
-        name: 'Locaciones',
-        url: 'dashboard/locations',
-        icon: 'fa-solid fa-house',
-        children: [
-            {
-                name: 'Todos', url: 'dashboard/locations', icon: 'nav-icon-bullet',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }
-            },
-            {
-                name: 'Crear', url: 'dashboard/locations/create', icon: 'nav-icon-bullet',
-                linkProps: {
-                    routerLinkActiveOptions: { exact: true }
-                }
-            },
-        ],
-        roles: ['master', 'ceo']
-    }
 ];
 

@@ -3,11 +3,21 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
+    path: 'migrations',
+    loadChildren: () => import('./migrations/routes.migration').then(module => module.routes),
+  },
+  {
+    path: 'panels',
+    loadChildren: () => import('./area-dashboards/routes.dashboard').then(module => module.routes),
+  },
+  {
+    path: 'branches',
+    loadChildren: () => import('./branches/routes.branch').then(m => m.routes),
+  },
+  {
     path: '',
-    loadComponent: () => import('./dashboard.component').then(m => m.DashboardComponent),
-    data: {
-      title: `Dashboard`
-    }
+    redirectTo: 'panels',
+    pathMatch: 'full',
   },
 
   {
@@ -64,13 +74,13 @@ export const routes: Routes = [
         (m) => m.routes
       ),
   },
-  // {
-  //   path: 'productions',
-  //   loadChildren: () =>
-  //     import('./productions/routes.production').then(
-  //       (m) => m.routes
-  //     ),
-  // },
+  {
+    path: 'orders',
+    loadChildren: () =>
+      import('./orders/routes.order').then(
+        (m) => m.routes
+      ),
+  },
 
   {
     path: 'pettycashes',

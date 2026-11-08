@@ -1,6 +1,7 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import {
   ContainerComponent,
@@ -9,25 +10,19 @@ import {
   SidebarComponent,
   SidebarFooterComponent,
   SidebarHeaderComponent,
-  SidebarNavComponent,
-  SidebarToggleDirective,
+  SidebarNavComponent,  SidebarToggleDirective,
   SidebarTogglerDirective,
 } from '@coreui/angular';
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
 import { navItems } from './_nav';
-import { UpperCasePipe } from '@angular/common';
+import { filterNavigation } from './navs/filter-navigation';
+import { dashboardRoles } from '../../views/dashboard/area-dashboards/dashboard.model';
+import { NgClass, NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 import { INavData } from '@coreui/angular';
 import { BaseService } from '../../views/base.service';
 import { IconDirective } from '@coreui/icons-angular';
 import { CustomNavData } from '../../interfaces/nav.interface';
-
-function isOverflown(element: HTMLElement) {
-  return (
-    element.scrollHeight > element.clientHeight ||
-    element.scrollWidth > element.clientWidth
-  );
-}
 
 @Component({
   selector: 'app-dashboard',
@@ -37,8 +32,7 @@ function isOverflown(element: HTMLElement) {
     SidebarComponent,
     SidebarHeaderComponent,
     SidebarBrandComponent,
-    SidebarNavComponent,
-    SidebarFooterComponent,
+    SidebarNavComponent,    SidebarFooterComponent,
     SidebarToggleDirective,
     SidebarTogglerDirective,
     ContainerComponent,
@@ -49,6 +43,8 @@ function isOverflown(element: HTMLElement) {
     RouterLink,
     ShadowOnScrollDirective,
     UpperCasePipe,
+    NgClass,
+    NgTemplateOutlet,
     IconDirective,
     RouterModule
   ],
@@ -63,31 +59,43 @@ export class DefaultLayoutComponent implements OnInit {
 
   constructor(
     private _base: BaseService,
-    private router: Router
+    private router: Router,
+    private destroyRef: DestroyRef
   ) { }
 
-  @HostListener('document:click', ['$event'])
+  openMenus = new Set<INavData>();
 
-  onNavGroupClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    const toggle = target.closest('.nav-group-toggle') as HTMLElement;
+  isExternalUrl(url: unknown): boolean {
+    return typeof url === 'string' && /^(https?:|mailto:|tel:)/i.test(url);
+  }
 
-    if (!toggle) return;
+  toggleMenu(item: INavData, siblings: INavData[]): void {
+    const wasOpen = this.openMenus.has(item);
+    siblings.forEach(sibling => this.closeMenuBranch(sibling));
+    if (wasOpen) return;
 
-    const navGroup = toggle.closest('.nav-group');
-    const navItems = navGroup?.querySelector('.nav-group-items') as HTMLElement;
+    this.openMenus.add(item);
+    const firstChildUrl = item.children?.[0]?.url;
+    if (typeof firstChildUrl === 'string') this.router.navigateByUrl(firstChildUrl);
+  }
 
-    if (!navItems) return;
+  private closeMenuBranch(item: INavData): void {
+    this.openMenus.delete(item);
+    item.children?.forEach(child => this.closeMenuBranch(child));
+  }
 
-    const isClosed = navItems.offsetHeight === 0;
-
-    // ✅ Solo navegar si está cerrado
-    if (isClosed) {
-      const firstChildUrl = toggle.getAttribute('data-first-child');
-      if (firstChildUrl) {
-        this.router.navigateByUrl(firstChildUrl);
-      }
-    }
+  private syncOpenMenus(url: string): void {
+    const path = url.split(/[?#]/)[0].replace(/\/$/, '');
+    this.openMenus.clear();
+    const visit = (items: INavData[]) => {
+      items.forEach(item => {
+        if (!item.children?.length || typeof item.url !== 'string') return;
+        const itemPath = item.url.replace(/\/$/, '');
+        if (path === itemPath || path.startsWith(itemPath + '/')) this.openMenus.add(item);
+        visit(item.children);
+      });
+    };
+    visit(this.navItems);
   }
 
   store: string | null = '';
@@ -100,20 +108,22 @@ export class DefaultLayoutComponent implements OnInit {
     this.store = this._base.store;
 
     // Obtengo sus roles
-    const localroles = this.user.roles || [];
+    const localroles = dashboardRoles(this.user);
 
     // Filtro en el menu solo los roles permitidos
-    this.navItems = navItems.filter((navItem: any) => {
-      // Si item no tiene roles definidos, no hay restriccion -> se muestra
-      if (!navItem.roles) return true;
-      // Si alguno de los roles del user coincide -> mostrar
-      return navItem.roles.some((role: any) => localroles.includes(role));
-    });
+    this.navItems = filterNavigation(navItems, localroles);
 
     this.storeName = this._base.storeName!;
     this.navItems = this.addToStore([...this.navItems], this.storeName);
+    this.syncOpenMenus(this.router.url);
+
+    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.syncOpenMenus(event.urlAfterRedirects);
+      }
+    });
   }
-  
+
 
   addToStore(navItems: CustomNavData[], storeName: string): CustomNavData[] {
 

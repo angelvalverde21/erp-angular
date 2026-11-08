@@ -2,16 +2,17 @@
 
 <app-loading></app-loading>
 
-}@else{
+}@else if(employee){
 
-<app-head-page [title]="`Colaborador: ${employee.user.name}`" [export]="false">
-    @if(is_sales){
-    <app-button (click)="openVerticallyCentered(content)" [icon]="faChartLine" color="success" colortext="white"
-        class="me-2">Reporte</app-button>
-    }
+<header class="personnel-heading">
+  <div class="personnel-heading-title"><span class="personnel-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+    <div><span class="personnel-eyebrow">Ficha del empleado</span><h1>{{ employee.name }}</h1><p>{{ employee.document_number || 'Sin documento registrado' }} · {{ employee.status ? 'Activo' : 'Inactivo' }}</p></div>
+  </div>
+  <div class="d-flex gap-2">
+    @if (is_sales && employee.tag_sales) { <button class="personnel-button" type="button" (click)="openVerticallyCentered(content)"><i class="fa-solid fa-chart-line" aria-hidden="true"></i>Reporte de ventas</button> }
     <app-button-back></app-button-back>
-
-</app-head-page>
+  </div>
+</header>
 
 <app-employee-widget [summary]="summary"></app-employee-widget>
 
@@ -39,7 +40,7 @@
                 <h2 ngbAccordionHeader>
                     <button ngbAccordionButton class="d-flex justify-content-between align-items-center">
                         <fa-icon [icon]="faCalculator" class="me-2"></fa-icon>
-                        <span>Reporte de comisiones ({{ employee.user.name | uppercase }})</span>
+                        <span>Reporte de comisiones ({{ employee.name | uppercase }})</span>
                     </button>
                 </h2>
                 <div ngbAccordionCollapse>
