@@ -9,24 +9,24 @@
   @if (!manufacture_variants?.length) {
   <div class="production-empty"><fa-icon [icon]="faInbox" aria-hidden="true"></fa-icon><h3>No hay productos registrados</h3><p>Agrega las variantes que vas a fabricar y define sus cantidades.</p><button type="button" class="btn btn-outline-secondary" (click)="openVerticallyCentered(content)">Agregar primer producto</button></div>
   } @else {
-  <div class="table-responsive" tabindex="0" role="region" aria-label="Productos y cantidades de la producción">
+  <div class="table-responsive">
     <table class="table production-table align-middle mb-0">
-      <caption class="visually-hidden">Variantes y unidades planificadas</caption>
-      <thead><tr><th scope="col" class="text-center">Unidades</th><th scope="col">Producto / variante</th><th scope="col">SKU</th><th scope="col" class="text-end">Acciones</th></tr></thead>
+      <thead><tr><th scope="col">Unidades</th><th scope="col">Producto / variante</th><th scope="col">SKU</th><th scope="col" class="text-end">Acciones</th></tr></thead>
       <tbody>
-        @for (manufacture_variant of manufacture_variants; track manufacture_variant.id) {
-        <tr app-manufacture-production-variant-index-row [manufacture_variant]="manufacture_variant"
-          (emitDeleteProductionVariantId)="receiveDeleteProductionVariantId($event)"
-          (emitUpdatedQuantity)="receiveProductionVariant($event)"></tr>
+        @for (item of manufacture_variants | manufactureVariantRows; track item.record.id) {
+          <tr app-manufacture-production-variant-index-row [manufacture_variant]="item.record" [attr.data-variant-id]="item.record.id"
+            [class.manufacture-group-striped]="item.striped" [class.manufacture-group-start]="item.startsGroup"
+            (emitUpdatedQuantity)="receiveProductionVariant($event)"
+            (emitDeleteProductionVariantId)="receiveDeleteProductionVariantId($event)"></tr>
         }
       </tbody>
-      <tfoot><tr><td class="text-center fw-semibold">{{ sum_variants }} unid.</td><td colspan="3" class="text-end production-meta">{{ manufacture_variants.length }} variantes en esta producción</td></tr></tfoot>
+      <tfoot><tr><td>{{ sum_variants }}</td><td colspan="3">Total</td></tr></tfoot>
     </table>
   </div>
   }
 </section>
 <ng-template #content let-modal>
   <div class="modal-header"><h2 class="modal-title fs-5">Agregar productos a la producción</h2><button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button></div>
-  <div class="modal-body"><app-variant-search (emitVariantsSelected)="receiveSearchSelectedVariants($event)"></app-variant-search></div>
+  <div class="modal-body"><app-variant-search [allowProductCreation]="true" (createProductRequested)="closeModal()" (emitVariantsSelected)="receiveSearchSelectedVariants($event)"></app-variant-search></div>
 </ng-template>
 }

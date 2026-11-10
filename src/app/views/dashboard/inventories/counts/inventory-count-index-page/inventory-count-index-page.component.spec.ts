@@ -1,20 +1,29 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { InventoryCountIndexPageComponent } from './inventory-count-index-page.component';
 import { InventoryService } from '../../inventory.service';
 import { InventoryWorkspaceService } from '../../inventory-workspace.service';
 import { InventorySessionService } from '../../sessions/inventory-session.service';
 import { InventoryCountService } from '../inventory-count.service';
+import { InventoryRackComponent } from '../inventory-rack/inventory-rack.component';
+import { BaseService } from '../../../../base.service';
+import Swal from 'sweetalert2';
+import { of, Subject, throwError } from 'rxjs';
 
 describe('Count zone and rack row selection', () => {
   function setup() {
     TestBed.configureTestingModule({ providers: [
       provideRouter([]),
+      { provide: BaseService, useValue: { store: 'sorelle' } },
       { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ inventory_id: '1', session_id: '1' }) } } },
-      ...[InventoryService, InventoryWorkspaceService, InventorySessionService, InventoryCountService].map(provide => ({ provide, useValue: {} })),
+      ...[InventoryService, InventoryWorkspaceService, InventorySessionService, InventoryCountService].map(provide => ({ provide, useValue: {
+        rackSummary: () => of({ data: [] }),
+        rack: () => of({ data: [], summary: { units: 0, captures: 0, variants: 0 }, current_page: 1, last_page: 1, total: 0 }),
+      } })),
     ] });
-    TestBed.overrideComponent(InventoryCountIndexPageComponent, { set: { imports: [], schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.overrideComponent(InventoryCountIndexPageComponent, { set: { imports: [InventoryRackComponent], schemas: [NO_ERRORS_SCHEMA] } });
     const fixture = TestBed.createComponent(InventoryCountIndexPageComponent);
     const component = fixture.componentInstance;
     spyOn(component, 'load');
@@ -28,38 +37,18 @@ describe('Count zone and rack row selection', () => {
       { ...zone, id: 99, warehouse_id: 8, name: 'Otra tienda' },
     ] };
     fixture.detectChanges();
+    (component.load as jasmine.Spy).calls.reset();
     return { fixture, component };
   }
 
-  it('requires selecting the rack row before enabling capture and filters out other warehouses', () => {
+  it('keeps the scanner hidden until Contar aquí is clicked and hides it again on finishing', () => {
     const { fixture, component } = setup();
-    const zone: HTMLSelectElement = fixture.nativeElement.querySelector('#count-capture-location-0');
-    expect(zone.options.length).toBe(2);
-    zone.value = '10';
-    zone.dispatchEvent(new Event('change'));
+    expect(fixture.nativeElement.querySelector('app-inventory-count-entry')).toBeNull();
+    expect(fixture.nativeElement.querySelector('#count-capture-location-0')).toBeNull();
+    fixture.debugElement.query(By.css('app-inventory-rack')).triggerEventHandler('captureLocation', 13);
     fixture.detectChanges();
-    expect(component.locationLocked).toBeFalse();
-    expect(component.selectedLocationId).toBeNull();
-    expect(fixture.nativeElement.querySelector('app-inventory-count-entry').locationId).toBeNull();
-    const row: HTMLSelectElement = fixture.nativeElement.querySelector('#count-capture-location-1');
-    expect(row.options.length).toBe(6);
-    row.value = '13';
-    row.dispatchEvent(new Event('change'));
-    fixture.detectChanges();
-    expect(component.selectedLocationId).toBe(13);
-    expect(component.locationLocked).toBeTrue();
     expect(fixture.nativeElement.querySelector('app-inventory-count-entry').locationId).toBe(13);
-    expect(fixture.nativeElement.querySelector('.capture-location').textContent).toContain('ZONA A / Fila 3');
-    component.chooseLocation('11', 1);
-    expect(component.selectedLocationId).toBe(13);
-  });
-
-  it('resets the hierarchy on finishing and does not accept a row from another zone', () => {
-    const { fixture, component } = setup();
-    component.chooseLocation('13', 0);
-    expect(component.selectedLocationId).toBeNull();
-    component.chooseLocation('10', 0);
-    component.chooseLocation('13', 1);
+    expect(fixture.nativeElement.querySelector('app-inventory-count-entry').closest('.rack-shelf').getAttribute('aria-label')).toBe('Fila 3');
     component.savingCount = true;
     component.finishCount();
     expect(component.locationLocked).toBeTrue();
@@ -67,7 +56,97 @@ describe('Count zone and rack row selection', () => {
     component.finishCount();
     fixture.detectChanges();
     expect(component.selectedLocationPath).toEqual([]);
+    expect(fixture.nativeElement.querySelector('app-inventory-count-entry')).toBeNull();
+    fixture.destroy();
+  });
+
+  it('opens capture for an entire zone without rows and rejects other warehouses and parent zones', () => {
+    const { fixture, component } = setup();
+    component.startRackCapture(10);
+    component.startRackCapture(99);
+    expect(component.locationLocked).toBeFalse();
+    const standalone = { id: 20, parent_id: null, warehouse_id: 4, name: 'Zona completa', code: 'zona_completa', is_active: true };
+    component.options = {
+      ...component.options!,
+      locations: [...component.options!.locations, standalone],
+      location_tree: [...component.options!.location_tree!, standalone],
+    };
+    component.startRackCapture(20);
+    fixture.detectChanges();
+    expect(component.selectedLocationPath).toEqual([20]);
+    expect(component.selectedLocationLabel).toBe('Zona completa');
+    expect(fixture.nativeElement.querySelector('app-inventory-count-entry').locationId).toBe(20);
+    fixture.destroy();
+  });
+  it('starts counting from a rack level and preserves the current capture until it is finished', () => {
+    const { fixture, component } = setup();
+    component.startRackCapture(13);
+    fixture.detectChanges();
+    expect(component.selectedLocationPath).toEqual([10, 13]);
+    expect(component.selectedLocationId).toBe(13);
+    expect(component.locationLocked).toBeTrue();
+    expect(component.load).not.toHaveBeenCalled();
+    expect(fixture.nativeElement.querySelector('app-inventory-count-entry').locationId).toBe(13);
+    component.startRackCapture(11);
+    expect(component.selectedLocationId).toBe(13);
+    component.finishCount();
+    component.startRackCapture(99);
     expect(component.selectedLocationId).toBeNull();
-    expect(component.locationLevels.length).toBe(1);
+  });
+
+  it('cancels deletion without sending a request or removing the capture', async () => {
+    const { fixture, component } = setup();
+    component.options!.current_user_id = 1;
+    const record = { id: 9, user_id: 1, status: 'valid', variant_id: 7, quantity: 25 } as any;
+    component.records = [record];
+    const service = TestBed.inject(InventoryCountService) as any;
+    service.deleteCapture = jasmine.createSpy('deleteCapture').and.returnValue(of(undefined));
+    spyOn(Swal, 'fire').and.resolveTo({ isConfirmed: false, isDenied: false, isDismissed: true });
+    await component.deleteCapture(record);
+    expect(service.deleteCapture).not.toHaveBeenCalled();
+    expect(component.records).toEqual([record]);
+    fixture.destroy();
+  });
+
+  it('deletes once after confirmation and returns to the previous page when the last capture is removed', async () => {
+    const { fixture, component } = setup();
+    component.options!.current_user_id = 1;
+    component.viewMode = 'history';
+    component.page = 2;
+    const record = { id: 9, user_id: 1, status: 'valid', variant_id: 7, quantity: 25 } as any;
+    component.records = [record];
+    const response = new Subject<void>();
+    const service = TestBed.inject(InventoryCountService) as any;
+    service.deleteCapture = jasmine.createSpy('deleteCapture').and.returnValue(response);
+    const dialog = spyOn(Swal, 'fire').and.resolveTo({ isConfirmed: true, isDenied: false, isDismissed: false });
+    const first = component.deleteCapture(record);
+    const duplicate = component.deleteCapture(record);
+    await first;
+    await duplicate;
+    expect(dialog).toHaveBeenCalledTimes(1);
+    expect(service.deleteCapture).toHaveBeenCalledOnceWith(1, 1, 9);
+    expect(component.deletingCountId).toBe(9);
+    response.next();
+    response.complete();
+    expect(component.records).toEqual([]);
+    expect(component.load).toHaveBeenCalledWith(1);
+    expect(component.deleteSuccess).toContain('#9');
+    expect(component.deletingCountId).toBeNull();
+    fixture.destroy();
+  });
+
+  it('keeps the capture and reports a failed deletion', async () => {
+    const { fixture, component } = setup();
+    component.options!.current_user_id = 1;
+    const record = { id: 9, user_id: 1, status: 'valid', variant_id: 7, quantity: 25 } as any;
+    component.records = [record];
+    const service = TestBed.inject(InventoryCountService) as any;
+    service.deleteCapture = jasmine.createSpy('deleteCapture').and.returnValue(throwError(() => new Error('Offline')));
+    spyOn(Swal, 'fire').and.resolveTo({ isConfirmed: true, isDenied: false, isDismissed: false });
+    await component.deleteCapture(record);
+    expect(component.records).toEqual([record]);
+    expect(component.deleteError).toBeTruthy();
+    expect(component.deletingCountId).toBeNull();
+    fixture.destroy();
   });
 });

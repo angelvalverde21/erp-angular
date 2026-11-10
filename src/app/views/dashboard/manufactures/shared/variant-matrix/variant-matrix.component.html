@@ -1,0 +1,62 @@
+﻿<div class="variant-matrices">
+  @for (group of groups; track group.key) {
+    <section class="variant-matrix" [attr.aria-label]="'Cantidades por color y talla de ' + group.name">
+      <header class="matrix-product-header">
+        <div class="matrix-product">
+          @if (group.image) {
+            <app-image-preview [image]="group.image" [title]="group.name" [height]="40" [width]="40" [previewSize]="600"></app-image-preview>
+          } @else {
+            <span class="matrix-product-icon"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span>
+          }
+          <div>
+            <h3>{{ group.name }}</h3>
+            <p>{{ group.count }} variantes · {{ group.sizes.length }} {{ group.sizes.length === 1 ? 'talla' : 'tallas' }}</p>
+          </div>
+        </div>
+        <span class="matrix-unit-badge">{{ group.quantity | number }} <small>unidades</small></span>
+      </header>
+      <div class="matrix-scroll" tabindex="0" role="region" [attr.aria-label]="'Tabla de ' + group.name">
+        <table class="matrix-table" [class.matrix-with-prices]="showPrices">
+          <caption class="visually-hidden">{{ group.name }}. Colores por fila, tallas por columna. Totales de cantidades guardadas.</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="matrix-color-column">Producto / color</th>
+              @for (size of group.sizes; track size) {
+                <th scope="col"><span class="matrix-size-label">Talla</span><span class="matrix-size">{{ size }}</span></th>
+              }
+              <th scope="col" class="matrix-total-column">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of group.rows; track row.key) {
+              <tr>
+                <th scope="row" class="matrix-color-column"><strong>{{ rowName(group, row) }}</strong>@if (row.details) { <small>{{ row.details }}</small> }</th>
+                @for (size of group.sizes; track size) {
+                  <td>
+                    @for (record of row.cells.get(size) ?? []; track record.id) {
+                      <app-variant-matrix-cell [record]="record" [manufactureId]="manufactureId" [showPrice]="showPrices"
+                        [label]="group.name + ' · ' + row.label + (row.details ? ' · ' + row.details : '') + ' · Talla: ' + size"
+                        (updated)="updated.emit($event)"></app-variant-matrix-cell>
+                    } @empty {
+                      <span class="matrix-missing" title="Esta combinación no está agregada. Usa Agregar productos.">—<span class="visually-hidden">Combinación no agregada</span></span>
+                    }
+                  </td>
+                }
+                <td class="matrix-row-total"><strong>{{ row.quantity | number }}</strong>@if (showPrices) { <small>S/ {{ row.amount | number:'1.2-2' }}</small> }</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row" class="matrix-color-column">Total del producto</th>
+              @for (size of group.sizes; track size) {
+                <td><strong>{{ group.totals.get(size)?.quantity | number }}</strong>@if (showPrices) { <small>S/ {{ group.totals.get(size)?.amount | number:'1.2-2' }}</small> }</td>
+              }
+              <td class="matrix-grand-total"><strong>{{ group.quantity | number }}</strong>@if (showPrices) { <small>S/ {{ group.amount | number:'1.2-2' }}</small> }</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+  }
+</div>

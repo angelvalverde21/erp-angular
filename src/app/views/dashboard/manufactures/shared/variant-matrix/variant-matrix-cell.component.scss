@@ -1,0 +1,78 @@
+:host { display: block; }
+
+.matrix-cell {
+  display: grid;
+  grid-template-columns: 96px;
+  justify-content: center;
+  align-items: end;
+  gap: .45rem .6rem;
+  min-width: 112px;
+
+  &.has-price { grid-template-columns: 76px 104px; min-width: 190px; }
+}
+
+.matrix-cell-controls,
+.matrix-cell-price {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.matrix-field-label {
+  color: var(--cui-secondary-color, #64748b);
+  font-size: .67rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: left;
+}
+
+input {
+  width: 100%;
+  min-height: 40px;
+  padding: .5rem .6rem;
+  border: 1px solid var(--cui-border-color, #d4dce8);
+  border-radius: .55rem;
+  background: var(--cui-body-bg, #fff);
+  color: var(--cui-body-color, #1e293b);
+  font-size: 1rem;
+  font-weight: 650;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  transition: border-color .15s, box-shadow .15s;
+
+  &:hover:not([readonly]) { border-color: var(--cui-secondary-color, #94a3b8); }
+  &:focus { outline: 0; border-color: var(--section-accent, #6941c6); box-shadow: 0 0 0 3px color-mix(in srgb, var(--section-accent, #6941c6) 14%, transparent); }
+  &[readonly] { opacity: .7; }
+  &.is-invalid { border-color: var(--cui-danger, #dc3545); }
+}
+
+.matrix-price-control {
+  position: relative;
+  display: block;
+
+  > span { position: absolute; left: .55rem; top: 50%; transform: translateY(-50%); color: var(--cui-secondary-color, #64748b); font-size: .72rem; pointer-events: none; }
+  input { padding-left: 1.8rem; text-align: right; font-size: .85rem; font-weight: 500; }
+}
+
+.matrix-cell-feedback {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  min-height: .9rem;
+}
+
+.matrix-cell-state,
+.matrix-cell-saved,
+.matrix-cell-error { display: flex; align-items: center; gap: .3rem; font-size: .65rem; line-height: 1.4; }
+.matrix-cell-state { color: var(--cui-secondary-color, #64748b); }
+.matrix-cell-saved { color: var(--cui-success-text-emphasis, #166534); }
+.matrix-cell-error { max-width: 190px; color: var(--cui-danger-text-emphasis, #b42318); text-align: center; }
+
+@media (max-width: 575.98px) {
+  .matrix-cell.has-price { grid-template-columns: 104px; min-width: 112px; }
+}
+
+@media (prefers-reduced-motion: reduce) { input { transition: none; } }

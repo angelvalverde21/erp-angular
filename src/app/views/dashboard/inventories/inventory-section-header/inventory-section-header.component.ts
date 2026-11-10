@@ -12,6 +12,7 @@ export class InventorySectionHeaderComponent {
   @Input() workspace: 'sessions' | 'progress' | 'counts' | 'adjustments' = 'sessions';
   @Input() title = '';
   @Input() description = '';
+  @Input() compact = false;
   get root(): string[] { return ['/', this._base.store ?? '', 'dashboard', 'inventories']; }
   get inventoryPath(): (string | number)[] { return [...this.root, this.inventory?.id ?? '']; }
   get sessionsPath(): (string | number)[] { return [...this.inventoryPath, 'sessions']; }

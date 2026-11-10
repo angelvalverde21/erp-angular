@@ -86,7 +86,7 @@ export class OrderWidgetComponent implements OnInit {
         type: 'date'
       },
       {
-        title: 'Productos',
+        title: 'Productos pedidos',
         subtitle: `${this.summary?.count_variants ?? 0} variantes · Unidades pedidas`,
         value: this.summary?.sum_variants ? this.summary?.sum_variants : 0,
         link: ['./variants'],

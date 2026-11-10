@@ -3,12 +3,12 @@
   @if (showLocationPicker) {
   @if (!editing && !locationConfirmed) {
     <form class="barcode-panel count-zone-picker" (submit)="confirmLocation($event)">
-      <div><h3>¿En qué zona vas a contar?</h3><p>Selecciona la zona una sola vez. Los siguientes conteos se registrarán allí.</p></div>
+      <div><h3>¿En qué ubicación vas a contar?</h3><p>Selecciona la ubicación una sola vez. Los siguientes conteos se registrarán allí.</p></div>
       
       <div class="count-zone-hierarchy">
         <div><label for="count-branch">Sucursal *</label><select #branchInput id="count-branch" class="form-select" [value]="selectedBranchId ?? ''" (change)="selectBranch(branchInput.value)" [disabled]="readOnly" [class.is-invalid]="!selectedBranchId && form.controls.location_id.touched"><option value="">Selecciona una sucursal</option>@for (branch of branches; track branch.id) { <option [value]="branch.id">{{ branch.name }}</option> }</select></div>
         <div><label for="count-warehouse">Almacén *</label><app-warehouse-select inputId="count-warehouse" [items]="warehouses" [value]="selectedWarehouseId" (valueChange)="selectWarehouse($event)" [disabled]="readOnly || !selectedBranchId" [class.is-invalid]="selectedBranchId && !selectedWarehouseId && form.controls.location_id.touched"></app-warehouse-select></div>
-        <div><label for="count-location">Zona *</label><select id="count-location" class="form-select" [formControl]="form.controls.location_id" [class.is-invalid]="form.controls.location_id.invalid && form.controls.location_id.touched" [attr.aria-invalid]="form.controls.location_id.invalid && form.controls.location_id.touched ? true : null" [attr.disabled]="readOnly || !selectedWarehouseId ? true : null">
+        <div><label for="count-location">Ubicación *</label><select id="count-location" class="form-select" [formControl]="form.controls.location_id" [class.is-invalid]="form.controls.location_id.invalid && form.controls.location_id.touched" [attr.aria-invalid]="form.controls.location_id.invalid && form.controls.location_id.touched ? true : null" [attr.disabled]="readOnly || !selectedWarehouseId ? true : null">
           <option [ngValue]="null">Selecciona una zona</option>
           @for (location of zones; track location.id) { <option [ngValue]="location.id">{{ location.parent?.name ? location.parent?.name + ' / ' : '' }}{{ location.name }}{{ location.code ? ' · ' + location.code : '' }}</option> }
         </select></div>
@@ -85,7 +85,7 @@
           <small>unidades</small>
         </strong>
       </header>
-        <fieldset class="barcode-stock-body count-fields" [disabled]="saving || readOnly">
+        <fieldset class="barcode-stock-body count-fields" [disabled]="saving || readOnly || confirmingQuantity">
       <div class="barcode-stock-row row g-4 align-items-start mb-4">
         @if (editing) {
         <div class="col-12 col-sm-6">

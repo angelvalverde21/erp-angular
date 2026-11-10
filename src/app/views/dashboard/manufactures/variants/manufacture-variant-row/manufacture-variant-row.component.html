@@ -1,8 +1,11 @@
 <ng-container [formGroup]="form">
   <td class="purchase-order-variant-quantity">
-    <input #quantityInput formControlName="quantity" (blur)="update()" (click)="quantityInput.select()" type="text" inputmode="numeric"
-      class="form-control text-center" aria-label="Unidades del pedido" [readonly]="loading || removeLoading" />
+    <input #quantityInput formControlName="quantity" (click)="quantityInput.select()" type="text" inputmode="numeric"
+      [class.is-invalid]="form.controls['quantity'].invalid && form.controls['quantity'].touched"
+      class="form-control text-center" aria-label="Unidades del pedido" [readonly]="locked || loading || removeLoading" />
     @if (loading) { <span class="purchase-order-variant-saving" role="status">Guardando...</span> }
+    @if (form.controls['quantity'].invalid && form.controls['quantity'].touched) { <small class="text-danger">Ingresa una cantidad entera desde 0.</small> }
+    @if (saveError) { <small class="text-danger" role="alert">{{ saveError }}</small> }
   </td>
   <td>
     <div class="purchase-order-variant-product">
@@ -23,11 +26,13 @@
   </td>
   <td class="purchase-order-variant-sku"><fa-icon [icon]="faBarcode" aria-hidden="true"></fa-icon> {{ manufacture_variant.variant?.sku || 'Sin SKU' }}</td>
   <td class="purchase-order-variant-price">
-    <input #priceInput formControlName="price" (blur)="update()" (click)="priceInput.select()" type="text" inputmode="decimal"
-      class="form-control text-end" placeholder="0.00" aria-label="Precio unitario en soles" [readonly]="loading || removeLoading" />
+    <input #priceInput formControlName="price" (click)="priceInput.select()" type="text" inputmode="decimal"
+      [class.is-invalid]="form.controls['price'].invalid && form.controls['price'].touched"
+      class="form-control text-end" placeholder="0.00" aria-label="Precio unitario en soles" [readonly]="locked || loading || removeLoading" />
+    @if (form.controls['price'].invalid && form.controls['price'].touched) { <small class="text-danger">Precio desde 0, con hasta 2 decimales.</small> }
   </td>
   <td class="text-end">
-    <button type="button" class="btn btn-outline-danger btn-sm" aria-label="Eliminar variante de la orden" [disabled]="removeLoading || loading"
+    <button type="button" class="btn btn-outline-danger btn-sm" aria-label="Eliminar variante de la orden" [disabled]="locked || removeLoading || loading"
       (click)="removeManufactureVariant(manufacture_variant.id, manufacture_variant.manufacture_id)">
       @if (removeLoading) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> } @else { <fa-icon [icon]="faTrash" aria-hidden="true"></fa-icon> }
     </button>

@@ -1,3 +1,4 @@
+import { ManufactureVariantRowsPipe } from '../../../shared/manufacture-variant-rows.pipe';
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faInbox } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +15,7 @@ import { ManufactureVariantService } from '../../../manufacture.variants.service
 @Component({
   selector: 'app-manufacture-production-variant-index',
   imports: [
+    ManufactureVariantRowsPipe,
     ManufactureProductionVariantIndexRowComponent,
     FontAwesomeModule,
     VariantSearchComponent,

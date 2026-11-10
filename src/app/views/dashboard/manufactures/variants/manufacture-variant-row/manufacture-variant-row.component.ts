@@ -1,210 +1,116 @@
-import { Component, EventEmitter, Input, OnDestroy, Output, OnInit, TemplateRef, ViewEncapsulation, ElementRef } from '@angular/core';
+﻿import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { HostBinding } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBarcode, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { catchError, finalize, map, Observable, of, Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { debounceTime, Subject, takeUntil } from 'rxjs';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ImagePreviewComponent } from '@shared/components/image-preview/image-preview.component';
 import { ManufactureVariantService } from '../../manufacture.variants.service';
-import { ImagePreviewComponent } from '@shared/components/image-preview/image-preview.component'
 
 @Component({
   selector: 'tr[app-manufacture-variant-row]',
-  imports: [
-    FontAwesomeModule,
-    ReactiveFormsModule,
-    ImagePreviewComponent
-  ],
+  imports: [FontAwesomeModule, ReactiveFormsModule, ImagePreviewComponent],
   templateUrl: './manufacture-variant-row.component.html',
   styleUrl: './manufacture-variant-row.component.scss',
-  encapsulation: ViewEncapsulation.None
-
+  encapsulation: ViewEncapsulation.None,
 })
-export class ManufactureVariantRowComponent implements OnDestroy, OnInit {
-
-  // import { Subject, takeUntil } from 'rxjs';
+export class ManufactureVariantRowComponent implements OnInit, OnDestroy {
+  @Input() manufacture_variant: any = {};
+  @Input() locked = false;
+  @Input() manufactureId = 0;
+  @Output() emitDeleteManufactureVariantId = new EventEmitter<number>();
+  @Output() emitUpdatedQuantity = new EventEmitter<any>();
+  @Output() draftChanged = new EventEmitter<void>();
 
   faBarcode = faBarcode;
   faTrash = faTrash;
-  faEdit = faEdit;
-
   form!: FormGroup;
+  loading = false;
+  removeLoading = false;
+  saveError = '';
+  private readonly destroy$ = new Subject<void>();
 
-  @Output() emitDeleteManufactureVariantId = new EventEmitter<number>();
-  @Output() emitUpdatedQuantity = new EventEmitter<any>();
-
-  modal: any;
   constructor(
-    config: NgbModalConfig,
-    private modalService: NgbModal,
-    private _manufactureVariantService: ManufactureVariantService,
-    private fb: FormBuilder,
-    private elRef: ElementRef
+    private readonly service: ManufactureVariantService,
+    private readonly fb: FormBuilder,
+  ) {}
 
-  ) {
-    // customize default values of modals used by this component tree
-    config.backdrop = 'static';
-    config.keyboard = false;
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      quantity: [this.manufacture_variant.quantity ?? 0, [Validators.required, Validators.pattern(/^\d+$/), Validators.max(2147483647)]],
+      price: [this.manufacture_variant.price ?? 0, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.max(99999999.99)]],
+    });
+    this.form.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.saveError = '';
+      this.draftChanged.emit();
+    });
   }
-  destroy$ = new Subject<void>();
+
+  @HostBinding('class.purchase-order-row-pending')
+  get hasChanges(): boolean {
+    if (!this.form) return false;
+    return ['quantity', 'price'].some(field => {
+      const value = this.form.get(field)?.value;
+      return String(value ?? '').trim() === '' || Number(value) !== Number(this.manufacture_variant[field] ?? 0);
+    });
+  }
+
+  save(): Observable<boolean> {
+    this.form.markAllAsTouched();
+    if (!this.hasChanges) return of(true);
+    if (this.form.invalid || this.loading || this.removeLoading) return of(false);
+
+    this.loading = true;
+    this.saveError = '';
+    this.service.setManufactureId(this.manufacture_variant.manufacture_id ?? this.manufactureId);
+    const payload = this.form.getRawValue();
+    return this.service.update(this.manufacture_variant.id, payload).pipe(
+      map((response: any) => {
+        if (!response?.data || response.data.id !== this.manufacture_variant.id) {
+          throw new Error('Invalid variant response');
+        }
+        this.manufacture_variant = {
+          ...this.manufacture_variant, ...payload, ...response.data,
+          variant: { ...this.manufacture_variant.variant, ...response.data.variant },
+        };
+        this.form.reset({ quantity: this.manufacture_variant.quantity, price: this.manufacture_variant.price }, { emitEvent: false });
+        this.emitUpdatedQuantity.emit(this.manufacture_variant);
+        return true;
+      }),
+      catchError(() => {
+        this.saveError = 'No se guardó. Puedes reintentar.';
+        return of(false);
+      }),
+      finalize(() => { this.loading = false; }),
+      takeUntil(this.destroy$),
+    );
+  }
+
+  async removeManufactureVariant(id: number, manufactureId: number): Promise<void> {
+    if (this.locked || this.loading || this.removeLoading) return;
+    const result = await Swal.fire({
+      title: '¿Eliminar variante?',
+      text: this.hasChanges ? 'Esta variante tiene cambios sin guardar. Se eliminará de la orden.' : 'La variante se eliminará de esta orden.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    });
+    if (!result.isConfirmed || this.locked) return;
+    this.removeLoading = true;
+    this.draftChanged.emit();
+    this.service.destroy(id, manufactureId ?? this.manufactureId).pipe(
+      takeUntil(this.destroy$),
+      finalize(() => { this.removeLoading = false; }),
+    ).subscribe({
+      next: () => { this.emitDeleteManufactureVariantId.emit(id); },
+      error: () => { Swal.fire('Error', 'No se pudo eliminar la variante. Intenta nuevamente.', 'error'); },
+    });
+  }
 
   ngOnDestroy(): void {
-
     this.destroy$.next();
     this.destroy$.complete();
   }
-
-  @Input() manufacture_variant: any = {};
-
-  removeLoading: boolean = false;
-
-  removeManufactureVariant(manufacture_variant_id: number, manufacture_id: number) {
-
-
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: "No podrás deshacer esta acción",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'No, cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Acción para eliminar el elemento
-
-        this.removeLoading = true;
-
-        this._manufactureVariantService.destroy(manufacture_variant_id, manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
-
-          next: (resp: any) => {
-
-            console.log(resp);
-            this.removeLoading = false;
-            this.emitDeleteManufactureVariantId.emit(manufacture_variant_id);
-
-            Swal.fire(
-              'Eliminado!',
-              'El elemento ha sido eliminado.',
-              'success'
-            );
-
-          },
-
-          error: (error: any) => {
-            this.loading = false;
-            Swal.fire('Error', 'Ocurrió un problema al eliminar el registro. Inténtalo nuevamente.', 'error');
-            console.error(error);
-          },
-
-        });
-
-
-      }
-    });
-
-
-
-
-    // Aquí puedes agregar la lógica para eliminar el variante del manufacture_variants
-  }
-
-
-
-  editManufactureVariant(content: TemplateRef<any>, manufacture_variant_id: number, manufacture_id: number) {
-    this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
-
-  }
-
-  quantitySubject: Subject<any> = new Subject();
-
-  originalQuantity: any;
-
-
-  ngOnInit(): void {
-
-    this.form = this.fb.group({
-      quantity: [''],
-      price: [''],
-    });
-
-    this.form.patchValue({
-      quantity: this.manufacture_variant.quantity,
-      price: this.manufacture_variant.price
-    });
-
-
-    this.quantitySubject
-      .pipe(debounceTime(500))
-      .subscribe(data => {
-        this.update();
-      });
-
-
-    //Para actualizar el valor original de quantity cuando el control no esté sucio (dirty) y
-    // const control = this.form.get('quantity');
-
-    this.originalQuantity = this.form.get('quantity')?.value;
-
-    // this.form.get('quantity')?.valueChanges.subscribe(value => {
-
-    //   this.originalQuantity = control?.dirty ? this.originalQuantity : value;
-    //     console.log('Valor de quantity:', value);
-
-    // });
-
-  }
-
-  closeModal() {
-    this.modal.close();
-  }
-
-  loading: boolean = false;
-
-  update() {
-
-    console.log(this.form.value);
-
-
-    console.log("click en update");
-
-    // const currentValue = this.form.get('quantity')?.value;
-
-    // if (currentValue == this.originalQuantity) {
-    //   // this.originalQuantity = currentValue;
-    //   return;
-    // }
-
-    this.loading = true;
-
-    this._manufactureVariantService.setManufactureId(this.manufacture_variant.manufacture_id);
-
-    this._manufactureVariantService.update(this.manufacture_variant.id, this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        console.log(resp);
-        this.loading = false;
-        // this.manufacture_variant = resp.data;
-        this.emitUpdatedQuantity.emit(resp.data); //emite el manufacture_variant actualizado
-      },
-
-      error: (error: any) => {
-        // Swal.fire('Error', 'Debe especificar una cantidad.', 'error');
-        console.error(error);
-        this.loading = false;
-        this.emitUpdatedQuantity.emit(false);
-      },
-
-    });
-
-  }
-
-  getUpdateQuantity() {
-
-    this.quantitySubject.next(this.form.value);
-
-  }
-
 }
-

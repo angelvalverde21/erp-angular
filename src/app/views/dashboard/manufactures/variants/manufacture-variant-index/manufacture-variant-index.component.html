@@ -1,7 +1,7 @@
-<section class="production-panel">
+<section class="production-panel purchase-order-editable-products">
   <header class="production-section-heading">
-    <div><h2>Productos de la orden</h2><p>Edita las unidades y el precio de cada variante. Los cambios se guardan al salir del campo.</p></div>
-    <div class="order-toolbar">
+    <div><h2>Productos de la orden</h2><p>Edita las unidades y el precio de cada variante. Luego pulsa «Guardar cambios».</p></div>
+    <div class="order-toolbar" [attr.inert]="saving ? '' : null">
       <app-button-print [toolbar]="true" [manufacture_id]="manufacture_id"></app-button-print>
       <button type="button" class="btn btn-dark add-products-button" (click)="openVerticallyCentered(content)"><i class="fa-solid fa-plus" aria-hidden="true"></i>{{ text_button }}</button>
     </div>
@@ -9,21 +9,41 @@
   @if (!manufacture_variants?.length) {
   <div class="production-empty"><fa-icon [icon]="faInbox" aria-hidden="true"></fa-icon><h3>No hay productos registrados</h3><p>Agrega las variantes del pedido y define sus cantidades y precios.</p><button type="button" class="btn btn-outline-secondary" (click)="openVerticallyCentered(content)">Agregar primer producto</button></div>
   } @else {
-  <div class="table-responsive" tabindex="0" role="region" aria-label="Productos y precios de la orden">
+  <div class="table-responsive">
     <table class="table production-table align-middle mb-0">
-      <caption class="visually-hidden">Unidades y precios de los productos de la orden</caption>
-      <thead><tr><th scope="col" class="text-center">Unidades</th><th scope="col">Producto / variante</th><th scope="col">SKU</th><th scope="col" class="text-end">Precio unitario (S/)</th><th scope="col" class="text-end">Acciones</th></tr></thead>
+      <thead><tr><th scope="col">Unidades</th><th scope="col">Producto / variante</th><th scope="col">SKU</th><th scope="col">Precio unitario (S/)</th><th scope="col" class="text-end">Acciones</th></tr></thead>
       <tbody>
-        @for (manufacture_variant of manufacture_variants; track manufacture_variant.id) {
-        <tr app-manufacture-variant-row [manufacture_variant]="manufacture_variant" (emitDeleteManufactureVariantId)="receiveDeleteManufactureVariantId($event)" (emitUpdatedQuantity)="receiveManufactureVariant($event)"></tr>
+        @for (item of manufacture_variants | manufactureVariantRows; track item.record.id) {
+          <tr app-manufacture-variant-row [manufacture_variant]="item.record" [attr.data-variant-id]="item.record.id"
+            [locked]="saving" [manufactureId]="manufacture_id" (draftChanged)="onDraftChanged()"
+            [class.manufacture-group-striped]="item.striped" [class.manufacture-group-start]="item.startsGroup"
+            (emitUpdatedQuantity)="receiveManufactureVariant($event)"
+            (emitDeleteManufactureVariantId)="receiveDeleteManufactureVariantId($event)"></tr>
         }
       </tbody>
-      <tfoot><tr><td class="text-center fw-semibold">{{ sum_variants }} unid.</td><td colspan="4" class="text-end production-meta">{{ manufacture_variants.length }} variantes en esta orden</td></tr></tfoot>
+      <tfoot><tr><td>{{ sum_variants }}</td><td colspan="4">Total</td></tr></tfoot>
     </table>
   </div>
   }
 </section>
+<div class="purchase-order-savebar" [class.has-pending]="pendingRows.length > 0" [attr.aria-busy]="saving">
+  <div class="purchase-order-savebar-content">
+    <div class="purchase-order-savebar-status" aria-live="polite" [class.text-danger]="saveFailed">
+      <span class="purchase-order-savebar-icon" aria-hidden="true">
+        <i [class]="saving ? 'fa-solid fa-spinner fa-spin' : saveFailed ? 'fa-solid fa-triangle-exclamation' : pendingRows.length ? 'fa-solid fa-pen-to-square' : 'fa-solid fa-circle-check'"></i>
+      </span>
+      <div>
+        <strong>@if (saving) { Guardando cambios… } @else if (saveFailed) { Hay cambios por guardar } @else if (pendingRows.length) { {{ pendingRows.length }} {{ pendingRows.length === 1 ? 'variante modificada' : 'variantes modificadas' }} } @else { Todo guardado }</strong>
+        <small>@if (saveMessage) { {{ saveMessage }} } @else if (pendingRows.length && !canSave && !saving) { Revisa las cantidades y precios antes de guardar. } @else if (pendingRows.length) { Tus cambios todavía no se han guardado. } @else { No hay cambios pendientes. }</small>
+      </div>
+    </div>
+    <button type="button" class="btn purchase-order-save-button" (click)="saveChanges()" [disabled]="!canSave">
+      @if (saving) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> } @else { <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> }
+      {{ saving ? 'Guardando…' : 'Guardar cambios' }}
+    </button>
+  </div>
+</div>
 <ng-template #content let-modal>
   <div class="modal-header"><h2 class="modal-title fs-5">Agregar productos a la orden</h2><button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button></div>
-  <div class="modal-body"><app-variant-search (emitVariantsSelected)="receiveSearchSelectedVariants($event)"></app-variant-search></div>
+  <div class="modal-body"><app-variant-search [allowProductCreation]="true" (createProductRequested)="closeModal()" (emitVariantsSelected)="receiveSearchSelectedVariants($event)"></app-variant-search></div>
 </ng-template>

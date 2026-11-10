@@ -13,8 +13,8 @@ export const routes: Routes = [
   { path: '', loadComponent: () => import('./inventory-index-page/inventory-index-page.component').then(m => m.InventoryIndexPageComponent), data: { title: 'Inventarios' } },
   { path: 'create', loadComponent: () => import('./inventory-create-page/inventory-create-page.component').then(m => m.InventoryCreatePageComponent), data: { title: 'Crear inventario' } },
   { path: ':inventory_id/edit', loadComponent: () => import('./inventory-edit-page/inventory-edit-page.component').then(m => m.InventoryEditPageComponent), data: { title: 'Editar inventario' } },
-  { path: ':inventory_id/sessions', loadComponent: () => import('./sessions/inventory-session-index-page/inventory-session-index-page.component').then(m => m.InventorySessionIndexPageComponent), data: { title: 'Sesiones' } },
-  { path: ':inventory_id/sessions/create', loadComponent: () => import('./sessions/inventory-session-create-page/inventory-session-create-page.component').then(m => m.InventorySessionCreatePageComponent), data: { title: 'Abrir sesión' } },
+  { path: ':inventory_id/sessions', loadComponent: () => import('./sessions/inventory-session-index-page/inventory-session-index-page.component').then(m => m.InventorySessionIndexPageComponent), data: { title: 'Sesiones de trabajo' } },
+  { path: ':inventory_id/sessions/create', loadComponent: () => import('./sessions/inventory-session-create-page/inventory-session-create-page.component').then(m => m.InventorySessionCreatePageComponent), data: { title: 'Crear sesión' } },
   { path: ':inventory_id/sessions/:session_id/edit', loadComponent: () => import('./sessions/inventory-session-edit-page/inventory-session-edit-page.component').then(m => m.InventorySessionEditPageComponent), data: { title: 'Editar sesión' } },
   // {
   //   path: '',

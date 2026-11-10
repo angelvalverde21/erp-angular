@@ -1,4 +1,4 @@
-<header class="inventory-heading">
+<header class="inventory-heading" [class.is-compact]="compact">
   <nav class="inventory-breadcrumb" aria-label="Ruta de inventarios">
   <a [routerLink]="root">Inventarios</a>
   @if (sessions) {
@@ -43,11 +43,12 @@
       }
     </div>
   }
+  <ng-content select="[inventoryHeaderContext]"></ng-content>
 </header>
 
 @if (sessions && inventory) {
   <nav class="inventory-work-tabs" aria-label="Secciones del inventario">
-    <a [routerLink]="sessionsPath" [class.tab-current]="workspace === 'sessions' || workspace === 'counts'" [attr.aria-current]="workspace === 'sessions' || workspace === 'counts' ? 'page' : null"><i class="fa-solid fa-stopwatch" aria-hidden="true"></i>Sesiones</a>
+    <a [routerLink]="sessionsPath" [class.tab-current]="workspace === 'sessions' || workspace === 'counts'" [attr.aria-current]="workspace === 'sessions' || workspace === 'counts' ? 'page' : null"><i class="fa-solid fa-stopwatch" aria-hidden="true"></i>Sesiones de trabajo</a>
     <a [routerLink]="progressPath" [class.tab-current]="workspace === 'progress'" [attr.aria-current]="workspace === 'progress' ? 'page' : null"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>Avance por ubicación</a>
     <a [routerLink]="adjustmentsPath" [class.tab-current]="workspace === 'adjustments'" [attr.aria-current]="workspace === 'adjustments' ? 'page' : null"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i>Ajustes</a>
   </nav>

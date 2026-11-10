@@ -3,8 +3,8 @@ import { provideRouter } from '@angular/router';
 import { InventoryCount } from 'src/app/interfaces/inventory-workspace.interface';
 import { InventoryCountIndexComponent } from './inventory-count-index.component';
 
-describe('Grouped inventory counts', () => {
-  it('sums valid captures and always exposes each record for editing', () => {
+describe('Individual inventory captures', () => {
+  it('shows every capture independently and exposes each record for editing', () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(InventoryCountIndexComponent);
     const records = [
@@ -16,8 +16,8 @@ describe('Grouped inventory counts', () => {
     ] as InventoryCount[];
     fixture.componentRef.setInput('records', records);
     fixture.detectChanges();
-    expect(fixture.componentInstance.groups.map(group => group.total)).toEqual([6, 3]);
-    expect(fixture.nativeElement.querySelectorAll('.count-group-row').length).toBe(2);
+    expect(fixture.componentInstance.records.map(record => record.quantity)).toEqual([1, 5, 3, 9, 2]);
+    expect(fixture.nativeElement.querySelectorAll('.count-group-row').length).toBe(0);
     expect(fixture.nativeElement.querySelector('.count-group-toggle')).toBeNull();
     expect(fixture.nativeElement.querySelectorAll('.count-capture-row').length).toBe(5);
     expect(fixture.nativeElement.querySelectorAll('.count-capture-row a').length).toBe(5);
@@ -39,13 +39,13 @@ describe('Grouped inventory counts', () => {
       { id: 3, variant_id: 8, quantity: 4, status: 'valid', variant: variant(8, 'm', 'Azul') },
     ]);
     fixture.detectChanges();
-    const groups = fixture.nativeElement.querySelectorAll('.count-group-row');
+    const groups = fixture.nativeElement.querySelectorAll('.count-capture-row');
     expect(groups[0].querySelector('.count-variant-options').textContent).toContain('Tallas: L');
     expect(groups[0].querySelector('.count-variant-options').textContent).toContain('Colores: NEGRO');
     expect(groups[0].querySelectorAll('.count-variant-options > span').length).toBe(2);
-    expect(groups[1].querySelector('.count-variant-options').textContent).toContain('Tallas: M');
-    expect(groups[1].querySelector('.count-variant-options').textContent).toContain('Colores: AZUL');
-    expect(fixture.componentInstance.groups.map(group => group.total)).toEqual([38, 4]);
+    expect(groups[2].querySelector('.count-variant-options').textContent).toContain('Tallas: M');
+    expect(groups[2].querySelector('.count-variant-options').textContent).toContain('Colores: AZUL');
+    expect(fixture.componentInstance.records.map(record => record.quantity)).toEqual([25, 13, 4]);
     fixture.destroy();
   });
 });

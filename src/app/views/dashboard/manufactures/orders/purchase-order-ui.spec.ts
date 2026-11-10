@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import Swal from 'sweetalert2';
 import { BaseService } from 'src/app/views/base.service';
 import { SupplierService } from '../../users/suppliers/supplier.service';
@@ -142,7 +142,7 @@ describe('Purchase order screens', () => {
     expect(fixture.nativeElement.querySelector('button[type="submit"]').disabled).toBeFalse();
   });
 
-  it('keeps quantity and price editing connected to the existing variant update', () => {
+  it('saves changed quantities only when the fixed save button is pressed', () => {
     const fixture = TestBed.createComponent(ManufactureVariantIndexComponent);
     const variant = { id: 12, manufacture_id: 41, quantity: 2, price: '10.00', variant: { id: 4, sku: 'ABC', product: { name: 'Blusa' }, variant_option_values: [{ id: 1, option: { label: 'Talla' }, option_value: { value: 'M' } }] } };
     fixture.componentRef.setInput('manufacture_variants', [variant]);
@@ -153,12 +153,112 @@ describe('Purchase order screens', () => {
     input.value = '3';
     input.dispatchEvent(new Event('input'));
     input.dispatchEvent(new Event('blur'));
+    fixture.detectChanges();
+    expect(updateVariant).not.toHaveBeenCalled();
+    const saveButton: HTMLButtonElement = fixture.nativeElement.querySelector('.purchase-order-save-button');
+    expect(saveButton.disabled).toBeFalse();
+    saveButton.click();
     expect(updateVariant).toHaveBeenCalledOnceWith(12, { quantity: '3', price: '10.00' });
     variantUpdate.next({ data: { ...variant, quantity: 3 } });
     variantUpdate.complete();
     fixture.detectChanges();
     expect(emitTotal).toHaveBeenCalledWith(3);
-    expect(fixture.nativeElement.textContent).toContain('Talla: M');
+    expect(fixture.nativeElement.querySelector('tbody tr').textContent).toContain('M');
+    expect(fixture.nativeElement.querySelector('.purchase-order-variant-sku').textContent).toContain('ABC');
+    expect(saveButton.disabled).toBeTrue();
+    expect(fixture.componentInstance.pendingRows.length).toBe(0);
+  });
+
+  it('keeps each variant price editable in its own row', () => {
+    const fixture = TestBed.createComponent(ManufactureVariantIndexComponent);
+    const rows = ['M', 'S'].map((size, index) => ({
+      id: 15 + index, manufacture_id: 41, quantity: index ? 3 : 4, price: index ? '6.00' : '5.00',
+      variant: { id: 100 + index, sku: `SKU-${size}`, product: { id: 1, name: 'Blusa' }, option_values: [
+        { option: { name: 'color', label: 'Colores' }, value: 'COCO' },
+        { option: { name: 'size', label: 'Tallas' }, value: size },
+      ] },
+    }));
+    fixture.componentRef.setInput('manufacture_variants', rows);
+    fixture.detectChanges();
+    const price: HTMLInputElement = fixture.nativeElement.querySelector('tbody tr[data-variant-id="15"] input[aria-label="Precio unitario en soles"]');
+    price.value = '12.50';
+    price.dispatchEvent(new Event('input'));
+    price.dispatchEvent(new Event('blur'));
+    expect(updateVariant).not.toHaveBeenCalled();
+    fixture.componentInstance.saveChanges();
+    expect(updateVariant).toHaveBeenCalledOnceWith(15, { quantity: 4, price: '12.50' });
+    variantUpdate.next({ data: { ...rows[0], price: '12.50' } });
+    variantUpdate.complete();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('tbody tr').length).toBe(2);
+    expect(fixture.nativeElement.querySelector('tbody tr[data-variant-id="16"] input[aria-label="Precio unitario en soles"]').value).toBe('6.00');
+  });
+
+  it('disables saving for unchanged, reverted or invalid drafts, and allows zero', () => {
+    const fixture = TestBed.createComponent(ManufactureVariantIndexComponent);
+    fixture.componentRef.setInput('manufacture_variants', [{ id: 12, manufacture_id: 41, quantity: 2, price: '10.00' }]);
+    fixture.detectChanges();
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('.purchase-order-save-button');
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('input[aria-label="Unidades del pedido"]');
+    expect(button.disabled).toBeTrue();
+    for (const value of ['3', '2', '-1', '', '1.5']) {
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      expect(button.disabled).toBe(value !== '3');
+    }
+    fixture.componentInstance.saveChanges();
+    expect(updateVariant).not.toHaveBeenCalled();
+    input.value = '0';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(button.disabled).toBeFalse();
+  });
+
+  it('saves only pending variants and preserves a failed draft for retry', () => {
+    const fixture = TestBed.createComponent(ManufactureVariantIndexComponent);
+    const rows = [1, 2, 3].map(id => ({ id, manufacture_id: 41, quantity: 2, price: '10.00', variant: { product: { id, name: `Producto ${id}` } } }));
+    fixture.componentRef.setInput('manufacture_variants', rows);
+    fixture.detectChanges();
+    const inputs = fixture.nativeElement.querySelectorAll('input[aria-label="Unidades del pedido"]');
+    for (const input of [inputs[0], inputs[1]]) {
+      input.value = '3';
+      input.dispatchEvent(new Event('input'));
+    }
+    updateVariant.and.callFake((id: number) => id === 1
+      ? of({ data: { id: 1, quantity: 3 } }) : throwError(() => new Error('Offline')));
+    fixture.componentInstance.saveChanges();
+    fixture.detectChanges();
+    expect(updateVariant.calls.allArgs().map(args => args[0])).toEqual([1, 2]);
+    expect(fixture.componentInstance.pendingRows.map(row => row.manufacture_variant.id)).toEqual([2]);
+    expect(inputs[1].value).toBe('3');
+    expect(fixture.componentInstance.manufacture_variants[0].variant.product.name).toBe('Producto 1');
+    expect(fixture.nativeElement.querySelector('[role="alert"]').textContent).toContain('No se guardó');
+    updateVariant.and.returnValue(of({ data: { id: 2, quantity: 3 } }));
+    fixture.componentInstance.saveChanges();
+    fixture.detectChanges();
+    expect(updateVariant.calls.allArgs().map(args => args[0])).toEqual([1, 2, 2]);
+    expect(fixture.componentInstance.pendingRows.length).toBe(0);
+    expect(fixture.nativeElement.querySelector('.purchase-order-save-button').disabled).toBeTrue();
+  });
+
+  it('prevents duplicate saves and locks inputs while saving', () => {
+    const fixture = TestBed.createComponent(ManufactureVariantIndexComponent);
+    fixture.componentRef.setInput('manufacture_variants', [{ id: 12, manufacture_id: 41, quantity: 2, price: '10.00' }]);
+    fixture.detectChanges();
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('input[aria-label="Unidades del pedido"]');
+    input.value = '3';
+    input.dispatchEvent(new Event('input'));
+    fixture.componentInstance.saveChanges();
+    fixture.detectChanges();
+    fixture.componentInstance.saveChanges();
+    expect(updateVariant).toHaveBeenCalledTimes(1);
+    expect(input.readOnly).toBeTrue();
+    expect(fixture.nativeElement.querySelector('.purchase-order-save-button').disabled).toBeTrue();
+    variantUpdate.next({ data: { id: 12, quantity: 3 } });
+    variantUpdate.complete();
+    fixture.detectChanges();
+    expect(input.readOnly).toBeFalse();
   });
 
   it('reloads grouped receptions after a movement is registered', () => {

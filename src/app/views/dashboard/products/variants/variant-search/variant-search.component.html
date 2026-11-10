@@ -36,8 +36,11 @@
     } @else {
       <div class="variant-search-state">
         <span class="variant-search-state-icon" aria-hidden="true"><i [class]="form.get('search')?.value?.trim() ? 'fa-solid fa-magnifying-glass' : 'fa-solid fa-box-open'"></i></span>
-        <h3>{{ form.get('search')?.value?.trim() ? 'Sin resultados' : 'Encuentra los productos del pedido' }}</h3>
-        <p>{{ form.get('search')?.value?.trim() ? 'Prueba con otro nombre o SKU.' : 'Escribe en el buscador para consultar las variantes disponibles.' }}</p>
+        <h3>{{ products.length ? 'El producto no tiene variantes disponibles' : form.get('search')?.value?.trim() ? 'Sin resultados' : 'Encuentra los productos del pedido' }}</h3>
+        <p>{{ products.length ? 'Configura las variantes del producto para poder agregarlo.' : form.get('search')?.value?.trim() ? 'Prueba con otro nombre o SKU.' : 'Escribe en el buscador para consultar las variantes disponibles.' }}</p>
+        @if (canCreateProduct) {
+          <button type="button" class="btn btn-dark text-white variant-search-create" (click)="createProduct()"><i class="fa-solid fa-plus" aria-hidden="true"></i>Crear producto</button>
+        }
       </div>
     }
   </div>

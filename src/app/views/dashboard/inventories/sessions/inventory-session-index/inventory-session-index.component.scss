@@ -5,6 +5,34 @@
 :host { display: block; margin-left: 0; }
 .session-table .inventory-actions-column { width: 280px; }
 .session-user-column { width: 190px; }
+.session-warehouse-column { width: 240px; min-width: 220px; }
+.session-warehouse {
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+
+  .inventory-secondary { max-width: 230px; }
+}
+.session-warehouse-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: .55rem;
+  background: var(--section-tint, #eef7f7);
+  color: var(--section-accent, #0d7d87);
+  font-size: .9rem;
+}
+.session-warehouse-name {
+  display: block;
+  color: var(--cui-body-color, #1e293b);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.session-warehouse-branch { font-size: .68rem; }
 .session-comment { min-width: 150px; max-width: 360px; margin: 0; color: var(--cui-body-color, #334155); font-size: .78rem; line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; }
 .session-comment-empty, .session-pending { color: var(--list-muted); font-size: .75rem; }
 @media (max-width: 767.98px) { :host { margin-left: 0; } }

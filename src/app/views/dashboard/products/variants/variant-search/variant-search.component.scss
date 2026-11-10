@@ -17,4 +17,5 @@
 .variant-search-footer { position: sticky; bottom: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding: 1rem 1.25rem; border-top: 1px solid var(--variant-search-border); border-radius: 0 0 .85rem .85rem; background: var(--variant-search-surface); }
 .variant-search-selection { color: var(--variant-search-muted); font-size: .75rem; strong { color: var(--bs-body-color, var(--cui-body-color, #334155)); } }
 .variant-search-add { min-height: 2.6rem; padding-inline: 1.25rem; border-radius: .5rem; font-size: .8rem; }
+.variant-search-create { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 42px; padding-inline: 1rem; margin-top: .25rem; border-radius: .55rem; font-size: .8rem; font-weight: 600; }
 @media (max-width: 575.98px) { .variant-search-toolbar, .variant-search-results-heading, .variant-search-footer { padding: 1rem; } .variant-search-add { width: 100%; } }

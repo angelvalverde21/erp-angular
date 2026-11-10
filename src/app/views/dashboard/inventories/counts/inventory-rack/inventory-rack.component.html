@@ -1,43 +1,117 @@
 <section class="virtual-rack" aria-labelledby="virtual-rack-title">
   <header class="rack-heading">
-    <div class="rack-heading-copy"><span class="rack-icon"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span><div><h2 id="virtual-rack-title">Rack virtual</h2><p>El conteo de esta sesión, organizado como tu almacén.</p></div></div>
-    <div class="rack-zone-picker"><label for="rack-zone">Zona del almacén</label><select #zoneInput id="rack-zone" class="form-select" [value]="selectedZoneId ?? ''" (change)="selectZone(zoneInput.value)">@for (zone of zones; track zone.id) { <option [value]="zone.id">{{ zone.name }}</option> }</select></div>
+    <div class="rack-heading-copy"><span class="rack-icon"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span><div><h2 id="virtual-rack-title">{{ selectedZone?.name || 'Estantes del almacén' }}</h2><p>El conteo de esta sesión, organizado como tu almacén.</p></div></div>
+    <div class="rack-heading-actions">
+      @if (zones.length) { <div class="rack-zone-picker"><label for="rack-zone">Estante o zona del almacén</label><select #zoneInput id="rack-zone" class="form-select" [value]="selectedZoneId ?? ''" [disabled]="activeLocationId !== null" (change)="selectZone(zoneInput.value)">@for (zone of zones; track zone.id) { <option [value]="zone.id">{{ zone.name }}</option> }</select></div> }
+      @if (directZone; as zone) {
+        @if (canCapture) { <button type="button" class="shelf-count-here zone-count-here" (click)="captureLocation.emit(zone.id)"><i class="fa-solid fa-barcode" aria-hidden="true"></i>Contar aquí<span class="visually-hidden"> en {{ zone.name }}</span></button> }
+        @if (zone.id === activeLocationId) { <span class="shelf-current">Conteo activo en esta zona</span> }
+      }
+    </div>
   </header>
   @if (selectedZone) {
-    <div class="rack-summary"><strong>{{ selectedZone?.name }}</strong><span>{{ shelves.length }} niveles</span><span>{{ loading || hasErrors ? '—' : (totalUnits | number) }} unidades vigentes</span><span>{{ loading || hasErrors ? '—' : (totalCaptures | number) }} capturas</span><button type="button" (click)="reload()" [disabled]="loading"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Actualizar</button></div>
+    <div class="rack-summary">
+      <strong>{{ selectedZone?.name }}</strong>
+      @if (directZone) { <span>Conteo directo en esta zona · Sin subdivisiones</span> }
+      @else { <span>{{ shelves.length }} {{ shelves.length === 1 ? 'nivel' : 'niveles' }}</span> }
+      @if (totalsComplete) { <span>{{ totalUnits | number }} unidades vigentes</span><span>{{ totalCaptures | number }} capturas vigentes</span> }
+      @else { <span>{{ summaryLoading ? 'Cargando totales…' : 'Totales no disponibles' }}</span> }
+      <button type="button" (click)="reload()" [disabled]="loading"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Actualizar</button>
+    </div>
+    @if (summaryError) { <p class="rack-error" role="alert">{{ summaryError }}<button type="button" (click)="loadSummaries()">Reintentar totales</button></p> }
+    @if (directZone && directZone.id === activeLocationId) {
+      <div class="zone-capture"><ng-container [ngTemplateOutlet]="captureTemplate"></ng-container></div>
+    }
     <div class="rack-structure">
       @for (shelf of shelves; track shelf.location.id) {
         <section class="rack-shelf" [class.shelf-active]="shelf.location.id === activeLocationId" [attr.aria-label]="shelf.label">
-          <header class="shelf-heading"><div><span class="shelf-level-marker" aria-hidden="true"></span><h3>{{ shelf.label }}</h3>@if (shelf.location.id === activeLocationId) { <span class="shelf-current">En captura</span> }</div><p>@if (shelf.page > 0) { <strong>{{ shelf.summary.units | number }}</strong> unidades · {{ shelf.summary.variants }} variantes } @else { — }</p></header>
-          <div class="shelf-content" [attr.aria-busy]="shelf.loading">
-            @for (item of shelf.items; track item.variant_id) {
-              <article class="rack-product">
-                <div class="rack-product-main">
-                  @if (item.variant?.product?.image; as image) { <app-image-preview [image]="image" [title]="item.variant?.product?.name || 'Producto'" [height]="48" [width]="48" [previewSize]="600"></app-image-preview> } @else { <span class="rack-product-placeholder"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span> }
-                  <div class="rack-product-info"><h4>{{ item.variant?.product?.name || 'Variante #' + item.variant_id }}</h4><small>{{ item.variant?.sku || 'Sin SKU' }} · #{{ item.variant_id }}</small></div>
-                  <div class="rack-product-quantity"><strong>{{ item.counted_quantity | number }}</strong><span>uds.</span></div>
-                </div>
-                @if (item.variant?.variant_option_values?.length) { <div class="rack-product-options">@for (option of item.variant?.variant_option_values; track option.id) { <span>{{ option.option?.label || option.option?.name || 'Opción' }}: <b>{{ option.option_value?.value | uppercase }}</b></span> }</div> }
-                <p class="rack-product-captures">{{ item.capture_count }} {{ +item.capture_count === 1 ? 'captura vigente' : 'capturas vigentes' }}@if (+item.counted_quantity === 0) { · Contado en cero }</p>
-                <details class="rack-capture-details" (toggle)="openHistory($event, shelf.location.id, item.variant_id)"><summary>Ver capturas<i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
-                  @if (history.get(historyKey(shelf.location.id, item.variant_id)); as state) {
-                    @for (capture of state.records; track capture.id) { <div class="rack-capture"><div><strong>{{ capture.quantity }} uds.</strong><app-inventory-status [status]="capture.status"></app-inventory-status></div><small>{{ capture.user?.name }} · {{ capture.counted_at | date:'dd/MM HH:mm' }}</small><a [routerLink]="['./', capture.id, 'edit']">Ver / editar captura #{{ capture.id }}<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div> }
-                    @if (state.loading) { <p class="rack-message" role="status">Cargando capturas…</p> }
-                    @if (state.error) { <p class="rack-error" role="alert">{{ state.error }} <button type="button" (click)="loadHistory(shelf.location.id, item.variant_id)">Reintentar</button></p> }
-                    @else if (!state.loading && state.page < state.lastPage) { <button type="button" class="rack-more" (click)="loadHistory(shelf.location.id, item.variant_id)">Ver más capturas</button> }
+          <header class="shelf-heading">
+            <h3>
+              <button type="button" class="shelf-toggle" [id]="'rack-level-toggle-' + shelf.location.id" [attr.aria-expanded]="shelf.expanded" [attr.aria-controls]="'rack-level-panel-' + shelf.location.id" (click)="toggleShelf(shelf)">
+                <span class="shelf-level-marker" aria-hidden="true"><i class="fa-solid fa-grip-lines"></i></span>
+                <span class="shelf-title">{{ directZone ? 'Capturas de esta zona' : shelf.label }}</span>
+                @if (shelf.location.id === activeLocationId) { <span class="shelf-current">En captura</span> }
+                <span class="shelf-overview">
+                  @if (shelf.summaryKnown) { <strong>Total: {{ shelf.summary.units | number }} unidades</strong><span class="shelf-capture-total">{{ shelf.summary.captures }} capturas vigentes</span> }
+                  @else { <span>{{ summaryLoading ? 'Calculando total…' : '— unidades' }}</span> }
+                </span>
+                <i class="fa-solid fa-chevron-down shelf-chevron" [class.shelf-chevron-open]="shelf.expanded" aria-hidden="true"></i>
+              </button>
+            </h3>
+            @if (canCapture && !directZone) { <div class="shelf-header-actions"><button type="button" class="shelf-count-here" (click)="captureLocation.emit(shelf.location.id)"><i class="fa-solid fa-barcode" aria-hidden="true"></i>Contar aquí<span class="visually-hidden"> en {{ selectedZone?.name }} / {{ shelf.label }}</span></button></div> }
+          </header>
+          @if (!directZone && shelf.location.id === activeLocationId) {
+            <ng-container [ngTemplateOutlet]="captureTemplate"></ng-container>
+          }
+          <div class="shelf-collapse" [class.is-open]="shelf.expanded" [attr.aria-hidden]="!shelf.expanded" [attr.inert]="shelf.expanded ? null : ''">
+            <div class="shelf-collapse-inner">
+              @if (shelf.expanded || shelf.page > 0 || shelf.loading || shelf.error) {
+                <div class="shelf-panel" [id]="'rack-level-panel-' + shelf.location.id" role="region" [attr.aria-labelledby]="'rack-level-toggle-' + shelf.location.id">
+                  @if (shelf.location.id === activeLocationId) {
+                    <div class="capture-list-heading"><strong>Registros de esta ubicación</strong>@if (shelf.page > 0) { <span>{{ shelf.summary.units | number }} unidades vigentes · {{ shelf.totalRecords | number }} capturas</span> }</div>
                   }
-                </details>
-              </article>
-            }
-            @if (!shelf.loading && !shelf.error && !shelf.items.length) { <div class="shelf-empty"><i class="fa-solid fa-barcode" aria-hidden="true"></i><span>Sin capturas vigentes</span><small>Los productos contados en este nivel aparecerán aquí.</small></div> }
+                  <div class="shelf-content" [attr.aria-busy]="shelf.loading">
+                    @if (shelf.items.length) {
+                      <div class="shelf-table-scroll" role="region" tabindex="0" [attr.aria-label]="'Capturas de ' + shelf.label">
+                        <table class="shelf-table">
+                          <caption class="visually-hidden">Capturas individuales en {{ shelf.label }}</caption>
+                          <thead><tr><th scope="col">Producto / captura</th><th scope="col">Opciones</th><th scope="col" class="quantity-column">Cantidad</th><th scope="col">Ronda</th><th scope="col">Estado</th><th scope="col">Registrado por</th><th scope="col">Fecha</th><th scope="col" class="actions-column">Acciones</th></tr></thead>
+                          <tbody>
+                            @for (item of shelf.items; track item.id) {
+                              <tr class="rack-product" [class.rack-product-inactive]="item.status !== 'valid'">
+                                <td>
+                                  <div class="rack-product-main">
+                                    @if (item.variant?.product?.image; as image) {
+                                      <app-image-preview [image]="image" [title]="item.variant?.product?.name || 'Producto'" [height]="40" [width]="40" [previewSize]="600"></app-image-preview>
+                                    } @else {
+                                      <span class="rack-product-placeholder"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span>
+                                    }
+                                    <div class="rack-product-info"><h4>{{ item.variant?.product?.name || 'Variante #' + item.variant_id }}</h4><small>Captura #{{ item.id }} · {{ item.variant?.sku || 'Sin SKU' }} · Variante #{{ item.variant_id }}</small></div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <div class="rack-product-options">
+                                    @for (option of item.variant?.variant_option_values; track option.id) {
+                                      <span>{{ option.option?.label || option.option?.name || 'Opción' }}: <b>{{ option.option_value?.value | uppercase }}</b></span>
+                                    } @empty { <span>Sin opciones</span> }
+                                  </div>
+                                </td>
+                                <td class="rack-product-quantity"><strong>{{ item.quantity | number }}</strong><span>uds.</span>@if (item.quantity === 0 && item.status === 'valid') { <small>Contado en cero</small> }</td>
+                                <td class="rack-capture-round">{{ item.count_round }}</td>
+                                <td><app-inventory-status [status]="item.status"></app-inventory-status></td>
+                                <td class="rack-capture-user">{{ item.user?.name || '—' }}</td>
+                                <td class="rack-capture-date">{{ item.counted_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                                <td class="actions-column"><a class="rack-capture-edit" [routerLink]="['./', item.id, 'edit']"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>Ver / editar<span class="visually-hidden"> captura #{{ item.id }}</span></a>
+                                  @if (canDelete && item.status === 'valid' && item.user_id === options.current_user_id) {
+                                    <button type="button" class="rack-capture-delete" (click)="deleteCapture.emit(item)" [disabled]="deleteBusy" [attr.aria-label]="'Eliminar captura #' + item.id" title="Eliminar captura">
+                                      @if (deletingId === item.id) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> } @else { <i class="fa-regular fa-trash-can" aria-hidden="true"></i> }
+                                    </button>
+                                  }                        </td>
+                              </tr>
+                            }
+                          </tbody>
+                        </table>
+                      </div>
+                    }
+                    @if (!shelf.loading && !shelf.error && !shelf.items.length) { <div class="shelf-empty"><i class="fa-solid fa-barcode" aria-hidden="true"></i><span>Sin capturas</span><small>{{ directZone ? 'Las capturas de esta zona aparecerán aquí.' : 'Las capturas de este nivel aparecerán aquí.' }}</small></div> }
+                  </div>
+                  @if (shelf.loading) { <p class="rack-message" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando capturas…</p> }
+                  @if (shelf.error) { <p class="rack-error" role="alert">{{ shelf.error }} <button type="button" (click)="loadShelf(shelf)">Reintentar</button></p> }
+                  @else if (!shelf.loading && shelf.page < shelf.lastPage) { <button type="button" class="rack-more" (click)="loadShelf(shelf)">Mostrar más capturas de {{ shelf.label }} · {{ shelf.items.length }} de {{ shelf.totalRecords }}</button> }
+                </div>
+              }
+            </div>
           </div>
-          @if (shelf.loading) { <p class="rack-message" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando productos…</p> }
-          @if (shelf.error) { <p class="rack-error" role="alert">{{ shelf.error }} <button type="button" (click)="loadShelf(shelf)">Reintentar</button></p> }
-          @else if (!shelf.loading && shelf.page < shelf.lastPage) { <button type="button" class="rack-more" (click)="loadShelf(shelf)">Mostrar más productos de {{ shelf.label }} · {{ shelf.items.length }} de {{ shelf.summary.variants }}</button> }
-          <div class="shelf-board" aria-hidden="true"></div>
         </section>
-      } @empty { <p class="rack-message">Esta zona no tiene sububicaciones habilitadas para el inventario.</p> }
+      } @empty { <div class="rack-message"><p>Este estante no tiene sububicaciones habilitadas para el inventario.</p>@if (locationsPath) { <a class="rack-setup-link" [routerLink]="locationsPath"><i class="fa-solid fa-sliders" aria-hidden="true"></i>Configurar zonas</a> }</div> }
     </div>
-  } @else { <p class="rack-message">Este almacén todavía no tiene ubicaciones disponibles.</p> }
-  <footer class="rack-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Las cantidades corresponden a las capturas vigentes de esta sesión. «Sin capturas» no significa que el nivel esté vacío.</footer>
+  } @else {
+    <div class="rack-empty-state">
+      <span class="rack-empty-icon"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i></span>
+      <h3>Este almacén aún no tiene zonas</h3>
+      <p>Crea las zonas o estantes del almacén para organizar el espacio y comenzar el conteo.</p>
+      @if (locationsPath) { <a class="rack-setup-link" [routerLink]="locationsPath"><i class="fa-solid fa-plus" aria-hidden="true"></i>Crear zonas</a> }
+    </div>
+  }
+  @if (zones.length) { <footer class="rack-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Cada fila corresponde a una captura. Los totales suman únicamente las capturas vigentes de esta sesión. «Sin capturas» no significa que el nivel esté vacío.</footer> }
 </section>

@@ -1,6 +1,6 @@
 <div class="inventory-page adjustment-page">
   <app-inventory-section-header [sessions]="true" workspace="adjustments" [inventory]="inventory" [session]="session" title="Ajustes" description="Revisa las diferencias antes de aprobar y aplicar cambios al stock.">
-    <a class="branch-back" [routerLink]="['../sessions']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Sesiones</a>
+    <a class="branch-back" [routerLink]="['../sessions']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Sesiones de trabajo</a>
     @if (editable) { <a class="branch-action" [routerLink]="['./create']"><i class="fa-solid fa-plus" aria-hidden="true"></i>Generar ajuste</a> }
   </app-inventory-section-header>
   @if (error) { <div class="branch-alert" role="alert">{{ error }} @if (!inventory) { <button class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button> }</div> }

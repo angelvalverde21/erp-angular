@@ -1,0 +1,20 @@
+<div class="matrix-cell" [class.has-price]="showPrice" [formGroup]="form" [attr.aria-busy]="saving">
+  <label class="matrix-cell-controls">
+    <input #quantity formControlName="quantity" type="text" inputmode="numeric" autocomplete="off"
+      [attr.aria-label]="'Cantidad · ' + label" [title]="label"
+      [class.is-invalid]="form.controls.quantity.touched && form.controls.quantity.invalid"
+      [readonly]="saving" (input)="markEdited()" (click)="quantity.select()" (blur)="save()" (keydown.enter)="quantity.blur()" />
+  </label>
+  @if (showPrice) {
+    <label class="matrix-cell-price"><span class="matrix-field-label">Precio unit.</span><span class="matrix-price-control"><span aria-hidden="true">S/</span><input #price formControlName="price" type="text" inputmode="decimal" autocomplete="off"
+      [attr.aria-label]="'Precio unitario · ' + label" [class.is-invalid]="form.controls.price.touched && form.controls.price.invalid"
+      [readonly]="saving" (input)="markEdited()" (click)="price.select()" (blur)="save()" (keydown.enter)="price.blur()" /></span></label>
+  }
+  <div class="matrix-cell-feedback" aria-live="polite">
+    @if (saving) { <small class="matrix-cell-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Guardando</small> }
+    @else if (error) { <small class="matrix-cell-error" role="alert">{{ error }}</small> }
+    @else if (form.controls.quantity.touched && form.controls.quantity.invalid) { <small class="matrix-cell-error">Ingresa unidades enteras, desde 0.</small> }
+    @else if (form.controls.price.touched && form.controls.price.invalid) { <small class="matrix-cell-error">Revisa el precio (hasta 2 decimales).</small> }
+    @else if (saved) { <small class="matrix-cell-saved"><i class="fa-solid fa-check" aria-hidden="true"></i>Guardado</small> }
+  </div>
+</div>

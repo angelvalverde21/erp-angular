@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { ManufactureVariantRowsPipe } from '../../shared/manufacture-variant-rows.pipe';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, QueryList, TemplateRef, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ManufactureVariantRowComponent } from '../manufacture-variant-row/manufacture-variant-row.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faInbox } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
-import { Subject, takeUntil } from 'rxjs';
+import { concatMap, finalize, from, Subject, takeUntil, toArray } from 'rxjs';
 import { VariantSearchComponent } from '../../../products/variants/variant-search/variant-search.component';
 import { ManufactureVariantService } from '../../manufacture.variants.service';
 import { ButtonPrintComponent } from '../../../../shared/components/buttons/button-print/button-print.component';
@@ -12,6 +13,7 @@ import { ButtonPrintComponent } from '../../../../shared/components/buttons/butt
 @Component({
   selector: 'app-manufacture-variant-index',
   imports: [
+    ManufactureVariantRowsPipe,
     ManufactureVariantRowComponent,
     FontAwesomeModule,
     VariantSearchComponent,
@@ -23,6 +25,52 @@ import { ButtonPrintComponent } from '../../../../shared/components/buttons/butt
 })
 
 export class ManufactureVariantIndexComponent implements OnInit {
+  @ViewChildren(ManufactureVariantRowComponent) rows!: QueryList<ManufactureVariantRowComponent>;
+  saving = false;
+  saveMessage = '';
+  saveFailed = false;
+
+  get pendingRows(): ManufactureVariantRowComponent[] {
+    return this.rows?.filter(row => row.hasChanges) ?? [];
+  }
+
+  get canSave(): boolean {
+    return !this.saving && this.pendingRows.length > 0 &&
+      !this.rows?.some(row => row.removeLoading) && this.pendingRows.every(row => row.form.valid);
+  }
+
+  onDraftChanged(): void {
+    this.saveMessage = '';
+    this.saveFailed = false;
+  }
+
+  saveChanges(): void {
+    if (!this.canSave) return;
+    const pending = this.pendingRows;
+    this.saving = true;
+    this.saveMessage = '';
+    this.saveFailed = false;
+    from(pending).pipe(
+      concatMap(row => row.save()),
+      toArray(),
+      takeUntil(this.destroy$),
+      finalize(() => { this.saving = false; }),
+    ).subscribe(results => {
+      const failures = results.filter(saved => !saved).length;
+      this.saveFailed = failures > 0;
+      this.saveMessage = failures
+        ? `${failures} ${failures === 1 ? 'variante no se pudo guardar' : 'variantes no se pudieron guardar'}. Reintenta los cambios pendientes.`
+        : 'Todos los cambios están guardados.';
+    });
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  warnUnsavedChanges(event: BeforeUnloadEvent): void {
+    if (this.pendingRows.length || this.saving) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  }
 
 
   faBarcode = faBarcode;
@@ -63,6 +111,7 @@ export class ManufactureVariantIndexComponent implements OnInit {
   }
 
   receiveDeleteManufactureVariantId(manufacture_variant_id: number) {
+    this.onDraftChanged();
 
     this.manufacture_variants = this.manufacture_variants.filter((manufacture_variant: any) => manufacture_variant.id !== manufacture_variant_id);
 

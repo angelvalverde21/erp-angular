@@ -1,6 +1,6 @@
 <div class="inventory-page progress-page">
   <app-inventory-section-header [sessions]="true" workspace="progress" [inventory]="inventory" [session]="session" title="Avance por ubicación" description="Controla el avance de las ubicaciones finales del inventario.">
-    <a class="branch-back" [routerLink]="['../sessions']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Sesiones</a>
+    <a class="branch-back" [routerLink]="['../sessions']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Sesiones de trabajo</a>
     @if (editable) { <a class="branch-action" [routerLink]="['./create']"><i class="fa-solid fa-plus" aria-hidden="true"></i>Registrar ubicación</a> }
   </app-inventory-section-header>
   @if (error) { <div class="branch-alert" role="alert">{{ error }} @if (!inventory) { <button class="btn btn-sm btn-outline-secondary ms-2" (click)="load()">Reintentar</button> }</div> }

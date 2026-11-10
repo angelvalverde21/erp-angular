@@ -1,40 +1,39 @@
 <section class="inventory-list" aria-labelledby="inventory-count-title">
   <header class="inventory-list-header">
-    <div class="inventory-list-heading"><span class="inventory-list-icon" aria-hidden="true"><i class="fa-solid fa-list-check"></i></span><div><h2 id="inventory-count-title">Conteos de la sesión</h2><p>Agrupados por variante. El total suma únicamente las capturas vigentes.</p></div></div>
-    <span class="inventory-page-count">{{ groups.length }} variantes en esta página</span>
+    <div class="inventory-list-heading"><span class="inventory-list-icon" aria-hidden="true"><i class="fa-solid fa-list-check"></i></span><div><h2 id="inventory-count-title">Capturas de la sesión</h2><p>Cada fila muestra una captura individual. Solo las vigentes suman al total.</p></div></div>
+    <span class="inventory-page-count">{{ records.length }} capturas en esta página</span>
   </header>
-  <div class="inventory-table-scroll" role="region" tabindex="0" aria-label="Conteos agrupados por variante">
-    <table class="inventory-table" [class.inventory-table-empty]="!groups.length">
-      <caption class="visually-hidden">Total por variante y detalle de sus capturas</caption>
-      <thead><tr><th scope="col">Variante / captura</th><th scope="col">Ubicación</th><th scope="col">Cantidad</th><th scope="col">Ronda</th><th scope="col">Estado</th><th scope="col">Registrado por</th><th scope="col">Fecha</th><th scope="col">Acciones</th></tr></thead>
+  <div class="inventory-table-scroll" role="region" tabindex="0" aria-label="Capturas individuales">
+    <table class="inventory-table" [class.inventory-table-empty]="!records.length">
+      <caption class="visually-hidden">Capturas individuales de la sesión</caption>
+      <thead><tr><th scope="col">Producto / captura</th><th scope="col">Ubicación</th><th scope="col">Cantidad</th><th scope="col">Ronda</th><th scope="col">Estado</th><th scope="col">Registrado por</th><th scope="col">Fecha</th><th scope="col">Acciones</th></tr></thead>
       <tbody>
-        @for (group of groups; track group.variantId) {
-          <tr class="count-group-row">
-            <td colspan="2">
-              <strong>{{ group.name }}</strong>
-              <small class="inventory-secondary">{{ group.sku }} · Variante #{{ group.variantId }}</small>
-              @if (group.options.length) {
+        @for (item of records; track item.id) {
+          <tr class="count-capture-row" [class.capture-inactive]="item.status !== 'valid'">
+            <td>
+              <strong>{{ item.variant?.product?.name || 'Variante #' + item.variant_id }}</strong>
+              <small class="inventory-secondary">Captura #{{ item.id }} · {{ item.variant?.sku || 'Sin SKU' }} · Variante #{{ item.variant_id }}</small>
+              @if (item.variant?.variant_option_values?.length) {
                 <div class="count-variant-options" aria-label="Opciones de la variante">
-                  @for (option of group.options; track option.id) {
+                  @for (option of item.variant?.variant_option_values; track option.id) {
                     <span>{{ option.option?.label || option.option?.name || 'Opción' }}: <b>{{ (option.option_value?.value || 'Sin valor') | uppercase }}</b></span>
                   }
                 </div>
               }
             </td>
-            <td class="quantity-cell"><strong>{{ group.total }}</strong><small class="inventory-secondary">unidades vigentes</small></td>
-            <td colspan="5"><span class="count-captures-label">{{ group.records.length }} {{ group.records.length === 1 ? 'captura' : 'capturas' }}</span></td>
+            <td>{{ item.location?.parent?.name ? item.location?.parent?.name + ' / ' : '' }}{{ item.location?.name }}<small class="inventory-secondary">{{ item.location?.warehouse?.name }}</small>@if (item.location?.warehouse?.subtitle) { <small class="inventory-secondary">{{ item.location?.warehouse?.subtitle }}</small> }</td>
+            <td class="quantity-cell">{{ item.quantity }}</td><td>{{ item.count_round }}</td>
+            <td><app-inventory-status [status]="item.status"></app-inventory-status></td><td>{{ item.user?.name }}</td><td>{{ item.counted_at | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td><div class="inventory-row-actions"><a class="inventory-edit" [routerLink]="['./', item.id, 'edit']"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>Ver / editar<span class="visually-hidden"> captura #{{ item.id }}</span></a>
+              @if (canDelete && item.status === 'valid' && item.user_id === currentUserId) {
+                <button type="button" class="inventory-delete" (click)="deleteCapture.emit(item)" [disabled]="deleteBusy" [attr.aria-label]="'Eliminar captura #' + item.id" title="Eliminar captura">
+                  @if (deletingId === item.id) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> } @else { <i class="fa-regular fa-trash-can" aria-hidden="true"></i> }
+                </button>
+              }
+            </div></td>
           </tr>
-            @for (item of group.records; track item.id) {
-              <tr class="count-capture-row">
-                <td><span class="count-capture-label"><i class="fa-solid fa-turn-up fa-rotate-90" aria-hidden="true"></i>Captura #{{ item.id }}</span></td>
-                <td>{{ item.location?.name }}<small class="inventory-secondary">{{ item.location?.warehouse?.name }}</small>@if (item.location?.warehouse?.subtitle) { <small class="inventory-secondary">{{ item.location?.warehouse?.subtitle }}</small> }</td>
-                <td class="quantity-cell">{{ item.quantity }}</td><td>{{ item.count_round }}</td>
-                <td><app-inventory-status [status]="item.status"></app-inventory-status></td><td>{{ item.user?.name }}</td><td>{{ item.counted_at | date:'dd/MM/yyyy HH:mm' }}</td>
-                <td><div class="inventory-row-actions"><a class="inventory-edit" [routerLink]="['./', item.id, 'edit']"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>Ver / editar<span class="visually-hidden"> captura #{{ item.id }}</span></a></div></td>
-              </tr>
-            }
         } @empty {
-          <tr><td colspan="8"><div class="inventory-empty"><span class="inventory-list-icon" aria-hidden="true"><i class="fa-solid fa-clipboard-list"></i></span><strong>No hay conteos registrados</strong><p>Las variantes contadas aparecerán aquí.</p></div></td></tr>
+          <tr><td colspan="8"><div class="inventory-empty"><span class="inventory-list-icon" aria-hidden="true"><i class="fa-solid fa-clipboard-list"></i></span><strong>No hay conteos registrados</strong><p>Las capturas aparecerán aquí.</p></div></td></tr>
         }
       </tbody>
     </table>

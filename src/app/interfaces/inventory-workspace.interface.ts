@@ -17,6 +17,20 @@ export interface InventoryVariant {
   variant_option_values?: { id: number; option?: { name: string; label?: string | null }; option_value?: { value: string } }[];
   product?: { id: number; name: string; image?: { url_thumbnail?: string | null; url_medium?: string | null } | null };
 }
+export interface InventoryVariantLocation {
+  location_id: number;
+  location_path: string;
+  warehouse_id: number | null;
+  warehouse_name: string | null;
+  branch_name: string | null;
+  quantity: number;
+}
+export interface InventoryCountMove {
+  source_location_id: number;
+  location_id: number;
+  variant: InventoryVariant;
+  counted_quantity: number;
+}
 export type LocationProgressStatus = 'pending' | 'in_progress' | 'counted' | 'verified';
 export interface InventoryLocationProgress {
   id: number; inventory_id: number; location_id: number; verified_by: number | null;
@@ -30,18 +44,18 @@ export interface InventoryCount {
   location?: InventoryWorkspaceLocation; variant?: InventoryVariant; user?: InventoryOperator;
 }
 export interface InventoryCountPayload { location_id: number; variant_id: number; quantity: number; mode: 'accumulate' | 'recount'; status?: 'valid' | 'cancelled'; }
-export interface InventoryRackItem {
-  variant_id: number;
-  counted_quantity: number | string;
-  capture_count: number | string;
-  variant?: InventoryVariant | null;
-}
 export interface InventoryRackResponse {
-  data: InventoryRackItem[];
+  data: InventoryCount[];
   current_page: number;
   last_page: number;
   total: number;
   summary: { units: number; captures: number; variants: number };
+}
+export interface InventoryRackSummary {
+  location_id: number;
+  units: number;
+  captures: number;
+  variants: number;
 }
 export interface InventoryAdjustment {
   id: number; inventory_id: number; variant_id: number; system_quantity: number; counted_quantity: number; difference: number;

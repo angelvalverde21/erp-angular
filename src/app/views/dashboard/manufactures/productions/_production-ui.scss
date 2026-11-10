@@ -17,3 +17,16 @@
 .production-table tfoot td { border-top: 1px solid var(--cui-border-color, #e2e8f0); border-bottom: 0; background: rgba(100, 116, 139, .025); font-size: .8rem; }
 .production-meta { color: var(--cui-secondary-color, #64748b); font-size: .8rem; }
 @media (max-width: 575.98px) { .production-section-heading, .production-panel-body { padding: 1rem; } .production-form-actions { align-items: stretch; flex-direction: column; } }
+
+// Alternate the background by product/color, keeping all its sizes together.
+.production-table tbody tr.manufacture-group-striped > td {
+  background-color: color-mix(in srgb, var(--section-accent, #64748b) 6%, var(--cui-body-bg, #fff));
+}
+
+.production-table tbody tr.manufacture-group-start:not(:first-child) > td {
+  border-top: 2px solid var(--cui-border-color, #dce2ea);
+}
+
+.production-table tbody tr:not(.manufacture-group-start) > td {
+  border-top-color: transparent;
+}

@@ -1,18 +1,20 @@
 import { ImagePreviewComponent } from 'src/app/views/shared/components/image-preview/image-preview.component';
 import { WarehouseSelectComponent } from '../../../warehouses/warehouse-select/warehouse-select.component';
-import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CurrencyPipe, DatePipe, UpperCasePipe } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { InventoryCount, InventoryCountPayload, InventoryWorkspaceOptions, InventoryVariant } from 'src/app/interfaces/inventory-workspace.interface';
 import { BranchFieldValidationDirective } from '../../../branches/branch-field-validation.directive';
 import { INVENTORY_STATUS_LABELS } from '../../inventory-workflow';
+import Swal from 'sweetalert2';
 @Component({ selector: 'app-inventory-count-create', imports: [ImagePreviewComponent, WarehouseSelectComponent, CurrencyPipe, DatePipe, UpperCasePipe, RouterLink, ReactiveFormsModule, BranchFieldValidationDirective], templateUrl: './inventory-count-create.component.html', styleUrl: './inventory-count-create.component.scss' })
-export class InventoryCountCreateComponent implements OnChanges, AfterViewChecked {
+export class InventoryCountCreateComponent implements OnChanges, AfterViewChecked, OnDestroy {
   @Input() options: InventoryWorkspaceOptions | null = null;
   @Input() saving = false;
   @Input() readOnly = false;
   @Input() variants: InventoryVariant[] = [];
+  @Input() initialVariant: InventoryVariant | null = null;
   @Input() searching = false;
   @Input() searchError = '';
   @Input() initialLocationId: number | null = null;
@@ -34,6 +36,9 @@ export class InventoryCountCreateComponent implements OnChanges, AfterViewChecke
   @ViewChild('barcodeInput') private barcodeInput?: ElementRef<HTMLInputElement>;
   @ViewChild('quantityInput') private quantityInput?: ElementRef<HTMLInputElement>;
   private focusPending: 'barcode' | 'quantity' | null = null;
+  readonly quantityWarningLimit = 50;
+  confirmingQuantity = false;
+  private destroyed = false;
   savedRecords: InventoryCount[] = [];
   get savedRecord(): InventoryCount | null { return this.savedRecords[0] ?? null; }
   registrationComplete = false;
@@ -82,7 +87,10 @@ export class InventoryCountCreateComponent implements OnChanges, AfterViewChecke
   
   readonly form;
   constructor(private fb: FormBuilder) { this.form = this.fb.nonNullable.group({ location_id: [null as number | null, Validators.required], variant_id: [null as number | null, Validators.required], quantity: [null as number | null, [Validators.required, Validators.min(0), Validators.max(2147483647), Validators.pattern(/^\d+$/)]], mode: ['accumulate' as 'accumulate' | 'recount'], status: ['valid' as 'valid' | 'cancelled'] }); }
-  get canSearch(): boolean { return this.locationConfirmed && !this.editing && !this.saving && !this.readOnly && !this.searching && !!this.searchTerm.trim(); }
+  get canSearch(): boolean { return this.locationConfirmed && !this.editing && !this.saving && !this.readOnly && !this.searching && !this.confirmingQuantity && !!this.searchTerm.trim(); }
+  get needsQuantityConfirmation(): boolean {
+    return (this.form.controls.quantity.value ?? 0) > this.quantityWarningLimit && this.form.controls.status.value !== 'cancelled';
+  }
   confirmLocation(event?: Event): void {
     event?.preventDefault();
     if (this.locationConfirmed || this.saving || this.readOnly) return;
@@ -129,6 +137,10 @@ export class InventoryCountCreateComponent implements OnChanges, AfterViewChecke
       }
       if (changes['initialLocationId']) this.clearProduct(!!location);
     }
+    if (!this.editing && changes['initialVariant'] && this.initialVariant) {
+      this.hasSearched = true;
+      this.chooseVariant(this.initialVariant);
+    }
     if (!this.editing && this.hasSearched && (changes['variants'] || changes['searching']) && !this.searching && !this.searchError && this.variants.length === 1) this.chooseVariant(this.variants[0]);
   }
 
@@ -146,7 +158,7 @@ export class InventoryCountCreateComponent implements OnChanges, AfterViewChecke
 
   ngAfterViewChecked(): void {
     const input = this.focusPending === 'quantity' ? this.quantityInput?.nativeElement : this.barcodeInput?.nativeElement;
-    if (!this.focusPending || !input || input.disabled || this.saving || this.readOnly || this.searching) return;
+    if (!this.focusPending || !input || input.disabled || this.saving || this.readOnly || this.searching || this.confirmingQuantity) return;
     this.focusPending = null;
     input.focus();
     input.select();
@@ -192,7 +204,7 @@ export class InventoryCountCreateComponent implements OnChanges, AfterViewChecke
   }
 
   nextProduct(): void {
-    if (this.saving || this.editing) return;
+    if (this.saving || this.editing || this.confirmingQuantity) return;
     this.clearProduct();
   }
 
@@ -207,12 +219,43 @@ export class InventoryCountCreateComponent implements OnChanges, AfterViewChecke
     this.focusPending = focus ? 'barcode' : null;
   }
 
-  submit(): void {
-    if (this.saving || this.readOnly) return;
+  async submit(): Promise<void> {
+    if (this.saving || this.readOnly || this.confirmingQuantity || this.destroyed) return;
 
     if (!this.editing && !this.locationConfirmed) { this.form.controls.location_id.markAsTouched(); return; }
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     const value = this.form.getRawValue();
+    if (this.needsQuantityConfirmation) {
+      this.confirmingQuantity = true;
+      let confirmed = false;
+      try {
+        const result = await Swal.fire({
+          title: 'Revisa la cantidad ingresada',
+          text: `Ingresaste ${value.quantity} unidades, una cantidad superior a ${this.quantityWarningLimit}. Podría ser un código de barras ingresado por error. ¿La cantidad es correcta?`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: `Sí, registrar ${value.quantity} unidades`,
+          cancelButtonText: 'Revisar cantidad',
+          focusCancel: true,
+          returnFocus: false,
+          allowOutsideClick: false,
+        });
+        confirmed = result.isConfirmed;
+      } finally {
+        this.confirmingQuantity = false;
+      }
+      if (this.destroyed || this.readOnly || this.saving) return;
+      const current = this.form.getRawValue();
+      if (!confirmed || current.quantity !== value.quantity || current.variant_id !== value.variant_id || current.location_id !== value.location_id || current.status !== value.status || current.mode !== value.mode) {
+        this.focusPending = 'quantity';
+        return;
+      }
+    }
     this.save.emit({ location_id: value.location_id!, variant_id: value.variant_id!, quantity: value.quantity!, mode: value.mode, ...(this.editing ? {status: value.status} : {}) });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed = true;
+    if (this.confirmingQuantity) Swal.close();
   }
 }
