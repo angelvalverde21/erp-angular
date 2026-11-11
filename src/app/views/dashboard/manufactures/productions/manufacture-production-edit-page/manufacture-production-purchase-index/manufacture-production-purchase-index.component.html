@@ -3,6 +3,6 @@
 } @else if (error) {
 <div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar las compras</h3><p>{{ error }}</p><button type="button" class="manufacture-secondary-action" (click)="productionPurchaseInit()">Reintentar</button></div>
 } @else {
-<app-purchase-index [productionView]="true" [purchases]="purchases"
-  (emitSumPurchases)="receiveSumPurchases($event)" purchaseable_type="manufacture" [purchaseable_id]="manufacture_id"></app-purchase-index>
+<app-production-stages [productionId]="manufacture_id" [purchases]="purchases"
+  (totalChanged)="receiveSumPurchases($event)"></app-production-stages>
 }

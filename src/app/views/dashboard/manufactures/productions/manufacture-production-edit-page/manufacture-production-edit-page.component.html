@@ -6,6 +6,8 @@
   <div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar la producción</h3><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary" (click)="productionInit()">Reintentar</button></div>
   } @else {
   <app-production-widget [summary]="summary"></app-production-widget>
+  @if (stages.length) { <app-production-stage-stepper [stages]="stages" [selectedId]="selectedStageId || stages[0].id" (choose)="openStage($event)"></app-production-stage-stepper> }
+  @if (stagesError) { <p class="text-danger" role="alert">{{ stagesError }} <button type="button" class="btn btn-link btn-sm" (click)="loadStages()">Reintentar</button></p> }
   <router-outlet></router-outlet>
   }
 </div>

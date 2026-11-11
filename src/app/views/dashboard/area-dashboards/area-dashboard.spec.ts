@@ -80,7 +80,7 @@ describe('Dashboards by area', () => {
     expect(fixture.componentInstance.report?.store.name).toBe('Sorelle');
   });
 
-  it('shows production bars on the CEO dashboard without assigning progress to undefined plans', () => {
+  it('shows received units on the CEO dashboard without stage percentages', () => {
     localStorage.setItem('user', JSON.stringify({ roles: ['ceo'] }));
     TestBed.overrideProvider(ActivatedRoute, { useValue: { paramMap: of(convertToParamMap({ area: 'ceo' })) } });
     service.report.and.returnValue(of({ data: {
@@ -98,8 +98,8 @@ describe('Dashboards by area', () => {
     const root = fixture.nativeElement as HTMLElement;
     expect(root.textContent).toContain('Avance de las producciones');
     expect(root.textContent).toContain('Sin meta');
-    expect(root.querySelectorAll('[role="progressbar"]').length).toBe(2);
-    expect(root.querySelector('.monitor-row [role="progressbar"]')?.getAttribute('aria-valuenow')).toBe('75');
+    expect(root.querySelectorAll('[role="progressbar"]').length).toBe(0);
+    expect(root.querySelector('.monitor-row-details')?.textContent).toContain('15 / 20');
     expect(root.querySelector('.monitor-row a')?.getAttribute('href')).toBe('/sorelle/dashboard/manufactures/productions/1');
     service.report.and.returnValue(throwError(() => ({ status: 500 })));
     fixture.componentInstance.refresh();

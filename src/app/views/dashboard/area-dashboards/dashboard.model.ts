@@ -29,6 +29,7 @@ export interface AreaReport {
 }
 
 export interface ProductionProgressItem {
+  stages?: { id: number; code: string; name: string; status: string; expected_end: string | null; responsible: string | null; sample_quantity: number | null; sample_review: string; overdue: boolean }[];
   id: number;
   name: string;
   created_at: string;

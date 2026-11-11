@@ -2,13 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { PurchaseIndexComponent } from '@dashboard/purchases/purchase-index/purchase-index.component';
+import { ProductionStagesComponent } from '../../production-stages/production-stages.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ManufactureService } from '../../../manufacture.service';
 import { ManufacturePurchaseService } from '../../../manufacture.purchase.service';
 
 @Component({
   selector: 'app-manufacture-production-purchase-index',
-  imports: [PurchaseIndexComponent, LoadingComponent],
+  imports: [ProductionStagesComponent, LoadingComponent],
   templateUrl: './manufacture-production-purchase-index.component.html',
   styleUrl: './manufacture-production-purchase-index.component.scss',
 })

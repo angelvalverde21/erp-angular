@@ -13,6 +13,7 @@ import { ManufacturePurchaseService } from '../../manufactures/manufacture.purch
 import { ManufactureProductionPurchaseIndexComponent } from '../../manufactures/productions/manufacture-production-edit-page/manufacture-production-purchase-index/manufacture-production-purchase-index.component';
 import { PurchaseIndexHeadComponent } from './purchase-index-head/purchase-index-head.component';
 import { PurchaseIndexComponent } from './purchase-index.component';
+import { ProductionStageService } from '../../manufactures/productions/production-stages/production-stage.service';
 
 registerLocaleData(localeEsPe);
 
@@ -42,7 +43,8 @@ describe('Production expenses', () => {
         { provide: NgbModal, useValue: { open } },
         { provide: ManufactureService, useValue: { setSummary } },
         { provide: ManufacturePurchaseService, useValue: { setManufactureId, index: () => of({ data: structuredClone(purchases) }) } },
-        { provide: ActivatedRoute, useValue: { parent: { paramMap: of(convertToParamMap({ production_id: '41' })) } } },
+        { provide: ProductionStageService, useValue: { list: () => of({ data: [{ id: 1, code: 'materials', name: 'Telas e insumos', status: 'pending', sample_review: 'pending' }] }) } },
+        { provide: ActivatedRoute, useValue: { parent: { paramMap: of(convertToParamMap({ production_id: '41' })) }, queryParamMap: of(convertToParamMap({})), snapshot: { queryParamMap: convertToParamMap({}) } } },
       ],
     }).compileComponents();
   });

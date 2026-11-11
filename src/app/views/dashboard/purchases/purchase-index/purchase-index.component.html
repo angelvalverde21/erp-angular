@@ -144,7 +144,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <app-purchase-create [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id"
+        <app-purchase-create [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id" [production_stage_id]="productionStageId"
             (emitPurchaseCreate)="receivePurchaseCreate($event)"></app-purchase-create>
     </div>
 

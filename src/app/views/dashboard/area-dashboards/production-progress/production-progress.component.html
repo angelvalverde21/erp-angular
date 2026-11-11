@@ -15,18 +15,7 @@
       <div><span>Unidades pendientes</span><strong>{{ summary.pending_units | number }}</strong><small>Para completar los planes</small></div>
       <div><span>Sin meta definida</span><strong>{{ summary.unplanned_count | number }}</strong><small>Requieren cantidades planificadas</small></div>
     </div>
-    @if (summary.total_count) {
-      <div class="monitor-total">
-        <div><span>Avance acumulado</span><strong>{{ summary.progress_percent !== null ? (summary.progress_percent | number:'1.0-1') + '%' : 'Sin meta' }}</strong></div>
-        @if (summary.progress_percent !== null) {
-          <div class="monitor-track" role="progressbar" aria-label="Avance acumulado de producciones"
-            aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="summary.progress_percent">
-            <span [style.width.%]="summary.progress_percent"></span>
-          </div>
-        }
-        <small>{{ summary.completed_units | number }} de {{ summary.planned_units | number }} unidades del plan recibidas · {{ summary.total_count | number }} producciones</small>
-      </div>
-    }
+    <div class="monitor-total"><strong>Recepción de prendas</strong><small>{{ summary.completed_units | number }} de {{ summary.planned_units | number }} unidades del plan recibidas. El avance de trabajo se consulta en las etapas de cada producción.</small></div>
     <div class="monitor-list">
       @for (production of summary.items; track production.id) {
         <article class="monitor-row">
@@ -36,19 +25,14 @@
             <span class="monitor-status" [class.completed]="production.status === 'completed'" [class.in-progress]="production.status === 'in_progress'"
               [class.unplanned]="production.status === 'unplanned'">{{ labels[production.status] }}</span>
           </div>
-          @if (production.progress_percent !== null) {
-            <div class="monitor-row-progress">
-              <div class="monitor-track" [class.completed]="production.status === 'completed'" role="progressbar"
-                [attr.aria-label]="'Avance de ' + production.name" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="production.progress_percent">
-                <span [style.width.%]="production.progress_percent"></span>
-              </div>
-              <strong>{{ production.progress_percent | number:'1.0-1' }}%</strong>
-            </div>
-            <div class="monitor-row-details"><span>{{ production.completed_units | number }} / {{ production.planned_units | number }} unidades del plan</span>
-              <span [class.pending]="production.pending_units > 0">{{ production.pending_units | number }} pendientes</span></div>
-          } @else {
-            <p class="monitor-unplanned">Define las cantidades por variante para medir su avance.</p>
+          @if (production.stages?.length) {
+            <app-production-stage-stepper [stages]="production.stages || []" (choose)="openStage(production.path, $event)"></app-production-stage-stepper>
+            @for (stage of production.stages; track stage.id) {
+              @if (stage.code === 'samples') { <small class="monitor-stage-detail">Muestras: {{ stage.sample_quantity || 0 }} · {{ stage.sample_review === 'approved' ? 'Aprobadas' : stage.sample_review === 'changes_requested' ? 'Requieren cambios' : 'Pendientes de revisión' }}</small> }
+              @if (stage.expected_end) { <small class="monitor-stage-detail" [class.monitor-alert]="stage.overdue">{{ stage.name }} · Entrega: {{ stage.expected_end | date:'dd/MM/yyyy' }} · {{ stage.responsible || 'Sin responsable' }}@if (stage.overdue) { · Atrasada }</small> }
+            }
           }
+          <div class="monitor-row-details"><span>Recepción: {{ production.completed_units | number }} / {{ production.planned_units | number }} prendas</span><span>{{ production.pending_units | number }} pendientes</span></div>
           @if (production.extra_units) { <small class="monitor-alert">{{ production.extra_units | number }} unidades adicionales o sin plan; no compensan faltantes de otras variantes.</small> }
           @if (production.needs_review) { <small class="monitor-alert">Revisar movimientos: hay variantes con salidas superiores a sus entradas.</small> }
         </article>

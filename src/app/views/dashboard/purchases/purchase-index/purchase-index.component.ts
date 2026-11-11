@@ -46,6 +46,8 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
   @Input() purchaseable_id: number = 0;
   @Input() sum_purchases: number = 0;
   @Input() productionView = false;
+  @Input() productionStageId: number | null = null;
+  @Output() purchasesChanged = new EventEmitter<any[]>();
 
   get conceptCount(): number {
     return this.purchases.reduce((total, purchase) => total + (purchase.items?.length ?? 0), 0);
@@ -112,6 +114,7 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
     // console.log('Updated Purchase:', PurchaseUpdated);
 
     this.sumTotalAmount();
+    this.purchasesChanged.emit(this.purchases);
     // this.emitSumPurchaseIndex.emit(this.sum_purchases);
 
   }
@@ -122,10 +125,12 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
 
     this.purchases = this.purchases.filter(p => p.id !== purchase_id);
     this.sumTotalAmount();
+    this.purchasesChanged.emit(this.purchases);
     // this.emitSumPurchaseIndex.emit(this.sum_purchases);
   }
 
   receivePurchaseCreate(purchase: any) {
+    if (!purchase) return;
 
     console.log('New Purchase Created on PurchaseIndexComponent', purchase);
     
@@ -134,6 +139,7 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
     this.modal.close();
     
     this.sumTotalAmount();
+    this.purchasesChanged.emit(this.purchases);
 
   }
 

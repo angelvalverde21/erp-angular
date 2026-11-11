@@ -72,6 +72,7 @@ export class PurchaseCreateComponent {
   @Input() purchaseable_type: string = "";
   @Input() purchaseable_id: number = 0;
   @Input() supplier_id: number | null = 0;
+  @Input() production_stage_id: number | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -94,6 +95,7 @@ export class PurchaseCreateComponent {
       purchaseable_id: [this.purchaseable_id],
       observations: [''],
       supplier_id: [null],
+      ...(this.production_stage_id ? { production_stage_id: [this.production_stage_id] } : {}),
       gateway_id: [2, [Validators.required]],
       purchase_items: this.fb.array([
         this.fb.group({

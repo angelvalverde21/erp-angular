@@ -1,7 +1,9 @@
 import { ManufactureSectionHeaderComponent } from '../../components/manufacture-section-header/manufacture-section-header.component';
 import { Component, OnDestroy, OnInit, effect } from '@angular/core';
 // import { HeadPageComponent } from '@components/head-page/head-page.component';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ProductionStage, ProductionStageService } from '../production-stages/production-stage.service';
+import { ProductionStageStepperComponent } from '../production-stages/production-stage-stepper.component';
 import { Subject, takeUntil } from 'rxjs';
 import { LoadingComponent } from '@components/loading/loading.component';
 import Swal from 'sweetalert2';
@@ -18,6 +20,7 @@ import { ManufactureService } from '../../manufacture.service';
     LoadingComponent,
     ProductionWidgetComponent,
     RouterModule,
+    ProductionStageStepperComponent,
     // NgbDropdownModule
   ],
   templateUrl: './manufacture-production-edit-page.component.html',
@@ -31,6 +34,9 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
   error = '';
   manufacture: any = null;
   manufacture_id: number = 0;
+  stages: ProductionStage[] = [];
+  stagesError = '';
+  selectedStageId = 0;
   purchases: any;
   variants: any;
 
@@ -42,7 +48,9 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
   constructor(
     private route: ActivatedRoute,
     private _manufacture: ManufactureService,
-    private _manufactureProduction: ManufactureProductionService
+    private _manufactureProduction: ManufactureProductionService,
+    private stageService: ProductionStageService,
+    private router: Router,
   ) {
 
     this.route.params.subscribe(params => {
@@ -73,6 +81,9 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
 
 
     this.productionInit();
+    this.loadStages();
+    this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe(params => this.selectedStageId = Number(params.get('stage')));
+    this.stageService.changes.pipe(takeUntil(this.destroy$)).subscribe(id => { if (id === this.manufacture_id) this.loadStages(); });
 
   }
 
@@ -82,6 +93,17 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
     sum_purchases: 0,
     sum_kardexes: 0
   };
+
+  loadStages(): void {
+    this.stageService.list(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
+      next: response => { this.stages = response.data; this.stagesError = ''; },
+      error: () => this.stagesError = 'No se pudo consultar el avance por etapas.',
+    });
+  }
+
+  openStage(id: number): void {
+    void this.router.navigate(['purchases'], { relativeTo: this.route, queryParams: { stage: id } });
+  }
 
   //usado
   productionInit() {

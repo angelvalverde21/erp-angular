@@ -1,0 +1,45 @@
+@if (loading) {
+  <div class="stage-panel stage-empty" role="status"><span class="spinner-border spinner-border-sm"></span>Cargando etapas de producción…</div>
+} @else {
+  @if (!selected) { <div class="stage-panel stage-empty"><p>{{ error || 'No hay etapas disponibles.' }}</p><button class="btn btn-outline-secondary" (click)="load()">Reintentar</button></div> }
+  @if (selected && form) {
+    <section class="stage-panel mb-3">
+      <header class="stage-heading"><div><span class="stage-eyebrow">SEGUIMIENTO DE PRODUCCIÓN</span><h2>{{ selected.name }}</h2><p>{{ descriptions[selected.code] }}</p></div><span class="stage-status" [class]="'stage-status ' + selected.status">{{ labels[selected.status] }}</span></header>
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <fieldset [disabled]="saving" class="stage-fields">
+          <div class="stage-field"><label for="stage-status">Estado de la etapa</label><select id="stage-status" formControlName="status">@for (state of ['pending', 'in_progress', 'completed', 'not_applicable']; track state) { <option [value]="state">{{ labels[state] }}</option> }</select></div>
+          <div class="stage-field"><label for="stage-responsible">{{ selected.code === 'sewing' ? 'Costurero o taller responsable' : 'Responsable o proveedor' }}</label><input id="stage-responsible" formControlName="responsible" maxlength="255" placeholder="Nombre de la persona o taller"></div>
+          <div class="stage-field"><label for="stage-date">{{ selected.code === 'sewing' ? 'Entrega comprometida por el costurero' : 'Fecha prevista de entrega' }}</label><input id="stage-date" type="date" formControlName="expected_end"></div>
+          @if (selected.expected_end && selected.expected_end !== form.value.expected_end) { <div class="stage-field stage-wide"><label for="stage-date-reason">Motivo del cambio de fecha *</label><input id="stage-date-reason" formControlName="date_change_reason" maxlength="2000" placeholder="Explica el nuevo acuerdo con el responsable"></div> }
+          @if (selected.code === 'samples') {
+            <div class="stage-field"><label for="sample-quantity">Cantidad de muestras</label><input id="sample-quantity" type="number" min="1" step="1" formControlName="sample_quantity" placeholder="Ej. 3"></div>
+            <div class="stage-field"><label for="sample-review">Resultado de la revisión</label><select id="sample-review" formControlName="sample_review"><option value="pending">Pendiente de revisión</option><option value="changes_requested">Requiere cambios</option><option value="approved">Aprobada</option></select></div>
+            <div class="stage-field stage-wide"><label for="sample-details">Tallas, variantes y detalle de las muestras</label><textarea id="sample-details" formControlName="sample_details" maxlength="5000" placeholder="Ej. 1 polo S, 1 M y 1 L · Prueba de ajuste y confección"></textarea></div>
+            <div class="stage-field stage-wide"><label for="sample-notes">Observaciones y correcciones de la revisión</label><textarea id="sample-notes" formControlName="review_notes" maxlength="5000"></textarea></div>
+            <div class="stage-field stage-wide"><label for="sample-photos">Fotos de las muestras</label><textarea id="sample-photos" formControlName="photos" placeholder="Pega los enlaces https de las imágenes, uno por línea. Hasta 10 fotos."></textarea></div>
+            @if (selected.sample_photos?.length) { <div class="stage-photos stage-wide">@for (photo of selected.sample_photos; track photo) { <app-image-preview [image]="{ url_thumbnail: photo, url_medium: photo }" title="Muestra de producción" [height]="80" [width]="80" [previewSize]="600"></app-image-preview> }</div> }
+            @if (selected.reviewer) { <p class="stage-wide stage-note">Aprobada por {{ selected.reviewer.name }} · {{ selected.reviewed_at | date:'dd/MM/yyyy HH:mm' }}</p> }
+          }
+          <div class="stage-field stage-wide"><label for="stage-notes">Observaciones @if (form.value.status === 'not_applicable') { · Indica por qué no aplica }</label><textarea id="stage-notes" formControlName="notes" maxlength="5000" placeholder="Avances, acuerdos o motivo de un cambio de fecha"></textarea></div>
+          @if (selected.completed_at) { <p class="stage-wide stage-note">Finalizada el {{ selected.completed_at | date:'dd/MM/yyyy HH:mm' }}</p> }
+        </fieldset>
+        @if (error) { <p class="stage-feedback text-danger" role="alert">{{ error }}</p> }
+        @if (message) { <p class="stage-feedback text-success" role="status">{{ message }}</p> }
+        <footer class="stage-actions"><small>El estado lo confirma el responsable. Registrar gastos no finaliza la etapa.</small><button class="btn btn-dark" type="submit" [disabled]="saving || !form.dirty">@if (saving) { <span class="spinner-border spinner-border-sm me-2"></span> } @else { <i class="fa-solid fa-floppy-disk me-2" aria-hidden="true"></i> }{{ saving ? 'Guardando…' : 'Guardar seguimiento' }}</button></footer>
+      </form>
+      @if (selected.events?.length) {
+        <details class="stage-history"><summary>Historial de cambios</summary>@for (event of selected.events; track event.id) { <div><strong>{{ event.user?.name || 'Responsable' }}</strong> · {{ event.created_at | date:'dd/MM/yyyy HH:mm' }}@if (event.changes['status']; as change) { <small>Estado: {{ labels[change.before] || change.before }} → {{ labels[change.after] || change.after }}</small> }@if (event.changes['expected_end']; as change) { <small>Fecha prevista: {{ (change.before | date:'dd/MM/yyyy') || 'Sin fecha' }} → {{ (change.after | date:'dd/MM/yyyy') || 'Sin fecha' }}</small> }@if (event.changes['date_change_reason']; as change) { <small>Motivo: {{ change.after }}</small> }@if (event.changes['notes']; as change) { <small>{{ change.after }}</small> }</div> }</details>
+      }
+    </section>
+    <div class="stage-finance"><span>Gasto de toda la producción <strong>{{ total | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></span><small>Las compras siguientes corresponden únicamente a {{ selected.name }}.</small></div>
+    <app-purchase-index [productionView]="true" [purchases]="stagePurchases" [productionStageId]="selected.id"
+      purchaseable_type="manufacture" [purchaseable_id]="productionId" (purchasesChanged)="purchasesUpdated($event)"></app-purchase-index>
+    <details class="stage-panel stage-classify mt-3" [open]="unclassified.length > 0">
+      <summary>Clasificar o reasignar compras <span>{{ unclassified.length }} sin clasificar</span></summary>
+      <p>Los registros anteriores mantienen sus importes. Selecciona la etapa correcta para cada compra.</p>
+      @for (purchase of purchases; track purchase.id) {
+        <div class="stage-classify-row"><div><strong>Compra #{{ purchase.id }} · {{ purchase.supplier?.user?.name || purchase.supplier?.name || 'Sin proveedor' }}</strong><small>{{ amount(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }} · {{ purchase.items?.[0]?.name || 'Sin conceptos' }}</small></div><select #targetStage aria-label="Etapa de la compra" [value]="purchase.production_stage_id || ''" [disabled]="assigning"><option value="">Sin clasificar</option>@for (stage of stages; track stage.id) { <option [value]="stage.id">{{ stage.name }}</option> }</select><button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="assigning" (click)="assign(purchase.id, targetStage.value)">Asignar</button></div>
+      } @empty { <p>No hay compras registradas todavía.</p> }
+    </details>
+  }
+}
