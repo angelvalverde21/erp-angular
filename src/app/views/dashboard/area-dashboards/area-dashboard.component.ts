@@ -3,11 +3,13 @@ import { CurrencyPipe, DatePipe, DecimalPipe, DOCUMENT } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { BehaviorSubject, catchError, combineLatest, distinctUntilChanged, filter, interval, map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { ProductionProgressComponent } from './production-progress/production-progress.component';
+import { DeliveryOverviewComponent } from './delivery-overview/delivery-overview.component';
+import { EmployeePayrollComponent } from './employee-payroll/employee-payroll.component';
 import { BaseService } from '../../base.service';
 import { AreaDashboardService } from './area-dashboard.service';
 import { AreaReport, canViewDashboard, dashboardRoles, DashboardSection, DASHBOARDS } from './dashboard.model';
 @Component({
-  selector: 'app-area-dashboard', imports: [RouterLink, CurrencyPipe, DecimalPipe, DatePipe, ProductionProgressComponent],
+  selector: 'app-area-dashboard', imports: [RouterLink, CurrencyPipe, DecimalPipe, DatePipe, ProductionProgressComponent, DeliveryOverviewComponent, EmployeePayrollComponent],
   templateUrl: './area-dashboard.component.html', styleUrl: './area-dashboard.component.scss',
 })
 export class AreaDashboardComponent implements OnInit, OnDestroy {

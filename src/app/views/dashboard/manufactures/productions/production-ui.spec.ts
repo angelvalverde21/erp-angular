@@ -88,11 +88,12 @@ describe('Production screens', () => {
     fixture.detectChanges();
     const links: NodeListOf<HTMLAnchorElement> = fixture.nativeElement.querySelectorAll('nav a');
     expect(links.length).toBe(4);
-    expect(links[0].getAttribute('aria-current')).toBe('page');
+    expect(links[0].getAttribute('href')).toBe('/purchases');
+    expect(links[0].textContent).toContain('400.00');
     expect(links[0].textContent).toContain('20.00');
-    expect(links[1].getAttribute('href')).toBe('/purchases');
     expect(links[2].getAttribute('href')).toBe('/variants');
     expect(links[3].getAttribute('href')).toBe('/kardexes');
+    expect(links[1].getAttribute('href')).toBe('/deliveries');
     fixture.componentRef.setInput('summary', { sum_variants: 10, sum_purchases: 90, count_variants: 1, sum_kardexes: 0 });
     fixture.detectChanges();
     expect(links[0].textContent).toContain('9.00');

@@ -1,0 +1,10 @@
+﻿{
+  "extends": "./tsconfig.production-tests.json",
+  "include": [
+    "src/**/*.d.ts",
+    "src/app/views/dashboard/attendances/attendance-edit/attendance-edit.component.spec.ts",
+    "src/app/views/dashboard/users/employees/employee-workflow.spec.ts",
+    "src/app/views/dashboard/users/employees/employee-edit-page/employee-attendance-index/attendance-period.spec.ts",
+    "src/app/views/dashboard/users/employees/employee-edit-page/employee-attendance-index/employee-attendance-index.component.spec.ts"
+  ]
+}

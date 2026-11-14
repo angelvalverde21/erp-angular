@@ -1,0 +1,41 @@
+<section class="stage-flow" aria-labelledby="stage-flow-title">
+  <header>
+    <h2 id="stage-flow-title">Flujo de producción</h2>
+    <div class="stage-flow-actions">
+      @if (selectedIndex >= 0) { <span class="stage-context">Etapa {{ selectedIndex + 1 }} de {{ stages.length }}</span> }
+      @if (otherExpenses; as expenses) {
+        <button type="button" class="stage-other-expenses"
+          [class.active]="selectedId === expenses.id"
+          [attr.aria-pressed]="selectedId === expenses.id"
+          [attr.aria-label]="'Otros gastos: ' + expenses.count + ' registros'"
+          (click)="choose.emit(expenses.id)">
+          <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+          Otros gastos
+          <span class="stage-other-count">{{ expenses.count }}</span>
+        </button>
+      }
+    </div>
+  </header>
+  <nav class="stage-stepper" aria-label="Etapas de producción">
+    @for (stage of stages; track stage.id; let index = $index) {
+      <div class="stage-step" [class]="'stage-step ' + stage.status" [class.selected]="selectedId === stage.id">
+        <button type="button" class="stage-step-link" [attr.aria-current]="selectedId === stage.id ? 'step' : null" (click)="choose.emit(stage.id)">
+        <span class="step-purchase-count" [class.count-unavailable]="stage.purchases_count == null" [attr.aria-label]="stage.purchases_count != null ? stage.purchases_count + ' compras' : null">{{ stage.purchases_count }} {{ stage.purchases_count === 1 ? 'compra' : 'compras' }}</span>
+        <span class="step-number" aria-hidden="true">
+          <i class="step-stage-icon" [class]="stageIcons[stage.code || ''] || 'fa-solid fa-layer-group'"></i>
+          @if (statusIcons[stage.status]; as icon) {
+            <span class="step-status-icon"><i [class]="icon"></i></span>
+          }
+        </span>
+        <strong>{{ index + 1 }}. {{ stage.name }}</strong>
+        </button>
+        @if (productionId) {
+          <app-production-stage-status [stage]="stage" [productionId]="productionId"></app-production-stage-status>
+        } @else {
+          <span class="step-status">{{ labels[stage.status] }}</span>
+        }
+        @if (overdue(stage)) { <small class="step-overdue">Entrega atrasada</small> }
+      </div>
+    }
+  </nav>
+</section>

@@ -1,0 +1,14 @@
+<section class="delivery-setup" [formGroup]="form">
+  <label class="delivery-toggle">
+    <input type="checkbox" role="switch" formControlName="enabled">
+    <span><strong>Controlar entrega de esta compra</strong><small>Conserva las fechas acordadas y el historial de reprogramaciones.</small></span>
+    <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+  </label>
+  @if (form.value.enabled) {
+    <div class="delivery-setup-fields">
+      <label>Se mandó a hacer / materiales entregados<input type="date" formControlName="handed_over_on" [max]="today"><small>Opcional. Fecha real del encargo.</small></label>
+      <label>Fecha tentativa de entrega <span aria-hidden="true">*</span><input type="date" formControlName="expected_on" [attr.aria-invalid]="form.touched && form.invalid ? true : null"><small>Podrás reprogramarla conservando el historial.</small></label>
+    </div>
+    @if (form.touched && form.hasError('expectedDateRequired')) { <p class="delivery-error" role="alert">Indica la fecha tentativa de entrega.</p> }
+  }
+</section>

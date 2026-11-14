@@ -1,0 +1,18 @@
+<ol class="delivery-timeline" aria-label="Historial de fechas de entrega">
+  @for (event of events; track event.id) {
+    <li [class.received]="event.type === 'received'">
+      <span class="timeline-dot" aria-hidden="true"></span>
+      <div class="timeline-title"><strong>{{ titles[event.type] }}</strong><time>{{ event.created_at | date:'dd/MM/yyyy HH:mm':'-0500' }}</time></div>
+      @for (field of dateFields; track field) {
+        @if (event.changes[field]; as change) {
+          <p>{{ labels[field] }}:
+            @if (change.before) { <span class="previous-date">{{ change.before | date:'dd/MM/yyyy' }}</span><span aria-label="cambia a"> → </span> }
+            <strong>{{ change.after ? (change.after | date:'dd/MM/yyyy') : 'Sin fecha' }}</strong>
+          </p>
+        }
+      }
+      @if (event.reason) { <p class="timeline-reason">{{ event.reason }}</p> }
+      <small>{{ event.actor_name }} · Registro en hora de Lima</small>
+    </li>
+  }
+</ol>

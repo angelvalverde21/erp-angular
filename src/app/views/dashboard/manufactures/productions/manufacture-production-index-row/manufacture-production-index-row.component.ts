@@ -76,7 +76,7 @@ export class ManufactureProductionIndexRowComponent implements OnInit {
         label: 'Editar',
         description: 'Datos de la producción',
         icon: this.faGears,
-        routerLink: this.link_base,
+        routerLink: [...this.link_base, 'details'],
         divider: true
       },
       {
@@ -103,6 +103,10 @@ export class ManufactureProductionIndexRowComponent implements OnInit {
 
   get variantLink() {
     return [...this.link_base, 'variants'];
+  }
+
+  get manageLink() {
+    return [...this.link_base, 'purchases'];
   }
   
   cost(production: any) {

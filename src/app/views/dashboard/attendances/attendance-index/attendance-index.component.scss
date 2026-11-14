@@ -1,1 +1,60 @@
 @use '../../_personnel-ui';
+
+.personnel-table {
+  th { padding: .65rem 1rem; }
+  td { padding: .55rem 1rem; }
+  td small { margin-top: .15rem; }
+  td .attendance-break-note {
+    color: #956200;
+    i { margin-right: .25rem; }
+  }
+  .attendance-adjustment { white-space: nowrap; font-variant-numeric: tabular-nums; font-weight: 600; }
+  tfoot td { background: #f8f9fc; border-top: 1px solid #dce3ee; font-weight: 600; }
+  .personnel-button {
+    min-height: 32px;
+    padding: .35rem .65rem;
+  }
+
+  tr.attendance-missing > td {
+    --cui-table-bg: var(--cui-danger-bg-subtle, #f8d7da);
+    background-color: var(--cui-danger-bg-subtle, #f8d7da);
+    border-color: var(--cui-danger-border-subtle, #f1aeb5);
+  }
+}
+
+.attendance-pay-summary {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border-top: 1px solid #dce3ee;
+  background: #fff;
+}
+.attendance-pay-breakdown {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  margin: 0;
+  dt { font-size: .75rem; font-weight: 400; color: #7b879c; }
+  dd { margin: .45rem 0 0; font-size: 1rem; font-weight: 650; font-variant-numeric: tabular-nums; color: #293f5d; }
+}
+.attendance-pay-net {
+  margin-left: auto;
+  min-width: 250px;
+  padding: 1.15rem 1.5rem;
+  border: 1px solid #b8dfcc;
+  border-radius: 12px;
+  background: #edf8f2;
+  text-align: right;
+  > span { display: block; color: #286b4e; font-size: .8rem; font-weight: 650; }
+  > strong { display: block; margin-top: .35rem; font-size: 1.85rem; line-height: 1.25; font-weight: 750; color: #17633f; font-variant-numeric: tabular-nums; }
+  > small { display: block; margin-top: .5rem; color: #4f7e69; font-size: .7rem; }
+}
+.attendance-pay-unavailable { font-size: .85rem; color: #415674; p { margin: .4rem 0 0; font-size: .78rem; color: #7b879c; } }
+@media(max-width: 575.98px) {
+  .attendance-pay-summary { padding: 1rem; }
+  .attendance-pay-net { width: 100%; min-width: 0; }
+}

@@ -7,3 +7,11 @@
 /* Elementos grandes para pantallas */
 @media (min-width: 576px) {
 }
+.content.attendance-search {
+  flex-wrap: wrap;
+  gap: 1rem;
+  .dates { flex-wrap: wrap; gap: .5rem; }
+  .dates input { width: 140px; }
+  .fortnight-button { white-space: nowrap; font-size: .78rem; min-height: 34px; }
+  .controls { margin-left: auto; }
+}

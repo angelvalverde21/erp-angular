@@ -18,19 +18,24 @@
         </small>
         }
 
-        <div ngbDropdown class="d-inline-block">
-            <button type="button" class="btn btn-outline-secondary btn-sm" [id]="'purchase-actions-' + purchase.id" [attr.aria-label]="'Acciones de la compra #' + purchase.id" ngbDropdownToggle>
-                <i class="fas fa-ellipsis-h"></i>
+        <div ngbDropdown class="d-inline-block" placement="bottom-end" container="body">
+            <button type="button" class="purchase-actions-toggle" [id]="'purchase-actions-' + purchase.id" [attr.aria-label]="'Acciones de la compra #' + purchase.id" ngbDropdownToggle>
+                <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
             </button>
-            <div ngbDropdownMenu [attr.aria-labelledby]="'purchase-actions-' + purchase.id">
-                <button ngbDropdownItem class="btn-sm" (click)="openVerticallyCentered(content)">
-                    <i class="fas fa-edit me-2 text-success"></i>Editar
+            <div ngbDropdownMenu class="purchase-actions-menu" [attr.aria-labelledby]="'purchase-actions-' + purchase.id">
+                <div class="purchase-actions-caption">Compra #{{ purchase.id }}</div>
+                <button ngbDropdownItem class="purchase-action" (click)="openVerticallyCentered(content)">
+                    <span class="purchase-action-icon"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i></span>
+                    <span><strong>Editar compra</strong><small>Conceptos, proveedor y datos</small></span>
                 </button>
-                <button ngbDropdownItem class="btn-sm" (click)="openVerticallyCentered(showPayments)">
-                    <i class="fas fa-circle-arrow-up me-2 text-secondary"></i>Boletas y Facturas
+                <button ngbDropdownItem class="purchase-action" (click)="openVerticallyCentered(showPayments)">
+                    <span class="purchase-action-icon"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i></span>
+                    <span><strong>Boletas y Facturas</strong><small>Pagos y comprobantes</small></span>
                 </button>
-                <button ngbDropdownItem class="btn-sm" (click)="eliminar(purchase.id)">
-                    <i class="fas fa-trash me-2 text-danger"></i>Eliminar
+                <div class="purchase-actions-divider" role="separator"></div>
+                <button ngbDropdownItem class="purchase-action purchase-action-danger" (click)="eliminar(purchase.id)">
+                    <span class="purchase-action-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></span>
+                    <span><strong>Eliminar compra</strong></span>
                 </button>
             </div>
         </div>
@@ -48,12 +53,14 @@
 </td> -->
 
 <ng-template #content let-modal>
-    <div class="modal-header">
-        <h6 class="modal-title">Editar Compra</h6>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    <div class="modal-header purchase-edit-modal-header">
+        <span class="purchase-edit-modal-icon" aria-hidden="true"><i class="fa-regular fa-pen-to-square"></i></span>
+        <div><h6 class="modal-title">Editar compra</h6><p>Registro #{{ purchase.id }} · Conceptos, importes y proveedor</p></div>
+        <button type="button" class="btn-close ms-auto" aria-label="Cerrar edición" (click)="modal.dismiss('Cross click')"></button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body purchase-edit-modal-body">
         <app-purchase-edit [purchase_id]="purchase.id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
+            (cancelled)="modal.dismiss('cancel')"
             [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id"></app-purchase-edit>
     </div>
 </ng-template>

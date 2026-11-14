@@ -1,7 +1,7 @@
-<form [formGroup]="form" (ngSubmit)="save()" class="personnel-card mb-3">
-  <header class="personnel-card-header"><div><h2>Ficha del empleado</h2><p>Actualiza sus datos personales, laborales y de asistencia.</p></div></header>
-  <div class="personnel-card-body"><app-employee-form [form]="form" [roles]="roles"></app-employee-form></div>
-  <footer class="personnel-card-footer">
+<form [formGroup]="form" (ngSubmit)="save()" class="employee-profile-form mb-3">
+  <header class="employee-profile-heading"><h2>Ficha del empleado</h2><p>Datos personales, información laboral, acceso y asistencia.</p></header>
+  <app-employee-form [form]="form" [roles]="roles" [cards]="true"></app-employee-form>
+  <footer class="personnel-card personnel-card-footer employee-profile-actions">
     @if (error) { <p class="personnel-error" role="alert">{{ error }}</p> }
     @if (canEdit) {
       <button type="submit" class="personnel-button personnel-primary" [disabled]="loadingIcon">

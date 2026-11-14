@@ -12,6 +12,7 @@ import { IdentitySelectedComponent } from '../../../identities/identity-selected
 export class EmployeeFormComponent {
   @Input({ required: true }) form!: FormGroup;
   @Input() roles: any[] = [];
+  @Input() cards = false;
 
   get roleOptions(): string[] {
     return this.roles.map(role => typeof role === 'string' ? role : role.name);

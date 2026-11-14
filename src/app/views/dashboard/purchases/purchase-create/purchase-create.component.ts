@@ -1,250 +1,96 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-import Swal from 'sweetalert2';
-import { InputGroupComponent } from '../../../shared/components/form/input-group/input-group.component';
-import {
-  faSave
-} from '@fortawesome/free-solid-svg-icons';
-import { ButtonComponent } from '../../../shared/components/buttons/button/button.component';
-import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component';
-import { UnitService } from '../../units/unit.service';
-import { CommonModule, JsonPipe } from '@angular/common';
-
-import { SupplierCreateComponent } from '../../users/suppliers/supplier-create/supplier-create.component';
-import { SupplierService } from '../../users/suppliers/supplier.service';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+﻿import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { PurchaseService } from '../purchase.service';
-import { ProductSelectedComponent } from '../../products/product-selected/product-selected.component';
+import { SupplierService } from '../../users/suppliers/supplier.service';
 import { PurchaseFormComponent } from '../purchase-form/purchase-form.component';
 import { PurchaseItemIndexComponent } from '../purchase-item-index/purchase-item-index.component';
-import { PaymentFormComponent } from '../../payments/payment-form/payment-form.component';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { createDeliveryForm, DeliverySetupComponent } from '@shared/components/delivery-tracking/delivery-setup.component';
+import { todayInLima } from '@shared/components/delivery-tracking/delivery-tracking.model';
 
 @Component({
   selector: 'app-purchase-create',
-  imports: [
-    ReactiveFormsModule,
-    InputGroupComponent,
-    ButtonComponent,
-    UnitSelectedComponent,
-    JsonPipe,
-    SupplierCreateComponent,
-    FontAwesomeModule,
-    CommonModule,
-    ProductSelectedComponent,
-    PurchaseFormComponent,
-    PurchaseItemIndexComponent,
-    PaymentFormComponent,
-    NgbAccordionModule
-  ],
+  imports: [ReactiveFormsModule, CurrencyPipe, PurchaseFormComponent, PurchaseItemIndexComponent, DeliverySetupComponent],
   templateUrl: './purchase-create.component.html',
-  styleUrl: './purchase-create.component.scss'
+  styleUrls: ['../purchase-editor.scss', './purchase-create.component.scss'],
 })
-export class PurchaseCreateComponent {
-
-  items = ['First', 'Second', 'Third'];
-
-  disabledButton: boolean = true;
-  loadingIcon: boolean = false;
-  form!: FormGroup;
-  loading: boolean = false;
-  success: boolean = false;
-  search_result: boolean = false;
-
-  faSave = faSave;
-  units: any[] = [];
-
-  @Output() emitPurchaseCreate = new EventEmitter<any | boolean>();
-  @Input() purchaseable_type: string = "";
-  @Input() purchaseable_id: number = 0;
+export class PurchaseCreateComponent implements OnInit, OnDestroy {
+  @Input() purchaseable_type = '';
+  @Input() purchaseable_id = 0;
   @Input() supplier_id: number | null = 0;
   @Input() production_stage_id: number | null = null;
+  @Input() deliveryDefault = false;
+  @Output() emitPurchaseCreate = new EventEmitter<any | boolean>();
+  @Output() cancelled = new EventEmitter<void>();
 
-  private destroy$ = new Subject<void>();
+  form!: FormGroup;
+  loadingIcon = false;
+  error = '';
+  supplierError = '';
+  suppliers: any[] = [];
+  private readonly destroy$ = new Subject<void>();
 
-  constructor(
-    private fb: FormBuilder,
-    private _purchase: PurchaseService,
-    private _supplier: SupplierService
-  ) {
-
-  }
-
-  private formInit(): void {
-
-    const today = new Date().toISOString().split('T')[0];
-
-    this.form = this.fb.group({
-      purchase_start: [today],
-      purchase_end: [today],
-      purchaseable_type: [this.purchaseable_type],
-      purchaseable_id: [this.purchaseable_id],
-      observations: [''],
-      supplier_id: [null],
-      ...(this.production_stage_id ? { production_stage_id: [this.production_stage_id] } : {}),
-      gateway_id: [2, [Validators.required]],
-      purchase_items: this.fb.array([
-        this.fb.group({
-          name: ['', [Validators.required]],
-          quantity: ['', [Validators.required]],
-          unit_id: [1, [Validators.required]],
-          price: ['', [Validators.required]],
-          subtotal: ['', [Validators.required]],
-        })
-      ])
-    });
-  }
-
+  constructor(private fb: FormBuilder, private purchases: PurchaseService, private supplierService: SupplierService) {}
 
   ngOnInit(): void {
-
-    this.formInit();
-
-    this.supplierInit();
-    // this.getSuppliers();
-    // this.initUnits();
-    // this.initBrands();
-    // this.initsuppliers();
-
-    // this.form.get('section_id')?.setValue(this.section.id);
-
-    this.form.statusChanges.subscribe((status) => {
-      console.log(status);
-
-      if (status === 'VALID') {
-        this.disabledButton = false;
-      } else {
-        this.disabledButton = true;
-      }
+    const today = todayInLima();
+    this.form = this.fb.group({
+      purchase_start: [today], purchase_end: [today],
+      purchaseable_type: [this.purchaseable_type], purchaseable_id: [this.purchaseable_id],
+      observations: [''], supplier_id: [this.supplier_id || null], gateway_id: [2, Validators.required],
+      ...(this.production_stage_id ? { production_stage_id: [this.production_stage_id] } : {}),
+      delivery: createDeliveryForm(this.fb, this.deliveryDefault),
+      purchase_items: this.fb.array([this.createPurchaseItem()], Validators.required),
     });
-
-    //recibir cambios del categoria
-  }
-
-  suppliers: any[] = [];
-
-  // getSuppliers() {
-  //   this._supplier
-  //     .index()
-  //     .pipe(takeUntil(this.destroy$))
-  //     .subscribe({
-  //       next: (resp: any) => {
-  //         console.log(resp);
-  //         this.suppliers = resp.data.map((s: any) => ({
-  //           ...s,
-  //           name: s.user?.name
-  //         }));
-  //         this.loading = false;
-  //         console.log(resp.data);
-  //       },
-
-  //       error: (error: any) => {
-  //         console.error(error);
-  //       },
-  //     });
-  // }
-
-  create() {
-
-    if (!this.form.valid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    this.loadingIcon = true;
-    this.disabledButton = true;
-
-    this.success = false;
-    // console.log(this.form.value);
-
-    this._purchase
-      .store(this.form.value)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (resp: any) => {
-          Swal.fire('Guardado', 'El registro ha sido creado', 'success');
-          this.success = true;
-          this.form.reset();
-          this.disabledButton = true;
-          this.loadingIcon = false;
-          // Emitimos los datos creados
-          this.emitPurchaseCreate.emit(resp.data);
-        },
-        error: (error: any) => {
-          Swal.fire(
-            'Error',
-            'Ocurrió un problema al crear. Inténtalo nuevamente.',
-            'error'
-          );
-          this.disabledButton = true;
-          this.loadingIcon = false;
-          // Emitimos false para indicar fallo
-          this.emitPurchaseCreate.emit(false);
-          console.error(error);
-        },
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  hidden_fields: boolean = true;
-
-  onSearchResult(result: any) {
-    console.log(result);
-
-    if (result.length > 0) {
-      this.hidden_fields = true;
-    } else {
-      this.hidden_fields = false;
-    }
-
+    this.loadSuppliers();
   }
 
   get purchase_items(): FormArray<FormGroup> {
     return this.form.get('purchase_items') as FormArray<FormGroup>;
   }
 
-  addItem() {
-    const item = this.fb.group({
-      name: ['', [Validators.required]],
-      quantity: ['', [Validators.required]],
-      price: ['', [Validators.required]],
-      subtotal: ['', [Validators.required]],
-      unit_id: [1, [Validators.required]],
+  get totalAmount(): number {
+    return this.purchase_items.controls.reduce((sum, control) => {
+      const { quantity, price } = control.getRawValue();
+      return sum + Math.round(Number(quantity || 0) * Number(price || 0) * 100) / 100;
+    }, 0);
+  }
+
+  private createPurchaseItem(): FormGroup {
+    return this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(255)]],
+      quantity: [1, [Validators.required, Validators.min(0.01)]],
+      unit_id: [1, Validators.required],
+      price: [null, [Validators.required, Validators.min(0)]],
+      subtotal: [0, [Validators.required, Validators.min(0)]],
     });
-
-    this.purchase_items.push(item);
   }
 
-  private supplierInit() {
+  addItem(): void { this.purchase_items.push(this.createPurchaseItem()); }
 
-    this._supplier.index()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resp: any) => {
-        //Da formato porque el json viene de la forma supplier.user.name 
-
-        this.suppliers = resp.data;
-        console.log(this.suppliers);
-
+  create(): void {
+    if (this.loadingIcon) return;
+    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    this.loadingIcon = true;
+    this.error = '';
+    this.purchases.store(this.form.getRawValue())
+      .pipe(takeUntil(this.destroy$), finalize(() => this.loadingIcon = false)).subscribe({
+        next: response => this.emitPurchaseCreate.emit(response.data),
+        error: response => {
+          const errors = response.error?.errors as Record<string, string[]> | undefined;
+          this.error = errors ? Object.values(errors).flat().join(' ') : 'No se pudo registrar la compra. Tus datos se mantienen para reintentar.';
+        },
       });
-
   }
 
+  loadSuppliers(): void {
+    this.supplierError = '';
+    this.supplierService.index().pipe(takeUntil(this.destroy$)).subscribe({
+      next: (response: any) => this.suppliers = response.data ?? [],
+      error: () => this.supplierError = 'No se pudieron cargar los proveedores.',
+    });
+  }
+
+  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 }

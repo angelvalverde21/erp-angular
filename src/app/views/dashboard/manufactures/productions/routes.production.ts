@@ -35,9 +35,19 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        pathMatch: 'full',
+        redirectTo: 'purchases',
+      },
+      {
+        path: 'details',
         loadComponent: () =>
           import('./manufacture-production-edit-page/manufacture-production-edit/manufacture-production-edit.component').then(m => m.ManufactureProductionEditComponent),
-          data: { title: 'Produccion en curso' }
+          data: { title: 'Datos de producción' }
+      },
+      {
+        path: 'deliveries',
+        loadComponent: () => import('./manufacture-production-edit-page/production-delivery-tracking/production-delivery-tracking.component').then(m => m.ProductionDeliveryTrackingComponent),
+        data: { title: 'Seguimiento de entregas' }
       },
       {
         path: 'purchases',

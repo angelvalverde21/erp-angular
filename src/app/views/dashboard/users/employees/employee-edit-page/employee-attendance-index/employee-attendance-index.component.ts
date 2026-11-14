@@ -1,4 +1,4 @@
-import { Component, effect, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { Component, effect, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AttendanceCreateComponent } from 'src/app/views/dashboard/attendances/attendance-create/attendance-create.component';
 
 import { ActivatedRoute } from '@angular/router';
@@ -13,6 +13,7 @@ import { EmployeeService } from '../../employee.service';
 import { HeadSearchComponent } from 'src/app/views/shared/components/head-search/head-search.component';
 import { ButtonAddComponent } from 'src/app/views/shared/components/buttons/button-add/button-add.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { lastClosedFortnight } from './attendance-period';
 
 @Component({
   selector: 'app-employee-attendance-index',
@@ -34,8 +35,16 @@ export class EmployeeAttendanceIndexComponent implements OnInit, OnDestroy {
   employee_id: number = 0;
   loading: boolean = false;
   attendances: any[] = [];
+  readonly defaultPeriod = lastClosedFortnight();
+  @ViewChild(HeadSearchComponent) private attendanceSearch?: HeadSearchComponent;
 
   employee: any;
+  get earliestAttendanceDate(): string | null {
+    const dates = [this.employee?.date_entry, ...(this.employee?.attendances ?? []).map((row: any) => row.date)]
+      .filter((date): date is string => typeof date === 'string' && /^\d{4}-\d{2}-\d{2}/.test(date))
+      .map(date => date.slice(0, 10)).sort();
+    return dates[0] ?? null;
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -64,7 +73,6 @@ export class EmployeeAttendanceIndexComponent implements OnInit, OnDestroy {
 
       this.employee = event;
 
-      this.attendances = this.employee.attendances;
       
     });
 
@@ -101,8 +109,8 @@ export class EmployeeAttendanceIndexComponent implements OnInit, OnDestroy {
   receiveAttendanceCreate(event: any){
     console.log(event);
     
-    this.attendances = [...this.attendances.filter(row => !(row.employee_id === event.employee_id && row.date === event.date)), event];
     this.closeModal();
+    this.attendanceSearch?.search();
   }
 
   destroy$ = new Subject<void>();

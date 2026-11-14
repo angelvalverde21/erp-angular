@@ -1,1 +1,7 @@
-@use '../../production-ui';
+﻿:host { display: block; }
+.overview-panel { border: 1px solid var(--cui-border-color); border-radius: 14px; background: var(--cui-body-bg); overflow: hidden; }
+.overview-panel > header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem; border-bottom: 1px solid var(--cui-border-color); h3 { margin: 0; font-size: 1rem; font-weight: 650; } p { margin: .4rem 0 0; font-size: .78rem; color: var(--cui-secondary-color); } }
+.overview-name form { display: flex; align-items: flex-end; gap: 1rem; padding: 1.25rem; label { display: flex; flex-direction: column; gap: .5rem; flex: 1; min-width: 0; font-size: .8rem; } input { width: 100%; border: 1px solid var(--cui-border-color); border-radius: 8px; padding: .7rem; color: var(--cui-body-color); background: var(--cui-body-bg); font-size: .85rem; } }
+.overview-primary { min-height: 43px; border: 1px solid #6855d7; border-radius: 8px; padding: .65rem .9rem; background: #6855d7; color: #fff; font-size: .78rem; font-weight: 550; &:disabled { opacity: .5; cursor: not-allowed; } }
+.name-feedback { margin: 0 1.25rem 1.25rem; font-size: .78rem; color: #247452; &.error { color: #b24537; } }
+@media(max-width: 575.98px) { .overview-name form { flex-direction: column; align-items: stretch; } }

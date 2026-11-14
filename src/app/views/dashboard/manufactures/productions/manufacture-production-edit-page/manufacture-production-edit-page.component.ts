@@ -1,10 +1,9 @@
-import { ManufactureSectionHeaderComponent } from '../../components/manufacture-section-header/manufacture-section-header.component';
 import { Component, OnDestroy, OnInit, effect } from '@angular/core';
 // import { HeadPageComponent } from '@components/head-page/head-page.component';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ProductionStage, ProductionStageService } from '../production-stages/production-stage.service';
+import { isProcessStage, ProductionStage, ProductionStageService } from '../production-stages/production-stage.service';
 import { ProductionStageStepperComponent } from '../production-stages/production-stage-stepper.component';
-import { Subject, takeUntil } from 'rxjs';
+import { EMPTY, Subject, catchError, filter, switchMap, takeUntil, tap } from 'rxjs';
 import { LoadingComponent } from '@components/loading/loading.component';
 import Swal from 'sweetalert2';
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -16,7 +15,6 @@ import { ManufactureService } from '../../manufacture.service';
 @Component({
   selector: 'app-manufacture-production-edit-page',
   imports: [
-    ManufactureSectionHeaderComponent,
     LoadingComponent,
     ProductionWidgetComponent,
     RouterModule,
@@ -36,6 +34,17 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
   manufacture_id: number = 0;
   stages: ProductionStage[] = [];
   stagesError = '';
+  get showWorkflow(): boolean { return this.router.url.split('?')[0].endsWith('/purchases'); }
+  get workflowStages(): (ProductionStage & { status: string })[] { return this.stages.filter(isProcessStage); }
+  get otherExpenses(): { id: number; count: number } | null {
+    const section = this.stages.find(stage => stage.code === 'others');
+    return section ? { id: section.id, count: section.purchases_count ?? 0 } : null;
+  }
+  get productionStatus(): string {
+    if (!this.workflowStages.length) return 'Sin seguimiento';
+    if (this.workflowStages.every(stage => ['completed', 'not_applicable'].includes(stage.status))) return 'Completada';
+    return this.workflowStages.some(stage => ['in_progress', 'completed'].includes(stage.status)) ? 'En proceso' : 'Pendiente';
+  }
   selectedStageId = 0;
   purchases: any;
   variants: any;
@@ -61,6 +70,8 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
     //Escuchar cambios en el resumen de compras y actualizar el widget de resumen en consecuencia
     effect(() => {
 
+      const production = this._manufacture.manufactureSingnalEvent();
+      if (production?.id === this.manufacture_id) this.manufacture = production;
       const event = this._manufacture.summaryEvent();
 
       if (!event) return;
@@ -82,8 +93,15 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
 
     this.productionInit();
     this.loadStages();
-    this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe(params => this.selectedStageId = Number(params.get('stage')));
-    this.stageService.changes.pipe(takeUntil(this.destroy$)).subscribe(id => { if (id === this.manufacture_id) this.loadStages(); });
+    this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe(params => this.selectedStageId = this.resolveStage(params.get('stage'))?.id ?? this.workflowStages[0]?.id ?? 0);
+    this.stageService.changes.pipe(
+      filter(id => id === this.manufacture_id),
+      tap(() => this.loadStages()),
+      switchMap(() => this._manufacture.get(this.manufacture_id).pipe(catchError(() => EMPTY))),
+      takeUntil(this.destroy$),
+    ).subscribe(response => {
+      this.summary = { ...this.summary, tracked_purchases_count: Number(response.data.tracked_purchases_count ?? 0) };
+    });
 
   }
 
@@ -91,18 +109,31 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
     sum_variants: 0,
     count_variants: 0,
     sum_purchases: 0,
-    sum_kardexes: 0
+    sum_kardexes: 0,
+    tracked_purchases_count: 0,
   };
 
   loadStages(): void {
     this.stageService.list(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
-      next: response => { this.stages = response.data; this.stagesError = ''; },
+      next: response => {
+        this.stages = response.data;
+        this.selectedStageId = this.resolveStage(this.route.snapshot.queryParamMap.get('stage'))?.id ?? this.workflowStages[0]?.id ?? 0;
+        this.stagesError = '';
+      },
       error: () => this.stagesError = 'No se pudo consultar el avance por etapas.',
     });
   }
 
   openStage(id: number): void {
-    void this.router.navigate(['purchases'], { relativeTo: this.route, queryParams: { stage: id } });
+    const stage = this.stages.find(section => section.id === id);
+    void this.router.navigate(['purchases'], { relativeTo: this.route, queryParams: { stage: stage?.slug ?? id } });
+  }
+
+  private resolveStage(identifier: string | null): ProductionStage | undefined {
+    if (!identifier) return undefined;
+    return this.stages.find(stage => stage.slug === identifier)
+      ?? this.stages.find(stage => stage.progress_id === Number(identifier))
+      ?? this.stages.find(stage => stage.id === Number(identifier));
   }
 
   //usado
@@ -123,7 +154,8 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
           sum_variants: this.manufacture.sum_variants,
           count_variants: this.manufacture.count_variants,
           sum_purchases: this.manufacture.sum_purchases,
-          sum_kardexes: this.manufacture.sum_kardexes
+          sum_kardexes: this.manufacture.sum_kardexes,
+          tracked_purchases_count: Number(this.manufacture.tracked_purchases_count ?? 0),
         }
 
         // this.summary = {

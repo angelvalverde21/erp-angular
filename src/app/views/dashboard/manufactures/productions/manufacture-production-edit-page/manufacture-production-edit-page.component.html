@@ -1,12 +1,18 @@
 <div class="production-page manufacture-theme-production">
-  <app-manufacture-section-header section="production" [title]="manufacture?.name || 'Detalle de producción'" [reference]="'Producción #' + manufacture_id" description="Planificación, costos y movimientos de fabricación." [backLink]="['../']" backLabel="Todas las producciones"></app-manufacture-section-header>
+  <header class="production-header">
+    <nav aria-label="Ruta de navegación"><a [routerLink]="['../']">Fabricación / Producciones</a><span>/ PRD-{{ manufacture_id.toString().padStart(4, '0') }}</span></nav>
+    <div class="production-header-main">
+      <div><div class="production-title-row"><h1>{{ manufacture?.name || 'Detalle de producción' }}</h1><span class="production-status">{{ productionStatus }}</span></div><p>PRD-{{ manufacture_id.toString().padStart(4, '0') }} · Gestión y seguimiento de fabricación</p></div>
+      <div class="production-header-actions"><a [routerLink]="['details']">Editar datos</a><a [routerLink]="['../create']">Nueva producción</a></div>
+    </div>
+  </header>
   @if (loading) {
   <div class="production-panel production-empty" role="status"><app-loading></app-loading><p>Cargando producción...</p></div>
   } @else if (error) {
   <div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar la producción</h3><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary" (click)="productionInit()">Reintentar</button></div>
   } @else {
   <app-production-widget [summary]="summary"></app-production-widget>
-  @if (stages.length) { <app-production-stage-stepper [stages]="stages" [selectedId]="selectedStageId || stages[0].id" (choose)="openStage($event)"></app-production-stage-stepper> }
+  @if (showWorkflow && workflowStages.length) { <app-production-stage-stepper [stages]="workflowStages" [productionId]="manufacture_id" [selectedId]="selectedStageId" [otherExpenses]="otherExpenses" (choose)="openStage($event)"></app-production-stage-stepper> }
   @if (stagesError) { <p class="text-danger" role="alert">{{ stagesError }} <button type="button" class="btn btn-link btn-sm" (click)="loadStages()">Reintentar</button></p> }
   <router-outlet></router-outlet>
   }

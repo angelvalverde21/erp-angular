@@ -1,37 +1,79 @@
 @if (employee) {
+  @if (attendanceIndependentPay && attendances.length) {
+    <div class="personnel-note m-3"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Pago sin control de asistencia: las marcaciones registradas no generan descuentos ni extras.</div>
+  }
   <div class="personnel-filters">
     <span class="personnel-badge active">{{ duration(workedMinutes) }} computados</span>
+    <span class="personnel-badge active attendance-days" title="Cantidad de fechas incluidas en el cálculo del período">{{ computedDays }} días computados</span>
     <span class="personnel-badge warning">{{ lateCount }} tardanzas</span>
+    <span class="personnel-badge active">{{ remoteDays }} días remotos</span>
     <span class="personnel-badge danger">{{ missingCount }} faltas</span>
   </div>
 }
 <div class="table-responsive">
   <table class="table personnel-table">
-    <thead><tr><th>Fecha</th><th>Empleado</th><th>Entrada</th><th>Salida</th><th>Estado</th><th>Tiempo computado</th><th class="text-end">Acción</th></tr></thead>
+    <thead><tr><th>Fecha</th><th>Empleado</th><th>Entrada</th><th>Salida</th><th>Estado</th><th>Tiempo computado</th><th class="text-end">Descuentos / Extra</th><th class="text-end">Acción</th></tr></thead>
     <tbody>
       @for (row of attendances; track $index) {
-        <tr>
-          <td><strong>{{ row.date | date:'dd MMM yyyy' }}</strong><small>{{ row.date | date:'EEEE' }}</small></td>
+        <tr [class.attendance-missing]="row.missing">
+          <td><strong>{{ row.date | date:'dd MMM yyyy':'':'es-PE' }}</strong><small>{{ row.date | date:'EEEE':'':'es-PE' }}</small></td>
           <td><strong>{{ row.employee_name || 'Empleado sin asignar' }}</strong>
             @if (row.comment) { <small>{{ row.comment }}</small> }
+            @if (row.break_skipped) {
+              <small class="attendance-break-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> No tomó descanso · Se computó la jornada sin descontar esa hora.</small>
+            }
           </td>
           <td>{{ row.check_in?.slice(0, 5) || '—' }}</td>
           <td>{{ row.check_out?.slice(0, 5) || '—' }}</td>
           <td><span class="personnel-badge" [class.active]="!row.missing && !row.is_late && !row.incomplete"
             [class.warning]="row.is_late || row.incomplete" [class.danger]="row.missing">{{ state(row) }}</span></td>
-          <td>{{ duration(row.paid_minutes ?? row.minutes_computed) }}</td>
+          <td>
+            @let minutes = row.paid_minutes ?? row.minutes_computed;
+            <span [class.text-success]="minutes != null && minutes > 480" [class.text-danger]="minutes != null && minutes < 480" [title]="row.break_skipped ? 'Sin descuento por descanso: excepción registrada manualmente' : 'Descanso descontado: ' + (row.break_minutes ?? 0) + ' min'">{{ duration(minutes) }}</span>
+          </td>
+          <td class="text-end attendance-adjustment">
+            @let adjustment = row.salary_extra;
+            @if (adjustment != null && adjustment != 0) {
+              <span [class.text-danger]="adjustment < 0" [class.text-success]="adjustment > 0">{{ adjustment < 0 ? '−' : '+' }} {{ (adjustment < 0 ? -adjustment : adjustment) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</span>
+            } @else { <span class="text-body-secondary">—</span> }
+          </td>
           <td class="text-end"><button type="button" class="personnel-button" (click)="edit(row, editor)">
             <i class="fa-solid" [class.fa-pen]="row.id" [class.fa-plus]="!row.id" aria-hidden="true"></i>{{ row.id ? 'Editar' : 'Registrar' }}
           </button></td>
         </tr>
       } @empty {
-        <tr><td colspan="7"><div class="personnel-empty"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
-          <strong>No hay asistencias para mostrar</strong><p>Selecciona otro período o registra una asistencia.</p>
+        <tr><td colspan="8"><div class="personnel-empty"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+          <strong>{{ attendanceIndependentPay ? 'No requiere marcaciones para el pago' : 'No hay asistencias para mostrar' }}</strong><p>{{ attendanceIndependentPay ? 'Las asistencias no se toman en cuenta para el pago. Recibirá su base quincenal íntegra.' : 'Selecciona otro período o registra una asistencia.' }}</p>
         </div></td></tr>
       }
     </tbody>
+    @if (attendances.length) {
+      <tfoot><tr>
+        <td colspan="6" class="text-end">Ajuste total del período</td>
+        <td class="text-end attendance-adjustment">
+          @let total = adjustmentTotal;
+          @if (total != null) {
+            <span [class.text-danger]="total < 0" [class.text-success]="total > 0">{{ total < 0 ? '−' : total > 0 ? '+' : '' }} {{ (total < 0 ? -total : total) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</span>
+          } @else { <span class="text-body-secondary">—</span> }
+        </td><td></td>
+      </tr></tfoot>
+    }
   </table>
 </div>
+@if (employee && (attendances.length || attendanceIndependentPay)) {
+  <section class="attendance-pay-summary" aria-labelledby="attendance-pay-title">
+    @if (periodPay; as pay) {
+      <dl class="attendance-pay-breakdown">
+        <div><dt>Base quincenal</dt><dd>{{ pay.base | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd></div>
+        <div><dt>Descuentos</dt><dd class="text-danger">− {{ pay.discounts | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd></div>
+        <div><dt>Extras</dt><dd class="text-success">+ {{ pay.extras | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd></div>
+      </dl>
+      <div class="attendance-pay-net"><span id="attendance-pay-title">Pago neto del período</span><strong>{{ pay.net | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong><small>{{ attendanceIndependentPay ? 'Quincena íntegra · Sin ajustes por asistencia' : 'Base − descuentos + extras por asistencias' }}</small></div>
+    } @else {
+      <div class="attendance-pay-unavailable"><strong id="attendance-pay-title">Pago neto del período</strong><p>{{ employee.status === false ? 'Empleado deshabilitado: excluido de los cálculos. Su historial se conserva.' : 'Faltan importes calculados para determinar el pago. Revisa el sueldo del empleado.' }}</p></div>
+    }
+  </section>
+}
 <ng-template #editor let-modal>
   <div class="modal-header"><div><h2 class="modal-title fs-5">{{ editing?.id ? 'Editar asistencia' : 'Registrar asistencia' }}</h2>
     <p class="personnel-muted mt-1">Revisa el empleado y sus marcaciones.</p></div>

@@ -8,7 +8,12 @@ export interface ProductionStage {
   manufacture_id: number;
   code: string;
   name: string;
-  status: string;
+  slug?: string;
+  show_in_stepper?: boolean;
+  delivery_tracking_default?: boolean;
+  progress_id?: number | null;
+  purchases_count?: number;
+  status: string | null;
   responsible: string | null;
   expected_end: string | null;
   completed_at: string | null;
@@ -28,6 +33,10 @@ export const STAGE_STATUS: Record<string, string> = {
   pending: 'Pendiente', in_progress: 'En proceso', completed: 'Finalizada', not_applicable: 'No aplica',
 };
 
+export function isProcessStage<T extends { code?: string; show_in_stepper?: boolean; status: string | null }>(stage: T): stage is T & { status: string } {
+  return stage.show_in_stepper !== false && stage.code !== 'others' && stage.status !== null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ProductionStageService extends BaseCrudDashboardService {
   readonly changes = new Subject<number>();
@@ -38,12 +47,19 @@ export class ProductionStageService extends BaseCrudDashboardService {
     return this.http.get<{ data: ProductionStage[] }>(`${this.baseUrl}/${productionId}/stages`);
   }
 
-  save(productionId: number, stageId: number, data: object) {
+  save(productionId: number, stageId: number | string, data: object) {
     return this.http.put<{ data: ProductionStage }>(`${this.baseUrl}/${productionId}/stages/${stageId}`, data)
       .pipe(tap(() => this.changes.next(productionId)));
   }
 
   assign(productionId: number, stageId: number, purchaseId: number) {
-    return this.http.put<{ data: any }>(`${this.baseUrl}/${productionId}/stages/${stageId}/purchases/${purchaseId}`, {});
+    return this.http.put<{ data: any }>(`${this.baseUrl}/${productionId}/stages/${stageId}/purchases/${purchaseId}`, {})
+      .pipe(tap(() => this.changes.next(productionId)));
+  }
+
+  classify(productionId: number) {
+    return this.http.post<{ data: { assigned: number; remaining: number; purchases: any[] } }>(
+      `${this.baseUrl}/${productionId}/stages/classify-purchases`, {},
+    ).pipe(tap(() => this.changes.next(productionId)));
   }
 }

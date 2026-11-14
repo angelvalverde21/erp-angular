@@ -1,5 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
+import { registerLocaleData } from '@angular/common';
+import localeEsPe from '@angular/common/locales/es-PE';
 import { signal } from '@angular/core';
 import { of, Subject, throwError } from 'rxjs';
 import { EmployeeService } from './employee.service';
@@ -13,11 +15,13 @@ import { AttendanceService } from '../../attendances/attendance.service';
 import { AttendanceIndexPageComponent } from '../../attendances/attendance-index-page/attendance-index-page.component';
 import { AttendanceIndexComponent } from '../../attendances/attendance-index/attendance-index.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
+import { EmployeeIndexComponent } from './employee-index/employee-index.component';
 import { EmployeeSalaryIndexComponent } from './employee-edit-page/employee-salary-index/employee-salary-index.component';
 
 const employee = { id: 3, name: 'Empleado independiente', email: 'staff@example.test', user_id: 1, account: { id: 1, email: 'staff@example.test', status: true }, roles: ['sales'], status: true,
   salary: 1500, biometric_code: '1', schedules: [], attendances: [], tolerance_minutes: 15, allow_extra_hours: true };
+registerLocaleData(localeEsPe);
 
 describe('Independent employees and attendances', () => {
   let savedUser: string | null;
@@ -28,7 +32,7 @@ describe('Independent employees and attendances', () => {
     savedUser = localStorage.getItem('user');
     localStorage.setItem('user', JSON.stringify({ roles: ['ceo'] }));
     current = signal(employee);
-    service = jasmine.createSpyObj('EmployeeService', ['store', 'update', 'index', 'setSignal', 'receiveSignal', 'laborSummary']);
+    service = jasmine.createSpyObj('EmployeeService', ['store', 'update', 'index', 'setSignal', 'receiveSignal', 'laborSummary', 'setWorkStatus']);
     service.receiveSignal.and.callFake(() => current());
     service.index.and.returnValue(of({ data: [employee] }));
     TestBed.configureTestingModule({ providers: [
@@ -41,6 +45,30 @@ describe('Independent employees and attendances', () => {
   afterEach(() => {
     if (savedUser === null) localStorage.removeItem('user');
     else localStorage.setItem('user', savedUser);
+  });
+
+  it('toggles employee calculation eligibility once and preserves the state if saving fails', () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(EmployeeIndexComponent);
+    const row = { ...employee };
+    fixture.componentRef.setInput('employees', [row]);
+    fixture.detectChanges();
+    const pending = new Subject<any>();
+    service.setWorkStatus.and.returnValue(pending);
+    fixture.componentInstance.toggleStatus(row);
+    fixture.componentInstance.toggleStatus(row);
+    expect(service.setWorkStatus).toHaveBeenCalledOnceWith(3, false);
+    expect(row.status).toBeTrue();
+    pending.next({ data: { status: false } });
+    pending.complete();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Excluido de cálculos');
+    expect(fixture.nativeElement.textContent).toContain('Habilitar');
+    service.setWorkStatus.and.returnValue(throwError(() => ({})));
+    fixture.componentInstance.toggleStatus(row);
+    fixture.detectChanges();
+    expect(row.status).toBeFalse();
+    expect(fixture.nativeElement.querySelector('[role="alert"]')).not.toBeNull();
   });
 
   it('requires login credentials and matching passwords while allowing optional contact data', () => {
@@ -76,6 +104,7 @@ describe('Independent employees and attendances', () => {
     service.update.and.returnValue(throwError(() => ({ error: { errors: { biometric_code: ['El código ya existe.'] } } })));
     const fixture = TestBed.createComponent(EmployeeEditComponent);
     fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('.employee-form-cards > .personnel-section').length).toBe(4);
     expect(fixture.componentInstance.form.get('name')?.value).toBe(employee.name);
     fixture.componentInstance.save();
     fixture.detectChanges();
@@ -113,6 +142,82 @@ describe('Independent employees and attendances', () => {
     fixture.componentInstance.load();
     expect(attendance.list.calls.mostRecent().args[0]).toBe(1);
     expect(fixture.nativeElement.textContent).toContain('20 por página');
+  });
+
+  it('counts computed dates as whole days even for short or missing shifts', () => {
+    TestBed.configureTestingModule({ providers: [{ provide: NgbModal, useValue: {} }] });
+    const fixture = TestBed.createComponent(AttendanceIndexComponent);
+    fixture.componentRef.setInput('employee', employee);
+    fixture.componentRef.setInput('attendances', [
+      { date: '2026-11-03', employee_id: 3, employee_name: employee.name, paid_minutes: 480 },
+      { date: '2026-11-04', employee_id: 3, employee_name: employee.name, paid_minutes: 240 },
+    ]);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.computedDays).toBe(2);
+    expect(fixture.nativeElement.querySelector('.attendance-days').textContent).toContain('2 días computados');
+    expect(fixture.nativeElement.querySelector('.attendance-days').textContent).not.toContain('8 h/día');
+    fixture.componentRef.setInput('attendances', [{ date: '2026-11-03', employee_id: 3, missing: true, paid_minutes: 0 }]);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.computedDays).toBe(1);
+  });
+
+  it('shows fortnight net pay from half the monthly salary without deducting absences twice', () => {
+    TestBed.configureTestingModule({ providers: [{ provide: NgbModal, useValue: {} }] });
+    const fixture = TestBed.createComponent(AttendanceIndexComponent);
+    fixture.componentRef.setInput('employee', employee);
+    fixture.componentRef.setInput('attendances', [
+      { date: '2026-11-03', employee_id: 3, paid_minutes: 467, salary_day: 55, salary_extra: -1.49 },
+      { date: '2026-11-04', employee_id: 3, paid_minutes: 0, missing: true, salary_day: 55, salary_extra: -55, salary_neto: -55 },
+      { date: '2026-11-05', employee_id: 3, paid_minutes: 484, salary_day: 55, salary_extra: .46 },
+    ]);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.periodPay).toEqual({ base: 750, discounts: 56.49, extras: .46, net: 693.97 });
+    expect(fixture.nativeElement.querySelector('.attendance-pay-net strong').textContent).toContain('693.97');
+    fixture.componentRef.setInput('attendances', [{ date: '2026-11-03', employee_id: 3, salary_day: null, salary_extra: null }]);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.periodPay).toBeNull();
+    expect(fixture.nativeElement.querySelector('.attendance-pay-unavailable')).not.toBeNull();
+    fixture.componentRef.setInput('employee', { ...employee, status: false });
+    fixture.componentRef.setInput('attendances', [{ date: '2026-11-03', employee_id: 3, salary_extra: 0 }]);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.periodPay).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('Empleado deshabilitado');
+  });
+
+  it('pays the full fortnight without attendance when configured and never pays a disabled employee', () => {
+    TestBed.configureTestingModule({ providers: [{ provide: NgbModal, useValue: {} }] });
+    const fixture = TestBed.createComponent(AttendanceIndexComponent);
+    fixture.componentRef.setInput('employee', { ...employee, salary: 1650, payroll_uses_attendance: false });
+    fixture.componentRef.setInput('attendances', []);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.periodPay).toEqual({ base: 825, discounts: 0, extras: 0, net: 825 });
+    expect(fixture.nativeElement.textContent).toContain('No requiere marcaciones para el pago');
+    expect(fixture.nativeElement.querySelector('.attendance-pay-net strong').textContent).toContain('825.00');
+    fixture.componentRef.setInput('attendances', [{ date: '2026-11-03', salary_extra: -55 }]);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.periodPay?.net).toBe(825);
+    fixture.componentRef.setInput('employee', { ...employee, payroll_uses_attendance: false, status: false });
+    fixture.detectChanges();
+    expect(fixture.componentInstance.periodPay).toBeNull();
+    fixture.componentRef.setInput('employee', { ...employee, payroll_uses_attendance: true });
+    fixture.componentRef.setInput('attendances', []);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.periodPay).toBeNull();
+  });
+
+  it('keeps a salary of 1650 at a fortnight base of 825 regardless of the number of computed days', () => {
+    TestBed.configureTestingModule({ providers: [{ provide: NgbModal, useValue: {} }] });
+    const fixture = TestBed.createComponent(AttendanceIndexComponent);
+    fixture.componentRef.setInput('employee', { ...employee, salary: '1650.00' });
+    const rows = Array.from({ length: 14 }, (_, index) => ({ date: `2026-11-${String(index + 1).padStart(2, '0')}`,
+      employee_id: 3, salary_day: 55, salary_extra: index === 0 ? -117.23 : index === 1 ? 7.45 : 0 }));
+    fixture.componentRef.setInput('attendances', rows);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.periodPay).toEqual({ base: 825, discounts: 117.23, extras: 7.45, net: 715.22 });
+    fixture.componentRef.setInput('attendances', rows.slice(0, 13));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.periodPay?.base).toBe(825);
+    expect(fixture.componentInstance.periodPay?.net).toBe(715.22);
   });
 
   it('distinguishes missing and incomplete punches without inventing exit times', () => {

@@ -1,31 +1,61 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ProductionStage, STAGE_STATUS } from './production-stage.service';
+import { isProcessStage, ProductionStage, STAGE_STATUS } from './production-stage.service';
+import { ProductionStageStatusComponent } from './production-stage-status.component';
+
+type StepperStage = Pick<ProductionStage, 'id' | 'name' | 'status' | 'expected_end'> & Partial<ProductionStage>;
 
 @Component({
   selector: 'app-production-stage-stepper',
-  template: `
-    <nav class="stage-stepper" aria-label="Etapas de producción">
-      @for (stage of stages; track stage.id; let index = $index) {
-        <button type="button" class="stage-step" [class]="'stage-step ' + stage.status"
-          [class.selected]="selectedId === stage.id" [attr.aria-current]="selectedId === stage.id ? 'step' : null"
-          (click)="choose.emit(stage.id)">
-          <span class="step-number" aria-hidden="true">@if (stage.status === 'completed') { <i class="fa-solid fa-check"></i> } @else if (stage.status === 'in_progress') { <i class="fa-solid fa-clock"></i> } @else { {{ index + 1 }} }</span>
-          <span><strong>{{ stage.name }}</strong><small>{{ labels[stage.status] }}@if (overdue(stage)) { · Atrasada }</small></span>
-        </button>
-      }
-    </nav>
-  `,
+  imports: [ProductionStageStatusComponent],
+  templateUrl: './production-stage-stepper.component.html',
   styleUrl: './production-stage-stepper.component.scss',
 })
 export class ProductionStageStepperComponent {
-  @Input() stages: Pick<ProductionStage, 'id' | 'name' | 'status' | 'expected_end'>[] = [];
+  private processStages: (StepperStage & { status: string })[] = [];
+  @Input() set stages(value: StepperStage[]) {
+    this.processStages = value.filter(isProcessStage);
+  }
+  get stages(): (StepperStage & { status: string })[] { return this.processStages; }
   @Input() selectedId = 0;
+  @Input() productionId = 0;
+  @Input() otherExpenses: { id: number; count: number } | null = null;
   @Output() choose = new EventEmitter<number>();
-  labels = STAGE_STATUS;
+  get selectedIndex(): number {
+    return this.stages.findIndex(stage => stage.id === this.selectedId);
+  }
+  readonly labels: Readonly<Record<string, string>> = {
+    ...STAGE_STATUS,
+    completed: 'Completado',
+  };
 
-  overdue(stage: Pick<ProductionStage, 'status' | 'expected_end'>): boolean {
-    const now = new Date();
-    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Lima', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
-    return !!stage.expected_end && stage.expected_end < today && !['completed', 'not_applicable'].includes(stage.status);
+  readonly stageIcons: Readonly<Record<string, string>> = {
+    molds: 'fa-solid fa-ruler-combined',
+    samples: 'fa-solid fa-shirt',
+    materials: 'fa-solid fa-layer-group',
+    cutting: 'fa-solid fa-scissors',
+    sewing: 'fa-solid fa-gears',
+    finishing: 'fa-solid fa-wand-magic-sparkles',
+  };
+
+  readonly statusIcons: Readonly<Record<string, string>> = {
+    completed: 'fa-solid fa-check',
+    in_progress: 'fa-solid fa-clock',
+    not_applicable: 'fa-solid fa-minus',
+  };
+
+  private readonly dateFormatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Lima',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+
+  overdue(stage: StepperStage): boolean {
+    if (!stage.status || !stage.expected_end || ['completed', 'not_applicable'].includes(stage.status)) {
+      return false;
+    }
+
+    const today = this.dateFormatter.format(new Date());
+    return stage.expected_end < today;
   }
 }

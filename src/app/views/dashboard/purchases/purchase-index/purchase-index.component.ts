@@ -6,7 +6,7 @@ import { faEdit, faCashRegister, faBagShopping, faInbox, faReceipt } from '@fort
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import { PurchaseEditComponent } from '../purchase-edit/purchase-edit.component';
 import { GalleryComponent } from '@shared/components/gallery/gallery.component';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonAddComponent } from '@buttons/button-add/button-add.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -14,6 +14,8 @@ import { PurchaseCreateComponent } from '../purchase-create/purchase-create.comp
 import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
 import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/button-edit/button-edit.component';
 import { PurchaseIndexHeadComponent } from './purchase-index-head/purchase-index-head.component';
+import { DeliveryTrackingComponent } from '@shared/components/delivery-tracking/delivery-tracking.component';
+import { DeliveryTracking } from '@shared/components/delivery-tracking/delivery-tracking.model';
 
 @Component({
   selector: 'app-purchase-index',
@@ -25,12 +27,14 @@ import { PurchaseIndexHeadComponent } from './purchase-index-head/purchase-index
     PurchaseEditComponent,
     GalleryComponent,
     CurrencyPipe,
+    DecimalPipe,
     FontAwesomeModule,
     ButtonAddComponent,
     PurchaseCreateComponent,
     DateShopifyPipe,
     ButtonEditComponent,
-    PurchaseIndexHeadComponent
+    PurchaseIndexHeadComponent,
+    DeliveryTrackingComponent
   ],
   templateUrl: './purchase-index.component.html',
   styleUrl: './purchase-index.component.scss',
@@ -47,6 +51,9 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
   @Input() sum_purchases: number = 0;
   @Input() productionView = false;
   @Input() productionStageId: number | null = null;
+  @Input() stageName = '';
+  @Input() stageDescription = 'Materiales, insumos y servicios asociados a esta etapa.';
+  @Input() deliveryDefault = false;
   @Output() purchasesChanged = new EventEmitter<any[]>();
 
   get conceptCount(): number {
@@ -107,9 +114,11 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
 
   receivePurchaseUpdated(PurchaseUpdated: any) {
 
+    if (!PurchaseUpdated) return;
+
     const index = this.purchases.findIndex(p => p.id === PurchaseUpdated.id);
     if (index !== -1) {
-      this.purchases[index] = PurchaseUpdated;
+      this.purchases = this.purchases.map(purchase => purchase.id === PurchaseUpdated.id ? { ...purchase, ...PurchaseUpdated } : purchase);
     }
     // console.log('Updated Purchase:', PurchaseUpdated);
 
@@ -162,6 +171,11 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
     const quantity = Number(item.quantity) || 0;
     const price = Number(item.price) || 0;
     return quantity * price;
+  }
+
+  deliveryUpdated(purchaseId: number, tracking: DeliveryTracking): void {
+    this.purchases = this.purchases.map(purchase => purchase.id === purchaseId ? { ...purchase, delivery_tracking: tracking } : purchase);
+    this.purchasesChanged.emit(this.purchases);
   }
 
 }

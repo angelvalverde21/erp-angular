@@ -1,4 +1,4 @@
-<div [formGroup]="form" class="personnel-form">
+<div [formGroup]="form" class="personnel-form" [class.employee-form-cards]="cards">
   <section class="personnel-section">
     <div class="personnel-section-heading">
       <span class="personnel-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
@@ -58,6 +58,10 @@
       </label>
       <label class="personnel-field"><span class="personnel-label">Estado laboral</span>
         <select class="form-select" formControlName="status"><option [ngValue]="true">Activo</option><option [ngValue]="false">Inactivo</option></select>
+      </label>
+      <label class="personnel-check personnel-wide">
+        <input type="checkbox" formControlName="payroll_uses_attendance">
+        <span><strong>Usar asistencias para calcular el pago</strong><small>Si lo desactivas, el empleado habilitado recibirá su base quincenal íntegra, sin descuentos ni extras por asistencia. No necesita registrar entrada ni salida.</small></span>
       </label>
     </div>
   </section>

@@ -1,0 +1,25 @@
+﻿<div ngbDropdown #menu="ngbDropdown" container="body" placement="bottom" autoClose="outside" class="stage-status-control" [class.with-completion]="completionAction">
+  <button type="button" ngbDropdownToggle class="stage-status-button" [class]="'stage-status-button ' + stage.status" [disabled]="saving || stage.revision == null" [attr.aria-label]="'Estado de ' + stage.name + ': ' + label" (click)="reviewing = false; error = ''">
+    <span class="status-dot" aria-hidden="true"></span>{{ saving ? 'Guardando…' : label }}
+  </button>
+  @if (completionAction && stage.status !== 'completed') {
+    <button type="button" class="stage-complete-action" [disabled]="saving || !canComplete || stage.revision == null" [title]="canComplete ? 'Marcar esta etapa como completada' : 'Registra al menos una compra en esta etapa'" (click)="complete(menu)"><i class="fa-solid fa-check" aria-hidden="true"></i>Completar</button>
+  }
+  <div ngbDropdownMenu class="stage-status-menu">
+    <p>Estado · {{ stage.name }}</p>
+    @if (stage.status === 'completed') {
+      <button type="button" ngbDropdownItem [disabled]="saving" (click)="select(canComplete ? 'in_progress' : 'pending', menu)">Reabrir etapa</button>
+    } @else {
+      <button type="button" ngbDropdownItem [disabled]="saving || !canComplete" (click)="select('completed', menu)">Marcar como completada</button>
+    }
+    <p [class.stage-status-warning]="!canComplete">{{ canComplete ? 'En proceso mientras tenga compras, hasta que completes la etapa.' : 'Registra al menos una compra en esta etapa para completarla.' }}</p>
+    @if (reviewing) {
+      <form class="sample-approval" (ngSubmit)="save('completed', menu)">
+        <label>Cantidad de muestras<input type="number" name="quantity" [(ngModel)]="quantity" min="1" max="100000" step="1" required [disabled]="saving"></label>
+        <small>Al completar confirmas que las muestras fueron revisadas y aprobadas.</small>
+        <button type="submit" [disabled]="saving || !quantity || quantity < 1">Aprobar y completar</button>
+      </form>
+    }
+    @if (error) { <div class="status-error" role="alert">{{ error }}</div> }
+  </div>
+</div>

@@ -1,0 +1,100 @@
+﻿<section class="purchase-delivery" [class.delivery-footer]="footer" [class.needs-setup]="!tracking" [attr.aria-label]="'Seguimiento de entrega del registro ' + ownerId">
+  <header class="delivery-card-header" [class.delivery-collapsed]="!tracking && !mode" [class.delivery-actions-first]="actionsFirst">
+    @if (footer && tracking && !actionsFirst) {
+      <ng-container [ngTemplateOutlet]="deliveryStatus"></ng-container>
+    } @else if (mode || historyOpen) {
+      <div class="delivery-footer-label">
+        <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
+        <div><h4>Fechas de entrega</h4>@if (footer) { <small>Seguimiento opcional de este encargo</small> }</div>
+      </div>
+    }
+    <div class="delivery-header-actions">
+      @if (footer && tracking && !actionsFirst && !tracking.received_on) {
+        <ng-container [ngTemplateOutlet]="deliveryActions"></ng-container>
+      }
+      @if (tracking) {
+        @if (!historyAlwaysVisible) {
+        <button type="button" class="delivery-history-toggle" [attr.aria-expanded]="historyOpen" [attr.aria-controls]="'delivery-history-' + ownerType + '-' + ownerId" (click)="toggleHistory()">
+          <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>Seguimiento de entrega
+          <i class="fa-solid" [class.fa-chevron-up]="historyOpen" [class.fa-chevron-down]="!historyOpen" aria-hidden="true"></i>
+        </button>
+        }
+      } @else {
+        <button type="button" class="delivery-start-button" [disabled]="saving" [attr.aria-expanded]="mode === 'create'" [attr.aria-controls]="'delivery-editor-' + ownerType + '-' + ownerId" (click)="mode === 'create' ? mode = null : begin('create')">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i>Seguimiento de entrega
+        </button>
+      }
+    </div>
+    <ng-content select="[deliveryFooterTotal]"></ng-content>
+  </header>
+
+  @if (tracking && (!footer || actionsFirst)) {
+    <div class="delivery-summary">
+      <span class="delivery-icon" aria-hidden="true"><i class="fa-regular fa-calendar-check"></i></span>
+      <ng-container [ngTemplateOutlet]="deliveryStatus"></ng-container>
+      <div class="delivery-actions"><ng-container [ngTemplateOutlet]="deliveryActions"></ng-container></div>
+    </div>
+  }
+
+  @if (mode) {
+    <form class="delivery-editor" [id]="'delivery-editor-' + ownerType + '-' + ownerId" [formGroup]="form" (ngSubmit)="save()">
+      <h4>{{ titles[mode] }}</h4>
+      <fieldset [disabled]="saving">
+        @if (mode === 'create' || mode === 'correct') {
+          <label>Se mandó a hacer / materiales entregados<input type="date" formControlName="handed_over_on" [max]="today"></label>
+        }
+        @if (mode === 'create' || mode === 'reschedule') {
+          <label>Fecha tentativa de entrega *<input type="date" formControlName="expected_on" required></label>
+        }
+        @if (mode === 'receive' || mode === 'correct') {
+          <label>Fecha real de recepción<input type="date" formControlName="received_on" [max]="today" [required]="mode === 'receive'"></label>
+        }
+        @if (mode === 'reschedule' || mode === 'correct') {
+          <label class="delivery-wide">Motivo del cambio *<textarea formControlName="reason" maxlength="2000" required placeholder="Explica el acuerdo con el proveedor o el motivo de la corrección"></textarea></label>
+        }
+      </fieldset>
+      @if (form.touched && form.invalid) { <p class="delivery-error" role="alert">Completa los campos obligatorios.</p> }
+      <div class="delivery-editor-actions">
+        <small>Los cambios quedan registrados con tu usuario.</small>
+        <button type="button" [disabled]="saving" (click)="mode = null">Cancelar</button>
+        <button type="submit" class="delivery-primary" [disabled]="saving">{{ saving ? 'Guardando…' : 'Guardar fechas' }}</button>
+      </div>
+    </form>
+  }
+  @if (error) {
+    <div class="delivery-error" role="alert">{{ error }} @if (tracking) { <button type="button" [disabled]="saving" (click)="reload()">Recargar datos</button> }</div>
+  }
+  @if (feedback) { <p class="delivery-feedback" role="status">{{ feedback }}</p> }
+  @if (historyAlwaysVisible && !tracking) { <p class="delivery-history-empty">El historial aparecerá aquí al activar el seguimiento de esta compra.</p> }
+  @if (tracking && historyOpen) {
+    <div class="delivery-history" [id]="'delivery-history-' + ownerType + '-' + ownerId">
+      <h5>Historial de fechas de entrega</h5>
+      <app-delivery-timeline [events]="events"></app-delivery-timeline>
+      @if (historyLoading) { <p role="status">Cargando historial…</p> }
+      @if (historyError) { <p class="delivery-error" role="alert">{{ historyError }} <button type="button" (click)="loadHistory()">Reintentar</button></p> }
+      @if (hasMore) { <button type="button" [disabled]="historyLoading" (click)="loadHistory()">Ver registros anteriores</button> }
+      <button type="button" class="delivery-correct" [disabled]="saving" (click)="begin('correct')">Corregir fechas registradas</button>
+    </div>
+  }
+</section>
+
+<ng-template #deliveryStatus>
+  @if (tracking) {
+    <div class="delivery-current">
+      <div><span class="delivery-badge" [class]="'delivery-badge ' + tracking.status">{{ labels[tracking.status] }}</span><strong>{{ tracking.received_on ? 'Recibida' : 'Prevista' }}: {{ (tracking.received_on || tracking.expected_on) | date:'dd MMM yyyy' }}</strong></div>
+      <small>
+        @if (tracking.handed_over_on) { Encargado: {{ tracking.handed_over_on | date:'dd/MM/yyyy' }} · }
+        @if (tracking.received_on) { Compromiso: {{ tracking.expected_on | date:'dd/MM/yyyy' }} · }
+        {{ tracking.reschedules_count }} {{ tracking.reschedules_count === 1 ? 'reprogramación' : 'reprogramaciones' }}
+        @if (tracking.received_late) { · Recibida con retraso }
+      </small>
+    </div>
+  }
+</ng-template>
+
+<ng-template #deliveryActions>
+  @if (tracking && !tracking.received_on) {
+    <button type="button" [disabled]="saving" (click)="begin('reschedule')">Reprogramar</button>
+    <button type="button" class="delivery-primary" [disabled]="saving" (click)="begin('receive')"><i class="fa-solid fa-check" aria-hidden="true"></i>Registrar recepción</button>
+  }
+</ng-template>

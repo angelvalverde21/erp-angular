@@ -14,7 +14,8 @@ export class ProductionProgressComponent {
   constructor(private router: Router) {}
 
   openStage(path: string, id: number): void {
-    void this.router.navigate([...this.link(path), 'purchases'], { queryParams: { stage: id } });
+    const stage = this.summary.items.find(item => item.path === path)?.stages?.find(section => section.id === id);
+    void this.router.navigate([...this.link(path), 'purchases'], { queryParams: { stage: stage?.slug ?? id } });
   }
   @Input({ required: true }) summary!: ProductionProgress;
   @Input() store = '';

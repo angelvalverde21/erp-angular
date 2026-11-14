@@ -138,11 +138,8 @@ export class PurchaseIndexHeadComponent implements OnInit{
   }
 
   receivePurchaseUpdated(purchase: any) {
-    if (purchase) {
-      this.purchase = purchase;
-    } else {
-      console.log('no se actualizo el registro');
-    }
+    if (!purchase) return;
+    this.purchase = purchase;
     this.closeModal();
     this.emitPurchaseUpdated.emit(purchase);
   }

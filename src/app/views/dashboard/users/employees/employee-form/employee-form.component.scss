@@ -1,1 +1,22 @@
 @use '../../../_personnel-ui';
+
+.employee-form-cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+  > .personnel-section {
+    min-width: 0;
+    margin: 0;
+    padding: 1.25rem;
+    border: 1px solid #dce3ee;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 2px 8px #293f5d04;
+  }
+  .personnel-section-heading {
+    margin: 0 0 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #edf0f6;
+  }
+}

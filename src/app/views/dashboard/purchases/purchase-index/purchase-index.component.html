@@ -1,7 +1,7 @@
 @if (productionView) {
 <section class="production-expenses" aria-labelledby="production-expenses-title">
   <header class="production-expenses-heading">
-    <div><span class="production-expenses-eyebrow">COSTOS DE FABRICACIÓN</span><h2 id="production-expenses-title">Compras y gastos</h2><p>Materiales, insumos y servicios asociados a esta producción.</p></div>
+    <div><span class="production-expenses-eyebrow">COMPRAS POR SECCIÓN</span><h2 id="production-expenses-title">{{ stageName ? 'Compras · ' + stageName : 'Compras y gastos' }}</h2><p>{{ stageDescription }}</p></div>
     <button type="button" class="production-expense-primary" (click)="openVerticallyCentered(content)"><i class="fa-solid fa-plus" aria-hidden="true"></i>Registrar compra o gasto</button>
   </header>
   <dl class="production-expenses-summary">
@@ -9,32 +9,60 @@
     <div><dt>Registros</dt><dd>{{ purchases.length }}</dd><dd class="production-expenses-note">Compras y gastos</dd></div>
     <div><dt>Conceptos</dt><dd>{{ conceptCount }}</dd><dd class="production-expenses-note">Materiales o servicios registrados</dd></div>
   </dl>
-  @for (purchase of purchases; track purchase.id; let first = $first) {
-  <article class="production-expense-card" [attr.aria-label]="'Compra o gasto #' + purchase.id">
+  @for (purchase of purchases; track purchase.id) {
+  <article class="production-expense-card" [id]="'purchase-' + purchase.id" [attr.aria-label]="'Compra o gasto #' + purchase.id">
     <header class="production-expense-card-header">
       <span class="production-expense-icon" aria-hidden="true"><i class="fa-solid fa-receipt"></i></span>
       <div class="production-expense-identity">
         <h3>{{ purchase.supplier?.user?.name || purchase.supplier?.name || 'Compra sin proveedor' }}</h3>
         <div class="production-expense-meta"><span>Registro #{{ purchase.id }}</span><span>{{ purchase.created_at ? (purchase.created_at | DateShopify) : 'Sin fecha' }}</span></div>
       </div>
-      <div class="production-expense-amount"><span>Importe</span><strong>{{ sum_purchase(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></div>
       <app-purchase-index-head [actionsOnly]="true" [purchase]="purchase" [purchaseable_type]="purchaseable_type"
         [purchaseable_id]="purchaseable_id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)" (emitRemovePurchase)="receiveRemovePurchase($event)"></app-purchase-index-head>
     </header>
-    <details class="production-expense-details" [open]="first">
-      <summary><span>Detalle de conceptos <small>{{ purchase.items?.length ?? 0 }}</small></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
-      <div class="table-responsive" tabindex="0" role="region" aria-label="Conceptos de la compra">
-        <table class="table production-expense-table align-middle mb-0">
-          <caption class="visually-hidden">Conceptos, precios e importes de la compra</caption>
-          <thead><tr><th scope="col" class="text-end">Cantidad</th><th scope="col">Unidad</th><th scope="col">Concepto</th><th scope="col" class="text-end">Precio unitario</th><th scope="col" class="text-end">Importe</th></tr></thead>
-          <tbody>
-            @for (item of purchase.items; track item.id) {
-            <tr><td class="text-end production-expense-number">{{ item.quantity }}</td><td>{{ item.unit?.name || '—' }}</td><td class="production-expense-description">{{ item.name }}</td><td class="text-end production-expense-number">{{ (item.price ?? 0) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td><td class="text-end production-expense-number fw-semibold">{{ itemTotal(item) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td></tr>
-            } @empty { <tr><td colspan="5" class="text-center text-body-secondary py-4">Este registro no tiene conceptos.</td></tr> }
-          </tbody>
-        </table>
-      </div>
-    </details>
+    <div class="production-expense-body">
+      <section class="production-expense-details" aria-label="Conceptos e importes de la compra">
+        <div class="production-expense-table-scroll" tabindex="0" role="region" aria-label="Conceptos de la compra">
+          <table class="table production-expense-table align-middle mb-0">
+            <caption class="visually-hidden">Conceptos, precios e importes de la compra</caption>
+            <thead>
+              <tr>
+                <th scope="col">Concepto</th>
+                <th scope="col" class="text-end">Cantidad</th>
+                <th scope="col" class="text-end">Precio unitario</th>
+                <th scope="col" class="text-end">Importe</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of purchase.items; track item.id; let index = $index) {
+                <tr>
+                  <td class="production-expense-description">
+                    <div class="production-expense-concept">
+                      <span class="production-expense-line-number" aria-hidden="true">{{ index + 1 }}</span>
+                      <strong>{{ item.name }}</strong>
+                    </div>
+                  </td>
+                  <td class="text-end production-expense-number" data-label="Cantidad">
+                    <strong>{{ item.quantity | number:'1.0-2':'es-PE' }}</strong>
+                    <small class="production-expense-unit">{{ item.unit?.name || 'Sin unidad' }}</small>
+                  </td>
+                  <td class="text-end production-expense-number" data-label="Precio unitario">{{ (item.price ?? 0) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+                  <td class="text-end production-expense-number production-expense-line-total" data-label="Importe">{{ itemTotal(item) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+                </tr>
+              } @empty {
+                <tr class="production-expense-no-items"><td colspan="4" class="text-center text-body-secondary py-4">Este registro no tiene conceptos.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+    <footer class="production-expense-delivery">
+      <app-delivery-tracking ownerType="purchase" [ownerId]="purchase.id" [tracking]="purchase.delivery_tracking ?? null" [suggested]="deliveryDefault" [footer]="true" [actionsFirst]="true"
+        (trackingChanged)="deliveryUpdated(purchase.id, $event)">
+        <div deliveryFooterTotal class="production-expense-amount"><span>Importe total</span><strong>{{ sum_purchase(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></div>
+      </app-delivery-tracking>
+    </footer>
   </article>
   } @empty {
   <div class="production-expenses-empty">
@@ -139,13 +167,14 @@
 }
 }
 <ng-template #content let-modal>
-    <div class="modal-header">
-        <h6 class="modal-title">Registrar Compra</h6>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    <div class="modal-header purchase-create-heading">
+        <span class="purchase-create-icon" aria-hidden="true"><i class="fa-solid fa-cart-plus"></i></span>
+        <div><h6 class="modal-title">Registrar compra</h6><p>Añade materiales o servicios y sus fechas de entrega.</p></div>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"></button>
     </div>
-    <div class="modal-body">
-        <app-purchase-create [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id" [production_stage_id]="productionStageId"
-            (emitPurchaseCreate)="receivePurchaseCreate($event)"></app-purchase-create>
+    <div class="modal-body p-0">
+        <app-purchase-create [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id" [production_stage_id]="productionStageId" [deliveryDefault]="deliveryDefault"
+            (emitPurchaseCreate)="receivePurchaseCreate($event)" (cancelled)="modal.dismiss('cancel')"></app-purchase-create>
     </div>
 
 </ng-template>

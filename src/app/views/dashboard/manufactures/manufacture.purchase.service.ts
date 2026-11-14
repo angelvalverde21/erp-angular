@@ -24,6 +24,10 @@ export class ManufacturePurchaseService extends BaseCrudDashboardService {
     this.extraPath = `/${manufacture_id}/purchases`;
   }
 
+  listPurchases<T>() {
+    return this.http.get<{ data: T[] }>(this.baseUrl);
+  }
+
 
 }
 

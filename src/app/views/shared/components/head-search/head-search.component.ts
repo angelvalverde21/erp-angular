@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
 import { CustomerService } from '@dashboard/users/customers/customer.service';
 // import { CustomerService } from '@dashboard/users/customers/customer.service';
 import { faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
@@ -18,6 +18,7 @@ import { ProductService } from '@dashboard/products/product.service';
 import { EmployeePaymentService } from '@dashboard/users/employees/employee-edit-page/employe-payment-index/employe.payment.service';
 import { EmployeeAttendanceService } from '@dashboard/users/employees/employee-edit-page/employee-attendance-index/employee.attendance.service';
 import { ManufactureProductionService } from 'src/app/views/dashboard/manufactures/productions/manufacture.production.service';
+import { followingFortnight, previousFortnight } from '@dashboard/users/employees/employee-edit-page/employee-attendance-index/attendance-period';
 
 @Component({
   selector: 'app-head-search',
@@ -56,6 +57,9 @@ export class HeadSearchComponent implements OnInit, OnDestroy {
   @Input() is_redirect: boolean = true;
   @Input() box_search: boolean = true;
   @Input() show_date: boolean = false;
+  @Input() initialDates: { start_date: string; end_date: string } | null = null;
+  @Input() searchOnInit = false;
+  @Input() earliestAttendanceDate: string | null = null;
   @Output() emitSearchResult = new EventEmitter<any>();
   @Output() emitLoadingStatus = new EventEmitter<boolean>();
   @Output() emitParams = new EventEmitter<{}>();
@@ -86,8 +90,8 @@ export class HeadSearchComponent implements OnInit, OnDestroy {
   formInit() {
     this.form = this.fb.group({
       search: [''],
-      start_date: ['', Validators.required],
-      end_date: ['', Validators.required],
+      start_date: [this.initialDates?.start_date ?? '', Validators.required],
+      end_date: [this.initialDates?.end_date ?? '', Validators.required],
     });
 
   }
@@ -120,6 +124,7 @@ export class HeadSearchComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.formInit();
+    if (this.searchOnInit) this.search();
 
 
     // this.form.valueChanges
@@ -138,8 +143,25 @@ export class HeadSearchComponent implements OnInit, OnDestroy {
   }
 
   loading: boolean = false;
+  get nextAttendancePeriod() { return followingFortnight(this.form?.value.end_date ?? ''); }
+  get previousAttendancePeriod() { return previousFortnight(this.form?.value.start_date ?? '', this.earliestAttendanceDate); }
+
+  showPreviousFortnight(): void {
+    const period = this.previousAttendancePeriod;
+    if (this.loading || !period) return;
+    this.form.patchValue(period);
+    this.search();
+  }
+
+  showNextFortnight(): void {
+    const period = this.nextAttendancePeriod;
+    if (this.loading || !period) return;
+    this.form.patchValue(period);
+    this.search();
+  }
 
   search() {
+    if (this.loading) return;
 
     console.log(this.form.value);
 
@@ -152,8 +174,12 @@ export class HeadSearchComponent implements OnInit, OnDestroy {
     } else {
 
       this.emitLoadingStatus.emit(true);
+      this.loading = true;
 
-      this.getService().search(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
+      this.getService().search(this.form.value).pipe(takeUntil(this.destroy$), finalize(() => {
+        this.loading = false;
+        this.emitLoadingStatus.emit(false);
+      })).subscribe({
 
         next: (resp: any) => {
           console.log(resp);
@@ -169,8 +195,6 @@ export class HeadSearchComponent implements OnInit, OnDestroy {
 
       });
 
-      this.getService().search(this.form.value).subscribe((resp: any) => {
-      });
     }
 
   }

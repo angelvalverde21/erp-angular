@@ -10,7 +10,7 @@
 } @else if (employee) {
   <div class="personnel-note mb-3"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>
     <p>Sueldo mensual registrado: <strong>{{ employee.salary !== null ? (employee.salary | currency:'PEN':'symbol':'1.2-2') : 'Sin definir' }}</strong>.
-      La quincena en curso se calcula hasta hoy. Las faltas se identifican según el horario configurado y las marcaciones disponibles.</p>
+      {{ employee.payroll_uses_attendance === false ? 'Pago sin control de asistencia: se reconoce la base quincenal íntegra mientras el empleado esté habilitado.' : 'La quincena en curso se calcula hasta hoy. Las faltas se identifican según el horario configurado y las marcaciones disponibles.' }}</p>
   </div>
 
   @for (period of periods; track period.id) {
@@ -38,7 +38,7 @@
         </button>
       </footer>
       @if (openPeriod === period.id) {
-        <div [id]="'fortnight-' + period.id"><app-attendance-index [attendances]="period.attendances" (attendanceChanged)="load()"></app-attendance-index></div>
+        <div [id]="'fortnight-' + period.id"><app-attendance-index [attendances]="period.attendances" [employee]="employee" (attendanceChanged)="load()"></app-attendance-index></div>
       }
     </section>
   }

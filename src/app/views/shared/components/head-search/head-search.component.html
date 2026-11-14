@@ -1,11 +1,15 @@
 <form action="" [formGroup]="form">
 
-    <div class="content d-flex justify-content-between align-items-center">
+    <div class="content d-flex justify-content-between align-items-center" [class.attendance-search]="type === 'employee_attendance'">
 
         <div class="dates d-flex justify-content-between align-items-center">
-            <input type="date" class="form-control me-2" formControlName="start_date" [max]="form.get('end_date')?.value" />
+            <input type="date" class="form-control" [class.me-2]="type !== 'employee_attendance'" formControlName="start_date" [max]="form.get('end_date')?.value" />
             <input type="date" class="form-control" formControlName="end_date" [min]="form.get('start_date')?.value"
                 [max]="today" />
+            @if (type === 'employee_attendance') {
+                <button type="button" class="btn btn-light fortnight-button" [disabled]="loading || !previousAttendancePeriod" (click)="showPreviousFortnight()"><i class="fa-solid fa-chevron-left me-2" aria-hidden="true"></i>Quincena anterior</button>
+                <button type="button" class="btn btn-light fortnight-button" [disabled]="loading || !nextAttendancePeriod" (click)="showNextFortnight()">Siguiente quincena<i class="fa-solid fa-chevron-right ms-2" aria-hidden="true"></i></button>
+            }
         </div>
 
         <div class="controls d-flex justify-content-between align-items-center">

@@ -7,4 +7,4 @@
 <td class="text-end production-money">{{ cost(production) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
 <td class="text-end production-money fw-semibold">{{ (production.sum_purchases ?? 0) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
 <td class="production-date">{{ production.updated_at ? (production.updated_at | DateShopify) : 'Sin fecha' }}</td>
-<td class="text-end"><div class="manufacture-row-actions"><a class="manufacture-row-open" [routerLink]="link_base">Gestionar<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><app-button-menu [menus]="menus" [context]="production.name || 'Producción #' + production.id"></app-button-menu></div></td>
+<td class="text-end"><div class="manufacture-row-actions"><a class="manufacture-row-open" [routerLink]="manageLink">Gestionar<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><app-button-menu [menus]="menus" [context]="production.name || 'Producción #' + production.id"></app-button-menu></div></td>

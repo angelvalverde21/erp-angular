@@ -1,140 +1,52 @@
-import { Component, effect, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { ManufactureProductionFormComponent } from '../../manufacture-production-form/manufacture-production-form.component';
-import { ManufactureProductionService } from '../../manufacture.production.service';
-import { ManufactureOrderService } from '../../../orders/manufacture.order.service';
+import { Component, OnDestroy, effect, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import Swal from 'sweetalert2';
+import { Subject, finalize, takeUntil } from 'rxjs';
 import { ManufactureService } from '../../../manufacture.service';
+import { ManufactureProductionService } from '../../manufacture.production.service';
 
 @Component({
   selector: 'app-manufacture-production-edit',
-  imports: [
-    ManufactureProductionFormComponent,
-    ReactiveFormsModule,
-    LoadingComponent,
-  ],
+  imports: [ReactiveFormsModule],
   templateUrl: './manufacture-production-edit.component.html',
-  styleUrl: './manufacture-production-edit.component.scss'
+  styleUrl: './manufacture-production-edit.component.scss',
 })
-export class ManufactureProductionEditComponent implements OnInit, OnDestroy {
+export class ManufactureProductionEditComponent implements OnDestroy {
+  private readonly manufacture = inject(ManufactureService);
+  private readonly productionService = inject(ManufactureProductionService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroy$ = new Subject<void>();
+  readonly form = inject(FormBuilder).group({ name: ['', [Validators.required, Validators.maxLength(255)]] });
+  saving = false;
+  nameError = '';
+  message = '';
+  get productionId(): number { return Number(this.route.snapshot.paramMap.get('production_id') ?? this.route.parent?.snapshot.paramMap.get('production_id')); }
 
-  form!: FormGroup;
-  faUser = faUser;
-
-  @Input() type: string = 'production';
-  @Input() production: any;
-
-  loading: boolean = false;
-  disabledButton: boolean = false;
-  manufacture_id: number = 0;
-
-  constructor(
-    private fb: FormBuilder,
-    private _manufactureProduction: ManufactureProductionService,
-    private _manufacture: ManufactureService,
-    private route: ActivatedRoute
-  ) {
-    this.route.paramMap.subscribe(params => {
-      this.manufacture_id = Number(params.get('production_id'));
-    });
-
-    this.formInit();
-
+  constructor() {
     effect(() => {
-
-      const event = this._manufacture.manufactureSingnalEvent();
-      console.log(event);
-      if (!event) return;
-
-      this.form.patchValue({
-        name: event.name,
-        manufacture_start: event.manufacture_start?.split(' ')[0],
-        manufacture_end: event.manufacture_end?.split(' ')[0],
-      });
-
+      const production = this.manufacture.manufactureSingnalEvent();
+      if (production?.id === this.productionId && !this.form.dirty) this.form.patchValue({ name: production.name });
     });
   }
-
-  ngOnInit(): void {
-
-    console.log(this.manufacture_id);
-
-
-
-    // this.manufactureInit();
-
-  }
-
-  formInit() {
-    this.form = this.fb.group({
-      name: ['', Validators.required],
-      // manufacture_start: ['', Validators.required],
-      // manufacture_end: ['', Validators.required],
+  update(): void {
+    if (this.saving) return;
+    const name = this.form.value.name?.trim() ?? '';
+    if (!name || this.form.invalid) { this.form.controls.name.setErrors({ required: true }); this.form.markAllAsTouched(); return; }
+    this.saving = true;
+    this.nameError = '';
+    this.message = '';
+    this.productionService.update(this.productionId, { name }).pipe(takeUntil(this.destroy$), finalize(() => this.saving = false)).subscribe({
+      next: () => {
+        this.form.patchValue({ name });
+        this.form.markAsPristine();
+        this.manufacture.setManufacture({ ...this.manufacture.manufactureSingnalEvent(), id: this.productionId, name });
+        this.message = 'Nombre actualizado.';
+      },
+      error: response => {
+        const errors = response.error?.errors;
+        this.nameError = errors ? Object.values(errors).flat().join(' ') : 'No se pudo guardar el nombre. Intenta nuevamente.';
+      },
     });
   }
-
-  update() {
-
-    if (this.disabledButton) return;
-
-    console.log("click ok");
-
-    console.log(this.form.value);
-
-    if (!this.form.valid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    Swal.fire({
-      title: 'Espere...',
-      html: 'Guardando cambios...',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    })
-
-    this.disabledButton = true;
-
-    this._manufactureProduction.update(this.manufacture_id, this.form.value)
-
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-
-        next: (resp: any) => {
-
-          Swal.fire({
-            icon: 'success',
-            title: 'Correcto',
-            text: 'Datos guardados correctamente',
-            confirmButtonText: 'OK',
-            timer: 500,
-            showConfirmButton: false
-          })
-
-          console.log(resp);
-          this.disabledButton = false;
-        },
-
-        error: (error: any) => {
-          console.error(error);
-          this.disabledButton = false;
-        },
-
-      });
-  }
-
-  destroy$ = new Subject<void>();
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-
+  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 }

@@ -1,0 +1,153 @@
+:host {
+  display: block;
+}
+
+.purchase-edit-loading {
+  padding: 3rem;
+  text-align: center;
+  p {
+    font-size: .8rem;
+    color: var(--cui-secondary-color);
+  }
+}
+
+.purchase-editor-content {
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 1.5rem;
+  background: var(--cui-tertiary-bg, #f6f7fb);
+}
+
+.purchase-editor-items {
+  border: 1px solid var(--cui-border-color, #dfe3ef);
+  border-radius: 12px;
+  background: var(--cui-body-bg, #fff);
+  overflow: hidden;
+}
+
+.purchase-editor-options {
+  margin-top: 1rem;
+  border: 1px solid var(--cui-border-color, #dfe3ef);
+  border-radius: 10px;
+  background: var(--cui-body-bg, #fff);
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    padding: 1rem;
+    cursor: pointer;
+    list-style: none;
+    font-size: .8rem;
+    font-weight: 550;
+    span {
+      display: flex;
+      gap: .6rem;
+      align-items: center;
+    }
+    > i {
+      font-size: .65rem;
+      color: var(--cui-secondary-color);
+    }
+  }
+  &[open] summary > i {
+    transform: rotate(180deg);
+  }
+}
+
+.purchase-editor-options-body {
+  border-top: 1px solid var(--cui-border-color);
+  padding: 1.25rem 1rem .25rem;
+  > p {
+    font-size: .8rem;
+    color: #b44747;
+  }
+}
+
+.purchase-editor-error {
+  margin-bottom: 1rem;
+  padding: .9rem 1rem;
+  border-radius: 9px;
+  background: #fff1f0;
+  color: #a53e3e;
+  font-size: .8rem;
+  button {
+    margin-left: .5rem;
+  }
+}
+
+.purchase-editor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.1rem 1.5rem;
+  border-top: 1px solid var(--cui-border-color);
+  background: var(--cui-body-bg, #fff);
+  > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    small {
+      font-size: .72rem;
+      color: var(--cui-secondary-color);
+    }
+    strong {
+      font-size: 1.25rem;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+}
+
+.purchase-editor-actions {
+  display: flex;
+  gap: .65rem;
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 42px;
+    padding: .65rem 1rem;
+    border: 1px solid var(--cui-border-color);
+    border-radius: 9px;
+    font-size: .8rem;
+    font-weight: 600;
+    &:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+    &:focus-visible {
+      outline: 2px solid #9584df;
+      outline-offset: 2px;
+    }
+  }
+}
+
+.purchase-editor-cancel {
+  background: var(--cui-body-bg);
+  color: var(--cui-body-color);
+}
+
+.purchase-editor-save {
+  background: #6855d7;
+  color: #fff;
+  border-color: #6855d7 !important;
+}
+
+@media (max-width: 575.98px) {
+  .purchase-editor-content {
+    padding: 1rem;
+  }
+  .purchase-editor-footer {
+    padding: 1rem;
+  }
+  .purchase-editor-actions {
+    width: 100%;
+    button {
+      flex: 1;
+    }
+  }
+}

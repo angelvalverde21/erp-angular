@@ -1,0 +1,58 @@
+<section class="payroll" aria-labelledby="employee-payroll-title">
+  <header class="payroll-heading">
+    <div>
+      <span class="payroll-kicker"><i class="fa-solid fa-wallet" aria-hidden="true"></i>PERSONAL</span>
+      <h2 id="employee-payroll-title">Pagos de los trabajadores</h2>
+      @if (summary.available) {
+        <p>{{ summary.start_date | date:'dd/MM/yyyy' }} — {{ summary.end_date | date:'dd/MM/yyyy' }} · {{ summary.employee_count }} empleados activos</p>
+        <small>Ajustes por asistencia hasta el {{ summary.computed_through | date:'dd/MM/yyyy' }}. Este resumen corresponde a la quincena actual.</small>
+      }
+    </div>
+    @if (summary.available) {
+      <div class="payroll-total" [class.payroll-partial]="summary.pending_count > 0">
+        <span>{{ summary.pending_count ? 'Total calculado' : 'Total a pagar' }}</span>
+        <strong>{{ summary.totals.net | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong>
+        <small>{{ summary.pending_count ? summary.calculated_count + ' de ' + summary.employee_count + ' empleados calculados' : summary.is_provisional ? 'Provisional · Quincena en curso' : 'Base quincenal + ajustes por asistencia' }}</small>
+      </div>
+    }
+  </header>
+  @if (summary.available) {
+    @if (summary.pending_count) {
+      <div class="payroll-warning" role="status"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>{{ summary.pending_count }} empleados pendientes de revisión. El importe mostrado incluye únicamente los pagos calculados.</div>
+    }
+    <div class="table-responsive">
+      <table class="payroll-table">
+        <thead><tr><th>Trabajador</th><th>Cálculo del pago</th><th class="money">Base quincenal</th><th class="money">Descuentos</th><th class="money">Extras</th><th class="money">Pago final</th></tr></thead>
+        <tbody>
+          @for (row of summary.items; track row.id) {
+            <tr>
+              <td><a [routerLink]="['/', store, 'dashboard', 'users', 'employees', row.id]">{{ row.name }}<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></td>
+              <td><span class="payroll-mode" [class.full-pay]="!row.payroll_uses_attendance">{{ row.payroll_uses_attendance ? 'Según asistencias' : 'Quincena íntegra' }}</span></td>
+              @if (row.amounts; as amounts) {
+                <td class="money">{{ amounts.base | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+                <td class="money" [class.text-danger]="amounts.discounts > 0">{{ amounts.discounts > 0 ? '− ' : '' }}{{ amounts.discounts | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+                <td class="money" [class.text-success]="amounts.extras > 0">{{ amounts.extras > 0 ? '+ ' : '' }}{{ amounts.extras | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+                <td class="money payroll-net">{{ amounts.net | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+              } @else {
+                <td colspan="4" class="payroll-pending"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ row.pending_reason }}</td>
+              }
+            </tr>
+          } @empty {
+            <tr><td colspan="6" class="payroll-empty">No hay empleados activos para esta tienda.</td></tr>
+          }
+        </tbody>
+        @if (summary.items.length) {
+          <tfoot><tr><th colspan="2">{{ summary.pending_count ? 'Subtotal calculado' : 'Total de la quincena' }}</th>
+            <td class="money">{{ summary.totals.base | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+            <td class="money text-danger">− {{ summary.totals.discounts | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+            <td class="money text-success">+ {{ summary.totals.extras | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+            <td class="money payroll-net">{{ summary.totals.net | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+          </tr></tfoot>
+        }
+      </table>
+    </div>
+    <footer class="payroll-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Base: mitad del sueldo mensual. Los empleados sin control de asistencia reciben la base íntegra. No incluye adelantos ni otros movimientos de pago.</footer>
+  } @else {
+    <p class="payroll-empty">El resumen de pagos estará disponible al completar la configuración de personal.</p>
+  }
+</section>

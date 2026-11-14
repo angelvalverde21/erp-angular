@@ -1,1 +1,11 @@
 @use '../../_personnel-ui';
+
+.attendance-remote-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+  > div { flex: 1 1 280px; }
+  button { flex-shrink: 0; }
+}

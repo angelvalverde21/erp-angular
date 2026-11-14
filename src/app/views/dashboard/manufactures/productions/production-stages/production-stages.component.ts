@@ -1,16 +1,15 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { CurrencyPipe, DatePipe } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CurrencyPipe } from '@angular/common';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { PurchaseIndexComponent } from '../../../purchases/purchase-index/purchase-index.component';
-import { ImagePreviewComponent } from '../../../../shared/components/image-preview/image-preview.component';
-import { ProductionStage, ProductionStageService, STAGE_STATUS } from './production-stage.service';
+import { isProcessStage, ProductionStage, ProductionStageService, STAGE_STATUS } from './production-stage.service';
 
 @Component({
   selector: 'app-production-stages',
-  imports: [CurrencyPipe, DatePipe, ReactiveFormsModule, PurchaseIndexComponent, ImagePreviewComponent],
+  imports: [CurrencyPipe, PurchaseIndexComponent],
   templateUrl: './production-stages.component.html',
   styleUrl: './production-stages.component.scss',
 })
@@ -26,7 +25,15 @@ export class ProductionStagesComponent implements OnInit, OnDestroy {
   assigning = false;
   error = '';
   message = '';
+  classificationMessage = '';
+  purchaseSearch = '';
+  showAllPurchases = false;
+  assignmentTargets: Record<number, number> = {};
   labels = STAGE_STATUS;
+  get canTrackProgress(): boolean { return !!this.selected && isProcessStage(this.selected); }
+  get deliveryDefault(): boolean {
+    return this.selected?.delivery_tracking_default ?? (this.selected?.code === 'samples' || this.selected?.code === 'sewing');
+  }
   descriptions: Record<string, string> = {
     molds: 'Desarrollo del molde, escalado de tallas y servicio de ploteo. Puede reutilizarse un molde existente.',
     samples: 'Confecciona y revisa las muestras antes de fabricar el lote. Estas unidades no se suman al lote ni al stock.',
@@ -36,16 +43,27 @@ export class ProductionStagesComponent implements OnInit, OnDestroy {
     finishing: 'Estampado, bordado, lavado, limpieza y planchado, según la prenda.',
   };
   private readonly destroy$ = new Subject<void>();
-
   constructor(private service: ProductionStageService, private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.load();
+    this.service.changes.pipe(takeUntil(this.destroy$)).subscribe(id => { if (id === this.productionId) this.refreshProgress(); });
     this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe(params => {
-      const id = Number(params.get('stage'));
-      if (this.stages.length) void this.select(id);
+      if (this.stages.length) void this.select(params.get('stage') ?? '');
     });
   }
+
+  private refreshProgress(): void {
+    this.service.list(this.productionId).pipe(takeUntil(this.destroy$)).subscribe({
+      next: response => {
+        this.stages = response.data;
+        const selected = this.stages.find(stage => stage.id === this.selected?.id);
+        if (selected && !this.form?.dirty) this.setStage(selected);
+      },
+      error: () => this.error = 'No se pudo actualizar el estado de la etapa. Recarga para comprobarlo.',
+    });
+  }
+
 
   load(): void {
     this.loading = true;
@@ -53,15 +71,15 @@ export class ProductionStagesComponent implements OnInit, OnDestroy {
     this.service.list(this.productionId).pipe(takeUntil(this.destroy$), finalize(() => this.loading = false)).subscribe({
       next: response => {
         this.stages = response.data;
-        this.setStage(this.stages.find(stage => stage.id === Number(this.route.snapshot.queryParamMap.get('stage'))) ?? this.stages[0]);
+        this.setStage(this.findStage(this.route.snapshot.queryParamMap.get('stage') ?? '') ?? this.stages[0]);
         this.totalChanged.emit(this.total);
       },
       error: () => this.error = 'No se pudieron cargar las etapas. Reintenta la consulta.',
     });
   }
 
-  async select(id: number): Promise<void> {
-    const stage = this.stages.find(item => item.id === id) ?? this.stages[0];
+  async select(identifier: number | string): Promise<void> {
+    const stage = this.findStage(identifier) ?? this.stages[0];
     if (!stage || this.selected?.id === stage.id) return;
     if (this.saving || this.form?.dirty) {
       const result = this.saving ? { isConfirmed: false } : await Swal.fire({
@@ -69,11 +87,17 @@ export class ProductionStagesComponent implements OnInit, OnDestroy {
         icon: 'warning', showCancelButton: true, confirmButtonText: 'Cambiar etapa', cancelButtonText: 'Seguir editando',
       });
       if (!result.isConfirmed) {
-        void this.router.navigate([], { relativeTo: this.route, queryParams: { stage: this.selected?.id }, queryParamsHandling: 'merge', replaceUrl: true });
+        void this.router.navigate([], { relativeTo: this.route, queryParams: { stage: this.selected?.slug ?? this.selected?.id }, queryParamsHandling: 'merge', replaceUrl: true });
         return;
       }
     }
     this.setStage(stage);
+  }
+
+  private findStage(identifier: number | string): ProductionStage | undefined {
+    return this.stages.find(stage => stage.slug === String(identifier))
+      ?? this.stages.find(stage => stage.progress_id === Number(identifier))
+      ?? this.stages.find(stage => stage.id === Number(identifier));
   }
 
   private setStage(stage?: ProductionStage): void {
@@ -90,7 +114,7 @@ export class ProductionStagesComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    if (!this.selected || this.saving || !this.form.dirty) return;
+    if (!this.selected || !this.canTrackProgress || this.saving || !this.form.dirty) return;
     this.saving = true;
     this.error = '';
     this.message = '';
@@ -100,7 +124,7 @@ export class ProductionStagesComponent implements OnInit, OnDestroy {
       revision: this.selected.revision, sample_photos: value.photos.split('\n').map((url: string) => url.trim()).filter(Boolean),
     };
     delete payload.photos;
-    this.service.save(this.productionId, this.selected.id, payload).pipe(takeUntil(this.destroy$), finalize(() => this.saving = false)).subscribe({
+    this.service.save(this.productionId, this.selected.slug ?? this.selected.id, payload).pipe(takeUntil(this.destroy$), finalize(() => this.saving = false)).subscribe({
       next: response => {
         this.stages = this.stages.map(stage => stage.id === response.data.id ? response.data : stage);
         this.setStage(response.data);
@@ -115,22 +139,50 @@ export class ProductionStagesComponent implements OnInit, OnDestroy {
 
   get stagePurchases(): any[] { return this.purchases.filter(purchase => purchase.production_stage_id === this.selected?.id); }
   get unclassified(): any[] { return this.purchases.filter(purchase => !purchase.production_stage_id); }
+  get classificationPurchases(): any[] {
+    const term = this.purchaseSearch.trim().toLocaleLowerCase();
+    return (this.showAllPurchases ? this.purchases : this.unclassified).filter(purchase =>
+      !term || [purchase.id, purchase.supplier?.user?.name, purchase.supplier?.name,
+        ...(purchase.items ?? []).map((item: any) => item.name)].join(' ').toLocaleLowerCase().includes(term));
+  }
+  concepts(purchase: any): string { return (purchase.items ?? []).map((item: any) => item.name).filter(Boolean).join(' · ') || 'Sin conceptos'; }
+  classify(): void {
+    if (this.assigning || !this.unclassified.length) return;
+    this.assigning = true;
+    this.classificationMessage = '';
+    this.service.classify(this.productionId).pipe(takeUntil(this.destroy$), finalize(() => this.assigning = false)).subscribe({
+      next: ({ data }) => {
+        this.purchases = data.purchases;
+        this.totalChanged.emit(this.total);
+        this.classificationMessage = `${data.assigned} compras clasificadas. Las compras sin coincidencia se asignan a Otros.`;
+        if (data.remaining) this.classificationMessage += ` ${data.remaining} no se pudieron clasificar.`;
+      },
+      error: () => this.classificationMessage = 'No se pudieron clasificar las compras. Intenta nuevamente.',
+    });
+  }
   amount(purchase: any): number { return (purchase.items ?? []).reduce((total: number, item: any) => total + Number(item.quantity || 0) * Number(item.price || 0), 0); }
   get total(): number { return this.purchases.reduce((total, purchase) => total + this.amount(purchase), 0); }
 
   purchasesUpdated(purchases: any[]): void {
     this.purchases = [...this.purchases.filter(purchase => purchase.production_stage_id !== this.selected?.id), ...purchases];
     this.totalChanged.emit(this.total);
+    this.service.changes.next(this.productionId);
   }
 
   assign(purchaseId: number, stageId: string): void {
     if (!stageId || this.assigning) return;
     this.assigning = true;
     this.service.assign(this.productionId, Number(stageId), purchaseId).pipe(takeUntil(this.destroy$), finalize(() => this.assigning = false)).subscribe({
-      next: response => { this.purchases = this.purchases.map(purchase => purchase.id === purchaseId ? response.data : purchase); },
-      error: () => this.error = 'No se pudo clasificar la compra. Intenta nuevamente.',
+      next: response => {
+        this.purchases = this.purchases.map(purchase => purchase.id === purchaseId ? response.data : purchase);
+        this.classificationMessage = 'Compra asignada al grupo seleccionado.';
+      },
+      error: () => this.classificationMessage = 'No se pudo clasificar la compra. Intenta nuevamente.',
     });
   }
 
-  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

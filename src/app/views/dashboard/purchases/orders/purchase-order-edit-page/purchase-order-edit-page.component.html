@@ -125,7 +125,7 @@
     </div>
     <div class="modal-body">
 
-        <app-purchase-create [supplier_id]="purchase_order.supplier_id"></app-purchase-create>
+        <app-purchase-create [supplier_id]="purchase_order.supplier_id" (cancelled)="modal.dismiss('cancel')"></app-purchase-create>
 
     </div>
 
@@ -137,13 +137,13 @@
 
 <div class="modal-control">
     <div class="content-control w-100">
-        <button 
-            class="btn btn-dark fs-7" 
-            type="button" 
+        <button
+            class="btn btn-dark fs-7"
+            type="button"
             [ngClass]="formActive ? 'btn-dark' : 'btn-secondary disabled'"
         >
             Agregar Producto(s)
         </button>
     </div>
 </div>
-}       
+}

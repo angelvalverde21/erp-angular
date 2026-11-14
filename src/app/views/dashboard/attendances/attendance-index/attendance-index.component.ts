@@ -23,8 +23,32 @@ export class AttendanceIndexComponent {
   }
   get attendances(): any[] { return this.rows; }
   get workedMinutes(): number { return this.rows.reduce((sum, row) => sum + Number(row.paid_minutes ?? row.minutes_computed ?? 0), 0); }
+  get computedDays(): number { return new Set(this.rows.map(row => row.date.slice(0, 10))).size; }
   get lateCount(): number { return this.rows.filter(row => row.is_late).length; }
+  get remoteDays(): number { return new Set(this.rows.filter(row => row.work_type === 'home_office').map(row => row.date.slice(0, 10))).size; }
   get missingCount(): number { return this.rows.filter(row => row.missing).length; }
+  get attendanceIndependentPay(): boolean { return this.employee?.status !== false && this.employee?.payroll_uses_attendance === false; }
+  get adjustmentTotal(): number | null {
+    const calculated = this.rows.filter(row => row.salary_extra != null);
+    return calculated.length ? Math.round(calculated.reduce((sum, row) => sum + Number(row.salary_extra), 0) * 100) / 100 : null;
+  }
+
+  get periodPay(): { base: number; discounts: number; extras: number; net: number } | null {
+    const salary = this.employee?.salary;
+    if (this.employee?.status === false || this.rows.some(row => row.calculation_excluded)
+      || salary == null || !Number.isFinite(Number(salary)) || Number(salary) < 0) return null;
+    const base = Math.round(Math.round(Number(salary) * 100) / 2);
+    if (this.attendanceIndependentPay) return { base: base / 100, discounts: 0, extras: 0, net: base / 100 };
+    if (!this.rows.length || this.rows.some(row => row.salary_extra == null)) return null;
+    let discounts = 0, extras = 0;
+    for (const row of this.rows) {
+      const adjustment = Math.round(Number(row.salary_extra) * 100);
+      if (!Number.isFinite(adjustment)) return null;
+      discounts += Math.max(0, -adjustment);
+      extras += Math.max(0, adjustment);
+    }
+    return { base: base / 100, discounts: discounts / 100, extras: extras / 100, net: (base - discounts + extras) / 100 };
+  }
 
   constructor(private modalService: NgbModal) {}
 

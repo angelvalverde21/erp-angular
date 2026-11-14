@@ -1,12 +1,17 @@
-  <div class="card mb-3">
-
-    <div class="card-header py-3 bg-primary text-white">
-      <fa-icon [icon]="faPenToSquare" class="me-2"></fa-icon> Edicion Compra
-    </div>
-
-    <div class="card-body">
-        <app-purchase-edit [purchase_id]="purchase_id!"></app-purchase-edit>
-    </div>
-
-</div>
-
+﻿<section class="purchase-edit-page">
+  <a class="purchase-back" [routerLink]="backLink"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>{{ fromTracking ? 'Volver al seguimiento de entregas' : fromProduction ? 'Volver al flujo de producción' : 'Volver a compras' }}</a>
+  <header class="purchase-page-heading">
+    <span class="purchase-page-icon" aria-hidden="true"><i class="fa-solid fa-receipt"></i></span>
+    <div><span class="purchase-page-eyebrow">GESTIÓN DE COMPRAS</span><h1>Compra #{{ purchaseId }}</h1><p>{{ loaded ? supplierName : 'Cargando datos de la compra…' }}</p></div>
+  </header>
+  <section class="purchase-edit-panel" aria-label="Editar conceptos y proveedor">
+    @if (message) { <p class="purchase-save-feedback" role="status"><i class="fa-solid fa-check" aria-hidden="true"></i>{{ message }}</p> }
+    <app-purchase-edit [purchase_id]="purchaseId" (purchaseLoaded)="purchaseLoaded($event)" (emitPurchaseUpdated)="saved($event)" (cancelled)="cancel()"></app-purchase-edit>
+  </section>
+  @if (loaded) {
+    <section class="purchase-edit-panel purchase-delivery-panel" aria-label="Gestionar fechas e historial de entrega">
+      <header><span class="purchase-delivery-heading-icon" aria-hidden="true"><i class="fa-regular fa-calendar-check"></i></span><div><h2>Entrega e historial</h2><p>Fechas acordadas con el proveedor, reprogramaciones y recepción.</p></div></header>
+      <app-delivery-tracking ownerType="purchase" [ownerId]="purchaseId" [tracking]="tracking" [footer]="true" [historyAlwaysVisible]="true" (trackingChanged)="tracking = $event"></app-delivery-tracking>
+    </section>
+  }
+</section>

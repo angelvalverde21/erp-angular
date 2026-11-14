@@ -10,6 +10,8 @@
     @if (report.area === 'ceo') {
       <p class="dash-data-note mb-3"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Actualización automática cada 60 segundos mientras esta pestaña esté visible.</p>
       @if (report.production_progress) { <app-production-progress [summary]="report.production_progress" [store]="base.store || ''"></app-production-progress> }
+      @if (report.employee_payroll) { <app-employee-payroll [summary]="report.employee_payroll" [store]="base.store || ''"></app-employee-payroll> }
+      @if (report.delivery_overview) { <app-delivery-overview [summary]="report.delivery_overview" [store]="base.store || ''"></app-delivery-overview> }
     }
     @for (section of report.sections; track section.key) {
       <section class="dash-section" [style.--section-accent]="accent(section.key)">

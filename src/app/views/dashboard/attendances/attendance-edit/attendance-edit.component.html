@@ -7,9 +7,26 @@
     <label class="personnel-field personnel-wide"><span class="personnel-label">Fecha *</span>
       <input class="form-control" type="date" formControlName="date" required>
     </label>
+    <label class="personnel-field personnel-wide"><span class="personnel-label">Modalidad de trabajo</span>
+      <select class="form-select" formControlName="work_type"><option value="onsite">Presencial</option><option value="home_office">Remoto · Desde casa</option></select>
+    </label>
+    @if (form.controls['work_type'].value === 'home_office') {
+      <div class="personnel-note personnel-wide attendance-remote-note">
+        <div><i class="fa-solid fa-house-laptop" aria-hidden="true"></i> {{ form.value.remote_hours_custom ? 'Se calculará la jornada con las horas indicadas, descontando el descanso salvo que marques la excepción.' : 'Se reconocerá la jornada programada para esta fecha. No necesitas ingresar marcaciones de entrada y salida.' }}</div>
+        <button class="personnel-button" type="button" (click)="toggleRemoteHours()" [attr.aria-expanded]="form.value.remote_hours_custom" aria-controls="attendance-hours">{{ form.value.remote_hours_custom ? 'Usar horario programado' : 'Editar horas' }}</button>
+      </div>
+    }
+    @if (form.value.work_type !== 'home_office' || form.value.remote_hours_custom) {
+    <div id="attendance-hours" class="personnel-grid personnel-wide">
     <label class="personnel-field"><span class="personnel-label">Entrada</span><input class="form-control" type="time" step="1" formControlName="check_in"></label>
     <label class="personnel-field"><span class="personnel-label">Salida</span><input class="form-control" type="time" step="1" formControlName="check_out">
-      <small>Puedes dejarla vacía si falta la marcación.</small>
+      <small>{{ form.value.work_type === 'home_office' ? 'Indica ambas horas para calcular la jornada remota.' : 'Puedes dejarla vacía si falta la marcación.' }}</small>
+    </label>
+    </div>
+    }
+    <label class="personnel-check personnel-wide">
+      <input type="checkbox" formControlName="break_skipped">
+      <span><strong>No tomó descanso</strong><small>Actívalo solo si el empleado lo comunicó. Se contará la hora que normalmente se descuenta por descanso.</small></span>
     </label>
     <label class="personnel-field personnel-wide"><span class="personnel-label">Observación</span>
       <textarea class="form-control" rows="3" maxlength="250" formControlName="comment" placeholder="Motivo del registro o de la corrección"></textarea>

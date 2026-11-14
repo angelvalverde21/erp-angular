@@ -1,14 +1,10 @@
-@if (loading) { <app-loading></app-loading> } @else {
-<section class="production-panel">
-  <header class="production-section-heading"><div><h2>Información general</h2><p>Actualiza el nombre con el que identificas esta producción.</p></div></header>
-  <form class="production-panel-body" [formGroup]="form" (ngSubmit)="update()">
-    <app-manufacture-production-form [form]="form"></app-manufacture-production-form>
-    <div class="production-form-actions">
-      <button type="submit" class="manufacture-primary-action" [disabled]="disabledButton">
-        @if (disabledButton) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }
-        {{ disabledButton ? 'Guardando...' : 'Guardar cambios' }}
-      </button>
-    </div>
-  </form>
-</section>
-}
+  <section class="overview-panel overview-name">
+    <header><div><h3>Datos de la producción</h3><p>El nombre se actualiza también en la cabecera.</p></div><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i></header>
+    <form [formGroup]="form" (ngSubmit)="update()">
+      <label for="production-name">Nombre de la producción<input id="production-name" type="text" formControlName="name" maxlength="255" [readOnly]="saving" [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"></label>
+      <button type="submit" class="overview-primary" [disabled]="saving || form.invalid || !form.dirty">{{ saving ? 'Guardando…' : 'Guardar nombre' }}</button>
+    </form>
+    @if (form.controls.name.touched && form.controls.name.invalid) { <p class="name-feedback error" role="alert">Indica un nombre válido de hasta 255 caracteres.</p> }
+    @if (nameError) { <p class="name-feedback error" role="alert">{{ nameError }}</p> }
+    @if (message) { <p class="name-feedback" role="status">{{ message }}</p> }
+  </section>

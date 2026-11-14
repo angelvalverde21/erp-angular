@@ -112,6 +112,31 @@
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/scss/styles.scss"],
             "scripts": []
+          },
+          "configurations": {
+            "production-module": {
+              "tsConfig": "tsconfig.production-tests.json",
+              "watch": false,
+              "browsers": "ChromeHeadless",
+              "include": [
+                "src/app/views/shared/components/delivery-tracking/delivery-tracking.spec.ts",
+                "src/app/views/dashboard/manufactures/productions/production-stages/production-stages.spec.ts",
+                "src/app/views/dashboard/manufactures/productions/production-overview.spec.ts",
+                "src/app/views/dashboard/purchases/purchase-index/production-expenses.spec.ts",
+                "src/app/views/dashboard/area-dashboards/area-dashboard.spec.ts"
+              ]
+            },
+            "personnel-module": {
+              "tsConfig": "tsconfig.personnel-tests.json",
+              "watch": false,
+              "browsers": "ChromeHeadless",
+              "include": [
+                "src/app/views/dashboard/attendances/attendance-edit/attendance-edit.component.spec.ts",
+                "src/app/views/dashboard/users/employees/employee-workflow.spec.ts",
+                "src/app/views/dashboard/users/employees/employee-edit-page/employee-attendance-index/attendance-period.spec.ts",
+                "src/app/views/dashboard/users/employees/employee-edit-page/employee-attendance-index/employee-attendance-index.component.spec.ts"
+              ]
+            }
           }
         }
       }

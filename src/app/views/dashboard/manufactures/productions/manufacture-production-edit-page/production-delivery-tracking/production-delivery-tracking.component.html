@@ -1,0 +1,26 @@
+﻿<section class="production-deliveries" aria-labelledby="delivery-page-title">
+  <header class="delivery-page-heading"><div><h2 id="delivery-page-title">Seguimiento de entregas</h2><p>Compras y servicios con fechas de entrega, en todas las etapas.</p></div><button type="button" class="delivery-refresh" [disabled]="loading" (click)="reload()"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>Actualizar</button></header>
+  @if (loading) { <p class="delivery-empty" role="status">Cargando compras con seguimiento…</p> }
+  @else if (error) { <div class="delivery-empty delivery-error" role="alert">{{ error }}<button type="button" (click)="reload()">Reintentar</button></div> }
+  @else {
+    <div class="delivery-toolbar">
+      <nav class="delivery-filters" aria-label="Filtrar por estado de entrega">
+        @for (option of filters; track option.value) { <button type="button" [class.active]="filter === option.value" [attr.aria-pressed]="filter === option.value" (click)="filter = option.value">{{ option.label }}<span>{{ count(option.value) }}</span></button> }
+      </nav>
+      <label class="delivery-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input type="search" placeholder="Buscar compra, proveedor o etapa…" aria-label="Buscar compra con seguimiento" [value]="search" (input)="search = $any($event.target).value"></label>
+    </div>
+    <div class="delivery-purchase-list">
+      @for (purchase of visiblePurchases; track purchase.id) {
+        <a class="delivery-purchase" [routerLink]="purchaseLink(purchase.id)" [queryParams]="{ production: productionId, returnTo: 'deliveries' }" [attr.aria-label]="'Gestionar compra #' + purchase.id">
+          <header><div><span class="delivery-stage">{{ stageName(purchase) }} · Compra #{{ purchase.id }}</span><h3>{{ purchaseLabel(purchase) }}</h3><p>{{ concepts(purchase) }}</p></div><span class="delivery-status" [class]="'delivery-status ' + purchase.delivery_tracking!.status">{{ purchase.delivery_tracking!.status === 'received' ? 'Recibida' : purchase.delivery_tracking!.status === 'overdue' ? 'Vencida' : 'Pendiente' }}</span></header>
+          <div class="delivery-purchase-footer">
+            <dl><div><dt>Encargo / materiales entregados</dt><dd>{{ (purchase.delivery_tracking!.handed_over_on | date:'dd MMM yyyy') || 'Sin registrar' }}</dd></div><div><dt>Compromiso vigente</dt><dd [class.overdue]="purchase.delivery_tracking!.status === 'overdue'">{{ purchase.delivery_tracking!.expected_on | date:'dd MMM yyyy' }}</dd></div><div><dt>Recepción real</dt><dd>{{ (purchase.delivery_tracking!.received_on | date:'dd MMM yyyy') || 'Por recibir' }}</dd></div></dl>
+            <span class="delivery-open">Gestionar compra<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+          </div>
+        </a>
+      } @empty {
+        <div class="delivery-empty"><i class="fa-regular fa-calendar-check" aria-hidden="true"></i><h3>{{ trackedPurchases.length ? 'Sin resultados para este filtro' : 'Todavía no hay compras con seguimiento' }}</h3><p>{{ trackedPurchases.length ? 'Prueba otro estado o cambia la búsqueda.' : 'Activa el seguimiento de entrega en una compra del flujo de producción.' }}</p><a [routerLink]="['../purchases']">Ir al flujo de producción<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+      }
+    </div>
+  }
+</section>

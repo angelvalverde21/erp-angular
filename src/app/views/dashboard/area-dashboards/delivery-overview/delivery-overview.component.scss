@@ -1,0 +1,127 @@
+.delivery-monitor {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--cui-border-color);
+  border-radius: 16px;
+  background: var(--cui-body-bg);
+  > header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    > div > span {
+      font-size: .65rem;
+      letter-spacing: .07em;
+      color: #8c743e;
+    }
+    h2 {
+      margin: .4rem 0;
+      font-size: 1.15rem;
+    }
+    p {
+      font-size: .75rem;
+      color: var(--cui-secondary-color);
+      margin: 0;
+      max-width: 65ch;
+    }
+  }
+}
+
+.delivery-counts {
+  display: flex;
+  gap: 1.5rem;
+  > span {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    font-size: .7rem;
+    color: var(--cui-secondary-color);
+    strong {
+      font-size: 1.4rem;
+      color: var(--cui-body-color);
+    }
+    &.overdue strong {
+      color: #b24537;
+    }
+  }
+}
+
+.delivery-monitor-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  h3 {
+    font-size: .85rem;
+    margin-bottom: .8rem;
+    small {
+      display: block;
+      margin-top: .3rem;
+      font-size: .7rem;
+      font-weight: 400;
+      color: var(--cui-secondary-color);
+    }
+  }
+  article {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    border-top: 1px solid var(--cui-border-color);
+    padding: .9rem 0;
+    > div:first-child {
+      flex: 1;
+      min-width: 0;
+    }
+    strong {
+      font-size: .8rem;
+      overflow-wrap: anywhere;
+    }
+    small {
+      display: block;
+      font-size: .7rem;
+      color: var(--cui-secondary-color);
+      margin-top: .3rem;
+    }
+    time {
+      display: block;
+      font-size: .75rem;
+      margin-top: .35rem;
+    }
+    a {
+      color: #705cc4;
+      font-size: .75rem;
+    }
+  }
+}
+
+.delivery-state {
+  padding: .2rem .4rem;
+  background: #f0edfa;
+  color: #665391;
+  border-radius: 20px;
+  font-size: .65rem;
+  &.overdue {
+    background: #fcece9;
+    color: #b24537;
+  }
+}
+
+.delivery-change p {
+  font-size: .75rem;
+  margin: .4rem 0;
+}
+
+.delivery-monitor-empty {
+  padding: 1.25rem 0;
+  font-size: .8rem;
+  color: var(--cui-secondary-color);
+}
+
+@media (max-width: 767.98px) {
+  .delivery-monitor > header {
+    flex-wrap: wrap;
+  }
+  .delivery-monitor-columns {
+    grid-template-columns: 1fr;
+  }
+}

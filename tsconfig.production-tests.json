@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/production-tests",
+    "types": ["jasmine", "@angular/localize"]
+  },
+  "files": ["src/test.ts"],
+  "include": [
+    "src/**/*.d.ts",
+    "src/app/views/shared/components/delivery-tracking/delivery-tracking.spec.ts",
+    "src/app/views/dashboard/manufactures/productions/production-stages/production-stages.spec.ts",
+    "src/app/views/dashboard/manufactures/productions/production-overview.spec.ts",
+    "src/app/views/dashboard/purchases/purchase-index/production-expenses.spec.ts",
+    "src/app/views/dashboard/area-dashboards/area-dashboard.spec.ts"
+  ]
+}

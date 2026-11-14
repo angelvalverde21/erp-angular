@@ -11,6 +11,7 @@ export function createEmployeeForm(fb: FormBuilder, creating = true) {
     document_number: [''],
     biometric_code: [''],
     status: [true],
+    payroll_uses_attendance: [true],
     roles: [[] as string[], Validators.required],
     salary: [null as number | null, [Validators.min(0)]],
     type: ['fulltime'],

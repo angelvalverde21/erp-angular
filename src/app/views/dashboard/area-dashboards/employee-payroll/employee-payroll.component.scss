@@ -1,0 +1,31 @@
+:host { display: block; margin-bottom: 1.5rem; }
+.payroll { background: #fff; border: 1px solid #dce3ee; border-radius: 16px; overflow: hidden; color: #263e5b; }
+.payroll-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem; padding: 1.5rem; }
+.payroll-kicker { display: flex; gap: .5rem; align-items: center; color: #3d6b5b; font-size: .68rem; font-weight: 700; letter-spacing: .1em; }
+h2 { margin: .5rem 0; font-size: 1.15rem; font-weight: 700; }
+p { margin: 0 0 .25rem; font-size: .82rem; }
+.payroll-heading small { color: #7b879c; font-size: .74rem; }
+.payroll-total { min-width: 245px; padding: 1rem 1.3rem; background: #edf8f2; border: 1px solid #b8dfcc; border-radius: 12px; text-align: right;
+  span { display: block; font-size: .78rem; font-weight: 650; color: #286b4e; }
+  strong { display: block; margin: .25rem 0; font-size: 1.9rem; font-weight: 750; color: #17633f; font-variant-numeric: tabular-nums; }
+}
+.payroll-partial { background: #fff8eb; border-color: #ecd29c; strong, span { color: #895b15; } }
+.payroll-warning { display: flex; gap: .6rem; margin: 0 1.5rem 1rem; padding: .75rem 1rem; border-radius: 8px; background: #fff8eb; color: #895b15; font-size: .8rem; }
+.payroll-table { width: 100%; border-collapse: collapse;
+  th { background: #f6f8fc; color: #7b879c; font-size: .69rem; font-weight: 650; }
+  th, td { padding: .85rem 1.25rem; border-top: 1px solid #e5eaf2; }
+  td { font-size: .82rem; }
+  a { color: #293f5d; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: .6rem;
+    i { color: #8b99ad; font-size: .65rem; }
+    &:hover { color: #4565a5; text-decoration: underline; }
+  }
+  .money { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tfoot th, tfoot td { background: #f3f8f5; font-weight: 650; }
+  .payroll-net { font-weight: 750; color: #17633f; }
+}
+.payroll-mode { font-size: .7rem; padding: .3rem .5rem; border-radius: 6px; background: #f1f4fa; white-space: nowrap; color: #536a89; }
+.full-pay { background: #edf8f2; color: #28714e; }
+.payroll-pending { color: #956200; text-align: right; i { margin-right: .5rem; } }
+.payroll-empty { text-align: center; padding: 1.5rem; color: #7b879c; }
+.payroll-note { display: flex; gap: .5rem; padding: 1rem 1.5rem; font-size: .74rem; color: #7b879c; border-top: 1px solid #e5eaf2; }
+@media(max-width: 575.98px) { .payroll-heading { padding: 1rem; } .payroll-total { width: 100%; min-width: 0; } }

@@ -23,13 +23,15 @@ export interface DashboardSection {
   actions: { label: string; path: string }[]; note: string;
 }
 export interface AreaReport {
+  employee_payroll?: import('./employee-payroll/employee-payroll.model').EmployeePayrollSummary;
+  delivery_overview?: import('./delivery-overview/delivery-overview.model').DeliveryOverview;
   area: DashboardArea; store: { id: number; name: string; slug: string };
   range: { days: number; from: string; to: string; timezone: string }; updated_at: string; sections: DashboardSection[];
   production_progress?: ProductionProgress;
 }
 
 export interface ProductionProgressItem {
-  stages?: { id: number; code: string; name: string; status: string; expected_end: string | null; responsible: string | null; sample_quantity: number | null; sample_review: string; overdue: boolean }[];
+  stages?: { id: number; code: string; name: string; slug?: string; show_in_stepper?: boolean; status: string; expected_end: string | null; responsible: string | null; sample_quantity: number | null; sample_review: string; overdue: boolean }[];
   id: number;
   name: string;
   created_at: string;

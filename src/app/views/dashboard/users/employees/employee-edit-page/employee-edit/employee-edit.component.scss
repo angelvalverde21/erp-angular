@@ -1,1 +1,8 @@
 @use '../../../../_personnel-ui';
+
+.employee-profile-heading {
+  margin-bottom: 1.25rem;
+  h2 { margin: 0; font-size: 1.1rem; font-weight: 650; color: #293f5d; }
+  p { margin: .4rem 0 0; font-size: .8rem; color: #7b879c; }
+}
+.employee-profile-actions { margin-top: 1.25rem; }

@@ -1,0 +1,39 @@
+:host { display: block; margin-top: .5rem; }
+.stage-status-control.with-completion { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.stage-complete-action {
+  display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .6rem;
+  border: 1px solid #bedbca; border-radius: 7px; color: #247452; background: #edf8f1; font-size: .7rem;
+  &:disabled { opacity: .45; cursor: not-allowed; }
+  &:focus-visible { outline: 2px solid #589b77; outline-offset: 2px; }
+}
+.stage-status-button {
+  display: inline-flex; align-items: center; gap: .35rem; padding: .3rem .55rem;
+  border: 1px solid var(--cui-border-color, #e0e3ee); border-radius: 20px;
+  background: var(--cui-body-bg, #fff); color: var(--cui-secondary-color, #8190aa); font-size: .65rem;
+  &.in_progress { color: #886020; background: #fff9ec; border-color: #efe0bc; }
+  &.completed { color: #247452; background: #edf8f1; border-color: #cce7d8; }
+  &:disabled { opacity: .6; }
+  &:focus-visible { outline: 2px solid #9584df; outline-offset: 2px; }
+}
+.status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.stage-status-menu {
+  min-width: 230px; max-width: 290px; padding: .5rem; border-radius: 12px;
+  border: 1px solid var(--cui-border-color); box-shadow: 0 8px 28px #26324b20;
+  > p { margin: .25rem .5rem .5rem; font-size: .7rem; color: var(--cui-secondary-color); }
+  > p.stage-status-warning {
+    padding: .6rem .7rem;
+    border: 1px solid var(--cui-warning-border-subtle, #ffe69c);
+    border-radius: 7px;
+    background: var(--cui-warning-bg-subtle, #fff3cd);
+    color: var(--cui-warning-text-emphasis, #664d03);
+  }
+  > button { display: flex; justify-content: space-between; align-items: center; border-radius: 6px; padding: .6rem; font-size: .78rem; }
+}
+.sample-approval {
+  border-top: 1px solid var(--cui-border-color); margin-top: .5rem; padding: .75rem .5rem .25rem;
+  label { display: flex; flex-direction: column; gap: .4rem; font-size: .75rem; }
+  input { width: 100%; padding: .5rem; border: 1px solid var(--cui-border-color); border-radius: 6px; background: var(--cui-body-bg); color: var(--cui-body-color); }
+  small { display: block; margin: .6rem 0; font-size: .7rem; color: var(--cui-secondary-color); }
+  button { width: 100%; border: 0; border-radius: 6px; padding: .6rem; background: #6855d7; color: #fff; font-size: .75rem; &:disabled { opacity: .5; } }
+}
+.status-error { padding: .6rem; font-size: .72rem; color: #a53e3e; }

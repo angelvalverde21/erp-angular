@@ -1,110 +1,20 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { faBarcode, faBagShopping, faCalculator, faRightLeft } from '@fortawesome/free-solid-svg-icons';
+import { Component, Input } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faBagShopping, faBoxesStacked, faCalendarCheck, faTruckRampBox } from '@fortawesome/free-solid-svg-icons';
 import { PenPipe } from '@shared/pipes/pen.pipe';
-import { BaseService } from 'src/app/views/base.service';
+import { SummaryPurchase } from '@interfaces/summary.interface';
 
 @Component({
   selector: 'app-production-widget',
-  imports: [
-    RouterModule,
-    FontAwesomeModule,
-    PenPipe
-  ],
+  imports: [RouterModule, FontAwesomeModule, PenPipe],
   templateUrl: './production-widget.component.html',
-  styleUrl: './production-widget.component.scss'
+  styleUrl: './production-widget.component.scss',
 })
-export class ProductionWidgetComponent implements OnInit {
-
-  faBarcode = faBarcode;
-  faBagShopping = faBagShopping;
-  faCalculator = faCalculator;
-  faRightLeft = faRightLeft;
-
-  // @Input() production_id: number = 0;
-  @Input() summary: any = null;
-
-  widgets: any[] = [];
-
-  store: string | null = '';
-
-  constructor(
-    private router: Router,
-    private _base: BaseService
-  ) {
-    this.store = this._base.store;
+export class ProductionWidgetComponent {
+  @Input() summary: SummaryPurchase | null = null;
+  readonly icons = { flow: faBagShopping, products: faBoxesStacked, reception: faTruckRampBox, tracking: faCalendarCheck };
+  get unitCost(): number {
+    return Number(this.summary?.sum_variants) > 0 ? Number(this.summary?.sum_purchases ?? 0) / Number(this.summary?.sum_variants) : 0;
   }
-
-  isActive(link: any[], exact = false): boolean {
-
-    const currentUrl = this.router.url.split('?')[0];
-
-    const targetUrl = this.router.serializeUrl(
-      this.router.createUrlTree(link)
-    );
-
-    if (exact) {
-      return currentUrl === targetUrl;
-    }
-
-    return currentUrl.startsWith(targetUrl);
-
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['summary']) {
-      this.widgetsInit();
-    }
-  }
-
-  ngOnInit(): void {
-
-
-    // http://localhost:4200/sorelle/dashboard/manufactures/productions/1/purchases
-
-    this.widgetsInit();
-  }
-
-
-
-  widgetsInit() {
-
-    this.widgets = [
-      {
-        title: 'Resumen',
-        subtitle: 'Costo por unidad',
-        value: (this.summary?.sum_variants > 0 ? (this.summary?.sum_purchases / this.summary?.sum_variants ? this.summary?.sum_purchases / this.summary?.sum_variants : 0) : 0),
-        link: ['./'],
-        exact: true,
-        icon: faBarcode,
-        type: 'currency'
-      },
-      {
-        title: 'Compras',
-        subtitle: 'Gasto total',
-        value: this.summary?.sum_purchases ? this.summary?.sum_purchases : 0,
-        link: ['./purchases'],
-        icon: faBagShopping,
-        type: 'currency'
-      },
-      {
-        title: 'Productos',
-        subtitle: `${this.summary?.count_variants ?? 0} variantes · Unidades planificadas`,
-        value: this.summary?.sum_variants ? this.summary?.sum_variants : 0,
-        link: ['./variants'],
-        icon: faCalculator,
-        type: 'units'
-      },
-      {
-        title: 'Movimientos',
-        subtitle: 'Unidades recibidas',
-        value: this.summary?.sum_kardexes ? this.summary?.sum_kardexes : 0,
-        link: ['./kardexes'],
-        icon: faRightLeft,
-        type: 'units'
-      }
-    ];
-  }
-
 }

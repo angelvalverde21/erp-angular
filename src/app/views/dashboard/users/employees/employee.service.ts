@@ -31,6 +31,10 @@ export class EmployeeService extends BaseCrudDashboardService {
     return this.http.get<any>(`${this.baseUrl}/${employeeId}/labor-summary`);
   }
 
+  setWorkStatus(employeeId: number, status: boolean) {
+    return this.http.patch<any>(`${this.baseUrl}/${employeeId}/status`, { status });
+  }
+
   ordersSearch(employee_id: number, data: any): Observable<any[]> {
 
     console.log(`${this.baseUrl}/orders`);

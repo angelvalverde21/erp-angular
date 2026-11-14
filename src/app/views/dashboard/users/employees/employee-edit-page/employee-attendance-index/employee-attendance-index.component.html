@@ -5,6 +5,9 @@
   </header>
   <div class="personnel-card-body pb-0">
     <app-head-search type="employee_attendance" [box_search]="false" [show_date]="true" [is_redirect]="false"
+      [initialDates]="defaultPeriod" [searchOnInit]="true"
+      [earliestAttendanceDate]="earliestAttendanceDate"
+      (emitLoadingStatus)="loading = $event"
       (emitSearchResult)="receiveAttendances($event)"></app-head-search>
   </div>
   @if (loading) { <div class="personnel-empty" role="status"><span class="spinner-border spinner-border-sm"></span>Cargando asistencias…</div> }

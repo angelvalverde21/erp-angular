@@ -1,20 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ControlContainer, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { InputGroupComponent } from '@shared/components/form/input-group/input-group.component';
+import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UnitSelectedComponent } from '../../units/unit-selected/unit-selected.component';
-import { ButtonComponent } from 'src/app/views/shared/components/buttons/button/button.component';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { ButtonTrashComponent } from 'src/app/views/shared/components/buttons/button-trash/button-trash.component';
 import { TwoDecimalsDirective } from 'src/app/core/directives/two-decimals.directive';
 
 @Component({
   selector: 'tr[app-purchase-item-row]',
   imports: [
-    InputGroupComponent,
     UnitSelectedComponent,
     ReactiveFormsModule,
-    ButtonComponent,
-    ButtonTrashComponent,
     TwoDecimalsDirective
   ],
   templateUrl: './purchase-item-row.component.html',
@@ -29,27 +23,22 @@ export class PurchaseItemRowComponent implements OnInit {
   @Input() formGroup!: FormGroup;
   @Input() index!: number;
 
-  faPlus = faPlus;
 
-  constructor(private controlContainer: ControlContainer) { }
+  private readonly destroyRef = inject(DestroyRef);
 
   ngOnInit() {
 
-    this.form.get('quantity')?.valueChanges.subscribe(() => {
+    this.form.get('quantity')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.calculateTotal();
     });
 
-    this.form.get('price')?.valueChanges.subscribe(() => {
+    this.form.get('price')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.calculateTotal();
     });
 
-    this.form.get('subtotal')?.valueChanges.subscribe(() => {
+    this.form.get('subtotal')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.calculatePrice();
     });
-
-  }
-
-  addItem() {
 
   }
 
