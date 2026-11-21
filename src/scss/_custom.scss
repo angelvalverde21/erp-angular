@@ -108,12 +108,12 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-input::placeholder {
+input:not(.payment-amount-number)::placeholder {
   font-size: 0.85rem !important;
   color: #bbb !important;
 }
 
-input {
+input:not(.payment-amount-number) {
   font-size: 0.85rem !important;
 }
 
@@ -207,4 +207,20 @@ a{
 
 .image-preview-bounded .fancybox__image {
   object-fit: contain;
+}
+
+// Native accordions share opening and closing motion across the ERP.
+@supports (interpolate-size: allow-keywords) and selector(details::details-content) {
+  details { interpolate-size: allow-keywords; }
+  details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition: block-size .24s ease, content-visibility .24s allow-discrete, overflow .24s step-start allow-discrete;
+  }
+  details[open]::details-content {
+    block-size: auto;
+    overflow: visible;
+    transition: block-size .24s ease, content-visibility .24s allow-discrete, overflow .24s step-end allow-discrete;
+  }
+  @media (prefers-reduced-motion: reduce) { details::details-content { transition: none; } }
 }

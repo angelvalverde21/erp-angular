@@ -1,0 +1,10 @@
+<form class="task-form" [formGroup]="form" (ngSubmit)="submit()">
+  <header class="task-form-heading"><h2><i class="fa-solid fa-list-check" aria-hidden="true"></i>{{ task ? 'Editar tarea' : 'Nueva tarea de preparación' }}</h2></header>
+  <div class="form-grid">
+    <div class="wide"><label for="task-title">¿Qué se debe preparar? *</label><input id="task-title" formControlName="title" maxlength="180" placeholder="Ej. Alistar prendas y accesorios de la colección">@if (form.controls.title.touched && form.controls.title.invalid) { <small class="invalid">Escribe el nombre de la tarea.</small> }</div>
+    <div><label for="task-assignee">Responsable *</label><select id="task-assignee" formControlName="assigned_to"><option [ngValue]="null">Selecciona un empleado</option>@for (employee of assignees; track employee.id) { <option [ngValue]="employee.id">{{ employee.name }}</option> }</select>@if (form.controls.assigned_to.touched && form.controls.assigned_to.invalid) { <small class="invalid">Asigna un responsable.</small> }</div>
+    <div><label for="task-due-date">Fecha límite</label><input id="task-due-date" type="date" formControlName="due_date"></div>
+    <div class="wide"><label for="task-description">Instrucciones</label><textarea id="task-description" formControlName="description" rows="3" maxlength="5000" placeholder="Prendas, tallas, cantidades, accesorios y criterios para dar la tarea por terminada"></textarea></div>
+  </div>
+  <div class="form-actions"><button type="button" class="button" [disabled]="saving" (click)="cancel.emit()">Cancelar</button><button class="button primary" type="submit" [disabled]="saving">{{ saving ? 'Guardando…' : task ? 'Guardar cambios' : 'Asignar tarea' }}</button></div>
+</form>

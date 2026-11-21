@@ -1,18 +1,22 @@
 ﻿<div ngbDropdown #menu="ngbDropdown" container="body" placement="bottom" autoClose="outside" class="stage-status-control" [class.with-completion]="completionAction">
-  <button type="button" ngbDropdownToggle class="stage-status-button" [class]="'stage-status-button ' + stage.status" [disabled]="saving || stage.revision == null" [attr.aria-label]="'Estado de ' + stage.name + ': ' + label" (click)="reviewing = false; error = ''">
-    <span class="status-dot" aria-hidden="true"></span>{{ saving ? 'Guardando…' : label }}
+  <button type="button" ngbDropdownToggle class="stage-status-button" [class]="'stage-status-button ' + stage.status" [disabled]="saving || stage.locked || stage.revision == null" [attr.aria-label]="'Estado de ' + stage.name + ': ' + label" (click)="reviewing = false; error = ''">
+    @if (stage.status === 'completed') { <i class="fa-solid fa-check status-completed-check" aria-hidden="true"></i> } @else { <span class="status-dot" aria-hidden="true"></span> }{{ saving ? 'Guardando…' : label }}
   </button>
   @if (completionAction && stage.status !== 'completed') {
     <button type="button" class="stage-complete-action" [disabled]="saving || !canComplete || stage.revision == null" [title]="canComplete ? 'Marcar esta etapa como completada' : 'Registra al menos una compra en esta etapa'" (click)="complete(menu)"><i class="fa-solid fa-check" aria-hidden="true"></i>Completar</button>
   }
   <div ngbDropdownMenu class="stage-status-menu">
     <p>Estado · {{ stage.name }}</p>
-    @if (stage.status === 'completed') {
-      <button type="button" ngbDropdownItem [disabled]="saving" (click)="select(canComplete ? 'in_progress' : 'pending', menu)">Reabrir etapa</button>
+    @if (stage.manual_status) {
+      @for (option of options; track option.value) {
+        <button type="button" ngbDropdownItem [disabled]="saving || stage.locked || option.value === stage.status" (click)="select(option.value, menu)">{{ option.label }}</button>
+      }
+    } @else if (stage.status === 'completed') {
+      <button type="button" ngbDropdownItem class="stage-menu-action stage-menu-reopen" [disabled]="saving" (click)="select(canComplete ? 'in_progress' : 'pending', menu)"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Reabrir etapa</button>
     } @else {
-      <button type="button" ngbDropdownItem [disabled]="saving || !canComplete" (click)="select('completed', menu)">Marcar como completada</button>
+      <button type="button" ngbDropdownItem class="stage-menu-action" [disabled]="saving || !canComplete" (click)="select('completed', menu)"><i class="fa-solid" [class.fa-circle-check]="!saving" [class.fa-spinner]="saving" [class.fa-spin]="saving" aria-hidden="true"></i>{{ saving ? 'Guardando…' : 'Marcar como completada' }}</button>
     }
-    <p [class.stage-status-warning]="!canComplete">{{ canComplete ? 'En proceso mientras tenga compras, hasta que completes la etapa.' : 'Registra al menos una compra en esta etapa para completarla.' }}</p>
+    <p [class.stage-status-warning]="!canComplete">{{ stage.manual_status ? 'Actualiza el estado de esta sección de forma independiente.' : (canComplete ? 'En proceso mientras tenga compras, hasta que completes la etapa.' : 'Registra al menos una compra en esta etapa para completarla.') }}</p>
     @if (reviewing) {
       <form class="sample-approval" (ngSubmit)="save('completed', menu)">
         <label>Cantidad de muestras<input type="number" name="quantity" [(ngModel)]="quantity" min="1" max="100000" step="1" required [disabled]="saving"></label>

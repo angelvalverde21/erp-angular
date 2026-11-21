@@ -5,6 +5,7 @@ import { LoadingComponent } from 'src/app/views/shared/components/loading/loadin
 import Swal from 'sweetalert2';
 import { ManufacturePaymentService } from './manufacture.payment.service';
 import { ActivatedRoute } from '@angular/router';
+import { ManufactureService } from '../../../manufacture.service';
 
 @Component({
   selector: 'app-manufacture-order-payment-index',
@@ -22,6 +23,7 @@ export class ManufactureOrderPaymentIndexComponent implements OnInit, OnDestroy 
   constructor(
     private _manufacturePayment: ManufacturePaymentService,
     private route: ActivatedRoute,
+    private manufacture: ManufactureService,
   ) {
 
     this.route.parent?.paramMap.subscribe(params => {
@@ -34,6 +36,11 @@ export class ManufactureOrderPaymentIndexComponent implements OnInit, OnDestroy 
   error = '';
 
   payments: any[] = [];
+
+  receivePayments(payments: any[]): void {
+    this.payments = payments;
+    this.manufacture.setSummary({ sum_payments: payments.reduce((sum, payment) => sum + (Number(payment.amount) || 0), 0), count_payments: payments.length });
+  }
 
   ngOnInit(): void {
     this.loadPayments();

@@ -1,0 +1,52 @@
+<main class="orders-page">
+  <a class="back-link" routerLink="../" queryParamsHandling="preserve"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver a pedidos importados</a>
+  @if (loading) { <section class="panel empty-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><p>Cargando el pedido…</p></section> }
+  @else if (error) { <section class="panel empty-state" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><p>{{ error }}</p><a class="button" routerLink="../" queryParamsHandling="preserve">Volver al listado</a></section> }
+  @else { @if (data; as detail) {
+    <header class="page-heading"><div><span class="eyebrow">PEDIDO IMPORTADO DE SHOPIFY</span><h1>Pedido {{ detail.order.name }}</h1><p>{{ view.date(detail.order.created_at, true) }} · {{ detail.order.customer }}</p></div><a class="button" [href]="detail.shopify_url" target="_blank" rel="noopener noreferrer">Abrir en Shopify<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></header>
+    <app-order-status-stepper [status]="progress" [dates]="progressDates" [cancelled]="!!detail.order.cancelled_at" [onHold]="detail.order.fulfillment_status === 'ON_HOLD'" />
+    @if (detail.order.timeline_status === 'unavailable_comments') { <div class="notice" role="status"><i class="fa-solid fa-comment-slash" aria-hidden="true"></i><div><strong>Los comentarios de este pedido no se pudieron recuperar.</strong><p>Shopify indica que existen, pero no los devuelve mediante la API. Aquí puedes revisar el pedido y todos los eventos que sí están disponibles.</p></div></div> }
+    @else if (detail.order.timeline_status !== 'available') { <div class="notice"><i class="fa-solid fa-clock" aria-hidden="true"></i><div><strong>La revisión del historial todavía no está completa.</strong><p>La información puede actualizarse cuando termine la importación.</p></div></div> }
+    <div class="detail-columns"><div class="detail-main">
+      <section class="panel"><header class="panel-heading"><div><h2>Artículos del pedido <span class="badge">{{ detail.items.length }}</span></h2><p>Conceptos y cantidades conservados en la importación.</p></div><div class="badge-group"><span class="badge" [class.success]="detail.order.financial_status === 'PAID'">{{ view.status(detail.order.financial_status) }}</span><span class="badge">{{ view.status(detail.order.fulfillment_status) }}</span>@if (detail.order.cancelled_at) { <span class="badge danger">Cancelado</span> }</div></header>
+        <div class="table-scroll">
+          <table class="orders-table">
+            <thead><tr><th>Producto / variante</th><th class="numeric">Cantidad</th><th class="numeric">Precio unitario</th><th class="numeric">Importe</th></tr></thead>
+            <tbody>
+              @for (item of detail.items; track item.id) {
+                <tr>
+                  <td>
+                    <div class="product-cell">
+                      <app-imported-order-item-image [image]="item.display_image || null" [title]="item.name || item.title || 'Artículo'" />
+                      <div class="product-description">
+                        <strong>{{ item.name || item.title || 'Artículo sin título' }}</strong>
+                        @if (item.variantTitle) { <small>{{ item.variantTitle }}</small> }
+                        <small>SKU: {{ item.sku || 'Sin SKU' }}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="numeric">
+                    {{ item.quantity }}
+                    @if (item.currentQuantity != null && item.currentQuantity !== item.quantity) { <small>Actual: {{ item.currentQuantity }}</small> }
+                  </td>
+                  <td class="numeric">{{ view.money(item.discountedUnitPriceSet?.shopMoney || item.originalUnitPriceSet?.shopMoney) }}</td>
+                  <td class="numeric amount">{{ view.money(item.discountedTotalSet?.shopMoney || item.originalTotalSet?.shopMoney) }}</td>
+                </tr>
+              } @empty { <tr><td colspan="4"><p>No hay artículos recuperados para este pedido.</p></td></tr> }
+            </tbody>
+          </table>
+        </div>
+      </section>
+      @if (detail.order.payload.note) { <section class="panel"><header class="panel-heading"><h2>Nota del pedido</h2></header><div class="note">{{ detail.order.payload.note }}</div></section> }
+      @if (detail.related.transactions.length) { <section class="panel"><header class="panel-heading"><h2>Pagos y transacciones</h2><span class="badge">{{ detail.related.transactions.length }}</span></header><ul class="plain-list">@for (payment of detail.related.transactions; track payment.id) { <li><div class="record-topline"><div><strong>{{ payment.formattedGateway || payment.gateway || 'Pago' }}</strong><small>{{ view.status(payment.kind) }} · {{ view.date(payment.createdAt, true) }}</small></div><div class="numeric"><strong>{{ view.money(payment.amountSet?.shopMoney) }}</strong><small>{{ view.status(payment.status) }}</small></div></div></li> }</ul><details class="raw-data"><summary>Datos originales de las transacciones</summary><pre>{{ detail.related.transactions | json }}</pre></details></section> }
+      @if (detail.related.fulfillments.length) { <section class="panel"><header class="panel-heading"><h2>Envíos del pedido</h2><span class="badge">{{ detail.related.fulfillments.length }}</span></header><ul class="plain-list">@for (shipment of detail.related.fulfillments; track shipment.id) { <li><div class="record-topline"><div><strong>{{ shipment.name || 'Envío' }}</strong><small>{{ view.date(shipment.createdAt, true) }}</small></div><span class="badge">{{ view.status(shipment.displayStatus || shipment.status) }}</span></div>@for (tracking of shipment.trackingInfo || []; track $index) { <p>{{ tracking.company || 'Transportista sin nombre' }} · {{ tracking.number || 'Sin número de seguimiento' }}</p> }</li> }</ul><details class="raw-data"><summary>Datos originales de los envíos</summary><pre>{{ detail.related.fulfillments | json }}</pre></details></section> }
+      @if (detail.related.refunds.length) { <section class="panel"><header class="panel-heading"><h2>Reembolsos</h2><span class="badge">{{ detail.related.refunds.length }}</span></header><ul class="plain-list">@for (refund of detail.related.refunds; track refund.id) { <li><div class="record-topline"><strong>{{ view.money(refund.totalRefundedSet?.shopMoney) }}</strong><small>{{ view.date(refund.createdAt, true) }}</small></div>@if (refund.note) { <p>{{ refund.note }}</p> }</li> }</ul><details class="raw-data"><summary>Datos originales de los reembolsos</summary><pre>{{ detail.related.refunds | json }}</pre></details></section> }
+      <app-imported-order-timeline [orderId]="detail.order.id" [counts]="detail.event_counts" />
+      <section class="panel"><header class="panel-heading"><h2>Información adicional importada</h2></header>@for (section of relatedSections; track section.key) { @if (detail.related[section.key].length) { <details class="raw-data"><summary>{{ section.label }} · {{ detail.related[section.key].length }} registros</summary><pre>{{ detail.related[section.key] | json }}</pre></details> } }<details class="raw-data"><summary>Datos originales del pedido</summary><pre>{{ detail.order.payload | json }}</pre></details><details class="raw-data"><summary>Datos originales de los artículos</summary><pre>{{ detail.items | json }}</pre></details></section>
+    </div><aside class="detail-aside">
+      <section class="panel"><header class="panel-heading"><h2>Resumen del pedido</h2></header><div class="totals"><div class="information-row"><span>Subtotal actual</span><strong>{{ view.money(detail.order.payload.currentSubtotalPriceSet?.shopMoney) }}</strong></div><div class="information-row"><span>Descuentos</span><strong>{{ view.money(detail.order.payload.totalDiscountsSet?.shopMoney) }}</strong></div><div class="information-row"><span>Envío</span><strong>{{ view.money(detail.order.payload.totalShippingPriceSet?.shopMoney) }}</strong></div><div class="information-row"><span>Impuestos</span><strong>{{ view.money(detail.order.payload.currentTotalTaxSet?.shopMoney) }}</strong></div><div class="information-row grand-total"><span>Total actual</span><strong>{{ view.money(detail.order.total) }}</strong></div>@if (detail.order.payload.totalRefundedSet?.shopMoney; as refund) { <div class="information-row"><span>Reembolsado</span><strong>{{ view.money(refund) }}</strong></div> }@if (detail.order.payload.totalOutstandingSet?.shopMoney; as outstanding) { <div class="information-row"><span>Saldo pendiente</span><strong>{{ view.money(outstanding) }}</strong></div> }</div></section>
+      <section class="panel"><div class="customer-block"><h3><i class="fa-regular fa-user" aria-hidden="true"></i> Cliente</h3><strong>{{ detail.order.customer }}</strong><p>{{ detail.order.email || 'Sin correo registrado' }}</p><p>{{ detail.order.payload.phone || detail.order.payload.shippingAddress?.phone || 'Sin teléfono registrado' }}</p></div><div class="customer-block"><h3>Dirección de envío</h3>@if (detail.order.payload.shippingAddress; as shipping) { <strong>{{ shipping.name }}</strong><p class="address-text">{{ address(shipping) }}</p> } @else { <p>Sin dirección de envío importada.</p> }</div><div class="customer-block"><h3>Dirección de facturación</h3>@if (detail.order.payload.billingAddress; as billing) { <strong>{{ billing.name }}</strong><p class="address-text">{{ address(billing) }}</p> } @else { <p>Sin dirección de facturación importada.</p> }</div></section>
+      <section class="panel"><div class="customer-block"><h3>Historial recuperado</h3><span class="badge" [class.warning]="detail.order.timeline_status === 'unavailable_comments'">{{ view.timeline(detail.order) }}</span><div class="information-row"><span>Eventos disponibles</span><strong>{{ detail.event_counts.all }}</strong></div><div class="information-row"><span>Comentarios</span><strong>{{ detail.event_counts.comments }}</strong></div><p>Importación: {{ view.date(detail.run.created_at, true) }}</p></div>@if (detail.order.payload.tags?.length) { <div class="customer-block"><h3>Etiquetas</h3><div class="badge-group">@for (tag of detail.order.payload.tags; track tag) { <span class="badge">{{ tag }}</span> }</div></div> }</section>
+    </aside></div>
+  } }
+</main>

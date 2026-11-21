@@ -82,7 +82,7 @@ export class ManufactureOrderEditPageComponent implements OnInit {
 
     this.loading = true;
 
-    this._manufacture.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
+    this._manufacture.overview(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         this.manufacture = resp.data;

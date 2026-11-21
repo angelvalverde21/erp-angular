@@ -1,13 +1,5 @@
-<app-head-page title="Crear Proveedor">
-    <app-button-back></app-button-back>
-</app-head-page>
-
-@if(loading){
-<app-loading></app-loading>
-}@else{
-<div class="card">
-    <div class="card-body">
-        <app-supplier-create [roles]="roles" (emitSupplierCreate)="receiveSupplierCreate($event)"></app-supplier-create>
-    </div>
-</div>
-}
+<main class="contact-page">
+  <a routerLink="../" class="contact-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver a proveedores</a>
+  <header class="contact-page-header"><div class="contact-page-title"><span class="contact-page-icon"><i class="fa-solid fa-building" aria-hidden="true"></i></span><div><span class="contact-eyebrow">Directorio · Nuevo registro</span><h1>Nuevo proveedor</h1><p>Registra sus datos para mantener tu directorio organizado.</p></div></div></header>
+  <app-supplier-create (emitSupplierCreate)="receiveSupplierCreate($event)" />
+</main>

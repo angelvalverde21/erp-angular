@@ -15,32 +15,33 @@ export class DateShopifyPipe implements PipeTransform {
 
   private readonly timeZone = 'America/Lima';
 
-  transform(value: string | Date | null | undefined): string {
+  transform(value: string | Date | null | undefined, format: 'long' | 'short' = 'long'): string {
     if (!value) return '';
 
     const fecha = this.parseFechaServidor(value);
 
     if (!fecha) return '';
 
-    const ahora = new Date();
-    const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
-    const fechaSoloDia = new Date(fecha.year, fecha.month - 1, fecha.day);
-    const diffMs = hoy.getTime() - fechaSoloDia.getTime();
+    const ahora = this.parseFechaConZona(new Date())!;
+    const hoy = Date.UTC(ahora.year, ahora.month - 1, ahora.day);
+    const fechaSoloDia = Date.UTC(fecha.year, fecha.month - 1, fecha.day);
+    const diffMs = hoy - fechaSoloDia;
     const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    const fechaDate = new Date(fecha.year, fecha.month - 1, fecha.day);
+    const fechaDate = new Date(fechaSoloDia);
     const horaMin = `${this.dosDigitos(fecha.hour)}:${this.dosDigitos(fecha.minute)}`;
-    const nombreDia = fechaDate.toLocaleDateString('es-PE', { weekday: 'long' });
-    const nombreMes = fechaDate.toLocaleDateString('es-PE', { month: 'short' });
+    const nombreDia = fechaDate.toLocaleDateString('es-PE', { weekday: 'long', timeZone: 'UTC' });
+    const nombreMes = fechaDate.toLocaleDateString('es-PE', { month: 'short', timeZone: 'UTC' });
+    const separator = format === 'short' ? ' ' : ' a las ';
 
     if (diffDias === 0) {
-      return `Hoy a las ${horaMin}`;
+      return `Hoy${separator}${horaMin}`;
     } else if (diffDias === 1) {
-      return `Ayer a las ${horaMin}`;
+      return `Ayer${separator}${horaMin}`;
     } else if (diffDias > 1 && diffDias <= 7) {
-      return `${this.capitalizar(nombreDia)} a las ${horaMin}`;
+      return `${this.capitalizar(nombreDia)}${separator}${horaMin}`;
     } else {
-      return `${fecha.day} ${nombreMes} a las ${horaMin}`;
+      return `${fecha.day} ${nombreMes}${separator}${horaMin}`;
     }
   }
 
@@ -82,7 +83,7 @@ export class DateShopifyPipe implements PipeTransform {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hourCycle: 'h23'
     }).formatToParts(value);
 
     const getPart = (type: Intl.DateTimeFormatPartTypes) =>

@@ -1,0 +1,18 @@
+<section class="panel" aria-label="Historial de eventos del pedido">
+  <header class="panel-heading"><div><h2><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> Historial del pedido</h2><p>Eventos recuperados, del más antiguo al más reciente.</p></div><span class="badge">{{ counts.all }} eventos</span></header>
+  <div class="timeline-filters" aria-label="Filtrar eventos">@for (filter of filters; track filter.key) { <button type="button" class="button small" [class.active]="type === filter.key" [attr.aria-pressed]="type === filter.key" (click)="select(filter.key)">{{ filter.label }}<span>{{ counts[filter.key] }}</span></button> }</div>
+  <ol class="timeline-list">
+    @for (event of items; track event.id) {
+      <li class="timeline-event" [class.comment]="event.kind === 'CommentEvent'">
+        <article class="event-card"><div class="event-body"><div class="event-meta"><span class="badge" [class.success]="event.kind === 'CommentEvent'"><i [class]="event.kind === 'CommentEvent' ? 'fa-regular fa-comment' : 'fa-solid fa-circle-nodes'" aria-hidden="true"></i>{{ event.kind === 'CommentEvent' ? 'Comentario' : 'Evento del sistema' }}</span>@if (event.edited) { <span class="badge">Editado</span> }@if (event.critical) { <span class="badge danger">Alerta</span> }<small>{{ view.date(event.created_at, true) }}</small></div>
+          <p>{{ event.message || 'Evento sin mensaje de texto.' }}</p>
+          @if (event.attachments.length) { <div class="attachment-grid">@for (file of event.attachments; track file.id) { <app-imported-order-attachment [orderId]="orderId" [file]="file" /> }</div> }
+        </div><details class="raw-data"><summary>Datos originales del evento</summary><pre>{{ event.payload | json }}</pre></details></article>
+      </li>
+    }
+  </ol>
+  @if (error) { <div class="empty-state" role="alert"><p>{{ error }}</p><button class="button small" (click)="load()">Reintentar</button></div> }
+  @else if (loading) { <div class="empty-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><p>Cargando eventos…</p></div> }
+  @else if (!items.length) { <div class="empty-state"><i class="fa-regular fa-comments" aria-hidden="true"></i><h3>No hay {{ type === 'comments' ? 'comentarios' : 'eventos' }} recuperados para esta vista</h3><p>Esta vista muestra únicamente la información que devolvió Shopify.</p></div> }
+  @if (!loading && !error && page < lastPage) { <footer class="pagination-bar"><span>{{ items.length }} eventos mostrados</span><button class="button small" (click)="load()">Cargar más eventos<i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button></footer> }
+</section>

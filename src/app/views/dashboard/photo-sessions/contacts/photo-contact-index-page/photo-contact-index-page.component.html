@@ -1,0 +1,12 @@
+<main class="photo-page" [attr.data-section]="kind">
+  <app-photo-section-header [section]="kind"><div><span class="eyebrow">SESIONES FOTOGRÁFICAS · DIRECTORIO</span><h1>{{ labels.title }}</h1><p>{{ labels.description }}</p></div><a class="button primary" routerLink="create"><i class="fa-solid fa-plus" aria-hidden="true"></i>Registrar {{ labels.singular }}</a></app-photo-section-header>
+  <section class="panel"><header class="panel-header"><div><h2><i class="fa-solid fa-address-book" aria-hidden="true"></i>Directorio de contactos</h2><p>Consulta, filtra y gestiona tus registros.</p></div>@if (data && !loading) { <span class="result-count">{{ data.total }} registros</span> }</header>
+    <form class="filters" (ngSubmit)="filter()"><label class="search"><span class="sr-only">Buscar ficha</span><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input name="search" [(ngModel)]="search" placeholder="Buscar nombre, teléfono, correo o empresa" maxlength="150"></label><label><span class="sr-only">Estado</span><select name="active" [(ngModel)]="active" (ngModelChange)="filter()"><option value="all">Todos los estados</option><option value="1">Activos</option><option value="0">Inactivos</option></select></label><button class="button" type="submit">Buscar</button></form>
+    @if (loading) { <div class="feedback" role="status">Cargando {{ labels.title.toLowerCase() }}…</div> }
+    @else if (error) { <div class="feedback" role="alert"><p>{{ error }}</p><button class="button" (click)="retry()">Reintentar</button></div> }
+    @else if (data?.data?.length) {
+      <app-photo-contact-index [contacts]="data!.data" [kind]="kind" />
+      <footer class="actions"><span>{{ data!.total }} registros · Página {{ data!.current_page }} de {{ data!.last_page }}</span><button class="button" [disabled]="data!.current_page <= 1" (click)="page(data!.current_page - 1)">Anterior</button><button class="button" [disabled]="data!.current_page >= data!.last_page" (click)="page(data!.current_page + 1)">Siguiente</button></footer>
+    } @else { <div class="feedback"><i class="fa-regular fa-address-book empty-icon" aria-hidden="true"></i><h2>{{ search || active !== 'all' ? 'No hay coincidencias con estos filtros' : 'Todavía no hay fichas registradas' }}</h2><p>Guarda los contactos para seleccionarlos al planificar una sesión.</p><a class="button primary" routerLink="create">Registrar {{ labels.singular }}</a></div> }
+  </section>
+</main>

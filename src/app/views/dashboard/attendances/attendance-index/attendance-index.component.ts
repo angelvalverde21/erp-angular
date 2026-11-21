@@ -2,10 +2,12 @@ import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/co
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AttendanceEditComponent } from '../attendance-edit/attendance-edit.component';
+import { AttendanceJustificationComponent } from '../attendance-justification/attendance-justification.component';
+import { dashboardRoles, MANAGEMENT_ROLES } from '../../area-dashboards/dashboard.model';
 
 @Component({
   selector: 'app-attendance-index',
-  imports: [DatePipe, CurrencyPipe, AttendanceEditComponent],
+  imports: [DatePipe, CurrencyPipe, AttendanceEditComponent, AttendanceJustificationComponent],
   templateUrl: './attendance-index.component.html',
   styleUrl: './attendance-index.component.scss',
 })
@@ -17,6 +19,7 @@ export class AttendanceIndexComponent {
   private rows: any[] = [];
   editing: any;
   private modal?: NgbModalRef;
+  readonly canJustify = dashboardRoles().some(role => MANAGEMENT_ROLES.includes(role));
 
   @Input() set attendances(value: any[] | null) {
     this.rows = [...(value ?? [])].sort((a, b) => b.date.localeCompare(a.date));
@@ -61,6 +64,7 @@ export class AttendanceIndexComponent {
   state(row: any): string {
     if (!row.employee_id) return 'Sin asignar';
     if (row.missing) return 'Falta';
+    if (row.absence_justified) return 'Falta justificada';
     if (row.missing_text === 'REMOTO') return 'Remoto';
     if (row.missing_text === 'DESCANZO') return 'Descanso';
     if (row.incomplete) return 'Marcación incompleta';
@@ -70,6 +74,17 @@ export class AttendanceIndexComponent {
   edit(row: any, template: TemplateRef<any>): void {
     this.editing = row;
     this.modal = this.modalService.open(template, { centered: true, backdrop: 'static', size: 'lg' });
+  }
+
+  justify(row: any, template: TemplateRef<any>): void {
+    this.editing = row;
+    const modal = this.modalService.open(template, { centered: true, backdrop: 'static', size: 'lg' });
+    modal.result.then(() => this.attendanceChanged.emit(this.editing), () => this.attendanceChanged.emit(this.editing));
+  }
+
+  justificationSaved(row: any): void {
+    this.rows = this.rows.map(item => item.employee_id === row.employee_id && item.date === row.date ? row : item);
+    this.editing = row;
   }
 
   updated(row: any): void {

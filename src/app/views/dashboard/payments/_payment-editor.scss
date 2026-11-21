@@ -1,0 +1,13 @@
+:host { display: block; }
+.payment-editor { margin: 0; background: #f7f8fc; }
+.payment-editor-body { padding: 1.4rem; }
+.payment-editor-error { display: flex; align-items: flex-start; gap: .65rem; padding: .85rem 1rem; margin-bottom: 1rem; background: #fff1f3; border: 1px solid #efd4d9; color: #a44250; border-radius: 9px; font-size: .8rem; line-height: 1.6; }
+.payment-editor-footer { position: sticky; bottom: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding: 1rem 1.4rem; background: #fff; border-top: 1px solid #dfe5ee; }
+.payment-editor-footer > small { color: #8492a6; font-size: .73rem; }
+.payment-editor-actions { display: flex; gap: .65rem; margin-left: auto; }
+.payment-editor-actions button { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 44px; border: 1px solid #d8e0ed; border-radius: 9px; padding: .7rem 1rem; background: #fff; color: #52657d; font-size: .8rem; font-weight: 600; cursor: pointer; }
+.payment-editor-actions .payment-submit { background: #252b36; border-color: #252b36; color: #fff; }
+.payment-editor-actions .payment-submit:hover:not(:disabled) { background: #191e27; }
+.payment-editor-actions button:disabled { opacity: .5; cursor: default; }
+.payment-editor-actions button:focus-visible { outline: 2px solid #b9a8df; outline-offset: 3px; }
+@media(max-width: 575.98px) { .payment-editor-body { padding: 1rem; } .payment-editor-footer { padding: 1rem; } .payment-editor-footer > small { display: none; } .payment-editor-actions { width: 100%; } .payment-editor-actions button { flex: 1; } }

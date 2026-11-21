@@ -1,0 +1,23 @@
+:host { display: block; color: #263a54; }
+.workspace { max-width: 1440px; margin: 0 auto; padding: 1.5rem; }
+.page-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+h1 { font-size: 1.8rem; letter-spacing: -.035em; font-weight: 750; margin: .45rem 0; }
+h2 { font-size: .95rem; font-weight: 700; margin: 0; }
+p { font-size: .8rem; color: #7c8aa0; line-height: 1.6; margin: .35rem 0 0; }
+.eyebrow { display: flex; align-items: center; gap: .75rem; font-size: .63rem; letter-spacing: .12em; color: #8290a5; font-weight: 650; }
+.version-tag { font-size: .65rem; letter-spacing: 0; font-weight: 600; padding: .3rem .5rem; color: #6855b4; background: #efebfb; border-radius: 5px; }
+.source-label { display: flex; align-items: center; gap: .45rem; color: #8491a5; font-size: .7rem; }
+.surface { border: 1px solid #dfe5ef; border-radius: 12px; background: white; overflow: hidden; }
+.surface-heading { display: flex; justify-content: space-between; align-items: center; gap: .75rem; padding: 1.1rem 1.25rem; border-bottom: 1px solid #e8edf5; }
+.surface-body { padding: 1.1rem 1.25rem; }
+.btn-action { display: inline-flex; justify-content: center; align-items: center; gap: .5rem; padding: .6rem .85rem; border: 1px solid #dce3ef; border-radius: 7px; background: white; color: #4c617f; font-size: .75rem; font-weight: 600; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.btn-action:hover { background: #f2f5fa; border-color: #aebed6; }
+.btn-action.dark { background: #293c57; border-color: #293c57; color: white; }
+.btn-action:disabled { opacity: .4; cursor: default; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid #6d7fc4; outline-offset: 3px; }
+.feedback { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: .75rem; text-align: center; min-height: 240px; padding: 2rem; color: #7a8aa2; font-size: .8rem; }
+.feedback > i { font-size: 1.8rem; color: #91a2bc; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+.warning-text { color: #9a6b22; }
+.back-link { display: inline-flex; align-items: center; gap: .55rem; margin-bottom: 1.35rem; text-decoration: none; color: #7185a1; font-size: .76rem; }
+@media(max-width: 767px) { .workspace { padding: 1rem; } h1 { font-size: 1.5rem; } }

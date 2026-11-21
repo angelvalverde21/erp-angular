@@ -1,0 +1,12 @@
+.table-scroll { overflow-x: auto; }
+table { width: 100%; min-width: 850px; border-collapse: collapse; text-align: left; }
+th { padding: .85rem 1.25rem; background: #f5f7fa; color: #63748d; font-size: .67rem; font-weight: 650; border-block: 1px solid #e5ebf2; white-space: nowrap; }
+td { padding: 1.1rem 1.25rem; border-bottom: 1px solid #e8edf4; font-size: .78rem; vertical-align: middle; }
+tbody tr:nth-child(even) { background: #fafbfd; }
+tbody tr:hover { background: var(--photo-tint, #f4f0fc); }
+tbody tr:last-child td { border-bottom: 0; }
+small { display: block; margin-top: .35rem; font-size: .7rem; color: #72839b; line-height: 1.5; }
+.muted { color: #7c8ba0; font-size: .72rem; }
+.status, .contact-status { display: inline-flex; align-items: center; gap: .4rem; background: #f0f2f6; color: #66768b; font-size: .67rem; font-weight: 600; border-radius: 20px; padding: .35rem .65rem; white-space: nowrap; }
+.status::before, .contact-status::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.status.active, .contact-status.active, .status.completed { background: #e8f5ee; color: #277a54; }

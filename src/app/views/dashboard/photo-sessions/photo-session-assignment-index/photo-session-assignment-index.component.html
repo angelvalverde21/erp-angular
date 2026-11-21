@@ -1,0 +1,43 @@
+<section class="assignment-section" [attr.data-kind]="kind">
+  <header class="assignment-heading"><h2><i [class]="'fa-solid ' + icon" aria-hidden="true"></i>{{ title }}<span class="count">{{ assignedIds.length }}</span></h2><div><button type="button" class="button" [disabled]="saving" (click)="choosing = !choosing" [attr.aria-expanded]="choosing"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar</button><button type="button" class="button create-button" [disabled]="saving" (click)="createRelated.emit(kind)"><i [class]="kind === 'location' ? 'fa-solid fa-map-location-dot' : 'fa-solid fa-user-plus'" aria-hidden="true"></i>Crear {{ singular }}</button></div></header>
+  @if (choosing) {
+    <div class="assignment-picker"><label [for]="'add-' + kind">Selecciona del directorio</label><div><ng-select [labelForId]="'add-' + kind" [items]="availableOptions" bindValue="id" bindLabel="name" [multiple]="true" [closeOnSelect]="false" [(ngModel)]="selectedIds" placeholder="Busca y selecciona" notFoundText="No hay más fichas disponibles" appendTo="body" /><button type="button" class="button primary" [disabled]="saving || !selectedIds.length" (click)="attach()">Agregar a la sesión</button><button type="button" class="button" (click)="choosing = false">Cancelar</button></div></div>
+  }
+  @if (kind !== 'location' && contacts.length) {
+    <div class="assignment-cards">@for (contact of contacts; track contact.id) {
+      <article class="person-card">
+        <header class="record-header">
+          @if (contact.images?.[0]; as image) { <app-image-preview [image]="image" [title]="contact.name" [height]="56" [width]="44" previewVariant="large" /> }
+          @else { <span class="record-avatar"><i [class]="'fa-solid ' + icon" aria-hidden="true"></i></span> }
+          <div class="record-identity"><h3><a class="record-name" [routerLink]="['/', base.store, 'dashboard', 'photo-sessions', path, contact.id]">{{ contact.name }}</a></h3>@if (contact.company) { <p>{{ contact.company }}</p> }@if (contact.active === false) { <small class="inactive">Ficha inactiva</small> }</div>
+          <button class="remove-record" type="button" [disabled]="saving" [attr.aria-label]="'Quitar de la sesión a ' + contact.name" title="Quitar de esta sesión" (click)="remove(contact.id)"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        </header>
+        <div class="record-copy contact-details">
+          @if (contact.phone) { <div class="record-field"><span class="field-label">Teléfono</span><span class="field-value"><i class="fa-solid fa-phone" aria-hidden="true"></i>{{ contact.phone }}</span></div> }
+          @if (contact.email) { <div class="record-field"><span class="field-label">Correo</span><span class="field-value">{{ contact.email }}</span></div> }
+          <div class="record-actions"><a class="record-link" [routerLink]="['/', base.store, 'dashboard', 'photo-sessions', path, contact.id]">Ver ficha<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></div>
+        </div>
+      </article>
+    }</div>
+  }
+  @if (kind === 'location' && locations.length) {
+    <div class="assignment-cards">@for (location of locations; track location.id) {
+      <article class="person-card location-card">
+        <header class="record-header">
+          <span class="record-avatar"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
+          <div class="record-identity"><h3><a class="record-name" [routerLink]="['/', base.store, 'dashboard', 'photo-sessions', 'locations', location.id]">{{ location.name }}</a></h3></div>
+          <button class="remove-record" type="button" [disabled]="saving" [attr.aria-label]="'Quitar de la sesión ' + location.name" title="Quitar de esta sesión" (click)="remove(location.id)"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        </header>
+        <div class="record-copy location-details">
+          @if (location.display_address || location.address?.primary || location.district_name) {
+            <div class="record-field"><span class="field-label">Dirección</span><span class="field-value">{{ location.display_address || location.address?.primary }}</span><small>{{ location.district_name || location.address?.district?.name }}@if (location.city_name || location.address?.city) { · {{ location.city_name || location.address?.city }} }</small></div>
+          }
+          @if (location.contact_name || location.phone || location.email) {
+            <div class="record-field"><span class="field-label">Contacto</span>@if (location.contact_name) { <span class="field-value">{{ location.contact_name }}</span> }@if (location.phone) { <span class="field-value"><i class="fa-solid fa-phone" aria-hidden="true"></i>{{ location.phone }}</span> }@if (location.email) { <span class="field-value">{{ location.email }}</span> }</div>
+          }
+          <div class="record-actions"><a class="record-link" [routerLink]="['/', base.store, 'dashboard', 'photo-sessions', 'locations', location.id]">Ver ficha<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>@if (mapUrl(location); as url) { <a class="map-link" [href]="url" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>Ver en Google Maps<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a> }</div>
+        </div>
+      </article>
+    }</div>
+  }
+</section>

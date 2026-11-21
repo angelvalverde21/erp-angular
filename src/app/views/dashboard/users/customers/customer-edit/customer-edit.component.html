@@ -1,6 +1,6 @@
-﻿<app-customer-form [form]="form" [roles]="roles"></app-customer-form>
-<!-- {{ form.value | json }} -->
-
-<app-user-controls-update type="customer" [formValue]="form.value" [user_id]="customer.id"></app-user-controls-update>
-
-
+<form class="contact-editor" [formGroup]="form" (ngSubmit)="submit()">
+  @if (error) { <div class="contact-alert" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ error }}</div> }
+  @if (success) { <div class="contact-success" role="status"><i class="fa-solid fa-check" aria-hidden="true"></i> {{ success }}</div> }
+  <fieldset [disabled]="loadingIcon"><app-customer-form [form]="form" [roles]="roles" /></fieldset>
+  <footer class="contact-editor-footer"><span><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Los campos con * son obligatorios.</span><button type="submit" class="contact-button dark" [disabled]="disabledButton"><i class="fa-solid" [class.fa-spinner]="loadingIcon" [class.fa-spin]="loadingIcon" [class.fa-check]="!loadingIcon" aria-hidden="true"></i>{{ loadingIcon ? 'Guardando…' : 'Guardar cambios' }}</button></footer>
+</form>

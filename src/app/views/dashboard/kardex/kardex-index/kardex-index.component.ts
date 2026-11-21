@@ -7,6 +7,7 @@ import { KardexService } from '../kardex.service';
 import { ImageShopifyComponent } from '../../../shared/components/image-shopify/image-shopify.component';
 import { RouterModule } from '@angular/router';
 import { BaseService } from 'src/app/views/base.service';
+import { flattenKardexes } from '../kardex-records';
 
 @Component({
   selector: 'app-kardex-index',
@@ -32,6 +33,7 @@ export class KardexIndexComponent implements OnInit {
 
   @Input() kardexes: any[] = [];
   @Input() text_balance: string = 'Balance';
+  @Input() embedded = false;
 
   constructor(
     private _kardex: KardexService,
@@ -59,13 +61,7 @@ export class KardexIndexComponent implements OnInit {
   }
 
   get kardexGroups(): any[] {
-    if (this.kardexes.length === 0) return [];
-
-    if (Array.isArray(this.kardexes[0]?.items)) {
-      return this.kardexes;
-    }
-
-    return this.kardexes.reduce((groups: any[], kardex: any) => {
+    return this.kardexesFlat.reduce((groups: any[], kardex: any) => {
       const date = this.fechaGrupo(kardex?.created_at);
       const group = groups.find((item) => item.date === date);
 
@@ -80,7 +76,7 @@ export class KardexIndexComponent implements OnInit {
   }
 
   get kardexesFlat(): any[] {
-    return this.kardexGroups.flatMap((group) => group.items);
+    return flattenKardexes(this.kardexes);
   }
 
   private fechaGrupo(value: string | null | undefined): string {

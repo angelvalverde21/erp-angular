@@ -1,3 +1,4 @@
+import { RecordAttachmentsComponent } from '@shared/components/attachments/record-attachments.component';
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation, } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
@@ -17,10 +18,13 @@ import { DateShopifyPipe } from '@shared/pipes/date-shopify.pipe';
 import { ButtonEditComponent } from '@shared/components/buttons/button-edit/button-edit.component';
 import { PaymentIndexComponent } from '../../../payments/payment-index/payment-index.component';
 import { PaymentService } from '../../../payments/payment.service';
+import { DeliveryTrackingComponent } from '@shared/components/delivery-tracking/delivery-tracking.component';
+import { DeliveryTracking } from '@shared/components/delivery-tracking/delivery-tracking.model';
 
 @Component({
   selector: 'app-purchase-index-head',
   imports: [
+    RecordAttachmentsComponent,
     FontAwesomeModule,
     LoadingComponent,
     RouterModule,
@@ -32,7 +36,8 @@ import { PaymentService } from '../../../payments/payment.service';
     DateShopifyPipe,
     ButtonEditComponent,
     NgbDropdownModule,
-    PaymentIndexComponent
+    PaymentIndexComponent,
+    DeliveryTrackingComponent
   ],
   templateUrl: './purchase-index-head.component.html',
   styleUrl: './purchase-index-head.component.scss'
@@ -68,6 +73,31 @@ export class PurchaseIndexHeadComponent implements OnInit{
   }
 
   payments: any[] = [];
+  editorReady = false;
+  attachmentsBusy = false;
+  private pausedDeliveryMode: DeliveryTrackingComponent['mode'] = null;
+  deliveryExpanded(editor: DeliveryTrackingComponent): boolean { return !!(editor.historyOpen || editor.mode); }
+  toggleDelivery(editor: DeliveryTrackingComponent, panel: HTMLElement): void {
+    if (!this.editorReady || editor.saving) return;
+    if (this.deliveryExpanded(editor)) {
+      this.pausedDeliveryMode = editor.mode;
+      editor.mode = null;
+      if (editor.historyOpen) editor.toggleHistory();
+    } else {
+      if (this.pausedDeliveryMode) { editor.mode = this.pausedDeliveryMode; this.pausedDeliveryMode = null; }
+      else if (this.purchase.delivery_tracking) editor.toggleHistory();
+      else editor.begin('create');
+      panel.scrollIntoView?.({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+  purchaseLoaded(purchase: any): void {
+    this.purchase = { ...this.purchase, ...purchase };
+    this.editorReady = true;
+  }
+  deliveryUpdated(tracking: DeliveryTracking): void {
+    this.purchase = { ...this.purchase, delivery_tracking: tracking };
+    this.emitPurchaseUpdated.emit(this.purchase);
+  }
 
   ngOnInit(): void {
     
@@ -82,6 +112,8 @@ export class PurchaseIndexHeadComponent implements OnInit{
   destroy$ = new Subject<void>();
 
   ngOnDestroy(): void {
+    this.attachmentsBusy = false;
+    this.modal?.dismiss?.();
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -144,7 +176,25 @@ export class PurchaseIndexHeadComponent implements OnInit{
     this.emitPurchaseUpdated.emit(purchase);
   }
 
+  attachmentsUpdated(files: readonly unknown[]): void {
+    if (this.purchase.attachments_count === files.length) return;
+    this.purchase = { ...this.purchase, attachments_count: files.length };
+    this.emitPurchaseUpdated.emit(this.purchase);
+  }
+  paymentsUpdated(payments: any[]): void {
+    this.payments = payments;
+    this.purchase = { ...this.purchase, payments };
+    this.emitPurchaseUpdated.emit(this.purchase);
+  }
+
+  openPurchaseFiles(content: TemplateRef<any>): void {
+    this.attachmentsBusy = false;
+    this.modal = this.modalService.open(content, { centered: true, size: 'lg', scrollable: true, beforeDismiss: () => !this.attachmentsBusy });
+  }
+
   openVerticallyCentered(content: TemplateRef<any>) {
+    this.editorReady = false;
+    this.pausedDeliveryMode = null;
     this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
   }
 

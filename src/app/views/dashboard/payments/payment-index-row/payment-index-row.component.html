@@ -1,52 +1,16 @@
-<td class="text-center">#{{ payment.id }}</td>
-<td class="text-center">
-  <app-image-preview [image]="payment?.images[0]"></app-image-preview>
+<td data-label="Fecha"><div class="payment-row-date"><time [attr.datetime]="payment.date">{{ payment.date | date:'dd/MM/yyyy' }}</time><small>Registro #{{ payment.id }}</small></div></td>
+<td data-label="Concepto"><div class="payment-row-concept"><strong>{{ payment.comment || 'Pago registrado' }}</strong><span class="payment-direction-badge" [class.payment-in]="payment.direction === 'in'"><i class="fa-solid" [class.fa-arrow-down]="payment.direction === 'in'" [class.fa-arrow-up]="payment.direction !== 'in'" aria-hidden="true"></i>{{ payment.direction === 'in' ? 'Ingreso' : 'Salida' }}</span></div></td>
+<td data-label="Medio de pago"><span class="payment-method">{{ payment.gateway?.title || payment.gateway?.name || 'Sin especificar' }}</span></td>
+<td data-label="Comprobante"><div class="payment-voucher">@if (payment.images?.length) { <app-image-preview [image]="payment.images[0]" [height]="42" [width]="42" previewVariant="large" objectFit="contain" [title]="'Comprobante del pago ' + payment.id" />@if (payment.images.length > 1) { <small class="payment-voucher-count">+{{ payment.images.length - 1 }}</small> } } @else { <span class="payment-no-proof"><i class="fa-regular fa-file-lines" aria-hidden="true"></i>Sin adjunto</span> }</div></td>
+<td data-label="Importe" class="payment-amount-cell"><strong class="payment-amount-value" [class.payment-in]="payment.direction === 'in'">{{ payment.direction === 'in' ? '+' : '−' }} {{ payment.amount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></td>
+<td data-label="Acciones" class="payment-actions-cell">
+  <div class="payment-row-actions">@if (edit) {
+    <button type="button" class="payment-action-icon" [disabled]="removeLoading" [attr.aria-label]="'Editar pago ' + payment.id" title="Editar pago" (click)="openVerticallyCentered(content)"><i class="fa-solid fa-pen" aria-hidden="true"></i></button>
+    <button type="button" class="payment-action-icon payment-action-danger" [disabled]="removeLoading" [attr.aria-label]="'Eliminar pago ' + payment.id" title="Eliminar pago" (click)="removePayment()"><i class="fa-solid" [class.fa-spinner]="removeLoading" [class.fa-spin]="removeLoading" [class.fa-trash-can]="!removeLoading" aria-hidden="true"></i></button>
+  } @else { <span class="payment-no-proof">—</span> }</div>
+  @if (error) { <small class="payment-row-error" role="alert">{{ error }}</small> }
 </td>
-
-<td class="text-center">{{ payment?.comment }}</td>
-<td class="text-center">{{ payment?.gateway?.name }}</td>
-<!-- <td class="text-center">{{ (payment.direction === 'in' ? 'Ingreso' : 'Salida') }}</td> -->
-<td class="text-center">{{ payment.date }}</td>
-<td class="text-center" [ngClass]="(payment.direction === 'in' ? 'text-success' : 'text-danger')">{{ payment.amount |
-  currency:'PEN':'symbol':'1.2-2':'es-PE' }} </td>
-
-@if(edit){
-  
-<td class="text-center" style="width: 50px;">
-  <app-button (click)="openVerticallyCentered(content)" [icon]="faEdit" color="outline-dark" [me]="false"></app-button>
-
-</td>
-
-<td style="width: 50px;">
-  @if(removeLoading){
-  <app-loading></app-loading>
-  }@else{
-  <app-button [me]="false" [icon]="faTrash" colortext="white" (click)="removePayment(payment.id)" color="danger">
-  </app-button>
-  }
-</td>
-
 <ng-template #content let-modal>
-  <div class="modal-header">
-    <h6 class="modal-title">Editar Pago</h6>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-  </div>
-  <div class="modal-body">
-    <app-payment-edit [payment]="payment" [paymentable_type]="paymentable_type" [paymentable_id]="paymentable_id"
-      (emitUpdatePayment)="receiveUpdatePayment($event)"></app-payment-edit>
-  </div>
+  <div class="modal-header payment-dialog-heading"><span class="payment-dialog-icon"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></span><div><h2>Editar pago</h2><p>Actualiza los datos y revisa sus comprobantes.</p></div><button type="button" class="payment-dialog-close" [disabled]="editing" aria-label="Cerrar edición de pago" (click)="modal.dismiss('cancel')"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
+  <div class="modal-body p-0"><app-payment-edit [payment]="payment" [paymentable_type]="paymentable_type" [paymentable_id]="paymentable_id" (emitUpdatePayment)="receiveUpdatePayment($event)" (attachmentsChanged)="receiveAttachmentsUpdated($event)" (cancelled)="modal.dismiss('cancel')" (saving)="editing = $event" /></div>
 </ng-template>
-
-<ng-template #purchase let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title">Compra #{{ payment?.purchase.id }}</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-  </div>
-  <div class="modal-body">
-    <app-purchase-card [purchase]="payment?.purchase"></app-purchase-card>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-  </div>
-</ng-template>
-}

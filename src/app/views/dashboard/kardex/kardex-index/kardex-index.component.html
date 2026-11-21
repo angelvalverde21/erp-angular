@@ -1,4 +1,4 @@
-<div class="kardex-ledger">
+<div class="kardex-ledger" [class.kardex-ledger-embedded]="embedded">
   <div class="table-responsive" tabindex="0" role="region" aria-label="Movimientos de kardex">
     <table class="table align-middle mb-0 kardex-table">
       <caption class="visually-hidden">Historial de entradas y salidas de inventario</caption>
@@ -21,6 +21,7 @@
                 {{ kardex.direction === 'in' ? 'Entrada' : kardex.direction === 'out' ? 'Salida' : 'Movimiento' }}
               </span>
               <span class="kardex-id">#{{ kardex.id }}</span>
+              @if (kardex.reception_item?.reception?.number) { <span class="kardex-id">Recepción N.º {{ kardex.reception_item.reception.number }}</span> }
             </div>
           </td>
           <td>

@@ -1,4 +1,4 @@
-<ngx-dropzone (change)="onSelect($event)" [multiple]="true" accept="image/*">
+<ngx-dropzone (change)="onSelect($event)" [multiple]="true" [accept]="acceptedFiles" [maxFileSize]="maxFileSize">
 
     <ngx-dropzone-label>
         <div class="message">
@@ -8,7 +8,9 @@
     </ngx-dropzone-label>
 
     @for (file of images; track file) {
-    <ngx-dropzone-image-preview (removed)="onRemove($event)" [file]="file" [removable]="true">
+    <ngx-dropzone-image-preview (removed)="onRemove($event)" [file]="file" [removable]="!uploading">
     </ngx-dropzone-image-preview>
     }
 </ngx-dropzone>
+@if (uploading) { <p class="small text-muted mt-2" role="status">Subiendo imágenes…</p> }
+@if (error) { <div class="alert alert-danger mt-2" role="alert">{{ error }}@if (images.length && !uploading) { <button type="button" class="btn btn-sm btn-light ms-2" (click)="retry()">Reintentar</button> }</div> }

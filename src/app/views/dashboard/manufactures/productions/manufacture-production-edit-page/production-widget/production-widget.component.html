@@ -1,11 +1,11 @@
 <nav class="production-navigation" aria-label="Secciones de la producción">
   <a class="production-metric" routerLink="./purchases" routerLinkActive="production-metric-active" ariaCurrentWhenActive="page">
-    <div class="production-metric-label"><span><fa-icon [icon]="icons.flow" aria-hidden="true"></fa-icon>Flujo de producción</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></div>
+    <div class="production-metric-label"><span><fa-icon [icon]="icons.flow" aria-hidden="true"></fa-icon>Compras</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></div>
     <strong>{{ (summary?.sum_purchases ?? 0) | pen }}</strong>
     <span class="production-metric-subtitle">Costo por unidad · {{ unitCost | pen }}</span>
   </a>
   <a class="production-metric production-metric-tracking" routerLink="./deliveries" routerLinkActive="production-metric-active" ariaCurrentWhenActive="page">
-    <div class="production-metric-label"><span><fa-icon [icon]="icons.tracking" aria-hidden="true"></fa-icon>Seguimiento de entregas</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></div>
+    <div class="production-metric-label"><span><fa-icon [icon]="icons.tracking" aria-hidden="true"></fa-icon>Seguimiento de compras</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></div>
     <strong>{{ summary?.tracked_purchases_count ?? 0 }}</strong>
     <span class="production-metric-subtitle">Pendientes, vencidas y recibidas</span>
   </a>

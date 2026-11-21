@@ -2,6 +2,15 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
+  { path: 'photo-sessions', loadChildren: () => import('./photo-sessions/routes.photo-session').then(module => module.routes) },
+  {
+    path: 'orders-next',
+    loadChildren: () => import('./order-workspace/routes.order-workspace').then(module => module.routes),
+  },
+  {
+    path: 'initial-import',
+    loadChildren: () => import('./initial-import/routes.initial-import').then(module => module.routes),
+  },
   {
     path: 'migrations',
     loadChildren: () => import('./migrations/routes.migration').then(module => module.routes),

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import Dropzone from 'dropzone';
 
 // import { AuthService } from '@core/auth/auth.service';
@@ -16,7 +16,13 @@ import { AuthService } from '../../auth/auth.service';
   templateUrl: './upload-dropzone.component.html',
   styleUrl: './upload-dropzone.component.css',
 })
-export class UploadDropzoneComponent {
+export class UploadDropzoneComponent implements OnDestroy {
+  private dropzone?: Dropzone;
+  private destroyed = false;
+  @Input() acceptedFiles = 'image/*';
+  @Input() autoUpload = true;
+  @Output() pendingFilesChange = new EventEmitter<number>();
+  @Output() uploadingChange = new EventEmitter<boolean>();
   store: string = '';
   url: string = '';
   dropzoneId: string = '';
@@ -76,6 +82,7 @@ export class UploadDropzoneComponent {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
+      if (this.destroyed) return;
       //usamos setTimeOut solo para retrazar ligeramente el tiempo de carga, asi esperamos que el contenedor padre cargue primero, en este caso cuando este componente es llamado desde <app-card-config>
       const self = this; // Guardamos una referencia al componente
       // Dropzone.autoDiscover = false; // Desactivar la auto-detección de Dropzone
@@ -93,11 +100,17 @@ export class UploadDropzoneComponent {
                               <path d="M149.1 64.5c6.5-11.2 18.5-18.5 31.6-18.5h150.7c13.1 0 25.1 7 31.6 18.5l14.5 25.5H464c26.5 0 48 21.5 48 48v256c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V138c0-26.5 21.5-48 48-48h86.5l14.6-25.5zM256 400c79.5 0 144-64.5 144-144S335.5 112 256 112 112 176.5 112 256s64.5 144 144 144zm0-48a96 96 0 1 1 0-192 96 96 0 1 1 0 192z"/>
                               </svg>
                             </div>`,
-        acceptedFiles: 'image/*',
+        acceptedFiles: this.acceptedFiles,
+        autoProcessQueue: this.autoUpload,
+        addRemoveLinks: !this.autoUpload,
+        dictRemoveFile: 'Quitar archivo',
         // paramName: 'file',
         maxFilesize: 10, // Tamaño máximo en MB
-        parallelUploads: 4, // Enviar 4 archivos a la vez
+        parallelUploads: this.parallelUploads,
         init: function () {
+          this.on('addedfiles', () => self.emitPendingFiles());
+          this.on('removedfile', () => self.emitPendingFiles());
+          this.on('processing', () => self.uploadingChange.emit(true));
           this.on('success', function (file: any, resp: any) {
             // Manejar la respuesta JSON aquí
             console.log('Respuesta del servidor:', resp);
@@ -123,21 +136,44 @@ export class UploadDropzoneComponent {
           this.on('error', (resp: any) => {
             console.error('Error al subir el archivo y:', resp);
             self.errorUpload.emit(true);
+            self.emitPendingFiles();
           });
 
           this.on('complete', (file: any) => {
-            this.removeFile(file);
+            if (self.autoUpload || file.status === Dropzone.SUCCESS) this.removeFile(file);
+            self.emitPendingFiles();
           });
 
           this.on('queuecomplete', (resp: any) => {
+            this.options.autoProcessQueue = self.autoUpload;
+            self.uploadingChange.emit(false);
             // Aquí disparas la alerta
             self.lastFileUpload.emit(self.image);
             // alert('¡Todas las fotos han sido subidas exitosamente!');
           });
         },
       });
+      this.dropzone = dropzone;
     }, 0);
   }
+
+  uploadQueued(path: string): void {
+    if (!this.dropzone) return;
+    this.url = `${API.private}/${this._base.store}/dashboard/${path}`;
+    this.dropzone.options.url = this.url;
+    for (const file of this.dropzone.getFilesWithStatus(Dropzone.ERROR)) {
+      if (file.accepted) { file.status = Dropzone.ADDED; this.dropzone.enqueueFile(file); }
+    }
+    this.dropzone.options.autoProcessQueue = true;
+    this.dropzone.processQueue();
+  }
+
+  private emitPendingFiles(): void {
+    const count = this.dropzone?.files.filter(file => file.accepted && file.status !== Dropzone.SUCCESS).length ?? 0;
+    this.pendingFilesChange.emit(count);
+  }
+
+  ngOnDestroy(): void { this.destroyed = true; this.dropzone?.destroy(); }
 
   /* 
   -

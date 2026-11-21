@@ -1,0 +1,11 @@
+﻿<div class="table-scroll"><table><thead><tr><th>Locación</th><th>Dirección</th><th>Contacto</th><th>Tarifa referencial</th><th>Estado</th><th><span class="sr-only">Editar locación</span></th></tr></thead><tbody>
+  @for (location of locations; track location.id) {
+    <tr><td><div class="record-identity"><span class="record-icon"><i [class]="'fa-solid ' + typeIcon(location.type)" aria-hidden="true"></i></span><div><a class="venue-name" [routerLink]="[location.id]">{{ location.name }}</a><small>{{ typeLabel(location.type) }} · {{ location.sessions_count || 0 }} sesiones</small></div></div></td>
+      <td><span>{{ location.display_address || 'Sin dirección registrada' }}</span><small>{{ location.district_name }}{{ location.district_name && location.city_name ? ' · ' : '' }}{{ location.city_name }}</small></td>
+      <td><span>{{ location.contact_name || 'Sin contacto asignado' }}</span>@if (location.phone) { <small>{{ location.phone }}</small> }</td>
+      <td class="rate">@if (location.rate != null) { <strong>S/ {{ location.rate | number:'1.2-2' }}</strong><small>{{ rateLabel(location.rate_unit) }}</small> } @else { <span class="muted">Por consultar</span> }</td>
+      <td><span class="status" [class.active]="location.active">{{ location.active ? 'Activa' : 'Inactiva' }}</span></td>
+      <td><a class="button" [routerLink]="[location.id]"><i class="fa-solid fa-pen" aria-hidden="true"></i>Editar</a></td></tr>
+  }
+</tbody></table></div>
+

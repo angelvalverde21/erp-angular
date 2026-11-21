@@ -1,0 +1,73 @@
+<section class="reception-history" aria-label="Recepciones de mercadería">
+  @if (error) {
+    <div class="reception-alert" role="alert">{{ error }}
+      @if (!reversingId && !postingId) { <button type="button" (click)="refresh(page)">Actualizar</button> }
+    </div>
+  }
+  @if (loading) {
+    <div class="reception-empty" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando recepciones…</div>
+  } @else {
+    <div class="reception-list">
+      @for (reception of receptions; track reception.id) {
+        <article class="reception-record" [class.reception-reversed]="reception.reversed_at">
+          <header>
+            <div>
+              <strong>Recepción N.º {{ reception.number }}</strong>
+              <span class="reception-state" [class.reception-state-draft]="reception.status === 'draft'">{{ reception.reversed_at ? 'Revertida' : reception.status === 'draft' ? 'Guardada · Pendiente de ingreso' : 'Ingreso confirmado' }}</span>
+              @if (reception.is_historical) { <span class="reception-historical">Histórica · Desde kardex</span> }
+              <p>{{ reception.received_on | date:'dd/MM/yyyy' }} · Responsable: {{ reception.receiver?.name || 'No registrado' }}</p>
+            </div>
+            <div class="reception-count"><strong>{{ total(reception) }}</strong><span>unidades</span></div>
+          </header>
+          @if (reception.notes) { <p class="reception-notes">{{ reception.notes }}</p> }
+          <details>
+            <summary>Ver detalle · {{ reception.items.length }} variantes</summary>
+            <div class="reception-items">
+              @for (row of reception.items | receptionItemRows; track row.item.id) {
+                <div [class.reception-item-striped]="row.striped" [class.reception-item-group-start]="row.startsGroup"><span><strong>{{ row.item.product_name }}</strong><small>{{ row.item.sku || 'Sin SKU' }} @for (option of row.item.options; track $index) { · {{ option.value }} }</small></span><b>{{ row.item.quantity }} ud.</b></div>
+              }
+            </div>
+          </details>
+          @if (reception.reversed_at) {
+            <div class="reception-audit"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i><div><strong>Revertida por {{ reception.reverser?.name || 'Usuario no disponible' }} · {{ reception.reversed_at | date:'dd/MM/yyyy HH:mm' }}</strong><p>{{ reception.reversal_reason }}</p></div></div>
+          }
+          <footer class="reception-record-actions">
+            <app-inventory-reception-print [manufactureId]="manufactureId" [receptionId]="reception.id" [receptionNumber]="reception.number" [disabled]="saving" />
+            <div>
+              @if (reception.status === 'draft') {
+                <button type="button" [disabled]="saving" (click)="editRequested.emit(reception)"><i class="fa-solid fa-pen" aria-hidden="true"></i>Editar recepción</button>
+                <button type="button" class="reception-primary" [disabled]="saving" (click)="requestPost(reception.id)"><i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>Confirmar ingreso al kardex</button>
+              } @else if (!reception.reversed_at) {
+                <span class="reception-posted-hint" tabindex="0" aria-label="Información sobre el ingreso confirmado" ngbTooltip="Las cantidades de esta recepción ya están registradas en el kardex. No es necesario volver a confirmarla." triggers="hover focus" container="body" #postedTooltip="ngbTooltip" (click)="postedTooltip.open()">
+                  <button type="button" class="reception-posted-info" disabled><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Ingreso confirmado en kardex<i class="fa-solid fa-circle-info" aria-hidden="true"></i></button>
+                </span>
+                <button type="button" class="reception-secondary" [disabled]="saving" (click)="startReversal(reception.id)"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Revertir recepción completa</button>
+              }
+            </div>
+          </footer>
+          @if (postingId === reception.id) {
+            <section class="reception-posting" aria-label="Revisión final del ingreso">
+              <strong>¿Confirmar el ingreso de {{ total(reception) }} unidades?</strong>
+              <p>Se registrarán {{ reception.items.length }} variantes en el kardex y se actualizará el stock. Revisa la hoja antes de continuar. Después de confirmar no se podrán editar estas cantidades.</p>
+              <div><button type="button" [disabled]="saving" (click)="postingId = null">Seguir revisando</button><button type="button" class="reception-primary" [disabled]="saving" (click)="post(reception)">{{ saving ? 'Confirmando…' : 'Sí, confirmar ingreso' }}</button></div>
+            </section>
+          }
+          @if (reversingId === reception.id) {
+            <form class="reception-reversal" (ngSubmit)="reverse()">
+              <label [for]="'reversal-' + reception.id">Revertir la recepción completa: {{ total(reception) }} unidades</label>
+              <p>Se generarán salidas que compensan todas sus variantes. El documento y sus movimientos se conservarán.</p>
+              @if (reception.is_historical) { <p>Esta recepción se reconstruyó sin modificar el stock. La reversión compensará el kardex y conservará ese stock.</p> }
+              <textarea [id]="'reversal-' + reception.id" name="reason" [(ngModel)]="reason" rows="2" minlength="5" maxlength="2000" required [disabled]="saving" placeholder="Explica por qué debe revertirse toda la recepción"></textarea>
+              <div><button type="button" [disabled]="saving" (click)="reversingId = null">Cancelar</button><button type="submit" class="reception-danger" [disabled]="saving || reason.trim().length < 5">{{ saving ? 'Revirtiendo…' : 'Confirmar reversión completa' }}</button></div>
+            </form>
+          }
+        </article>
+      } @empty {
+        <div class="reception-empty"><i class="fa-solid fa-box-open" aria-hidden="true"></i><span>Guarda la primera recepción para revisar e imprimir su hoja antes de ingresar la mercadería al inventario.</span></div>
+      }
+    </div>
+    @if (lastPage > 1) {
+      <nav class="reception-pagination" aria-label="Páginas de recepciones"><button type="button" [disabled]="page <= 1 || saving" (click)="refresh(page - 1)">Anterior</button><span>{{ page }} de {{ lastPage }}</span><button type="button" [disabled]="page >= lastPage || saving" (click)="refresh(page + 1)">Siguiente</button></nav>
+    }
+  }
+</section>

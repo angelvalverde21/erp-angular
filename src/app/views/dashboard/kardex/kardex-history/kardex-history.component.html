@@ -1,0 +1,13 @@
+<details class="kardex-history" (toggle)="toggle($event)">
+  <summary><span class="history-icon"><i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i></span><span class="history-copy"><strong>Movimientos de kardex</strong><small>{{ loaded ? 'Consulta las entradas, salidas y el balance registrado.' : 'Despliega para consultar las entradas, salidas y el balance.' }}</small></span><i class="fa-solid fa-chevron-down history-chevron" aria-hidden="true"></i></summary>
+  @if (open) {
+    <div class="history-content">
+      @if (loading) { <div class="history-message" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Consultando movimientos…</div> }
+      @else if (error) { <div class="history-message" role="alert"><p>{{ error }}</p><button type="button" (click)="load()">Reintentar consulta</button></div> }
+      @else if (loaded) {
+        <app-kardex-index [kardexes]="records" [embedded]="true" (emitKardexSummary)="summaryChange.emit($event)" />
+        <div class="history-refresh"><button type="button" (click)="load()"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Actualizar movimientos</button></div>
+      }
+    </div>
+  }
+</details>

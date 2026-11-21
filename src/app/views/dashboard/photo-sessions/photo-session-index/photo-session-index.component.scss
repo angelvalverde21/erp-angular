@@ -1,0 +1,8 @@
+﻿@use '../shared/photo-table';
+.file-count { display: flex; align-items: center; gap: .45rem; color: #596f8a; font-size: .73rem; }
+.file-count i:nth-of-type(2) { margin-left: .6rem; }
+.status.planned { background: #f2eefb; color: #7152aa; }
+.status.in_progress { background: #eaf1fd; color: #3867a6; }
+.status.editing { background: #fff4df; color: #947020; }
+.status.archived { background: #f0f2f6; color: #718199; }
+.tasks-overdue { color: #b54d5d; font-weight: 650; }

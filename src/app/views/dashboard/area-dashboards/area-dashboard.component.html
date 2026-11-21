@@ -9,7 +9,7 @@
     @if (error) { <div class="dash-refresh-warning" role="alert">{{ error }} Se conserva la última actualización.<button type="button" class="dash-refresh" (click)="refresh()">Reintentar</button></div> }
     @if (report.area === 'ceo') {
       <p class="dash-data-note mb-3"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Actualización automática cada 60 segundos mientras esta pestaña esté visible.</p>
-      @if (report.production_progress) { <app-production-progress [summary]="report.production_progress" [store]="base.store || ''"></app-production-progress> }
+      @if (report.production_progress) { <app-production-progress [limit]="productionLimit" [loading]="loading" (limitChanged)="changeProductionLimit($event)" [summary]="report.production_progress" [store]="base.store || ''"></app-production-progress> }
       @if (report.employee_payroll) { <app-employee-payroll [summary]="report.employee_payroll" [store]="base.store || ''"></app-employee-payroll> }
       @if (report.delivery_overview) { <app-delivery-overview [summary]="report.delivery_overview" [store]="base.store || ''"></app-delivery-overview> }
     }

@@ -6,7 +6,7 @@ import { faEdit, faCashRegister, faBagShopping, faInbox, faReceipt } from '@fort
 import { ButtonComponent } from '@shared/components/buttons/button/button.component';
 import { PurchaseEditComponent } from '../purchase-edit/purchase-edit.component';
 import { GalleryComponent } from '@shared/components/gallery/gallery.component';
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonAddComponent } from '@buttons/button-add/button-add.component';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -14,8 +14,8 @@ import { PurchaseCreateComponent } from '../purchase-create/purchase-create.comp
 import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
 import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/button-edit/button-edit.component';
 import { PurchaseIndexHeadComponent } from './purchase-index-head/purchase-index-head.component';
-import { DeliveryTrackingComponent } from '@shared/components/delivery-tracking/delivery-tracking.component';
-import { DeliveryTracking } from '@shared/components/delivery-tracking/delivery-tracking.model';
+import { DELIVERY_LABELS } from '@shared/components/delivery-tracking/delivery-tracking.model';
+import { ProductionPurchaseSection } from '../production-purchase-section.model';
 
 @Component({
   selector: 'app-purchase-index',
@@ -34,7 +34,7 @@ import { DeliveryTracking } from '@shared/components/delivery-tracking/delivery-
     DateShopifyPipe,
     ButtonEditComponent,
     PurchaseIndexHeadComponent,
-    DeliveryTrackingComponent
+    DatePipe
   ],
   templateUrl: './purchase-index.component.html',
   styleUrl: './purchase-index.component.scss',
@@ -50,11 +50,20 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
   @Input() purchaseable_id: number = 0;
   @Input() sum_purchases: number = 0;
   @Input() productionView = false;
+  @Input() compactHeader = false;
   @Input() productionStageId: number | null = null;
+  @Input() productionSections: readonly ProductionPurchaseSection[] = [];
   @Input() stageName = '';
   @Input() stageDescription = 'Materiales, insumos y servicios asociados a esta etapa.';
   @Input() deliveryDefault = false;
   @Output() purchasesChanged = new EventEmitter<any[]>();
+  createdNotice = '';
+  readonly deliveryLabels: Record<string, string> = DELIVERY_LABELS;
+
+  attachmentCount(purchase: any): number { return Number(purchase.attachments_count ?? purchase.attachments?.length ?? 0) || 0; }
+  receiptCount(purchase: any): number {
+    return (purchase.payments ?? []).reduce((count: number, payment: any) => count + (payment.images?.length ?? Number(payment.images_count ?? 0)), 0);
+  }
 
   get conceptCount(): number {
     return this.purchases.reduce((total, purchase) => total + (purchase.items?.length ?? 0), 0);
@@ -106,6 +115,7 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['purchases']) this.sumTotalAmount();
+    if (changes['productionStageId']) this.createdNotice = '';
   }
 
   ngOnDestroy(): void {
@@ -145,6 +155,8 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
     
 
     this.purchases = [purchase, ...this.purchases];
+    const section = this.productionSections.find(section => section.id === Number(purchase.production_stage_id));
+    this.createdNotice = section ? `Compra registrada en ${section.code === 'others' ? 'Otros gastos' : section.name}.` : '';
     this.modal.close();
     
     this.sumTotalAmount();
@@ -173,9 +185,5 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
     return quantity * price;
   }
 
-  deliveryUpdated(purchaseId: number, tracking: DeliveryTracking): void {
-    this.purchases = this.purchases.map(purchase => purchase.id === purchaseId ? { ...purchase, delivery_tracking: tracking } : purchase);
-    this.purchasesChanged.emit(this.purchases);
-  }
 
 }

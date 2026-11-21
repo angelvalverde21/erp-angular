@@ -1,13 +1,16 @@
-<td class="text-center">{{ image.id }}</td>
-<td class="text-center">
-    <app-image-preview [image]="image"></app-image-preview>
-    <!-- <img [src]="image.url_thumbnail" height="100" alt=""> -->
+﻿<td class="image-preview-cell">
+  <span class="image-thumbnail-frame"><app-image-preview [image]="image" [title]="image.name || 'Imagen adjunta'" [height]="52" [width]="52"></app-image-preview></span>
 </td>
-<td class="text-center">{{ image.name }}</td>
-<td class="text-center" style="width: 50px;">
-    @if(loading){
-    <app-loading></app-loading>
-    }@else{
-    <app-button-trash (click)="removeImage(image.id)"></app-button-trash>
-    }
+<td class="image-file-cell">
+  <strong>{{ image.name || 'Imagen sin nombre' }}</strong>
+  <span class="image-file-format">{{ format }}</span>
 </td>
+@if (allowRemove) {
+  <td class="image-action-cell">
+    <button type="button" class="image-remove" [disabled]="disabled" (click)="removeImage(image.id)" [attr.aria-label]="'Eliminar ' + (image.name || 'imagen adjunta')">
+      @if (removing) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> }
+      @else { <i class="fa-regular fa-trash-can" aria-hidden="true"></i> }
+      {{ removing ? 'Eliminando…' : 'Eliminar' }}
+    </button>
+  </td>
+}

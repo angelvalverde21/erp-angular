@@ -114,17 +114,41 @@
             "scripts": []
           },
           "configurations": {
+            "catalog-module": {
+              "tsConfig": "tsconfig.catalog-tests.json",
+              "watch": false,
+              "browsers": "ChromeHeadless",
+              "include": [
+                "src/app/views/dashboard/products/product-shopify-bulk/product-shopify-bulk.spec.ts",
+                "src/app/views/dashboard/products/product-index/product-duplicate.spec.ts",
+                "src/app/views/dashboard/products/product-index-page/product-sort.spec.ts",
+                "src/app/views/dashboard/products/variants/variant-search/variant-search.component.spec.ts"
+              ]
+            },
             "production-module": {
               "tsConfig": "tsconfig.production-tests.json",
               "watch": false,
               "browsers": "ChromeHeadless",
               "include": [
+                "src/app/views/dashboard/users/shared/contact-workflow.spec.ts",
+    "src/app/views/dashboard/payments/payment-workflow.spec.ts",
+                "src/app/views/dashboard/kardex/kardex-history/kardex-history.component.spec.ts",
+                "src/app/views/dashboard/inventory-receptions/inventory-reception-index/inventory-reception-index.component.spec.ts",
+                "src/app/views/dashboard/kardex/kardex-index/kardex-index.component.spec.ts",
+                "src/app/views/dashboard/kardex/kardex-index-selected/kardex-index-selected.component.spec.ts",
+                "src/app/views/dashboard/kardex/kardex-register-in/kardex-register-in.component.spec.ts",
                 "src/app/views/shared/components/delivery-tracking/delivery-tracking.spec.ts",
                 "src/app/views/dashboard/manufactures/productions/production-stages/production-stages.spec.ts",
                 "src/app/views/dashboard/manufactures/productions/production-overview.spec.ts",
                 "src/app/views/dashboard/purchases/purchase-index/production-expenses.spec.ts",
                 "src/app/views/dashboard/area-dashboards/area-dashboard.spec.ts"
               ]
+            },
+            "initial-import-module": {
+              "tsConfig": "tsconfig.initial-import-tests.json",
+              "watch": false,
+              "browsers": "ChromeHeadless",
+              "include": ["src/app/views/dashboard/initial-import/initial-shopify-import.spec.ts", "src/app/views/dashboard/initial-import/orders/imported-orders.spec.ts", "src/app/views/dashboard/order-workspace/order-workspace.spec.ts", "src/app/views/dashboard/photo-sessions/photo-sessions.spec.ts", "src/app/views/shared/components/image-preview/image-preview.component.spec.ts", "src/app/views/shared/pipes/date-shopify.pipe.spec.ts", "src/app/views/dashboard/shopify/orders/shared/order-status-stepper/order-status.model.spec.ts", "src/app/views/dashboard/migrations/shopify-order-migration.spec.ts"]
             },
             "personnel-module": {
               "tsConfig": "tsconfig.personnel-tests.json",

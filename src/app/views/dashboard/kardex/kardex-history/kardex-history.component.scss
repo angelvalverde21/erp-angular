@@ -1,0 +1,19 @@
+:host { display: block; margin-top: 1.5rem; }
+.kardex-history { border: 1px solid #dce3f0; border-radius: 12px; overflow: hidden; background: #fff; }
+summary { display: flex; align-items: center; gap: .9rem; padding: 1.15rem 1.25rem; cursor: pointer; list-style: none; background: #fff; }
+summary::-webkit-details-marker { display: none; }
+summary:focus-visible { outline: 2px solid #7564cc; outline-offset: -3px; }
+.history-icon { display: grid; place-items: center; width: 40px; height: 40px; flex: 0 0 40px; border-radius: 10px; background: #f0edfc; color: #7159bc; }
+.history-copy { flex: 1; min-width: 0; }
+.history-copy strong { display: block; color: #2c405b; font-size: .9rem; font-weight: 600; }
+.history-copy small { display: block; margin-top: .35rem; color: #71829b; font-size: .76rem; line-height: 1.5; }
+.history-chevron { color: #71829b; font-size: .8rem; transition: transform .2s ease; }
+details[open] .history-chevron { transform: rotate(180deg); }
+.history-content { border-top: 1px solid #e5eaf3; }
+.history-message { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem; padding: 2rem 1.25rem; color: #71829b; font-size: .8rem; }
+.history-message p { margin: 0; }
+button { display: inline-flex; align-items: center; gap: .5rem; min-height: 38px; padding: .5rem .8rem; background: #fff; border: 1px solid #dce3f0; border-radius: 8px; color: #52657d; font-size: .75rem; font-weight: 600; cursor: pointer; }
+button:hover { background: #f5f7fd; }
+button:focus-visible { outline: 2px solid #7564cc; outline-offset: 3px; }
+.history-refresh { display: flex; justify-content: flex-end; padding: .85rem 1rem; border-top: 1px solid #e5eaf3; }
+@media(max-width: 600px) { summary { padding: 1rem; gap: .75rem; } .history-refresh button { width: 100%; justify-content: center; min-height: 44px; } }

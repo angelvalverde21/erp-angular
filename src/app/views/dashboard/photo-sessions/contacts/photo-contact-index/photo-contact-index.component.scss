@@ -1,0 +1,4 @@
+﻿@use '../../shared/photo-table';
+.portfolio { display: flex; gap: .4rem; align-items: center; color: var(--photo-accent); font-size: .72rem; margin-top: .4rem; text-decoration: none; }
+.portfolio:hover { text-decoration: underline; }
+.contact-actions { display: flex; align-items: center; justify-content: flex-end; gap: .5rem; white-space: nowrap; }

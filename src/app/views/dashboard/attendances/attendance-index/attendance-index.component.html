@@ -19,6 +19,7 @@
           <td><strong>{{ row.date | date:'dd MMM yyyy':'':'es-PE' }}</strong><small>{{ row.date | date:'EEEE':'':'es-PE' }}</small></td>
           <td><strong>{{ row.employee_name || 'Empleado sin asignar' }}</strong>
             @if (row.comment) { <small>{{ row.comment }}</small> }
+            @if (row.absence_justified) { <small>{{ row.justification_reason }}</small><small [class.text-warning]="!row.justification_documents?.length">{{ row.justification_documents?.length ? row.justification_documents.length + ' documentos de sustento' : 'Sustento pendiente' }}</small> }
             @if (row.break_skipped) {
               <small class="attendance-break-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> No tomó descanso · Se computó la jornada sin descontar esa hora.</small>
             }
@@ -37,9 +38,16 @@
               <span [class.text-danger]="adjustment < 0" [class.text-success]="adjustment > 0">{{ adjustment < 0 ? '−' : '+' }} {{ (adjustment < 0 ? -adjustment : adjustment) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</span>
             } @else { <span class="text-body-secondary">—</span> }
           </td>
-          <td class="text-end"><button type="button" class="personnel-button" (click)="edit(row, editor)">
+          <td class="text-end"><div class="attendance-row-actions">
+            @if (canJustify && (row.missing || row.absence_justified)) {
+              <button type="button" class="personnel-button" (click)="justify(row, justification)"><i class="fa-solid fa-file-circle-check" aria-hidden="true"></i>{{ row.absence_justified ? 'Justificación' : 'Justificar falta' }}</button>
+            }
+            @if (!row.absence_justified) {
+            <button type="button" class="personnel-button" (click)="edit(row, editor)">
             <i class="fa-solid" [class.fa-pen]="row.id" [class.fa-plus]="!row.id" aria-hidden="true"></i>{{ row.id ? 'Editar' : 'Registrar' }}
-          </button></td>
+          </button>
+            }
+          </div></td>
         </tr>
       } @empty {
         <tr><td colspan="8"><div class="personnel-empty"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
@@ -80,4 +88,8 @@
     <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body p-4"><app-attendance-edit [attendance]="editing" (emitAttendanceUpdate)="updated($event)"></app-attendance-edit></div>
+</ng-template>
+<ng-template #justification let-modal>
+  <div class="modal-header"><div><h2 class="modal-title fs-5">Justificar falta</h2><p class="personnel-muted mt-1">{{ editing?.employee_name }} · {{ editing?.date | date:'dd/MM/yyyy' }}</p></div><button class="btn-close" type="button" aria-label="Cerrar" (click)="modal.dismiss()"></button></div>
+  <div class="modal-body p-4"><app-attendance-justification [attendance]="editing" (saved)="justificationSaved($event)" (closed)="modal.close()"></app-attendance-justification></div>
 </ng-template>

@@ -1,0 +1,14 @@
+<form class="panel" [formGroup]="form" (ngSubmit)="submit()">
+  <header class="panel-header"><div><h2><i class="fa-regular fa-address-card" aria-hidden="true"></i>Datos del {{ labels.singular }}</h2><p>Información de contacto y referencias para coordinar las sesiones.</p></div></header>
+  <div class="panel-body contact-form">
+    <div><label for="contact-name">Nombre completo / nombre profesional *</label><input id="contact-name" formControlName="name" maxlength="180">@if (form.controls.name.touched && form.controls.name.invalid) { <small class="invalid">Escribe un nombre válido.</small> }</div>
+    <div><label for="contact-company">{{ labels.company }}</label><input id="contact-company" formControlName="company" maxlength="255"></div>
+    <div><label for="contact-phone">Teléfono / WhatsApp</label><input id="contact-phone" type="tel" formControlName="phone" maxlength="40"></div>
+    <div><label for="contact-email">Correo electrónico</label><input id="contact-email" type="email" formControlName="email" maxlength="255">@if (form.controls.email.touched && form.controls.email.invalid) { <small class="invalid">Revisa el correo electrónico.</small> }</div>
+    <div><label for="contact-instagram">Instagram</label><input id="contact-instagram" formControlName="instagram" maxlength="120" placeholder="@usuario"></div>
+    <div><label for="contact-portfolio">Portafolio / página web</label><input id="contact-portfolio" formControlName="portfolio_url" maxlength="500" placeholder="https://…">@if (form.controls.portfolio_url.touched && form.controls.portfolio_url.invalid) { <small class="invalid">Usa una dirección que empiece por https:// o http://.</small> }</div>
+    <div class="wide"><label for="contact-notes">Observaciones</label><textarea id="contact-notes" rows="3" formControlName="notes" maxlength="5000" placeholder="Disponibilidad, estilo de trabajo y referencias para la coordinación"></textarea></div>
+    <div><label for="contact-active">Estado</label><select id="contact-active" formControlName="active"><option [ngValue]="true">Activo</option><option [ngValue]="false">Inactivo</option></select></div>
+  </div>
+  <footer class="actions"><button class="button primary" type="submit" [disabled]="saving"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>{{ saving ? 'Guardando…' : editing ? 'Guardar cambios' : 'Guardar ficha' }}</button></footer>
+</form>

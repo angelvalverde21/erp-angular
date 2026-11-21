@@ -1,0 +1,11 @@
+:host { display: block; min-width: 0; }
+.supplier-option { display: flex; flex-direction: column; gap: .2rem; padding-block: .2rem; }
+.supplier-option strong { font-weight: 550; }
+.supplier-option small { color: #75859b; font-size: .72rem; }
+:host ::ng-deep .ng-select-container {
+  min-height: var(--supplier-select-height, 44px); border-radius: 8px;
+  border-color: #d7deea; font-size: .8rem;
+}
+:host ::ng-deep .ng-select.ng-select-single .ng-select-container { height: var(--supplier-select-height, 44px); }
+:host ::ng-deep .ng-select-focused:not(.ng-select-opened) > .ng-select-container { border-color: #a392dd; box-shadow: 0 0 0 3px #7056c512; }
+:host ::ng-deep .ng-dropdown-panel { border-color: #d7deea; box-shadow: 0 8px 24px #25375316; }

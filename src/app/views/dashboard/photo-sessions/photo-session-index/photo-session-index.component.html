@@ -1,0 +1,14 @@
+﻿<div class="table-scroll"><table><thead><tr><th>Sesión</th><th>Fecha / lugar</th>@if (!employeeView) { <th>Responsable</th> }<th>Preparación</th>@if (!employeeView) { <th>Material</th> }<th>Estado</th><th><span class="sr-only">Abrir sesión</span></th></tr></thead><tbody>
+  @for (session of sessions; track session.id) {
+    <tr><td><div class="record-identity"><span class="record-icon"><i class="fa-solid fa-camera-retro" aria-hidden="true"></i></span><div><a [routerLink]="employeeView ? [session.id, 'tasks'] : [session.id]">{{ session.name }}</a>@if (session.collection) { <small>{{ session.collection }}</small> }</div></div></td>
+      <td><strong>{{ session.shoot_date ? (session.shoot_date | date:'dd/MM/yyyy') : 'Por programar' }}</strong>@if (locationNames(session)) { <small>{{ locationNames(session) }}</small> }</td>
+      @if (!employeeView) { <td>{{ session.responsible?.name || 'Sin asignar' }}@if (photographerNames(session)) { <small>{{ photographerNames(session) }}</small> }</td> }
+      <td>@if (session.tasks_count) { <strong>{{ session.completed_tasks_count || 0 }}/{{ session.tasks_count }}</strong><small>Tareas completadas</small>@if (session.overdue_tasks_count) { <small class="tasks-overdue">{{ session.overdue_tasks_count }} vencidas</small> } } @else { <small>Sin tareas asignadas</small> }</td>
+      @if (!employeeView) { <td><span class="file-count"><i class="fa-regular fa-image" aria-hidden="true"></i>{{ session.photos_count || 0 }}<i class="fa-solid fa-video" aria-hidden="true"></i>{{ session.videos_count || 0 }}</span><small>{{ size(session.total_bytes) }}</small></td> }
+      <td><span class="status" [class]="'status ' + session.status">{{ status(session.status) }}</span></td>
+      <td><a class="button" [routerLink]="employeeView ? [session.id, 'tasks'] : [session.id]">{{ employeeView ? 'Ver tareas' : 'Abrir' }}<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></td>
+    </tr>
+  }
+</tbody></table></div>
+
+

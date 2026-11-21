@@ -5,13 +5,47 @@ button { display: inline-flex; align-items: center; justify-content: center; gap
 .delivery-toolbar { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
 .delivery-filters { display: flex; gap: .4rem; flex-wrap: wrap; button { span { padding: .1rem .3rem; border-radius: 4px; background: var(--cui-tertiary-bg); font-size: .65rem; } &.active { border-color: #b2a5e7; background: #f0edfc; color: #6855d7; } } }
 .delivery-search { display: flex; align-items: center; gap: .6rem; padding: 0 .8rem; min-width: 280px; flex: 0 1 340px; color: var(--cui-secondary-color); input { width: 100%; min-width: 0; padding: .65rem 0; border: 0; background: transparent; color: var(--cui-body-color); font-size: .8rem; outline: none; } &:focus-within { outline: 2px solid #9584df; outline-offset: 1px; } }
-.delivery-purchase-list { display: grid; gap: 1rem; }
-.delivery-purchase { display: block; border: 1px solid var(--cui-border-color); border-radius: 13px; overflow: hidden; background: var(--cui-body-bg); color: inherit; text-decoration: none; &:hover, &:focus-visible { border-color: #b2a5e7; box-shadow: 0 3px 14px #26324b0d; } > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.2rem 1.25rem; h3 { margin: .4rem 0; font-size: .9rem; font-weight: 650; } p { margin: 0; font-size: .78rem; color: var(--cui-secondary-color); overflow-wrap: anywhere; } } }
+.delivery-purchase-list { display: grid; gap: 0; }
+.delivery-purchase { display: block; border: 1px solid color-mix(in srgb, var(--cui-border-color, #dce2ea) 75%, #64748b); box-shadow: 0 4px 14px #24324712; border-radius: 13px; overflow: hidden; background: var(--cui-body-bg); color: inherit; text-decoration: none; &:hover, &:focus-visible { border-color: #b2a5e7; box-shadow: 0 6px 18px #2432471a; } > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.2rem 1.25rem; h3 { margin: .4rem 0; font-size: .9rem; font-weight: 650; } p { margin: 0; font-size: .78rem; color: var(--cui-secondary-color); overflow-wrap: anywhere; } } }
 .delivery-stage { font-size: .68rem; color: var(--cui-secondary-color); }
 .delivery-status { flex-shrink: 0; padding: .3rem .6rem; border-radius: 20px; font-size: .68rem; font-weight: 600; background: #f0edfc; color: #6855d7; &.overdue { background: #fcece9; color: #b24537; } &.received { background: #edf8f1; color: #247452; } }
-.delivery-purchase-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: 1rem 1.25rem; border-top: 1px solid var(--cui-border-color); background: var(--cui-tertiary-bg); dl { display: flex; gap: 2rem; flex-wrap: wrap; margin: 0; } dt { font-size: .67rem; font-weight: 400; color: var(--cui-secondary-color); } dd { margin: .35rem 0 0; font-size: .78rem; font-weight: 600; font-variant-numeric: tabular-nums; } }
+.delivery-purchase-footer {
+  display: grid; gap: 16px; padding: 20px; border-top: 1px solid var(--cui-border-color); background: var(--cui-body-bg, #fff);
+  .delivery-list-actions { justify-content: space-between; }
+}
+.delivery-dates-table {
+  width: 100%; border-collapse: collapse; table-layout: fixed;
+  th, td { padding: 12px 16px; border-bottom: 1px solid var(--cui-border-color, #dce2ea); text-align: left; vertical-align: middle; overflow-wrap: anywhere; }
+  thead th { padding-block: 10px; background: var(--cui-tertiary-bg, #f3f4f8); color: var(--cui-secondary-color, #64748b); font-size: 12px; font-weight: 500; }
+  thead th:first-child { width: 42%; }
+  thead th:last-child { width: 25%; }
+  tbody th { font-size: 14px; font-weight: 500; color: var(--cui-body-color, #243247); i { margin-inline-end: 6px; } }
+  td { font-size: 20px; line-height: 1.4; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--cui-body-color, #243247); }
+  .date-missing { font-size: 14px; font-weight: 400; color: var(--cui-secondary-color, #64748b); }
+  .date-priority, .date-rescheduled { th, td { color: #5934af; } }
+  .date-overdue { th, td { color: #a12d20; } }
+  .date-received { th, td { color: #216443; } }
+}
+@media(max-width: 575.98px) {
+  .delivery-purchase-footer { padding: 16px; .delivery-list-actions { justify-content: flex-start; } }
+  .delivery-dates-table { th, td { padding: 12px 8px; } td { font-size: 17px; } tbody th { font-size: 13px; } }
+}
+
 .overdue { color: #b24537; }
 .delivery-open { display: inline-flex; align-items: center; gap: .6rem; font-size: .78rem; color: #6855d7; font-weight: 550; }
 .delivery-empty { padding: 2.5rem 1.5rem; border: 1px solid var(--cui-border-color); border-radius: 13px; background: var(--cui-body-bg); text-align: center; color: var(--cui-secondary-color); font-size: .82rem; > i { display: block; margin-bottom: 1rem; font-size: 1.6rem; color: #9384c7; } h3 { font-size: 1rem; color: var(--cui-body-color); } p { margin: .75rem 0 1rem; } a { display: inline-flex; align-items: center; gap: .6rem; color: #6855d7; } }
 .delivery-error { color: #b24537; button { margin-left: .75rem; } }
-@media(max-width: 575.98px) { .delivery-search { flex: 1 1 100%; min-width: 0; } .delivery-purchase-footer dl { gap: 1rem; } }
+@media(max-width: 575.98px) { .delivery-search { flex: 1 1 100%; min-width: 0; } }
+
+.delivery-list-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  .delivery-update-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-inline-start: auto; }
+  button, .delivery-open { min-height: 42px; }
+  .delivery-receive { background: #242933; border-color: #242933; color: #fff; }
+  .delivery-open { padding: 10px 14px; border: 1px solid #b2a5e7; border-radius: 8px; background: transparent; text-decoration: none; &:hover { background: #f0edfc; border-color: #6855d7; } &:focus-visible { outline: 2px solid #9584df; outline-offset: 2px; } }
+}
+
+.date-current-label { display: inline-block; margin-inline-start: 8px; font-size: 11px; font-weight: 500; }
+.date-reason { display: block; margin-top: 5px; color: var(--cui-secondary-color, #64748b); font-size: 12px; font-weight: 400; }
+.delivery-dates-table .date-previous td { font-size: 16px; font-weight: 500; color: var(--cui-secondary-color, #64748b); }
+.date-status { display: inline-block; padding: 5px 8px; border-radius: 5px; font-size: 12px; line-height: 1.4; font-weight: 600; background: #e9eef5; color: #495a73; &.pending { background: #fff0c2; color: #885708; } &.overdue { background: #fcece9; color: #a12d20; } &.received { background: #d4eddf; color: #216443; } }
+@media(max-width: 575.98px) { .delivery-dates-table { thead th:first-child { width: 38%; } thead th:last-child { width: 28%; } td { font-size: 15px; } .date-status { padding: 4px 5px; font-size: 11px; } } }

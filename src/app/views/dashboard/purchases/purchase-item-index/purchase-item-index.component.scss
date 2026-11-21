@@ -10,16 +10,21 @@
   gap: 1rem;
   flex-wrap: wrap;
   padding: 1.1rem;
+  background: #f5f2fc;
+  border-bottom: 1px solid #e5ddf3;
   h3 {
     margin: 0;
-    font-size: .9rem;
-    font-weight: 650;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #3f345b;
+    > i { margin-right: .6rem; color: #7a60b6; font-size: .95rem; }
     span {
       margin-left: .4rem;
       padding: .2rem .45rem;
       border-radius: 6px;
-      background: var(--cui-tertiary-bg, #f3f3f9);
-      color: var(--cui-secondary-color);
+      background: #fff;
+      color: #7a60b6;
+      border: 1px solid #e1d8f2;
       font-size: .7rem;
     }
   }
@@ -42,6 +47,8 @@
   color: #7057b3;
   font-size: .75rem;
   font-weight: 550;
+  &:hover { background: #eee8f9; border-color: #a993d6; }
+  &:focus-visible { outline: 2px solid #8a70bd; outline-offset: 3px; }
 }
 
 .purchase-items-scroll {
@@ -73,7 +80,7 @@
     width: 6%;
   }
   th {
-    padding: .7rem .65rem;
+    padding: .85rem .75rem;
     background: var(--cui-tertiary-bg, #f5f6fa);
     border-color: var(--cui-border-color);
     color: var(--cui-secondary-color);

@@ -1,0 +1,16 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <section class="panel">
+    <header class="panel-header"><div><h2><i class="fa-solid fa-calendar-days" aria-hidden="true"></i>Detalles de la sesión</h2><p>Define la campaña, la fecha, el horario y la persona responsable.</p></div>@if (!editing) { <span class="initial-status"><i class="fa-solid fa-circle" aria-hidden="true"></i>Nueva sesión</span> }</header>
+    <div class="panel-body form-grid">
+      <div class="wide"><label for="photo-name">Nombre de la sesión *</label><input id="photo-name" formControlName="name" maxlength="180" placeholder="Ej. Colección verano · Catálogo y campaña">@if (form.controls.name.touched && form.controls.name.invalid) { <small class="invalid">Escribe un nombre de hasta 180 caracteres.</small> }</div>
+      @if (editing) { <div><label for="photo-status">Estado</label><select id="photo-status" formControlName="status">@for (status of statuses; track status.value) { <option [value]="status.value">{{ status.label }}</option> }</select></div> }
+      <div [class.wide]="!editing"><label for="photo-collection">Colección / campaña</label><input id="photo-collection" formControlName="collection" maxlength="255" placeholder="Nombre de la colección o campaña"></div>
+      <div><label for="photo-date">Fecha de la sesión</label><input id="photo-date" type="date" formControlName="shoot_date"></div>
+      <div class="time-fields"><div><label for="photo-start">Hora de inicio</label><input id="photo-start" type="time" formControlName="starts_at"></div><div><label for="photo-end">Hora de fin</label><input id="photo-end" type="time" formControlName="ends_at"></div></div>
+      <div class="wide"><label for="photo-responsible">Responsable de la sesión</label><select id="photo-responsible" formControlName="responsible_id"><option [ngValue]="null">Por asignar</option>@for (employee of options?.employees || []; track employee.employee_id) { <option [ngValue]="employee.id">{{ employee.name }}</option> }</select><p>Selecciona un único responsable entre los empleados activos de esta tienda.</p></div>
+    </div>
+  </section>
+
+  <footer class="session-form-footer">@if (!editing) { <span><i class="fa-solid fa-list-check" aria-hidden="true"></i>Después de crear la sesión podrás agregar fotógrafos, modelos, locaciones y tareas.</span> }<button type="submit" class="button primary" [disabled]="saving"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>{{ saving ? 'Guardando…' : editing ? 'Guardar cambios' : 'Crear sesión' }}</button></footer>
+</form>
+

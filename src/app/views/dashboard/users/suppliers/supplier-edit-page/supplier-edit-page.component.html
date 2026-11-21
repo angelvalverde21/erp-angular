@@ -1,61 +1,15 @@
-<app-head-page title="Editar Proveedor">
-    <app-button-back></app-button-back>
-</app-head-page>
+<main class="contact-page">
+  <a class="contact-back" routerLink="../"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver a proveedores</a>
+  <header class="contact-page-header"><div class="contact-page-title"><span class="contact-page-icon"><i class="fa-solid fa-building" aria-hidden="true"></i></span><div><span class="contact-eyebrow">Directorio · Ficha del proveedor</span><h1>{{ supplier?.user?.name || supplier?.name || 'Ficha del proveedor' }}</h1><p>Consulta y actualiza los datos y las direcciones de tu proveedor.</p></div></div>@if (supplier) { <span class="contact-status" [class.active]="+(supplier?.user?.status ?? supplier?.status) === 1" [class.blocked]="+(supplier?.user?.status ?? supplier?.status) === 0"><i class="fa-solid fa-circle" aria-hidden="true"></i>{{ +(supplier?.user?.status ?? supplier?.status) === 1 ? 'Activo' : 'Bloqueado' }}</span> }</header>
+  @if (error) { <div class="contact-alert" role="alert">{{ error }}<button class="contact-button light" type="button" (click)="load()">Reintentar</button></div> }
+  @if (loading) { <div class="contact-panel contact-feedback" role="status"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Cargando ficha…</div> }
+  @else if (supplier && !error) {
 
-@if(loading || !supplier){
-<app-loading></app-loading>
-}@else{
-
-<div class="card mb-3">
-    <div class="card-body">
-        <app-supplier-edit [supplier]="supplier" [roles]="roles"></app-supplier-edit>
-    </div>
-</div>
-
-<app-head-page [icon]="faHouse" title="Direcciones" subtitle="Lista de direcciones del proveedor" class="my-3">
-    <app-button-add path="" (click)="openVerticallyCentered(content)">Direccion</app-button-add>
-</app-head-page>
-
-<div class="card mb-3">
-
-    <div class="card-body p-0">
-
-        @if(supplier?.addresses?.length > 0){
-
-        <app-address-index [addresses]="supplier.addresses" [user_id]="supplier.user_id" [addressable_type]="'supplier'"
-            [addressable_id]="supplier.id"></app-address-index>
-
-        }@else{
-        <div class="p-3">
-            No hay oficinas registradas
-        </div>
-        }
-
-    </div>
-
-    <div class="card-footer" style="border-top: 0;">
-        {{ supplier?.addresses?.length }} Registros encontrados
-    </div>
-
-</div>
-
-<app-head-page [icon]="faBagShopping" title="Pedidos" subtitle="Lista de pedidos del proveedor" class="my-3">
-    <!-- <app-button-add path="" (click)="openVerticallyCentered(content)">Direccion</app-button-add> -->
-</app-head-page>
-
-<ng-template #content let-modal>
-
-    <div class="modal-header">
-        <h5 class="modal-title">Direccion exacta del proveedor</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body px-4">
-        <app-address-create [user_id]="supplier.user_id" [addressable_type]="'supplier'" [addressable_id]="supplier.id"
-            (emitCreateAddress)="receiveCreateAddress($event)"></app-address-create>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-    </div>
-
-</ng-template>
-}
+    <app-supplier-edit [supplier]="supplier" [roles]="roles" (updated)="load()" />
+    <section class="contact-panel"><header class="contact-panel-header"><div><h2><i class="fa-solid fa-location-dot" aria-hidden="true"></i>Direcciones <span class="contact-muted">{{ supplier.addresses?.length || 0 }}</span></h2><p>Oficinas y puntos de atención del proveedor.</p></div><button class="contact-button light" type="button" (click)="openVerticallyCentered(content)"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar dirección</button></header>
+      @if (supplier.addresses?.length) { <app-address-index [addresses]="supplier.addresses" [user_id]="supplier.user_id" addressable_type="supplier" [addressable_id]="supplier.id" (emitUpdateAddress)="load()" /> }
+      @else { <div class="contact-empty"><span class="contact-empty-icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span><h2>Aún no hay direcciones</h2><p>Registra una oficina o punto de atención del proveedor.</p><button class="contact-button light" type="button" (click)="openVerticallyCentered(content)">Agregar primera dirección</button></div> }
+    </section>
+    <ng-template #content let-modal><div class="modal-header"><h5 class="modal-title">Nueva dirección del proveedor</h5><button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button></div><div class="modal-body"><app-address-create [user_id]="supplier.user_id" addressable_type="supplier" [addressable_id]="supplier.id" (emitCreateAddress)="receiveCreateAddress($event)" /></div></ng-template>
+  }
+</main>

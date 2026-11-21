@@ -1,4 +1,51 @@
 export type OrderProgressStatus = 'registrado' | 'pago_recibido' | 'pago_confirmado' | 'preparacion' | 'enviado' | 'desconocido';
+export type OrderProgressDates = Partial<Record<Exclude<OrderProgressStatus, 'desconocido'>, string>>;
+export interface OrderProgressEvent { action?: string; createdAt?: string; }
+
+interface OrderProgressDateSource {
+  createdAt?: string | null;
+  created_at?: string | null;
+  displayFinancialStatus?: string | null;
+  transactions?: { kind?: string; status?: string; processedAt?: string | null; createdAt?: string | null }[];
+  fulfillments?: { status?: string; displayStatus?: string; createdAt?: string | null }[];
+  events?: OrderProgressEvent[] | { nodes?: OrderProgressEvent[]; edges?: { node: OrderProgressEvent }[] };
+}
+
+/** Only recorded timestamps are used; later states never fabricate earlier dates. */
+export function orderProgressDates(order: OrderProgressDateSource | null | undefined): OrderProgressDates {
+  if (!order) return {};
+  const dates: OrderProgressDates = {};
+  const ordered = (values: (string | null | undefined)[]) => values
+    .filter((value): value is string => !!value && !Number.isNaN(Date.parse(value)))
+    .sort((a, b) => Date.parse(a) - Date.parse(b));
+  const events = Array.isArray(order.events)
+    ? order.events
+    : order.events?.nodes ?? order.events?.edges?.map(edge => edge.node) ?? [];
+  const eventDates = (actions: string[]) => ordered(events
+    .filter(event => actions.includes(event.action ?? ''))
+    .map(event => event.createdAt));
+  const created = ordered([order.createdAt ?? order.created_at])[0];
+  if (created) dates.registrado = created;
+
+  const payments = ordered((order.transactions ?? [])
+    .filter(payment => payment.status === 'SUCCESS' && ['SALE', 'CAPTURE'].includes(payment.kind ?? ''))
+    .map(payment => payment.processedAt || payment.createdAt));
+  const confirmedPayments = eventDates(['sale_success', 'capture_success']);
+  const received = payments[0] ?? confirmedPayments[0];
+  if (received) dates.pago_recibido = received;
+  if (order.displayFinancialStatus === 'PAID') {
+    const confirmed = confirmedPayments.at(-1) ?? payments.at(-1);
+    if (confirmed) dates.pago_confirmado = confirmed;
+  }
+  const preparation = eventDates(['fulfillment_pending'])[0];
+  if (preparation) dates.preparacion = preparation;
+  const shipments = ordered((order.fulfillments ?? [])
+    .filter(shipment => shipment.status === 'SUCCESS')
+    .map(shipment => shipment.createdAt));
+  const sent = shipments.at(-1) ?? eventDates(['fulfillment_success']).at(-1);
+  if (sent) dates.enviado = sent;
+  return dates;
+}
 
 export interface PaymentState {
   label: string;
@@ -37,13 +84,9 @@ interface OrderProgressSource {
 }
 
 export function orderProgress(order: OrderProgressSource | null | undefined): OrderProgressStatus {
-  const fulfillments = order?.fulfillments;
-  if (order?.displayFulfillmentStatus === 'FULFILLED' && Array.isArray(fulfillments) && fulfillments.length > 0) {
-    const shipped = ['IN_TRANSIT', 'OUT_FOR_DELIVERY', 'DELIVERED', 'ATTEMPTED_DELIVERY'];
-    if (fulfillments.every(item => shipped.includes(item.displayStatus ?? ''))) return 'enviado';
-  }
   switch (order?.displayFulfillmentStatus) {
-    case 'FULFILLED':
+    // The order's fulfillment state is authoritative; carrier tracking is optional.
+    case 'FULFILLED': return 'enviado';
     case 'IN_PROGRESS':
     case 'PARTIALLY_FULFILLED': return 'preparacion';
   }

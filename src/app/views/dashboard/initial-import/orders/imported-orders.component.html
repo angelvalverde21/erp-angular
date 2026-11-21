@@ -1,0 +1,71 @@
+﻿<main class="orders-page packing-page">
+  <header class="page-heading">
+    <div><span class="eyebrow">PRIMERA IMPORTACIÓN</span><h1>Pedidos importados</h1><p>Identifica qué preparar y revisa las prendas, cantidades y el pago de cada pedido.</p></div>
+    <a class="button" routerLink="../shopify"><i class="fa-solid fa-cloud-arrow-down" aria-hidden="true"></i>Ver importación</a>
+  </header>
+  @if (data; as result) {
+    <app-imported-order-sync [run]="result.run" [initialUpdate]="result.order_update || null" (finished)="retry()" />
+    <div class="summary-grid" aria-label="Filtrar por preparación">
+      @for (option of packingFilters; track option.key) {
+        <button type="button" class="summary-tile" [class.selected]="(query['work'] || 'all') === option.key" [attr.aria-pressed]="(query['work'] || 'all') === option.key" (click)="filterWork(option.key)">
+          <span><i [class]="'fa-solid ' + option.icon" aria-hidden="true"></i>{{ option.label }}</span><strong>{{ (result.packing_summary?.[option.count] ?? 0) | number }}</strong>
+        </button>
+      }
+    </div>
+  }
+  <section class="panel">
+    <div class="toolbar">
+      <form class="search-form" (ngSubmit)="submit()"><label class="sr-only" for="import-order-search">Buscar pedido</label><div class="search-input"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="import-order-search" name="search" [(ngModel)]="search" maxlength="150" placeholder="Buscar pedido, cliente, correo o teléfono"></div><button class="button dark" type="submit">Buscar</button></form>
+    </div>
+    <details class="packing-filters" [open]="!!query['run_id'] || (!!query['timeline'] && query['timeline'] !== 'all')">
+      <summary><i class="fa-solid fa-sliders" aria-hidden="true"></i>Más filtros @if (query['timeline'] && query['timeline'] !== 'all') { <span class="badge warning">Historial filtrado</span> }</summary>
+      <div class="advanced-fields">
+        <div class="run-select"><label for="packing-status">Preparación</label><select id="packing-status" [value]="query['work'] || 'all'" (change)="selectWork($event)">
+          @for (option of packingFilters; track option.key) { <option [value]="option.key">{{ option.label }}</option> }
+          <option value="review">Por revisar</option><option value="on_hold">En espera</option><option value="scheduled">Programados</option><option value="cancelled">Cancelados</option>
+        </select></div>
+        <div class="run-select"><label for="timeline-filter">Historial recuperado</label><select id="timeline-filter" [value]="query['timeline'] || 'all'" (change)="selectTimeline($event)">
+          @for (option of filters; track option.key) { <option [value]="option.key">{{ option.label }} ({{ data?.summary?.[option.count] ?? 0 }})</option> }
+        </select></div>
+        @if (data?.runs?.length) { <div class="run-select"><label for="import-order-run">Importación</label><select id="import-order-run" [value]="data?.run?.id || ''" (change)="changeRun($event)">@for (run of data!.runs; track run.id) { <option [value]="run.id">{{ view.date(run.created_at, true) }}</option> }</select></div> }
+      </div>
+    </details>
+    @if (query['timeline'] === 'unavailable') { <div class="notice inset"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><div><strong>Shopify indica que existen comentarios, pero no los devuelve.</strong><p>Abre el pedido para revisar sus detalles y los eventos que sí se pudieron recuperar.</p></div></div> }
+    @if (error) { <div class="empty-state" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><p>{{ error }}</p><button class="button" (click)="retry()">Reintentar</button></div> }
+    @else if (loading) { <div class="empty-state" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><p>Cargando pedidos…</p></div> }
+    @else { @if (data; as result) {
+      @if (result.items.length) {
+        <div class="packing-list-heading"><h2>{{ listHeading }}</h2><span>{{ result.pagination.total | number }} pedidos · Más recientes primero</span></div>
+        <div class="table-scroll"><table class="orders-table packing-table"><thead><tr><th>Pedido / fecha</th><th>Cliente / destino</th><th>Artículos y cantidades</th><th>Preparación</th><th>Pago</th><th><span class="sr-only">Acciones</span></th></tr></thead><tbody>
+          @for (order of result.items; track order.id) {
+            @let state = packingStates[order.packing_state || 'review'];
+            <tr [class.ready-row]="order.packing_state === 'ready'" [class.cancelled-row]="order.packing_state === 'cancelled'">
+              <td><a class="order-link" [routerLink]="[order.id]" [queryParams]="detailQuery">{{ order.name }}</a><small>{{ order.created_at | DateShopify }}</small>
+                @if (order.comment_count > 0) { <small class="order-comments"><i class="fa-regular fa-comment" aria-hidden="true"></i>{{ order.comment_count }} {{ order.comment_count === 1 ? 'comentario' : 'comentarios' }}</small> }
+              </td>
+              <td><strong class="customer-name">{{ order.customer }}</strong>@if (order.destination) { <small><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {{ order.destination }}</small> }</td>
+              <td class="packing-items-cell">
+                <span class="unit-total">{{ order.units_count ?? 0 }} {{ order.units_count === 1 ? 'unidad' : 'unidades' }}</span>
+                <ul class="packing-items">
+                  @for (item of order.packing_items || []; track item.id) {
+                    <li><span class="item-quantity" [class.multiple]="(item.currentQuantity ?? item.quantity) > 1" [attr.aria-label]="(item.currentQuantity ?? item.quantity) + ' unidades'">{{ item.currentQuantity ?? item.quantity }}<span>×</span></span>
+                      <app-imported-order-item-image [image]="item.display_image || null" [title]="item.title || item.name || 'Artículo'" [compact]="true" />
+                      <div><strong>{{ item.title || item.name }}</strong>@if (item.variantTitle && item.variantTitle !== 'Default Title') { <span class="variant-label">{{ item.variantTitle }}</span> }@if (item.sku) { <small class="item-sku">SKU: {{ item.sku }}</small> }</div>
+                    </li>
+                  } @empty { <li class="muted">Sin artículos activos disponibles</li> }
+                </ul>
+                @if ((order.item_count ?? 0) > 3) { <a class="more-items" [routerLink]="[order.id]" [queryParams]="detailQuery">Ver {{ order.item_count! - 3 }} artículos más<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a> }
+              </td>
+              <td><span [class]="'packing-state state-' + order.packing_state"><i [class]="'fa-solid ' + state.icon" aria-hidden="true"></i>{{ state.label }}</span><small>{{ state.hint }}</small>
+                @if (order.fulfillment_status === 'PARTIALLY_FULFILLED') { <small class="partial-warning">Envío parcial</small> }
+              </td>
+              <td><span class="badge" [class.success]="order.financial_status === 'PAID'" [class.warning]="order.financial_status !== 'PAID'">{{ view.status(order.financial_status) }}</span><strong class="packing-amount">{{ view.money(order.total) }}</strong></td>
+              <td><a class="button small" [routerLink]="[order.id]" [queryParams]="detailQuery" [attr.aria-label]="'Ver pedido ' + order.name">Ver pedido<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></td>
+            </tr>
+          }
+        </tbody></table></div>
+        <footer class="pagination-bar"><span>{{ result.pagination.total | number }} pedidos · Página {{ result.pagination.page }} de {{ result.pagination.last_page }}</span><div><button class="button small" [disabled]="result.pagination.page <= 1" (click)="page(result.pagination.page - 1)"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>Anterior</button><button class="button small" [disabled]="result.pagination.page >= result.pagination.last_page" (click)="page(result.pagination.page + 1)">Siguiente<i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button></div></footer>
+      } @else { <div class="empty-state"><i class="fa-solid fa-inbox" aria-hidden="true"></i><h2>{{ result.run ? 'No hay pedidos con estos filtros' : 'Todavía no hay pedidos importados' }}</h2><p>{{ result.run ? 'Prueba con otro estado o cambia la búsqueda.' : 'Los pedidos aparecerán aquí después de realizar la primera importación.' }}</p>@if (result.run) { <button class="button" (click)="clear()">Limpiar filtros</button> }</div> }
+    } }
+  </section>
+</main>

@@ -17,7 +17,7 @@
     </div>
   </header>
 
-  <app-order-status-stepper [status]="progress" [cancelled]="!!order.cancelled_at || order.status === 'cancelado'"
+  <app-order-status-stepper [status]="progress" [dates]="progressDates" [cancelled]="!!order.cancelled_at || order.status === 'cancelado'"
     [onHold]="order.status === 'en_espera'"></app-order-status-stepper>
 
   <div class="editor-layout">

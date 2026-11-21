@@ -44,4 +44,17 @@ describe('ImagePreviewComponent', () => {
     expect(fixture.componentInstance.previewUrl).toBe('/medium.webp');
     fixture.destroy();
   });
+
+  it('uses the large image in the lightbox when requested and renders only the thumbnail initially', () => {
+    spyOn(Fancybox, 'bind');
+    const fixture = TestBed.createComponent(ImagePreviewComponent);
+    fixture.componentRef.setInput('image', { url_thumbnail: '/thumb.webp', url_medium: '/medium.webp', url_large: '/large.webp' });
+    fixture.componentRef.setInput('previewVariant', 'large'); fixture.componentRef.setInput('objectFit', 'contain');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('a').getAttribute('href')).toBe('/large.webp');
+    expect(fixture.nativeElement.querySelectorAll('img').length).toBe(1);
+    expect(fixture.nativeElement.querySelector('img').getAttribute('src')).toBe('/thumb.webp');
+    expect(fixture.nativeElement.querySelector('img').style.objectFit).toBe('contain');
+    fixture.destroy();
+  });
 });

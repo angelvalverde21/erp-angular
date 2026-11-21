@@ -1,0 +1,5 @@
+<dialog #dialog [attr.aria-label]="title" (cancel)="onCancel($event)">
+  <header class="dialog-heading"><div><h2><i [class]="'fa-solid ' + icon" aria-hidden="true"></i>{{ title }}</h2>@if (description) { <p>{{ description }}</p> }</div><button type="button" class="close-dialog" aria-label="Cerrar ventana" [disabled]="closeDisabled || isClosing" (click)="requestClose()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></header>
+  <div class="dialog-body" [class.plain]="plain"><ng-content /></div>
+  <ng-content select="[photoDialogFooter]" />
+</dialog>

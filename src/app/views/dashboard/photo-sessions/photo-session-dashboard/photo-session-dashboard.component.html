@@ -1,0 +1,43 @@
+<div class="dashboard-overview" [class.is-empty]="emptyPreparation">
+  <section class="panel preparation-panel" [attr.aria-busy]="taskState.loading">
+    <header class="panel-header"><div><h2><i class="fa-solid fa-list-check" aria-hidden="true"></i>Preparación de la sesión</h2><p>El avance refleja las tareas completadas por el equipo.</p></div>@if (!emptyPreparation) { <button type="button" class="button" (click)="navigate.emit('tasks')">Ver tareas<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button> }</header>
+    <div class="preparation-body">
+      @if (taskState.error) { <p class="progress-error" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>{{ summary ? 'No se pudo actualizar el avance. Se muestra la última información disponible.' : 'No se pudo consultar el avance. Abre Tareas para volver a intentarlo.' }}</p> }
+      @if (summary; as tasks) {
+        @if (tasks.total > 0) {
+          <div class="progress-headline"><div><span class="metric-label">Avance de preparación</span><h3><strong>{{ tasks.completed }}</strong> de {{ tasks.total }} tareas completadas</h3></div><strong class="progress-percentage">{{ percentage }}<span>%</span></strong></div>
+          <div class="preparation-progress" role="progressbar" aria-label="Preparación de la sesión" [attr.aria-valuenow]="percentage" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuetext]="tasks.completed + ' de ' + tasks.total + ' tareas completadas'"><span [style.width.%]="percentage"></span></div>
+          <p class="progress-caption">{{ percentage === 100 ? 'Todas las tareas de preparación están completadas.' : 'Completa los preparativos para tener todo listo para la sesión.' }}@if (taskState.loading) { <span role="status">Actualizando…</span> }</p>
+        } @else {
+          <div class="empty-preparation"><span class="empty-symbol"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></span><div><h3>Organiza los preparativos de la sesión</h3><p>Aún no hay tareas registradas. Empieza en Tareas y completa las demás secciones para preparar la sesión.</p><button type="button" class="button primary" (click)="navigate.emit('tasks')">Ir a tareas<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div></div>
+        }
+        @if (tasks.total > 0) {
+        <div class="task-breakdown" aria-label="Resumen de tareas">
+          <div class="completed"><span><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Completadas</span><strong>{{ tasks.completed }}</strong></div>
+          <div class="in-progress"><span><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>En curso</span><strong>{{ tasks.in_progress }}</strong></div>
+          <div class="pending"><span><i class="fa-regular fa-clock" aria-hidden="true"></i>Pendientes</span><strong>{{ tasks.pending }}</strong></div>
+          <div class="blocked"><span><i class="fa-solid fa-ban" aria-hidden="true"></i>Bloqueadas</span><strong>{{ tasks.blocked }}</strong></div>
+        </div>
+        }
+        @if (emptyPreparation && missingSections.length) {
+          <nav class="setup-sections" aria-label="Secciones por completar"><p>Continúa con las secciones que faltan:</p>@for (section of missingSections; track section.key) { <button type="button" (click)="navigate.emit(section.key)"><i [class]="'fa-solid ' + section.icon" aria-hidden="true"></i>{{ section.label }}<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button> }</nav>
+        }
+      } @else if (taskState.loading) { <div class="dashboard-loading" role="status"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Consultando el avance de las tareas…</div> }
+    </div>
+  </section>
+  <aside class="panel attention-panel">
+    <header class="attention-heading"><h2><i class="fa-solid fa-flag" aria-hidden="true"></i>{{ emptyPreparation ? 'Resumen pendiente' : 'Requieren atención' }}</h2><p>{{ emptyPreparation ? 'Se completará con los datos de tu sesión.' : 'Prioridades para la coordinación.' }}</p></header>
+    @if (emptyPreparation) {
+      <div class="attention-initial"><i class="fa-regular fa-clipboard" aria-hidden="true"></i><h3>Todavía no hay datos de preparación</h3><p>Al registrar tareas verás aquí el avance, las fechas límite y los puntos que requieren atención.</p><span>Comienza por la sección Tareas.</span></div>
+    } @else {
+    @if (summary; as tasks) {
+      <div class="attention-items">
+        <div class="attention-item" [class.has-alert]="tasks.overdue > 0"><span class="attention-icon"><i class="fa-regular fa-calendar-xmark" aria-hidden="true"></i></span><div><strong>Tareas vencidas</strong><small>Superaron su fecha límite</small></div><span class="attention-count">{{ tasks.overdue }}</span></div>
+        <div class="attention-item" [class.has-alert]="tasks.blocked > 0"><span class="attention-icon"><i class="fa-solid fa-ban" aria-hidden="true"></i></span><div><strong>Tareas bloqueadas</strong><small>Necesitan apoyo para continuar</small></div><span class="attention-count">{{ tasks.blocked }}</span></div>
+      </div>
+      @if (tasks.total && !tasks.overdue && !tasks.blocked) { <p class="no-alerts"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Sin tareas vencidas ni bloqueadas</p> }
+      @if (tasks.overdue || tasks.blocked) { <button type="button" class="button review-tasks" (click)="navigate.emit('tasks')">Revisar tareas<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button> }
+    } @else { <p class="attention-placeholder">{{ taskState.loading ? 'Consultando prioridades…' : 'Las prioridades estarán disponibles al cargar las tareas.' }}</p> }
+    }
+  </aside>
+</div>

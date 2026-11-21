@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { PurchaseIndexComponent } from '@dashboard/purchases/purchase-index/purchase-index.component';
@@ -14,8 +14,18 @@ import { ManufacturePurchaseService } from '../../../manufacture.purchase.servic
   styleUrl: './manufacture-production-purchase-index.component.scss',
 })
 export class ManufactureProductionPurchaseIndexComponent implements OnInit, OnDestroy {
+  @ViewChild(ProductionStagesComponent) stageWorkspace?: ProductionStagesComponent;
+  canLeaveSection(): Promise<boolean> | boolean { return this.stageWorkspace?.canLeaveSection() ?? true; }
   manufacture_id = 0;
   purchases: any[] = [];
+  get productionName(): string {
+    const production = this._manufacture.manufactureSingnalEvent();
+    return Number(production?.id) === this.manufacture_id ? production.name ?? '' : '';
+  }
+  get cuttingTotal(): number {
+    const production = this._manufacture.manufactureSingnalEvent();
+    return Number(production?.id) === this.manufacture_id ? Number(production.sum_variants ?? 0) : 0;
+  }
   loading = false;
   error = '';
 

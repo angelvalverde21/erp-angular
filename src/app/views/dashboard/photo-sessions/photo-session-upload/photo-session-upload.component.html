@@ -1,0 +1,25 @@
+<section [class.panel]="!embedded">
+  <header class="panel-header" [class.embedded-toolbar]="embedded">@if (!embedded) { <div><h2><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>Subir fotos y videos</h2><p>Archivos originales, sin reducir calidad ni resolución.</p></div> }<label class="category-label">Guardar como<select [value]="category" (change)="category = $any($event.target).value">@for (option of categories; track option.value) { <option [value]="option.value">{{ option.label }}</option> }</select></label></header>
+  <div class="panel-body">
+    @if (!configured) { <div class="notice">La carga estará disponible cuando se configure el almacenamiento B2.</div> }
+    @else {
+      <label class="dropzone" [class.dragging]="dragging" (dragover)="$event.preventDefault(); dragging = true" (dragleave)="dragging = false" (drop)="drop($event)">
+        <input type="file" multiple (change)="select($event)" accept="image/*,video/*,.dng,.cr2,.cr3,.nef,.arw,.rw2,.raf,.orf,.mxf,.mkv">
+        <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i><strong>Arrastra tus archivos o haz clic para elegir</strong><span>Fotos, RAW y videos · Hasta {{ size(maxBytes) }} por archivo</span><small>La carga va directamente a Backblaze B2. El original se conserva intacto.</small>
+      </label>
+    }
+    @if (error) { <div class="error" role="alert">{{ error }}</div> }
+    @if (tasks.length) {
+      <div class="queue-heading"><span>{{ tasks.length }} archivos en la cola</span><button type="button" class="text-button" (click)="clear()">Limpiar completados</button></div>
+      <ul class="upload-queue">
+        @for (task of tasks; track task) {
+          <li><div class="file-info"><i class="fa-regular fa-file" aria-hidden="true"></i><div><strong>{{ task.file.name }}</strong><small>{{ size(task.file.size) }} · {{ taskLabel(task) }}</small></div></div>
+            @if (task.state === 'uploading') { <progress max="100" [attr.value]="task.phase === 'uploading' ? task.progress : null" [attr.aria-label]="taskLabel(task) + ': ' + task.file.name"></progress> }
+            @if (task.error) { <p class="upload-error" role="alert">{{ task.error }}</p> }
+            <div class="file-actions">@if (task.state === 'error') { <button type="button" class="button" (click)="retry(task)">Reintentar</button> }@if (task.state === 'waiting' || task.state === 'uploading') { <button type="button" class="text-button" (click)="cancel(task)">Detener</button> }@if (task.state === 'ready') { <i class="fa-solid fa-circle-check saved" aria-label="Guardado"></i> }</div>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</section>

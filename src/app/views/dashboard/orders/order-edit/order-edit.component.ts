@@ -5,7 +5,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, finalize, takeUntil } from 'rxjs';
 import { VariantSearchComponent } from '../../products/variants/variant-search/variant-search.component';
 import { OrderStatusStepperComponent } from '../../shopify/orders/shared/order-status-stepper/order-status-stepper.component';
-import { OrderProgressStatus } from '../../shopify/orders/shared/order-status-stepper/order-status.model';
+import { OrderProgressStatus, orderProgressDates } from '../../shopify/orders/shared/order-status-stepper/order-status.model';
 import { OrderService } from '../order.service';
 
 @Component({
@@ -73,6 +73,7 @@ export class OrderEditComponent implements OnChanges, OnDestroy {
       ['registrado', 'pago_recibido', 'pago_confirmado', 'preparacion', 'enviado'].includes(status)
         ? status : 'desconocido';
   }
+  get progressDates() { return orderProgressDates(this.order); }
 
   ngOnChanges(): void {
     if (!this.order) return;

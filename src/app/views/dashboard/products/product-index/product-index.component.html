@@ -1,4 +1,5 @@
-﻿<section class="product-list" aria-labelledby="product-list-title">
+﻿<p class="visually-hidden" role="status" aria-live="polite">{{ insertionMessage }}</p>
+<section class="product-list" aria-labelledby="product-list-title">
     <div class="product-list-header">
         <div class="product-list-heading">
             <span class="product-list-icon" aria-hidden="true"><i class="fa-solid fa-boxes-stacked"></i></span>
@@ -10,11 +11,14 @@
         <span class="product-list-count">{{ products.length }} {{ products.length === 1 ? 'producto cargado' : 'productos cargados' }}</span>
     </div>
 
+    @if (bulkActions && selectedIds.size) { <app-product-shopify-bulk [products]="selectedProducts" (clearSelection)="clearProducts()" (busyChanged)="bulkBusy = $event"></app-product-shopify-bulk> }
+    @if (bulkActions && !selectedIds.size) { <p class="product-selection-hint">Selecciona productos para aplicar acciones masivas. Hasta 25 por envío.</p> }
     <div class="table-responsive product-table-scroll" tabindex="0" role="region" aria-label="Productos y controles de orden">
     <table class="table table-hover mb-0 align-middle product-table" [class.product-table-sortable]="sortable">
         <caption class="visually-hidden">Catálogo de productos con categoría, stock, precio en soles, fecha de creación y acceso a edición.</caption>
         <thead>
             <tr>
+                @if (bulkActions) { <th scope="col" class="product-select-column"><input type="checkbox" [checked]="allProductsSelected" [indeterminate]="selectedIds.size > 0 && !allProductsSelected" [disabled]="loading || bulkBusy || !products.length" (change)="toggleProducts()" aria-label="Seleccionar productos cargados, hasta 25" /></th> }
                 <th scope="col" class="text-center product-code" [class.d-none]="!sortable" [class.d-lg-table-cell]="!sortable" [attr.aria-sort]="columnSort('id')">
                     @if (sortable) {
                     <button type="button" class="product-column-sort" [class.product-column-sort-active]="sortBy === 'id'" (click)="sortChange.emit('id')" aria-label="Ordenar por código">
@@ -62,10 +66,11 @@
         </thead>
         <tbody>
             @if (loading) {
-            <tr><td colspan="7" class="product-table-loading"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span><span role="status">Cargando productos...</span></td></tr>
+            <tr><td [attr.colspan]="bulkActions ? 8 : 7" class="product-table-loading"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span><span role="status">Cargando productos...</span></td></tr>
             } @else {
             @for (product of products; track product.id) {
-            <tr class="product-row" (click)="getProduct(product.id)">
+            <tr class="product-row" [class.product-row-inserted]="highlightedId === product.id" [class.product-row-selected]="selectedIds.has(product.id)" [attr.data-product-id]="product.id" (click)="getProduct(product.id)">
+                @if (bulkActions) { <td class="product-select-column" (click)="$event.stopPropagation()"><input type="checkbox" [checked]="selectedIds.has(product.id)" [disabled]="bulkBusy || (!selectedIds.has(product.id) && selectedIds.size >= 25)" (change)="toggleProduct(product.id)" [attr.aria-label]="'Seleccionar ' + (product.name || 'producto ' + product.id)" /></td> }
                 <td class="text-center product-id" [class.d-none]="!sortable" [class.d-lg-table-cell]="!sortable">#{{ product.id }}</td>
                 <td>
                     <div class="product-identity">
@@ -79,6 +84,7 @@
                         <div class="product-details">
                             <button type="button" class="product-name" (click)="$event.stopPropagation(); getProduct(product.id)">
                                 {{ product.name || 'Producto sin nombre' }}
+                                @if (highlightedId === product.id) { <span class="product-inserted-badge">Nuevo</span> }
                             </button>
                             <span class="product-mobile-category d-md-none" [class.d-none]="sortable">{{ product.category?.name || 'Sin categoría' }}</span>
                             <span class="product-mobile-code d-lg-none" [class.d-none]="sortable">#{{ product.id }}</span>
@@ -105,9 +111,9 @@
                         title="Editar producto" (click)="$event.stopPropagation(); getProduct(product.id)">
                         <i class="fa-solid fa-pen" aria-hidden="true"></i>
                     </button>
-                    <button type="button" class="btn btn-outline-secondary product-edit ms-1"
+                    <button type="button" class="btn btn-outline-secondary product-edit product-duplicate ms-1"
                         [attr.aria-label]="'Duplicar ' + (product.name || 'producto ' + product.id)"
-                        [disabled]="duplicating" title="Duplicar producto"
+                        [disabled]="duplicating || bulkBusy" title="Duplicar producto"
                         (click)="$event.stopPropagation(); duplicateProduct(product)">
                         <i class="fa-regular fa-copy" aria-hidden="true"></i>
                     </button>
@@ -115,7 +121,7 @@
             </tr>
             } @empty {
             <tr>
-                <td colspan="7" class="product-empty">
+                <td [attr.colspan]="bulkActions ? 8 : 7" class="product-empty">
                     <span class="product-empty-icon" aria-hidden="true"><i class="fa-solid fa-box-open"></i></span>
                     <h3>No hay productos para mostrar</h3>
                     <p>Los productos registrados aparecerán aquí. Si realizaste una búsqueda, prueba con otro término.</p>

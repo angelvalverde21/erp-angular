@@ -23,7 +23,7 @@ import { MenuButtonComponent } from './menu-button/menu-button.component';
 import { ShopifyShippingStatusComponent } from '../shopify-shipping-status/shopify-shipping-status.component'
 import { DateShopifyPipe } from 'src/app/views/shared/pipes/date-shopify.pipe';
 import { OrderStatusStepperComponent } from '../../../shared/order-status-stepper/order-status-stepper.component';
-import { OrderProgressStatus, orderProgress } from '../../../shared/order-status-stepper/order-status.model';
+import { OrderProgressStatus, orderProgress, orderProgressDates } from '../../../shared/order-status-stepper/order-status.model';
 
 
 @Component({
@@ -54,6 +54,7 @@ export class OrderDetailsComponent {
   get progressStatus(): OrderProgressStatus {
     return orderProgress(this.order);
   }
+  get progressDates() { return orderProgressDates(this.order); }
 
   faEllipsis = faEllipsis;
   faEdit = faEdit;

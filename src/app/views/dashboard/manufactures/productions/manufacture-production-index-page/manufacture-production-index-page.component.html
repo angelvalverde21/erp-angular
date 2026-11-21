@@ -1,9 +1,9 @@
 <div class="production-page manufacture-theme-production">
-  <app-manufacture-section-header section="production" title="Producciones" description="Planifica la fabricación, controla los costos y recibe lo que produces." actionLabel="Nueva producción" [actionLink]="createPath" [showNavigation]="true"></app-manufacture-section-header>
-  <section class="production-panel" aria-labelledby="production-list-title">
+  <app-manufacture-section-header section="production" title="Producciones" description="Gestiona tus lotes, costos y recepciones." actionLabel="Nueva producción" [actionLink]="createPath" [showNavigation]="true"></app-manufacture-section-header>
+  <section class="production-panel production-list-panel" aria-labelledby="production-list-title">
     <header class="production-section-heading manufacture-list-heading">
-      <h2 id="production-list-title">Producciones registradas</h2>
-      <span class="production-list-count">{{ productions.length }} {{ activeFilters ? 'resultados' : 'registros en esta vista' }}</span>
+      <h2 id="production-list-title"><span class="production-list-icon" aria-hidden="true"><i class="fa-solid fa-list-ul"></i></span>Listado de producciones</h2>
+      <span class="production-list-count">{{ productions.length }} {{ activeFilters ? (productions.length === 1 ? 'resultado' : 'resultados') : (productions.length === 1 ? 'producción' : 'producciones') }}</span>
     </header>
     <app-manufacture-index-filters searchLabel="Buscar producción" placeholder="Nombre o código de producción" [busy]="loading" [hasAppliedFilters]="!!activeFilters" (applyFilters)="applyFilters($event)" (clearFilters)="clearFilters()"></app-manufacture-index-filters>
     @if (loading) {

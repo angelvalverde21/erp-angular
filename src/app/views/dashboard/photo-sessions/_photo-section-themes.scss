@@ -1,0 +1,22 @@
+@use 'sass:map';
+
+$themes: (
+  session: (accent: #7056c5, tint: #f4f0fc, line: #e4dbf6),
+  tasks: (accent: #99701d, tint: #fff7e7, line: #ead5ad),
+  photographers: (accent: #416ca4, tint: #eff4fc, line: #d6e2f3),
+  models: (accent: #a7537e, tint: #fcf0f6, line: #efd5e3),
+  locations: (accent: #287e70, tint: #edf8f4, line: #cfe5df),
+  library: (accent: #5264ad, tint: #f0f3ff, line: #dbe2fa),
+);
+
+@mixin apply($section) {
+  $theme: map.get($themes, $section);
+  --photo-accent: #{map.get($theme, accent)};
+  --photo-tint: #{map.get($theme, tint)};
+  --photo-line: #{map.get($theme, line)};
+}
+
+@mixin card-headers {
+  .panel-header { background: var(--photo-tint); border-bottom-color: var(--photo-line); }
+  .panel-header h2 { color: var(--photo-accent); font-size: 1.04rem; font-weight: 750; }
+}

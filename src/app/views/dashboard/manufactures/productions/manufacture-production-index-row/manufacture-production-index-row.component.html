@@ -1,10 +1,12 @@
 <td class="production-name-cell">
-  <a class="production-name" [routerLink]="variantLink">{{ production.name || 'Producción sin nombre' }}</a>
-  <div class="production-row-meta"><span>#{{ production.id }}</span><span>{{ production.count_variants ?? 0 }} variantes</span></div>
+  <div class="production-identity"><span class="production-mark" aria-hidden="true"><i class="fa-solid fa-gears"></i></span><div class="production-name-content">
+    <a class="production-name" [routerLink]="manageLink">{{ production.name || 'Producción sin nombre' }}</a>
+    <div class="production-row-meta"><span class="production-code">PRD-{{ production.id.toString().padStart(4, '0') }}</span><span>{{ production.count_variants ?? 0 }} {{ production.count_variants === 1 ? 'variante' : 'variantes' }}</span></div>
+  </div></div>
 </td>
-<td class="text-end production-number">{{ production.sum_variants ?? 0 }}</td>
-<td class="text-end"><span class="production-received">{{ production.sum_kardexes ?? 0 }}</span></td>
-<td class="text-end production-money">{{ cost(production) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
-<td class="text-end production-money fw-semibold">{{ (production.sum_purchases ?? 0) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
-<td class="production-date">{{ production.updated_at ? (production.updated_at | DateShopify) : 'Sin fecha' }}</td>
-<td class="text-end"><div class="manufacture-row-actions"><a class="manufacture-row-open" [routerLink]="manageLink">Gestionar<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><app-button-menu [menus]="menus" [context]="production.name || 'Producción #' + production.id"></app-button-menu></div></td>
+<td class="text-end production-number" data-label="Planificadas">{{ production.sum_variants ?? 0 }}</td>
+<td class="text-end" data-label="Recibidas"><span class="production-received" [class.has-receipts]="production.sum_kardexes > 0" [class.over-planned]="production.sum_variants > 0 && production.sum_kardexes > production.sum_variants">{{ production.sum_kardexes ?? 0 }}</span></td>
+<td class="text-end production-money" data-label="Costo por unidad">{{ cost(production) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+<td class="text-end production-money production-total" data-label="Gasto total">{{ (production.sum_purchases ?? 0) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+<td class="production-date" data-label="Actualización">{{ production.updated_at ? (production.updated_at | DateShopify) : 'Sin fecha' }}</td>
+<td class="text-end production-actions-cell"><div class="manufacture-row-actions"><a class="manufacture-row-open" [routerLink]="manageLink">Abrir panel<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><app-button-menu [menus]="menus" [context]="production.name || 'Producción #' + production.id"></app-button-menu></div></td>

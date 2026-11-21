@@ -1,3 +1,22 @@
-.form-select{
-  font-size: 0.85rem;
-}
+:host { display: table-row; }
+:host([hidden]) { display: none; }
+td { padding: .85rem 1rem; vertical-align: middle; border-bottom: 1px solid #e8edf3; background: white; }
+:host:nth-child(even) td { background: #fafbfd; }
+:host.row-selected td { background: var(--entry-tint, #edf8f2); }
+:host.row-selected td:first-child { box-shadow: inset 3px 0 var(--entry-accent, #2d8060); }
+.entry-product { display: flex; align-items: center; gap: 1rem; }
+.entry-product app-image-preview { flex-shrink: 0; overflow: hidden; border: 1px solid #e4e9f0; border-radius: 8px; background: white; }
+.entry-image-placeholder { display: grid; place-items: center; flex: 0 0 46px; height: 58px; border: 1px solid #e4e9f0; border-radius: 8px; color: #a0adbd; background: #f4f6fa; font-size: 1.2rem; }
+.entry-product-copy { min-width: 0; }
+.entry-product-copy > strong { display: block; font-size: .86rem; font-weight: 650; color: #2c405b; overflow-wrap: anywhere; line-height: 1.5; }
+.entry-sku { display: flex; align-items: center; gap: .4rem; font-size: .7rem; color: #8290a4; margin-top: .2rem; overflow-wrap: anywhere; }
+.entry-options { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .45rem; }
+.entry-options span { padding: .2rem .45rem; border-radius: 5px; background: #f0f3f7; border: 1px solid #e3e8ef; color: #53657d; font-size: .68rem; font-weight: 600; }
+input, select { width: 100%; min-height: 44px; padding: .6rem .7rem; border: 1px solid #d8e1ed; border-radius: 8px; background: white; color: #344a66; font-size: .82rem; }
+input { text-align: center; font-weight: 650; }
+input:focus, select:focus { outline: 2px solid var(--entry-accent, #2d8060); outline-offset: 2px; }
+input.is-invalid { border-color: #be5262; }
+input[readonly], select:disabled { background: #f4f6f9; opacity: .75; }
+.entry-row-status { display: inline-flex; align-items: center; gap: .4rem; font-size: .71rem; color: #8a97a9; white-space: nowrap; }
+.entry-row-status.included { color: var(--entry-accent, #2d8060); font-weight: 650; }
+.entry-status-cell { text-align: center; }

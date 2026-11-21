@@ -1,0 +1,60 @@
+<main class="workspace">
+  <a class="back-link" routerLink="../" queryParamsHandling="preserve"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver a pedidos</a>
+  @if (loading) {
+    <div class="surface feedback" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando pedido…</div>
+  } @else if (error) {
+    <div class="surface feedback" role="alert"><p>{{ error }}</p><button class="btn-action" (click)="retry()">Reintentar</button></div>
+  } @else { @if (data; as detail) {
+    <header class="page-header">
+      <div>
+        <div class="eyebrow">GESTIÓN DE PEDIDOS <span class="version-tag">Nueva versión</span></div>
+        <div class="title-line"><h1>Pedido {{ detail.order.number }}</h1><app-order-preparation-badge [status]="detail.order.preparation" /></div>
+        <p>{{ detail.order.createdAt | DateShopify }} · {{ detail.order.customer }}</p>
+      </div>
+      <a class="btn-action" [href]="detail.shopifyUrl" target="_blank" rel="noopener noreferrer">Ver en Shopify<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+    </header>
+
+    <app-order-status-stepper [status]="detail.progress" [dates]="detail.dates" [cancelled]="detail.order.preparation === 'cancelled'" [onHold]="detail.onHold" />
+
+    <div class="detail-grid">
+      <div class="detail-content">
+        <section class="surface">
+          <header class="surface-heading"><div><h2>Artículos del pedido</h2><p>Revisa la variante y la cantidad de cada prenda.</p></div><span class="unit-count">{{ detail.order.units }} {{ detail.order.units === 1 ? 'unidad' : 'unidades' }}</span></header>
+          @if (detail.order.preparation === 'preparing') { <p class="inline-note">Las cantidades corresponden al pedido vigente. Revisa los envíos para identificar lo que falta despachar.</p> }
+          <div class="surface-body"><app-order-product-list [products]="detail.order.products" [compact]="false" [showPrices]="true" /></div>
+          <footer class="product-total"><span>Total del pedido</span><strong>{{ detail.order.total }}</strong></footer>
+        </section>
+
+        @if (detail.note) { <section class="surface"><header class="surface-heading"><h2><i class="fa-regular fa-note-sticky" aria-hidden="true"></i>Nota del pedido</h2></header><p class="surface-body order-note">{{ detail.note }}</p></section> }
+
+        <section class="surface">
+          <header class="surface-heading"><h2>Envíos</h2><span class="section-count">{{ detail.shipments.length }}</span></header>
+          @for (shipment of detail.shipments; track shipment.id) {
+            <div class="record"><div><strong>{{ shipment.name }}</strong><small>{{ shipment.date | DateShopify }}</small>@for (tracking of shipment.tracking; track $index) { <p>{{ tracking }}</p> }</div><span class="record-status">{{ shipment.status }}</span></div>
+          } @empty { <p class="surface-body">Todavía no hay envíos registrados.</p> }
+        </section>
+
+        @if (detail.historyUnavailable) { <div class="history-notice"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Hay comentarios en Shopify que no estuvieron disponibles en la importación. Puedes revisarlos abriendo el pedido en Shopify.</div> }
+        <app-imported-order-timeline [orderId]="detail.order.id" [counts]="detail.eventCounts" />
+      </div>
+
+      <aside class="detail-sidebar">
+        <section class="surface">
+          <header class="surface-heading"><h2><i class="fa-regular fa-user" aria-hidden="true"></i>Cliente y entrega</h2></header>
+          <div class="surface-body customer-contact"><strong>{{ detail.order.customer }}</strong>@if (detail.phone) { <p><i class="fa-solid fa-phone" aria-hidden="true"></i>{{ detail.phone }}</p> }@if (detail.email) { <p>{{ detail.email }}</p> }</div>
+          <div class="address"><span class="field-label">DIRECCIÓN DE ENTREGA</span><p>{{ detail.address || 'Sin dirección de entrega registrada.' }}</p></div>
+        </section>
+        <section class="surface">
+          <header class="surface-heading"><h2>Resumen del pago</h2><span class="payment-label" [class.paid]="detail.order.paid">{{ detail.order.payment }}</span></header>
+          <div class="surface-body">
+            @for (total of detail.totals; track total.label) { <div class="total-row"><span>{{ total.label }}</span><strong>{{ total.amount }}</strong></div> }
+            <div class="grand-total"><span>Total</span><strong>{{ detail.order.total }}</strong></div>
+          </div>
+          @for (payment of detail.payments; track payment.id) {
+            <div class="payment-record"><div><strong>{{ payment.label }}</strong><small>{{ payment.date | DateShopify }}</small></div><div><strong>{{ payment.amount }}</strong><small>{{ payment.status }}</small></div></div>
+          }
+        </section>
+      </aside>
+    </div>
+  } }
+</main>

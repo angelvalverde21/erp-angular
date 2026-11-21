@@ -4,7 +4,7 @@
 <section class="card product-catalog-panel">
   <div class="card-header product-search-header"><app-product-search (searchSubmit)="receiveParams($event)"></app-product-search></div>
   <div class="card-body p-0" [attr.aria-busy]="loading || loadingMore">
-    <app-product-index [products]="products" [sortable]="true" [sortBy]="sortBy" [sortDirection]="sortDirection" [loading]="loading" (sortChange)="changeSort($event)" (loadMore)="loadMoreProducts()"></app-product-index>
+    <app-product-index [bulkActions]="true" [products]="products" [insertedProductId]="insertedProductId" [sortable]="true" [sortBy]="sortBy" [sortDirection]="sortDirection" [loading]="loading" (productDuplicated)="insertDuplicate($event)" (sortChange)="changeSort($event)" (loadMore)="loadMoreProducts()"></app-product-index>
     @if (loadingMore) { <div class="product-loading-state" role="status"><app-loading></app-loading><p>Cargando más productos...</p></div> }
     @if (error) { <div class="product-catalog-error" role="alert"><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary btn-sm" (click)="retry()">Reintentar</button></div> }
   </div>

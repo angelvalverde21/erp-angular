@@ -300,3 +300,8 @@ button.delivery-correct {
     min-width: 150px;
   }
 }
+.purchase-delivery.delivery-embedded {
+  margin-top: 1rem; border: 1px solid #ddd4f1; border-radius: 10px; background: #f8f6fd;
+  .delivery-card-header { padding: 1.1rem 1.1rem 0; background: transparent; border-bottom: 0; }
+  .delivery-editor { padding: 1.1rem; border-top: 0; }
+}

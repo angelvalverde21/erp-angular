@@ -9,6 +9,7 @@ export interface DeliveryTracking {
   status: DeliveryStatus;
   received_late: boolean;
   reschedules_count: number;
+  schedule_history?: DeliveryEvent[];
 }
 
 export interface DeliveryEvent {

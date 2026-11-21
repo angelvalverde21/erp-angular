@@ -1,0 +1,14 @@
+@if (supplierId) {
+  <section class="supplier-addresses" [formGroup]="form" aria-label="Dirección del proveedor">
+    @if (loading) { <p class="address-feedback" role="status"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Cargando direcciones…</p> }
+    @else if (error) { <div class="address-error" role="alert">{{ error }}<button type="button" (click)="reload()">Reintentar</button></div> }
+    @else if (addresses.length === 1) { <div class="single-address"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><div><strong>{{ addresses[0].primary }}</strong><small>{{ addresses[0].district?.name }} · Dirección seleccionada automáticamente</small></div></div> }
+    @else if (addresses.length > 1) {
+      <header><strong><i class="fa-solid fa-location-dot" aria-hidden="true"></i>Dirección del proveedor</strong><span>{{ addresses.length }} direcciones disponibles</span></header>
+      <p>Este proveedor tiene varias direcciones. Verifica cuál corresponde a esta compra.</p>
+      <div class="address-choices">@for (address of addresses; track address.id) {
+        <label [class.selected]="form.get('supplier_address_id')?.value === address.id"><input type="radio" formControlName="supplier_address_id" [value]="address.id" (change)="select(address.id)"><span><strong>{{ address.name }}</strong><span>{{ address.primary }}</span>@if (address.district?.name) { <small>{{ address.district?.name }}</small> }</span>@if (address.is_default) { <small class="default-label">Predeterminada</small> }</label>
+      }</div>
+    } @else { <p class="address-feedback"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Este proveedor aún no tiene direcciones registradas. Puedes agregarlas desde su ficha.</p> }
+  </section>
+}

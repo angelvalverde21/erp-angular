@@ -1,0 +1,26 @@
+<section class="panel">
+  <header class="panel-header"><div><h2><i class="fa-solid fa-images" aria-hidden="true"></i>Biblioteca de la sesión</h2><p>{{ data?.total || 0 }} archivos · Vistas previas ligeras y originales disponibles para descargar.</p></div><div class="library-actions"><button type="button" class="button" (click)="load()" [disabled]="loading"><i class="fa-solid fa-rotate" aria-hidden="true"></i>Actualizar</button><button type="button" class="button primary" (click)="uploadRequested.emit()"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>{{ uploading ? 'Ver carga' : 'Subir fotos y videos' }}</button></div></header>
+  <div class="asset-filters">
+    <label><span class="sr-only">Tipo de archivo</span><select [value]="kind" (change)="filter('kind', $event)"><option value="all">Fotos y videos</option><option value="photo">Fotos</option><option value="video">Videos</option></select></label>
+    <label><span class="sr-only">Clasificación del archivo</span><select [value]="category" (change)="filter('category', $event)"><option value="all">Todas las versiones</option>@for (option of categories; track option.value) { <option [value]="option.value">{{ option.label }}</option> }</select></label>
+    <button type="button" class="button" [class.active]="selected" [attr.aria-pressed]="selected" (click)="toggleSelected()"><i class="fa-star" [class]="selected ? 'fa-solid fa-star' : 'fa-regular fa-star'" aria-hidden="true"></i>Solo seleccionados</button>
+  </div>
+  @if (error) { <div class="error" role="alert">{{ error }} <button type="button" class="button" (click)="load()">Reintentar</button></div> }
+  @if (loading) { <div class="feedback" role="status">Cargando archivos…</div> }
+  @else if (data) {
+    <div class="asset-grid">
+      @for (asset of data.data; track asset.id) {
+        <article class="asset-card" [class.selected]="asset.selected">
+          <header class="asset-heading"><i [class]="asset.kind === 'video' ? 'fa-solid fa-video' : 'fa-regular fa-image'" aria-hidden="true"></i><strong [title]="asset.name">{{ asset.name }}</strong></header>
+          <div class="asset-preview">
+            @if (asset.image) { <app-image-preview [image]="asset.image" [title]="asset.name" [height]="180" previewVariant="large" objectFit="contain" /> }
+            @else { <div class="file-placeholder"><i [class]="asset.kind === 'video' ? 'fa-solid fa-video' : 'fa-regular fa-file-image'" aria-hidden="true"></i><span>{{ asset.kind === 'video' ? 'Video original' : 'Foto / RAW original' }}</span><small>Disponible para descargar</small></div> }
+            <button type="button" class="select-asset" [class.active]="asset.selected" [disabled]="saving.has(asset.id)" [attr.aria-label]="(asset.selected ? 'Quitar selección de ' : 'Seleccionar ') + asset.name" [attr.aria-pressed]="asset.selected" (click)="selectAsset(asset)"><i [class]="asset.selected ? 'fa-solid fa-star' : 'fa-regular fa-star'" aria-hidden="true"></i></button>
+          </div>
+          <div class="asset-body"><small>{{ size(asset.bytes) }} · {{ asset.category === 'original' ? 'Original' : asset.category === 'edited' ? 'Editado' : 'Final' }}</small><button type="button" class="button download" (click)="download(asset)"><i class="fa-solid fa-download" aria-hidden="true"></i>Descargar original</button></div>
+        </article>
+      } @empty { <div class="feedback empty">{{ selected ? 'Todavía no hay archivos seleccionados.' : 'Sube los primeros archivos de esta sesión.' }}</div> }
+    </div>
+    @if (data.last_page > 1) { <footer class="actions"><span>Página {{ data.current_page }} de {{ data.last_page }}</span><button class="button" [disabled]="data.current_page <= 1" (click)="load(data.current_page - 1)">Anterior</button><button class="button" [disabled]="data.current_page >= data.last_page" (click)="load(data.current_page + 1)">Siguiente</button></footer> }
+  }
+</section>

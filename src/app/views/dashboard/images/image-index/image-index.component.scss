@@ -1,0 +1,31 @@
+﻿:host { display: block; }
+.image-library-upload { margin-bottom: 1rem; }
+.image-library { border: 1px solid #dce3ee; border-radius: 12px; background: #fff; overflow: hidden; }
+.image-library-heading {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+  padding: .85rem 1rem;
+  > span { display: flex; align-items: center; gap: .5rem; color: #293f5d; font-size: .83rem; font-weight: 650; }
+  i { color: #7b879c; }
+  small { color: #7b879c; font-size: .72rem; }
+}
+.image-library-count { padding: .15rem .45rem; border-radius: 6px; color: #60718a; background: #f0f3f8; font-size: .68rem; font-variant-numeric: tabular-nums; }
+.image-table {
+  width: 100%; border-collapse: collapse; margin: 0;
+  th { padding: .65rem 1rem; background: #f6f8fb; border-top: 1px solid #e5eaf2; border-bottom: 1px solid #e5eaf2; color: #738198; font-size: .69rem; font-weight: 600; text-align: left; white-space: nowrap; }
+  .image-preview-column { width: 96px; }
+  .image-actions-column { width: 130px; text-align: right; }
+}
+.image-library-empty { display: flex; align-items: center; flex-direction: column; gap: .45rem; padding: 1.5rem 1rem; border-top: 1px solid #e5eaf2;
+  i { color: #a4b0c2; font-size: 1.6rem; margin-bottom: .25rem; }
+  strong { color: #536780; font-size: .82rem; font-weight: 600; }
+  span { color: #8491a5; font-size: .75rem; }
+}
+.image-library-error { margin: 0; padding: .75rem 1rem; border-top: 1px solid #f1d5d9; background: #fff5f5; color: #b54152; font-size: .8rem; }
+.image-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; padding: 1rem; border-top: 1px solid #e5eaf2; }
+.image-gallery-card { min-width: 0; overflow: hidden; border: 1px solid #e1e7f0; border-radius: 10px; background: white; }
+.image-gallery-preview { display: flex; justify-content: center; align-items: center; height: 200px; background: #f5f6fa; }
+.image-gallery-preview app-image-preview { display: block; width: 100%; }
+.image-gallery-description { padding: .75rem; }
+.image-gallery-description strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #506582; font-size: .74rem; font-weight: 600; }
+.image-gallery-remove { display: inline-flex; align-items: center; gap: .4rem; margin-top: .65rem; padding: .35rem .55rem; border: 1px solid #ecd6de; border-radius: 5px; color: #b57487; background: #fff9fb; font-size: .68rem; cursor: pointer; }
+.image-gallery-remove:disabled { opacity: .5; cursor: default; }

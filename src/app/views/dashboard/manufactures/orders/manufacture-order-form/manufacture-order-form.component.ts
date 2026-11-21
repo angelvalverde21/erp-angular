@@ -1,3 +1,4 @@
+import { SupplierAddressSelectionComponent } from '../../../users/suppliers/supplier-address-selection/supplier-address-selection.component';
 import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { faHome, faUser, faPhone, faImagePortrait, faLocationDot, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -7,7 +8,7 @@ import { SupplierSelectedComponent } from '../../../users/suppliers/supplier-sel
 
 @Component({
   selector: 'app-manufacture-order-form',
-  imports: [
+  imports: [SupplierAddressSelectionComponent,
     ReactiveFormsModule,
     SupplierSelectedComponent,
     SupplierCreateComponent

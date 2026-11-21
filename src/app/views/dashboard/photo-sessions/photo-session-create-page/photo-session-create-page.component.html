@@ -1,0 +1,9 @@
+<main class="photo-page" data-section="sessions">
+  <a class="back-link" routerLink="../"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Sesiones fotográficas</a>
+  <app-photo-section-header section="sessions"><div><span class="eyebrow">PRODUCCIÓN VISUAL</span><h1>Nueva sesión fotográfica</h1><p>Crea la sesión con sus datos iniciales. Luego podrás organizar el equipo, las locaciones y las tareas.</p></div></app-photo-section-header>
+  @if (error) { <div class="error" role="alert">{{ error }}</div> }
+  @if (loading) { <div class="panel feedback" role="status">Cargando…</div> }
+  @else if (options) { <app-photo-session-create [options]="options" [saving]="saving" (save)="save($event)" /> }
+  @else { <button class="button" (click)="load()">Reintentar</button> }
+</main>
+

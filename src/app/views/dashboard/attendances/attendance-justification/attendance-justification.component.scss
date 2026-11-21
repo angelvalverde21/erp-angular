@@ -1,0 +1,7 @@
+@use '../../_personnel-ui';
+.justification-actions { display: flex; justify-content: flex-end; gap: .5rem; margin-top: 1rem; }
+.justification-documents { margin-top: 1.25rem; border-top: 1px solid #dce3ee; padding-top: 1.25rem;
+  h3 { font-size: .9rem; font-weight: 650; i { margin-right: .4rem; } }
+  p { font-size: .78rem; color: #7b879c; }
+}
+.justification-document { display: flex; margin-bottom: .5rem; max-width: 100%; overflow-wrap: anywhere; }

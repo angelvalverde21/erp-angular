@@ -1,0 +1,20 @@
+<nav class="session-navigation" role="tablist" aria-label="Secciones de la sesión" (keydown)="navigateTabs($event)">
+  @for (section of sections; track section.key) {
+    <button type="button" role="tab" [id]="'session-nav-' + section.key" [attr.data-section]="section.key"
+      [attr.aria-selected]="activeSection === section.key" [attr.aria-controls]="'session-' + section.key"
+      [attr.tabindex]="activeSection === section.key ? 0 : -1" (click)="goTo(section.key)">
+      <span class="section-icon"><i [class]="'fa-solid ' + section.icon" aria-hidden="true"></i></span>
+      <span class="section-label">{{ section.label }}</span>
+      @if (section.key !== 'session') { <span class="section-count">{{ count(section.key) }}</span> }
+    </button>
+  }
+</nav>
+<div id="session-session" class="session-panel" role="tabpanel" aria-labelledby="session-nav-session" tabindex="0" [hidden]="activeSection !== 'session'">
+  @if (!editing) { <app-photo-session-dashboard [resourceCounts]="{ photographers: count('photographers'), models: count('models'), locations: count('locations'), library: count('library') }" [summary]="taskSummary" [taskState]="taskState" (navigate)="goTo($event)" /> }
+  <ng-content select="[sessionDetails]" />
+</div>
+<div id="session-tasks" class="session-panel" role="tabpanel" aria-labelledby="session-nav-tasks" tabindex="0" [hidden]="activeSection !== 'tasks'"><app-photo-session-task-index [sessionId]="session.id" (summaryChange)="taskSummary = $event" (summaryStateChange)="taskState = $event" /></div>
+<div id="session-photographers" class="session-panel" role="tabpanel" aria-labelledby="session-nav-photographers" tabindex="0" [hidden]="activeSection !== 'photographers'"><app-photo-session-assignment-index kind="photographer" [contacts]="photographers" [options]="options?.photographers || []" [saving]="saving" (changeAssignment)="changeAssignment.emit($event)" (createRelated)="createRelated.emit($event)" /></div>
+<div id="session-models" class="session-panel" role="tabpanel" aria-labelledby="session-nav-models" tabindex="0" [hidden]="activeSection !== 'models'"><app-photo-session-assignment-index kind="model" [contacts]="session.models || []" [options]="options?.models || []" [saving]="saving" (changeAssignment)="changeAssignment.emit($event)" (createRelated)="createRelated.emit($event)" /></div>
+<div id="session-locations" class="session-panel" role="tabpanel" aria-labelledby="session-nav-locations" tabindex="0" [hidden]="activeSection !== 'locations'"><app-photo-session-assignment-index kind="location" [locations]="session.locations || []" [options]="options?.locations || []" [saving]="saving" (changeAssignment)="changeAssignment.emit($event)" (createRelated)="createRelated.emit($event)" /></div>
+<div id="session-library" class="session-panel" role="tabpanel" aria-labelledby="session-nav-library" tabindex="0" [hidden]="activeSection !== 'library'"><ng-content select="[sessionLibrary]" /></div>

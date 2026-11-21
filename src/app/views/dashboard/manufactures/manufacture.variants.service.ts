@@ -27,6 +27,10 @@ export class ManufactureVariantService extends BaseCrudDashboardService {
     this.extraPath = `/${manufacture_id}/variants`;
   }
 
+  selection() {
+    return this.http.get<any>(this.baseUrl, { params: { include_kardex: '0' } });
+  }
+
 
 
 }

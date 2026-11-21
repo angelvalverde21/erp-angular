@@ -31,6 +31,14 @@ export class ManufactureService extends BaseCrudDashboardService {
     this.summaryEvent.set(data);
   }
 
+  overview(id: number | string) {
+    return this.http.get<any>(`${this.baseUrl}/${id}`, { params: { include_kardex: '0' } });
+  }
+
+  summary(id: number | string) {
+    return this.http.get<any>(`${this.baseUrl}/${id}`, { params: { summary_only: '1' } });
+  }
+
   setManufacture(data: any) {
     console.log(data);
 

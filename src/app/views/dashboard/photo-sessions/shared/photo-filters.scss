@@ -1,0 +1,6 @@
+.filters { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; padding: 1rem 1.4rem; }
+.filters label { margin: 0; }
+.filters .search { flex: 1; min-width: 220px; display: flex; align-items: center; gap: .6rem; border: 1px solid #d7e0ec; border-radius: 8px; padding-left: .8rem; color: #8190a4; background: white; }
+.search input { border: 0; min-width: 0; }
+.search:focus-within { border-color: var(--photo-accent, #7056c5); }
+@media(max-width: 600px) { .filters { padding: 1rem; } .filters .search { flex-basis: 100%; min-width: 0; } .filters > label:not(.search) { flex: 1; } }

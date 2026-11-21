@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { productionSectionLeaveGuard } from './production-section-leave.guard';
 
 export const routes: Routes = [
   {
@@ -36,7 +37,12 @@ export const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'purchases',
+        redirectTo: 'overview',
+      },
+      {
+        path: 'overview',
+        loadComponent: () => import('./production-overview.component').then(m => m.ProductionOverviewComponent),
+        data: { title: 'Etapas de producción' },
       },
       {
         path: 'details',
@@ -47,10 +53,11 @@ export const routes: Routes = [
       {
         path: 'deliveries',
         loadComponent: () => import('./manufacture-production-edit-page/production-delivery-tracking/production-delivery-tracking.component').then(m => m.ProductionDeliveryTrackingComponent),
-        data: { title: 'Seguimiento de entregas' }
+        data: { title: 'Seguimiento de compras' }
       },
       {
         path: 'purchases',
+        canDeactivate: [productionSectionLeaveGuard],
         loadComponent: () =>
           import('./manufacture-production-edit-page/manufacture-production-purchase-index/manufacture-production-purchase-index.component')
             .then(m => m.ManufactureProductionPurchaseIndexComponent),

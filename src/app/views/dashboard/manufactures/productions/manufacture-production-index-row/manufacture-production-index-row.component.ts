@@ -80,10 +80,10 @@ export class ManufactureProductionIndexRowComponent implements OnInit {
         divider: true
       },
       {
-        label: 'Compras',
-        description: 'Compras y gastos asociados',
+        label: 'Secciones',
+        description: 'Procesos, compras e historial',
         icon: this.faMoneyBill1,
-        routerLink: [...this.link_base, 'purchases']
+        routerLink: [...this.link_base, 'overview']
       },
       {
         label: 'Inventario inicial',
@@ -101,12 +101,8 @@ export class ManufactureProductionIndexRowComponent implements OnInit {
 
   }
 
-  get variantLink() {
-    return [...this.link_base, 'variants'];
-  }
-
   get manageLink() {
-    return [...this.link_base, 'purchases'];
+    return [...this.link_base, 'overview'];
   }
   
   cost(production: any) {

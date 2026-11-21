@@ -1,188 +1,78 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import { KardexIndexComponent } from '@dashboard/kardex/kardex-index/kardex-index.component';
-import Swal from 'sweetalert2';
+import { Component, Input, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { KardexService } from '@dashboard/kardex/kardex.service';
-import { faRightLeft, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { Subject, takeUntil } from 'rxjs';
+import { NgbModal, NgbModalConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { InventoryReception } from '@dashboard/inventory-receptions/inventory-reception.service';
+import { InventoryReceptionIndexComponent } from '@dashboard/inventory-receptions/inventory-reception-index/inventory-reception-index.component';
+import { KardexHistoryComponent } from '@dashboard/kardex/kardex-history/kardex-history.component';
 import { KardexRegisterInComponent } from '@dashboard/kardex/kardex-register-in/kardex-register-in.component';
 import { KardexRegisterOutComponent } from '@dashboard/kardex/kardex-register-out/kardex-register-out.component';
 import { KardexRegisterReInComponent } from '@dashboard/kardex/kardex-register-re-in/kardex-register-re-in.component';
-import { LoadingComponent } from 'src/app/views/shared/components/loading/loading.component';
-
-import { KardexSummary } from '@interfaces/kardexSummary.interface';
-import { ManufactureKardexService } from '../../../manufacture.kardex.service';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ManufactureVariantService } from '../../../manufacture.variants.service';
 import { ManufactureService } from '../../../manufacture.service';
+import { KardexSummary } from '@interfaces/kardexSummary.interface';
 
 @Component({
   selector: 'app-manufacture-production-kardex-index',
-  imports: [
-    KardexIndexComponent,
-    KardexRegisterInComponent,
-    KardexRegisterReInComponent,
-    KardexRegisterOutComponent,
-    LoadingComponent,
-  ],
+  imports: [InventoryReceptionIndexComponent, KardexHistoryComponent, KardexRegisterInComponent, KardexRegisterOutComponent, KardexRegisterReInComponent, LoadingComponent],
   templateUrl: './manufacture-production-kardex-index.component.html',
   styleUrl: './manufacture-production-kardex-index.component.scss',
-  encapsulation: ViewEncapsulation.None
 })
-export class ManufactureProductionKardexIndexComponent implements OnInit, OnDestroy {
-
-  production_id: number = 0;
-
-  faRightLeft = faRightLeft;
-  faMinus = faMinus;
+export class ManufactureProductionKardexIndexComponent implements OnDestroy {
+  @ViewChild(InventoryReceptionIndexComponent) receptionIndex?: InventoryReceptionIndexComponent;
+  editingReception?: InventoryReception;
+  production_id = 0;
+  @Input() set manufactureId(value: number) { this.production_id = value; }
+  kardexRevision = 0;
+  kardex_summary: KardexSummary = {};
+  variants: any[] = [];
+  loadingKardex = false;
+  variantsError = '';
+  registering = false;
+  modal?: NgbModalRef;
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
-    private route: ActivatedRoute,
-    private _kardex: KardexService,
-    private _manufacture: ManufactureService,
-    private _manufactureKardex: ManufactureKardexService,
-    private _manufactureVariant: ManufactureVariantService,
-    config: NgbModalConfig,
-    private modalService: NgbModal,
-
+    route: ActivatedRoute, private manufacture: ManufactureService,
+    private variantService: ManufactureVariantService, config: NgbModalConfig, private modalService: NgbModal,
   ) {
-
-    // this.route.params.subscribe(params => {
-    //   this.production_id = params['production_id'];
-    // });
-    config.backdrop = 'static';
-    config.keyboard = false;
-
-    this.route.parent?.paramMap.subscribe(params => {
-      this.production_id = Number(params.get('production_id'));
-
-    });
-
+    config.backdrop = 'static'; config.keyboard = false;
+    route.parent?.paramMap.pipe(takeUntil(this.destroy$)).subscribe(params => this.production_id = Number(params.get('production_id')));
   }
-  ngOnInit(): void {
-    this.productionKardexesInit();
-  }
-
-
-  kardexes: any[] = [];
-
-  production: any;
-
-  loading: boolean = false;
-  error = '';
-
-  kardex_summary: KardexSummary = {};
-
-  production_variants: any[] = [];
-  variants: any[] = [];
-
-
-  productionKardexesInit() {
-
-    this.error = '';
-    this.loading = true;
-
-    this._manufactureKardex.setManufactureId(this.production_id);
-
-    this._manufactureKardex.index().pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        console.log(resp);
-
-        this.kardexes = resp.data;
-
-        console.log("Extracted variants:", this.variants);
-
-        this.loading = false;
-
-      },
-
-      error: (error: any) => {
-        this.loading = false;
-        this.error = 'No se pudieron cargar los movimientos. Intenta nuevamente.';
-        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
-        console.error(error);
-      },
-
-    });
-
-  }
-
-
-  loadingKardex: boolean = false;
-
-  productionVariantsInit() {
-
-    this.loadingKardex = true;
-
-    this._manufactureVariant.setManufactureId(this.production_id);
-
-    this._manufactureVariant.index().pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        console.log(resp);
-
-        const production_variants = resp.data;
-
-        this.variants = production_variants.map((pv: any) => pv.variant);
-
-        console.log("Extracted variants:", this.variants);
+  loadVariants(): void {
+    this.loadingKardex = true; this.variantsError = ''; this.variants = [];
+    this.variantService.setManufactureId(this.production_id);
+    this.variantService.selection().pipe(takeUntil(this.destroy$)).subscribe({
+      next: response => {
+        this.variants = (Array.isArray(response.data) ? response.data : []).map((item: any) => item?.variant ?? null);
         this.loadingKardex = false;
       },
-      error: (error: any) => {
-        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
-        console.error(error);
-      }
+      error: () => { this.loadingKardex = false; this.variantsError = 'No se pudieron cargar las variantes. Vuelve a intentarlo.'; },
     });
-
   }
-
-
-  destroy$ = new Subject<void>();
-
-  ngOnDestroy(): void {
-
-    this.destroy$.next();
-    this.destroy$.complete();
-
-  }
-
-  receiveKardexSummary(kardex_summary: KardexSummary) {
-
-    console.log("Received kardex summary:", kardex_summary);
-
-    this.kardex_summary = kardex_summary;
-
-        //Este valor se envia por signals
-    this._manufacture.setSummary({
-      sum_kardexes: this.kardex_summary.reception ?? 0
+  inventoryChanged(): void {
+    this.kardexRevision++;
+    // Only totals are refreshed here. The ledger fetches rows only while expanded.
+    this.manufacture.summary(this.production_id).pipe(takeUntil(this.destroy$)).subscribe({
+      next: response => this.manufacture.setSummary({ sum_kardexes: Number(response.data?.sum_kardexes) || 0 }),
+      error: () => {},
     });
-
   }
-
-  receiveKardexes(event: any) {
-
-    this.kardexes = [...this.kardexes, ...event];
-
-    this.kardex_summary = this._kardex.summary(this.kardexes);
-
-    this.modal.close();
-
+  receiveKardexSummary(summary: KardexSummary): void {
+    this.kardex_summary = summary;
+    this.manufacture.setSummary({ sum_kardexes: summary.reception ?? 0 });
   }
-
-
-  closeModal() {
-    this.modal.close();
+  receiveKardexes(event: any): void { this.modal?.close(); this.inventoryChanged(); }
+  receptionSaved(): void {
+    this.modal?.close();
+    if (this.receptionIndex) this.receptionIndex.refresh(this.editingReception ? this.receptionIndex.page : 1);
   }
-
-  modal: any;
-
-  openVerticallyCentered(content: TemplateRef<any>) {
-
-    this.productionVariantsInit();
-
-    this.modal = this.modalService.open(content, { centered: true, size: 'xl' });
+  closeModal(): void { this.modal?.close(); }
+  openVerticallyCentered(content: TemplateRef<any>, reception?: InventoryReception): void {
+    this.editingReception = reception;
+    this.loadVariants();
+    this.modal = this.modalService.open(content, { centered: true, size: 'xl', scrollable: true });
   }
-
+  ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 }
-

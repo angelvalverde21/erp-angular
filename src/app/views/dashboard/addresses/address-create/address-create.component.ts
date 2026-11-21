@@ -6,6 +6,7 @@ import { AddressService } from '../address.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ButtonSaveComponent } from '../../../shared/components/buttons/button-save/button-save.component';
+import { addressLocationControls } from '../address-form/address-form.model';
 
 @Component({
   selector: 'app-address-create',
@@ -58,11 +59,8 @@ export class AddressCreateComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
 
       name: ['', [Validators.required]],
-      primary: ['', [Validators.required]],
-      secondary: [''],
-      district_id: ['', [Validators.required]],
-      phone: ['', ['courier', 'store'].includes(this.addressable_type) ? [] : [Validators.required]],
-      references: [''],
+      ...addressLocationControls(this.fb),
+      phone: ['', ['courier', 'store', 'photo_location'].includes(this.addressable_type) ? [] : [Validators.required]],
       document_number: [''],
       identity_id: [1],
       addressable_type: [this.addressable_type, [Validators.required]],

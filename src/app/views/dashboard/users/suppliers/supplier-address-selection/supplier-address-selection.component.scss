@@ -1,0 +1,14 @@
+:host { display: block; }
+.supplier-addresses { margin-top: .9rem; border: 1px solid #dce5f0; border-radius: 10px; padding: 1rem; background: #f8fafd; color: #536b88; }
+.supplier-addresses header { display: flex; align-items: center; gap: .7rem; justify-content: space-between; flex-wrap: wrap; font-size: .78rem; i { margin-right: .5rem; } > span { color: #8b9ab0; font-size: .7rem; } }
+.supplier-addresses p { font-size: .73rem; margin: .5rem 0 .8rem; line-height: 1.6; }
+.address-choices { display: grid; gap: .6rem; }
+.address-choices label { display: flex; align-items: flex-start; gap: .7rem; padding: .9rem; background: #fff; border: 1px solid #dfe6ef; border-radius: 8px; cursor: pointer; font-size: .78rem; }
+.address-choices label.selected { border-color: #a49bce; background: #f6f3fd; }
+.address-choices input { margin-top: .2rem; accent-color: #7460bc; flex-shrink: 0; }
+.address-choices label > span { display: flex; flex-direction: column; gap: .25rem; flex: 1; }
+.default-label { padding: .2rem .4rem; color: #7460bc; background: #eeebf9; border-radius: 5px; font-size: .63rem; }
+.single-address, .address-feedback { display: flex; gap: .65rem; align-items: center; margin: 0 !important; }
+.single-address { font-size: .78rem; > div { display: flex; flex-direction: column; gap: .3rem; } small { color: #8a99ad; font-size: .68rem; } }
+.address-error { font-size: .75rem; color: #ad5b5b; button { margin-left: .6rem; border: 1px solid #dcb8b8; border-radius: 5px; background: white; color: inherit; padding: .3rem .5rem; } }
+@media(max-width: 575px) { .address-choices label { flex-wrap: wrap; }.default-label { margin-left: 1.6rem; } }

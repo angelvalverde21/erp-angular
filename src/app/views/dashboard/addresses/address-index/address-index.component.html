@@ -1,4 +1,15 @@
-@if (addressable_type === 'courier') {
+@if (addressable_type === 'supplier') {
+<div class="supplier-address-list">
+    @if (defaultError) { <p role="alert" class="text-danger">{{ defaultError }}</p> }
+    @for (address of addresses; track address.id) {
+    <article class="supplier-address-card">
+        <div class="supplier-address-marker"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></div>
+        <div class="supplier-address-info"><header><strong>{{ address.name }}</strong>@if (address.is_default) { <span>Predeterminada</span> }</header><p>{{ address.primary }}</p>@if (address.secondary) { <p>{{ address.secondary }}</p> }<small>{{ address.district?.name }}</small>@if (address.phone) { <a [href]="'tel:' + address.phone">{{ address.phone }}</a> }</div>
+        <div class="supplier-address-actions"><button type="button" class="btn btn-light" (click)="openVerticallyCentered(content, address.id)"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Editar</button>@if (!address.is_default) { <button type="button" class="btn btn-outline-secondary" [disabled]="defaultSaving" (click)="makeDefault(address.id)"><i class="fa-regular fa-star" aria-hidden="true"></i> Usar por defecto</button> }</div>
+    </article>
+    }
+</div>
+} @else if (addressable_type === 'courier') {
 <div class="table-responsive">
     <table class="table courier-office-table align-middle mb-0">
         <caption class="visually-hidden">Oficinas y agencias del courier</caption>

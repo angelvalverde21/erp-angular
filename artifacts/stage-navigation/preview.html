@@ -1,0 +1,266 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="file:///C:/Users/User/Documents/angular/erp/node_modules/@fortawesome/fontawesome-free/css/all.min.css"><style>*{box-sizing:border-box}body{margin:0;padding:32px;background:#f3f4f8;color:#243247;font:16px system-ui,sans-serif}main{max-width:1280px;margin:auto}h1{font-size:24px;margin:0 0 24px}button{font-family:inherit;cursor:pointer}.workspace{background:#fff;border:1px solid #dce2ea;border-radius:14px;padding:24px;margin-top:20px}.workspace h2{margin:6px 0;font-size:22px}.workspace p{color:#64748b;font-size:14px}.eyebrow{font-size:10px;color:#6941c6;letter-spacing:.1em}.panel-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.panel-top button{background:white;border:1px solid #dce2ea;border-radius:7px;padding:10px;font-size:12px;color:#475569}.block{padding:18px;background:#f8f9fb;border-radius:10px;font-size:14px;margin-top:20px;color:#64748b}@media(max-width:575px){body{padding:12px}h1{font-size:19px}.workspace{padding:16px}.panel-top{flex-wrap:wrap}}.preview-stepper {
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
+.stage-flow {
+  padding: 1.25rem;
+  border: 1px solid var(--cui-border-color, #dce2ea);
+  border-radius: 16px;
+  background: var(--cui-body-bg, #fff);
+  scroll-margin-top: 90px;
+}
+.stage-flow > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.stage-flow h2 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+.stage-flow header p {
+  margin: 0.3rem 0 0;
+  font-size: 0.75rem;
+  color: var(--cui-secondary-color, #64748b);
+}
+
+.stage-flow-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stage-context {
+  font-size: 0.75rem;
+  color: var(--cui-secondary-color, #64748b);
+  white-space: nowrap;
+}
+
+.stage-stepper {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.stage-step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.85rem;
+  border: 1px solid var(--cui-border-color, #dce2ea);
+  border-radius: 10px;
+  background: var(--cui-body-bg, #fff);
+  color: var(--cui-body-color, #243247);
+  text-align: left;
+  transition: border-color 120ms, background-color 120ms;
+}
+.stage-step:hover {
+  border-color: #ac9bdb;
+  background: color-mix(in srgb, #6941c6 3%, var(--cui-body-bg, #fff));
+}
+.stage-step:focus-visible {
+  outline: 3px solid #b6a2e8;
+  outline-offset: 2px;
+}
+.stage-step.selected {
+  border-color: #7853cd;
+  background: color-mix(in srgb, #6941c6 6%, var(--cui-body-bg, #fff));
+  box-shadow: inset 3px 0 #7853cd;
+}
+
+.step-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.step-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--cui-tertiary-bg, #f1f3f7);
+  color: #69768b;
+  font-size: 0.9rem;
+}
+
+.step-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.step-order {
+  font-size: 0.6rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--cui-secondary-color, #64748b);
+}
+
+.step-title strong {
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.step-open {
+  font-size: 0.6rem;
+  color: #94a0b2;
+}
+
+.selected .step-number {
+  color: #6941c6;
+  background: #ebe4fa;
+}
+
+.selected .step-open {
+  color: #6941c6;
+}
+
+.completed .step-number {
+  color: #277554;
+  background: #eaf4ef;
+}
+
+.step-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.5rem;
+  margin-top: auto;
+  font-size: 0.65rem;
+  color: var(--cui-secondary-color, #64748b);
+}
+
+.step-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.step-status i {
+  font-size: 0.35rem;
+}
+
+.completed .step-status {
+  color: #277554;
+}
+.completed .step-status i {
+  font-size: 0.6rem;
+}
+
+.in_progress .step-status {
+  color: #936009;
+}
+
+.locked .step-status {
+  color: #69768b;
+}
+.locked .step-status i {
+  font-size: 0.55rem;
+}
+
+.step-purchase-count, .step-detail {
+  font-size: 0.65rem;
+}
+
+.count-unavailable {
+  visibility: hidden;
+}
+
+.step-overdue {
+  color: #b42318;
+  font-size: 0.65rem;
+}
+
+.stage-other-expenses {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--cui-border-color, #dce2ea);
+  border-radius: 7px;
+  background: var(--cui-body-bg, #fff);
+  color: inherit;
+  font-size: 0.75rem;
+}
+.stage-other-expenses.active {
+  border-color: #7853cd;
+  color: #6941c6;
+}
+.stage-other-expenses span {
+  margin-left: 0.3rem;
+}
+
+@media (max-width: 575.98px) {
+  .stage-flow {
+    padding: 0.75rem;
+  }
+  .stage-flow > header {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .stage-flow header p {
+    max-width: 25ch;
+  }
+  .stage-stepper {
+    gap: 0.35rem;
+  }
+  .stage-step {
+    padding: 0.6rem 0.25rem;
+    gap: 0.55rem;
+    text-align: center;
+  }
+  .stage-step.selected {
+    box-shadow: inset 0 3px #7853cd;
+  }
+  .step-heading {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .step-number {
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+  .step-title {
+    gap: 0.2rem;
+    width: 100%;
+  }
+  .step-order {
+    font-size: 0.55rem;
+  }
+  .step-title strong {
+    font-size: 0.65rem;
+    min-height: 3.9em;
+  }
+  .step-open {
+    display: none;
+  }
+  .step-summary {
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.3rem;
+    font-size: 0.55rem;
+  }
+  .step-purchase-count, .step-detail, .step-overdue {
+    font-size: 0.55rem;
+  }
+  .stage-context {
+    font-size: 0.65rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-step {
+    transition: none;
+  }
+}</style><main><h1>Detalle de producción</h1><div class="preview-stepper"><section class="stage-flow"><header><div><h2>Etapas de producción</h2><p>Selecciona una etapa para ver y completar sus datos.</p></div><span class="stage-context">Etapa 3 de 8</span></header><nav class="stage-stepper"><button type="button" class="stage-step stage-step-link pending " onclick="selectStage(this,0)"><span class="step-heading"><span class="step-number"><i class="fa-solid fa-ruler-combined"></i></span><span class="step-title"><span class="step-order">01</span><strong>Moldes y ploteo</strong></span><i class="step-open fa-solid fa-chevron-right"></i></span><span class="step-summary"><span class="step-status"><i class="fa-solid fa-circle"></i>Pendiente</span><span class="step-purchase-count">0 compras</span></span></button><button type="button" class="stage-step stage-step-link pending " onclick="selectStage(this,1)"><span class="step-heading"><span class="step-number"><i class="fa-solid fa-shirt"></i></span><span class="step-title"><span class="step-order">02</span><strong>Muestras</strong></span><i class="step-open fa-solid fa-chevron-right"></i></span><span class="step-summary"><span class="step-status"><i class="fa-solid fa-circle"></i>Pendiente</span><span class="step-purchase-count">0 compras</span></span></button><button type="button" class="stage-step stage-step-link completed selected" onclick="selectStage(this,2)"><span class="step-heading"><span class="step-number"><i class="fa-solid fa-layer-group"></i></span><span class="step-title"><span class="step-order">03</span><strong>Telas e insumos</strong></span><i class="step-open fa-solid fa-chevron-right"></i></span><span class="step-summary"><span class="step-status"><i class="fa-solid fa-check"></i>Completado</span><span class="step-purchase-count">6 compras</span></span></button><button type="button" class="stage-step stage-step-link in_progress " onclick="selectStage(this,3)"><span class="step-heading"><span class="step-number"><i class="fa-solid fa-scissors"></i></span><span class="step-title"><span class="step-order">04</span><strong>Corte</strong></span><i class="step-open fa-solid fa-chevron-right"></i></span><span class="step-summary"><span class="step-status"><i class="fa-solid fa-circle"></i>En proceso</span><span class="step-purchase-count">1 compra</span></span></button><button type="button" class="stage-step stage-step-link in_progress " onclick="selectStage(this,4)"><span class="step-heading"><span class="step-number"><i class="fa-solid fa-gears"></i></span><span class="step-title"><span class="step-order">05</span><strong>Costura</strong></span><i class="step-open fa-solid fa-chevron-right"></i></span><span class="step-summary"><span class="step-status"><i class="fa-solid fa-circle"></i>En proceso</span><span class="step-purchase-count">1 compra</span></span></button><button type="button" class="stage-step stage-step-link pending " onclick="selectStage(this,5)"><span class="step-heading"><span class="step-number"><i class="fa-solid fa-wand-magic-sparkles"></i></span><span class="step-title"><span class="step-order">06</span><strong>Acabados</strong></span><i class="step-open fa-solid fa-chevron-right"></i></span><span class="step-summary"><span class="step-status"><i class="fa-solid fa-circle"></i>Pendiente</span><span class="step-purchase-count">0 compras</span></span></button><button type="button" class="stage-step stage-step-link pending " onclick="selectStage(this,6)"><span class="step-heading"><span class="step-number"><i class="fa-solid fa-box-open"></i></span><span class="step-title"><span class="step-order">07</span><strong>Recepción</strong></span><i class="step-open fa-solid fa-chevron-right"></i></span><span class="step-summary"><span class="step-status"><i class="fa-solid fa-circle"></i>Pendiente</span><span class="step-purchase-count">Mercadería</span></span></button><button type="button" class="stage-step stage-step-link pending " onclick="selectStage(this,7)"><span class="step-heading"><span class="step-number"><i class="fa-solid fa-boxes-stacked"></i></span><span class="step-title"><span class="step-order">08</span><strong>Otros</strong></span><i class="step-open fa-solid fa-chevron-right"></i></span><span class="step-summary"><span class="step-status"><i class="fa-solid fa-circle"></i>Pendiente</span><span class="step-purchase-count">0 compras</span></span></button></nav></section></div><section class="workspace"><div class="panel-top"><div><span class="eyebrow" id="stage-label">ETAPA 3 DE 8</span><h2 id="stage-name">Telas e insumos</h2></div><div><button onclick="move(-1)">‹ Anterior</button> <button onclick="move(1)">Siguiente ›</button></div></div><p>Consulta y registra los datos de la etapa seleccionada.</p><div class="block">El formulario y las compras de esta etapa se muestran aquí.</div></section></main><script>let current=2;const names=["Moldes y ploteo","Muestras","Telas e insumos","Corte","Costura","Acabados","Recepción","Otros"];function selectStage(button,index){document.querySelector('.stage-step.selected')?.classList.remove('selected');button.classList.add('selected');current=index;document.getElementById('stage-name').textContent=names[index];document.getElementById('stage-label').textContent='ETAPA '+(index+1)+' DE 8';document.querySelector('.stage-context').textContent='Etapa '+(index+1)+' de 8'}function move(delta){const index=Math.max(0,Math.min(7,current+delta));selectStage(document.querySelectorAll('.stage-step')[index],index)}</script></html>

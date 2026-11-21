@@ -7,8 +7,16 @@
   "files": ["src/test.ts"],
   "include": [
     "src/**/*.d.ts",
+    "src/app/views/dashboard/users/shared/contact-workflow.spec.ts",
+    "src/app/views/dashboard/payments/payment-workflow.spec.ts",
+    "src/app/views/dashboard/kardex/kardex-history/kardex-history.component.spec.ts",
+    "src/app/views/dashboard/inventory-receptions/inventory-reception-index/inventory-reception-index.component.spec.ts",
+    "src/app/views/dashboard/kardex/kardex-index/kardex-index.component.spec.ts",
+    "src/app/views/dashboard/kardex/kardex-index-selected/kardex-index-selected.component.spec.ts",
+    "src/app/views/dashboard/kardex/kardex-register-in/kardex-register-in.component.spec.ts",
     "src/app/views/shared/components/delivery-tracking/delivery-tracking.spec.ts",
     "src/app/views/dashboard/manufactures/productions/production-stages/production-stages.spec.ts",
+    "src/app/views/dashboard/manufactures/productions/production-stages/production-stage-attachments.spec.ts",
     "src/app/views/dashboard/manufactures/productions/production-overview.spec.ts",
     "src/app/views/dashboard/purchases/purchase-index/production-expenses.spec.ts",
     "src/app/views/dashboard/area-dashboards/area-dashboard.spec.ts"

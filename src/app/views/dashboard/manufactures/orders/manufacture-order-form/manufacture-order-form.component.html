@@ -11,8 +11,10 @@
     <label id="purchase-order-supplier-label">Proveedor</label>
     <div class="purchase-order-supplier-control">
       <app-supplier-selected formControlName="supplier_id" [suppliers]="suppliers" aria-labelledby="purchase-order-supplier-label"></app-supplier-selected>
+      <app-supplier-address-selection [form]="form" />
       <button type="button" class="btn btn-outline-secondary" (click)="openVerticallyCentered(newSupplier)"><i class="fa-solid fa-plus me-2" aria-hidden="true"></i>Nuevo proveedor</button>
     </div>
+    <app-supplier-address-selection [form]="form" />
     <p>Selecciona un proveedor existente o registra uno nuevo.</p>
   </div>
   <div class="purchase-order-dates">

@@ -1,14 +1,15 @@
 @if (productionView) {
-<section class="production-expenses" aria-labelledby="production-expenses-title">
+<section class="production-expenses" [class.production-expenses-compact]="compactHeader" aria-labelledby="production-expenses-title">
   <header class="production-expenses-heading">
-    <div><span class="production-expenses-eyebrow">COMPRAS POR SECCIÓN</span><h2 id="production-expenses-title">{{ stageName ? 'Compras · ' + stageName : 'Compras y gastos' }}</h2><p>{{ stageDescription }}</p></div>
-    <button type="button" class="production-expense-primary" (click)="openVerticallyCentered(content)"><i class="fa-solid fa-plus" aria-hidden="true"></i>Registrar compra o gasto</button>
+    @if (!compactHeader) {     <div><span class="production-expenses-eyebrow">COMPRAS POR SECCIÓN</span><h2 id="production-expenses-title">{{ stageName ? 'Compras · ' + stageName : 'Compras y gastos' }}</h2><p>{{ stageDescription }}</p></div> } @else { <h2 id="production-expenses-title" class="visually-hidden">Compras</h2> }
+    <dl class="production-expenses-summary">
+      <div class="production-expenses-total"><dt>{{ compactHeader ? 'Total' : 'Gasto acumulado' }}</dt><dd>{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd></div>
+      <div><dt>Registros</dt><dd>{{ purchases.length }}</dd></div>
+      @if (!compactHeader) { <div><dt>Conceptos</dt><dd>{{ conceptCount }}</dd></div> }
+    </dl>
+    <button type="button" class="production-expense-primary" (click)="openVerticallyCentered(content)"><i class="fa-solid fa-plus" aria-hidden="true"></i>{{ compactHeader ? 'Registrar compra' : 'Registrar compra o gasto' }}</button>
   </header>
-  <dl class="production-expenses-summary">
-    <div class="production-expenses-total"><dt>Gasto acumulado</dt><dd>{{ sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</dd><dd class="production-expenses-note">Suma de las compras y gastos registrados</dd></div>
-    <div><dt>Registros</dt><dd>{{ purchases.length }}</dd><dd class="production-expenses-note">Compras y gastos</dd></div>
-    <div><dt>Conceptos</dt><dd>{{ conceptCount }}</dd><dd class="production-expenses-note">Materiales o servicios registrados</dd></div>
-  </dl>
+  @if (createdNotice) { <p class="production-purchase-confirmation" role="status"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>{{ createdNotice }}</p> }
   @for (purchase of purchases; track purchase.id) {
   <article class="production-expense-card" [id]="'purchase-' + purchase.id" [attr.aria-label]="'Compra o gasto #' + purchase.id">
     <header class="production-expense-card-header">
@@ -58,17 +59,27 @@
       </section>
     </div>
     <footer class="production-expense-delivery">
-      <app-delivery-tracking ownerType="purchase" [ownerId]="purchase.id" [tracking]="purchase.delivery_tracking ?? null" [suggested]="deliveryDefault" [footer]="true" [actionsFirst]="true"
-        (trackingChanged)="deliveryUpdated(purchase.id, $event)">
-        <div deliveryFooterTotal class="production-expense-amount"><span>Importe total</span><strong>{{ sum_purchase(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></div>
-      </app-delivery-tracking>
+      <div class="production-expense-footer-meta">
+        <div class="production-expense-attachment-counts" aria-label="Adjuntos de la compra">
+          <span [class.has-attachments]="receiptCount(purchase) > 0" title="Boletas, facturas y comprobantes adjuntos a los pagos"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i><strong>{{ receiptCount(purchase) }}</strong> {{ receiptCount(purchase) === 1 ? 'comprobante' : 'comprobantes' }}</span>
+          <span [class.has-attachments]="attachmentCount(purchase) > 0" title="Imágenes y documentos adjuntos a esta compra"><i class="fa-solid fa-paperclip" aria-hidden="true"></i><strong>{{ attachmentCount(purchase) }}</strong> {{ attachmentCount(purchase) === 1 ? 'archivo' : 'archivos' }}</span>
+        </div>
+      @if (purchase.delivery_tracking; as delivery) {
+        <div class="production-expense-delivery-date" [class.overdue]="delivery.status === 'overdue'" [class.received]="delivery.status === 'received'">
+          <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
+          <div><span>{{ delivery.received_on ? 'Fecha de recepción' : 'Entrega prevista' }}</span><strong>{{ (delivery.received_on || delivery.expected_on) | date:'d MMM y':'':'es-PE' }}</strong></div>
+          <small>{{ deliveryLabels[delivery.status] }}</small>
+        </div>
+      }
+      </div>
+      <div class="production-expense-amount"><span>Importe total</span><strong>{{ sum_purchase(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></div>
     </footer>
   </article>
   } @empty {
   <div class="production-expenses-empty">
     <span aria-hidden="true"><i class="fa-solid fa-receipt"></i></span>
-    <h3>Aún no hay compras ni gastos</h3><p>Registra materiales, insumos o servicios para empezar a conocer el costo de fabricación.</p>
-    <button type="button" class="production-expense-secondary" (click)="openVerticallyCentered(content)">Registrar el primer gasto<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+    <h3>{{ compactHeader ? 'Sin compras registradas' : 'Aún no hay compras ni gastos' }}</h3>@if (!compactHeader) { <p>Registra materiales, insumos o servicios para empezar a conocer el costo de fabricación.</p> }
+    @if (!compactHeader) { <button type="button" class="production-expense-secondary" (click)="openVerticallyCentered(content)">Registrar el primer gasto<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button> }
   </div>
   }
 </section>
@@ -173,7 +184,7 @@
         <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body p-0">
-        <app-purchase-create [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id" [production_stage_id]="productionStageId" [deliveryDefault]="deliveryDefault"
+        <app-purchase-create [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id" [production_stage_id]="productionStageId" [productionSections]="productionSections" [deliveryDefault]="deliveryDefault"
             (emitPurchaseCreate)="receivePurchaseCreate($event)" (cancelled)="modal.dismiss('cancel')"></app-purchase-create>
     </div>
 

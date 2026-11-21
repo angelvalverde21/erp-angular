@@ -91,7 +91,7 @@ export class ManufactureProductionVariantIndexComponent implements OnInit {
       0
     );
 
-    // this.emitSumProductionVariant.emit(this.sum_products);
+    this.emitSumProductionVariant.emit(this.sum_variants);
 
     //Este valor se envia por signals
     this._manufacture.setSummary({

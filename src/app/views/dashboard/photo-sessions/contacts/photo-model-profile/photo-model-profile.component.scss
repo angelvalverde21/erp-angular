@@ -1,0 +1,28 @@
+.model-profile { display: grid; grid-template-columns: minmax(0, 1fr) 310px; align-items: start; gap: 1.5rem; }
+.model-content { min-width: 0; }
+.model-tabs { display: flex; gap: .4rem; padding: .4rem; background: white; border: 1px solid #dfe5ef; border-radius: 11px; margin-bottom: 1rem; }
+.model-tabs button { display: inline-flex; align-items: center; gap: .55rem; border: 1px solid transparent; border-radius: 7px; background: transparent; padding: .75rem 1.15rem; color: #6a7b91; font-size: .8rem; font-weight: 650; }
+.model-tabs button:hover { background: #f6f7fa; }
+.model-tabs button[aria-selected="true"] { background: var(--photo-tint); border-color: var(--photo-line); color: var(--photo-accent); }
+.tab-count { background: white; border-radius: 5px; padding: .1rem .4rem; font-size: .68rem; }
+[hidden] { display: none !important; }
+.model-portrait { margin: 0; padding: 1rem; text-align: center; }
+.portrait-heading { display: flex; align-items: center; gap: .55rem; text-align: left; color: #51647d; font-size: .75rem; font-weight: 650; margin: .15rem 0 1rem; }
+.portrait-heading i { color: var(--photo-accent); }
+.portrait-image { display: flex; justify-content: center; align-items: center; min-height: 280px; background: var(--photo-tint); border: 1px solid var(--photo-line); border-radius: 10px; overflow: hidden; }
+.portrait-image app-image-preview { display: block; width: 100%; }
+.portrait-empty { display: flex; flex-direction: column; align-items: center; gap: .65rem; padding: 1.5rem .75rem; color: #88798b; }
+.portrait-empty > i { font-size: 2.7rem; margin-bottom: .3rem; color: #b9a2b0; }
+.portrait-empty strong { font-size: .8rem; }
+.portrait-empty span { font-size: .72rem; }
+.portrait-details { display: flex; flex-direction: column; align-items: center; gap: .6rem; padding: 1.1rem .25rem; }
+.portrait-details > strong { font-size: 1rem; overflow-wrap: anywhere; }
+.availability { display: inline-flex; align-items: center; gap: .4rem; color: #287d5c; background: #edf7f1; padding: .3rem .6rem; border-radius: 20px; font-size: .68rem; }
+.availability i { font-size: .4rem; }
+.availability.inactive { background: #f0f2f5; color: #768397; }
+.model-portrait > .button { width: 100%; }
+@media(max-width: 991px) {
+  .model-profile { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .model-portrait { grid-row: 1; width: 100%; }
+  .portrait-image { max-width: 280px; min-height: 220px; margin: auto; }
+}

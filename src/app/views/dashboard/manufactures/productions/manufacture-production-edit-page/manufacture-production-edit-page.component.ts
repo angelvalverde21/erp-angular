@@ -1,14 +1,15 @@
+import { ProductionSectionOption, ProductionSectionPickerComponent } from '../production-stages/production-section-picker.component';
 import { Component, OnDestroy, OnInit, effect } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 // import { HeadPageComponent } from '@components/head-page/head-page.component';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { isProcessStage, ProductionStage, ProductionStageService } from '../production-stages/production-stage.service';
 import { ProductionStageStepperComponent } from '../production-stages/production-stage-stepper.component';
-import { EMPTY, Subject, catchError, filter, switchMap, takeUntil, tap } from 'rxjs';
+import { EMPTY, Subject, catchError, filter, finalize, switchMap, takeUntil, tap } from 'rxjs';
 import { LoadingComponent } from '@components/loading/loading.component';
 import Swal from 'sweetalert2';
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ManufactureProductionService } from '../manufacture.production.service';
-import { ProductionWidgetComponent } from './production-widget/production-widget.component';
 import { SummaryPurchase } from '@interfaces/summary.interface';
 import { ManufactureService } from '../../manufacture.service';
 
@@ -16,9 +17,10 @@ import { ManufactureService } from '../../manufacture.service';
   selector: 'app-manufacture-production-edit-page',
   imports: [
     LoadingComponent,
-    ProductionWidgetComponent,
+    CurrencyPipe,
     RouterModule,
     ProductionStageStepperComponent,
+    ProductionSectionPickerComponent,
     // NgbDropdownModule
   ],
   templateUrl: './manufacture-production-edit-page.component.html',
@@ -28,14 +30,55 @@ import { ManufactureService } from '../../manufacture.service';
 
 export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy {
 
+  configuringSections = false;
+  loadingSections = false;
+  savingSections = false;
+  sectionOptions: ProductionSectionOption[] = [];
+  selectedSectionIds: number[] = [];
+  sectionRevision = 0;
+  sectionError = '';
+
+  async manageSections(): Promise<void> {
+    if (this.savingSections) return;
+    this.configuringSections = true;
+    this.loadingSections = true;
+    this.sectionError = '';
+    this.stageService.configuration(this.manufacture_id).pipe(takeUntil(this.destroy$), finalize(() => this.loadingSections = false)).subscribe({
+      next: ({ data }) => { this.sectionOptions = data.options; this.selectedSectionIds = data.options.filter(section => section.is_enabled).map(section => section.id); this.sectionRevision = data.revision; },
+      error: () => this.sectionError = 'No se pudieron cargar las secciones. Cierra y vuelve a intentar.',
+    });
+  }
+
+  saveSections(): void {
+    if (this.savingSections || this.loadingSections) return;
+    if (!this.selectedSectionIds.length) { this.sectionError = 'Selecciona al menos una sección.'; return; }
+    this.savingSections = true;
+    this.sectionError = '';
+    this.stageService.configure(this.manufacture_id, this.selectedSectionIds, this.sectionRevision).pipe(takeUntil(this.destroy$), finalize(() => this.savingSections = false)).subscribe({
+      next: () => { this.configuringSections = false; },
+      error: response => this.sectionError = response.error?.errors ? Object.values(response.error.errors).flat().join(' ') : 'No se pudieron guardar las secciones. Tu selección se mantiene.',
+    });
+  }
+
   loading: boolean = false;
   error = '';
   manufacture: any = null;
   manufacture_id: number = 0;
   stages: ProductionStage[] = [];
   stagesError = '';
-  get showWorkflow(): boolean { return this.router.url.split('?')[0].endsWith('/purchases'); }
+  get sectionMode(): boolean { return this.router.url.split('?')[0].endsWith('/purchases'); }
+  get overviewMode(): boolean { return this.router.url.split('?')[0].endsWith('/overview'); }
   get workflowStages(): (ProductionStage & { status: string })[] { return this.stages.filter(isProcessStage); }
+  get navigationStages(): ProductionStage[] { return this.stages.filter(stage => stage.show_in_stepper !== false); }
+  get activeStageId(): number {
+    const path = this.router.url.split('?')[0];
+    if (path.endsWith('/kardexes')) return this.stages.find(stage => stage.code === 'reception')?.id ?? 0;
+    if (path.endsWith('/variants')) return this.stages.find(stage => stage.code === 'cutting')?.id ?? 0;
+    return path.endsWith('/purchases') ? this.selectedStageId : 0;
+  }
+  get cuttingSection(): ProductionStage | undefined { return this.stages.find(stage => stage.code === 'cutting'); }
+  get receptionSection(): ProductionStage | undefined { return this.stages.find(stage => stage.code === 'reception'); }
+  get unitCost(): number { return Number(this.summary.sum_variants) > 0 ? Number(this.summary.sum_purchases) / Number(this.summary.sum_variants) : 0; }
   get otherExpenses(): { id: number; count: number } | null {
     const section = this.stages.find(stage => stage.code === 'others');
     return section ? { id: section.id, count: section.purchases_count ?? 0 } : null;
@@ -97,7 +140,7 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
     this.stageService.changes.pipe(
       filter(id => id === this.manufacture_id),
       tap(() => this.loadStages()),
-      switchMap(() => this._manufacture.get(this.manufacture_id).pipe(catchError(() => EMPTY))),
+      switchMap(() => this._manufacture.overview(this.manufacture_id).pipe(catchError(() => EMPTY))),
       takeUntil(this.destroy$),
     ).subscribe(response => {
       this.summary = { ...this.summary, tracked_purchases_count: Number(response.data.tracked_purchases_count ?? 0) };
@@ -126,7 +169,11 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
 
   openStage(id: number): void {
     const stage = this.stages.find(section => section.id === id);
-    void this.router.navigate(['purchases'], { relativeTo: this.route, queryParams: { stage: stage?.slug ?? id } });
+    if (id === this.selectedStageId && this.sectionMode) {
+      this.stageService.focusRequests.next(this.manufacture_id);
+      return;
+    }
+    void this.router.navigate(['purchases'], { relativeTo: this.route, queryParams: { stage: stage?.slug ?? id, view: stage?.code === 'reception' ? 'receptions' : 'purchases' } });
   }
 
   private resolveStage(identifier: string | null): ProductionStage | undefined {
@@ -142,7 +189,7 @@ export class ManufactureProductionEditPageComponent implements OnInit, OnDestroy
     this.error = '';
     this.loading = true;
 
-    this._manufacture.get(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
+    this._manufacture.overview(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
 

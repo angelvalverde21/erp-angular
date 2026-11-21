@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/catalog-tests",
+    "types": ["jasmine", "@angular/localize"]
+  },
+  "files": ["src/test.ts"],
+  "include": [
+    "src/**/*.d.ts",
+    "src/app/views/dashboard/products/product-shopify-bulk/product-shopify-bulk.spec.ts",
+    "src/app/views/dashboard/products/product-index/product-duplicate.spec.ts",
+    "src/app/views/dashboard/products/product-index-page/product-sort.spec.ts",
+    "src/app/views/dashboard/products/variants/variant-search/variant-search.component.spec.ts"
+  ]
+}

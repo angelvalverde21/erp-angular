@@ -1,0 +1,82 @@
+<main class="workspace">
+  <header class="page-header">
+    <div>
+      <div class="eyebrow">VENTAS Y EMPAQUE <span class="version-tag">Nueva versión</span></div>
+      <h1>Pedidos</h1>
+      <p>Todo lo que necesitas para revisar, preparar y despachar cada pedido.</p>
+    </div>
+    <span class="source-label"><i class="fa-solid fa-database" aria-hidden="true"></i>Vista previa con pedidos importados</span>
+  </header>
+
+  @if (data; as result) {
+    <nav class="order-filters" aria-label="Filtrar pedidos por estado">
+      @for (option of filters; track option.key) {
+        <button type="button" [class.active]="activeFilter === option.key" [attr.aria-pressed]="activeFilter === option.key" (click)="filter(option.key)">
+          <span class="filter-icon"><i [class]="'fa-solid ' + option.icon" aria-hidden="true"></i></span>
+          <span class="filter-copy"><span>{{ option.label }}</span><strong>{{ result.counts[option.count] | number }}</strong></span>
+          <span class="filter-indicator" aria-hidden="true"></span>
+        </button>
+      }
+    </nav>
+  }
+
+  <section class="surface">
+    <div class="list-toolbar">
+      <form class="search" (ngSubmit)="submit()">
+        <label class="sr-only" for="workspace-search">Buscar pedido o cliente</label>
+        <div class="search-field"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="workspace-search" name="search" [(ngModel)]="search" maxlength="150" placeholder="Buscar por pedido, cliente, correo o teléfono"></div>
+        <button type="submit" class="btn-action dark">Buscar</button>
+      </form>
+      <label class="status-filter"><span class="sr-only">Estado del pedido</span>
+        <select [ngModel]="activeFilter" (ngModelChange)="filter($event)">
+          <option value="all">Todos los estados</option>
+          <option value="ready">Por empacar</option><option value="preparing">En preparación</option><option value="shipped">Enviados</option>
+          @for (state of otherStates; track state[0]) { <option [value]="state[0]">{{ state[1].label }}</option> }
+        </select>
+      </label>
+    </div>
+    <div class="list-title"><h2>{{ heading }}</h2><span>{{ data?.total ?? 0 | number }} pedidos · Más recientes primero</span></div>
+
+    @if (loading) {
+      <div class="feedback" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Cargando pedidos…</div>
+    } @else if (error) {
+      <div class="feedback" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><p>{{ error }}</p><button class="btn-action" (click)="retry()">Reintentar</button></div>
+    } @else { @if (data; as result) {
+      @if (result.orders.length) {
+        <div class="table-scroll">
+          <table class="workspace-table">
+            <thead><tr><th>Pedido</th><th>Cliente</th><th>Qué preparar</th><th>Estado</th><th>Pago / total</th><th><span class="sr-only">Ver detalle</span></th></tr></thead>
+            <tbody>
+              @for (order of result.orders; track order.id) {
+                <tr [class.ready]="order.preparation === 'ready'">
+                  <td>
+                    <a class="order-number" [routerLink]="[order.id]" [queryParams]="detailQuery">{{ order.number }}</a>
+                    <small>{{ order.createdAt | DateShopify }}</small>
+                    @if (order.comments) { <span class="comment-count"><i class="fa-regular fa-comment" aria-hidden="true"></i>{{ order.comments }} {{ order.comments === 1 ? 'comentario' : 'comentarios' }}</span> }
+                  </td>
+                  <td><strong class="customer">{{ order.customer }}</strong>@if (order.destination) { <small class="destination"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ order.destination }}</small> }</td>
+                  <td class="products-column">
+                    <span class="units">{{ order.units }} {{ order.units === 1 ? 'unidad' : 'unidades' }} en el pedido</span>
+                    <app-order-product-list [products]="order.products" />
+                    @if (order.productCount > order.products.length) { <a class="more-products" [routerLink]="[order.id]" [queryParams]="detailQuery">+ {{ order.productCount - order.products.length }} artículos · Ver todos</a> }
+                  </td>
+                  <td>
+                    <app-order-preparation-badge [status]="order.preparation" />
+                    @if (order.partiallyShipped) { <small class="warning-text">Envío parcial · Revisar pendientes</small> }
+                    @if (order.preparation === 'review') { <small class="warning-text">Revisar antes de empacar</small> }
+                    @if (order.preparation === 'cancelled') { <small>No preparar</small> }
+                  </td>
+                  <td><span class="payment" [class.paid]="order.paid">{{ order.payment }}</span><strong class="order-total">{{ order.total }}</strong></td>
+                  <td><a class="open-order" [routerLink]="[order.id]" [queryParams]="detailQuery" [attr.aria-label]="'Abrir pedido ' + order.number"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <footer class="pagination"><span>Página {{ result.page }} de {{ result.lastPage }}</span><div><button class="btn-action" [disabled]="result.page <= 1" (click)="page(result.page - 1)"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>Anterior</button><button class="btn-action" [disabled]="result.page >= result.lastPage" (click)="page(result.page + 1)">Siguiente<i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button></div></footer>
+      } @else {
+        <div class="feedback"><i class="fa-solid fa-box-open" aria-hidden="true"></i><h2>No hay pedidos para mostrar</h2><p>{{ result.runId ? 'Prueba con otra búsqueda o estado.' : 'Los pedidos aparecerán después de realizar la primera importación.' }}</p>@if (result.runId) { <button class="btn-action" (click)="clear()">Limpiar filtros</button> }</div>
+      }
+    } }
+  </section>
+</main>

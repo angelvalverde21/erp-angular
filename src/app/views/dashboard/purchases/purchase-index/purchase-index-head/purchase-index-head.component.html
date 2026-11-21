@@ -32,6 +32,10 @@
                     <span class="purchase-action-icon"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i></span>
                     <span><strong>Boletas y Facturas</strong><small>Pagos y comprobantes</small></span>
                 </button>
+                <button ngbDropdownItem class="purchase-action" (click)="openPurchaseFiles(purchaseFiles)">
+                    <span class="purchase-action-icon"><i class="fa-regular fa-images" aria-hidden="true"></i></span>
+                    <span><strong>Archivos adjuntos</strong><small>Imágenes, PDF, Word y otros</small></span>
+                </button>
                 <div class="purchase-actions-divider" role="separator"></div>
                 <button ngbDropdownItem class="purchase-action purchase-action-danger" (click)="eliminar(purchase.id)">
                     <span class="purchase-action-icon"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></span>
@@ -60,8 +64,15 @@
     </div>
     <div class="modal-body purchase-edit-modal-body">
         <app-purchase-edit [purchase_id]="purchase.id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
+            [manageDelivery]="true" [deliveryExpanded]="deliveryExpanded(deliveryEditor)" [deliveryTracked]="!!purchase.delivery_tracking" (deliveryRequested)="toggleDelivery(deliveryEditor, deliveryPanel)"
+            (purchaseLoaded)="purchaseLoaded($event)"
             (cancelled)="modal.dismiss('cancel')"
-            [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id"></app-purchase-edit>
+            [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id">
+          <div purchase-delivery-panel class="purchase-edit-delivery-collapse" [class.expanded]="editorReady && deliveryExpanded(deliveryEditor)" [attr.inert]="editorReady && deliveryExpanded(deliveryEditor) ? null : ''" [attr.aria-hidden]="!editorReady || !deliveryExpanded(deliveryEditor)" id="purchase-edit-delivery" #deliveryPanel><div class="purchase-edit-delivery-content"><div class="purchase-edit-modal-delivery">
+            <app-delivery-tracking #deliveryEditor ownerType="purchase" [ownerId]="purchase.id" [tracking]="purchase.delivery_tracking ?? null" [footer]="true" [externalToggle]="true" [embedded]="true" (trackingChanged)="deliveryUpdated($event)" />
+          </div></div>
+          </div>
+        </app-purchase-edit>
     </div>
 </ng-template>
 
@@ -71,7 +82,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <app-payment-index [payments]="payments" [paymentable_id]="purchase.id" paymentable_type="purchase"></app-payment-index>
+        <app-payment-index [payments]="payments" [paymentable_id]="purchase.id" paymentable_type="purchase" (paymentsChange)="paymentsUpdated($event)"></app-payment-index>
     </div>
 
 </ng-template>
@@ -90,4 +101,12 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
     </div>
+</ng-template>
+
+<ng-template #purchaseFiles let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title">Archivos adjuntos #{{ purchase.id }}</h6>
+        <button type="button" class="btn-close" aria-label="Cerrar archivos adjuntos" [disabled]="attachmentsBusy" (click)="modal.dismiss('close')"></button>
+    </div>
+    <div class="modal-body p-0"><app-purchase-attachments [purchaseId]="purchase.id" (busyChange)="attachmentsBusy = $event" (filesChange)="attachmentsUpdated($event)"></app-purchase-attachments></div>
 </ng-template>

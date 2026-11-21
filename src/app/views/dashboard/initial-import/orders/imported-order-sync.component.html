@@ -1,0 +1,14 @@
+<section class="orders-sync" aria-label="Buscar nuevos pedidos de Shopify">
+  <div class="sync-heading"><div class="sync-copy"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i><div><h2>Nuevos pedidos de Shopify</h2><p>Busca e importa los que faltan en esta carga, con sus artículos, pagos, envíos y eventos.</p></div></div>
+    <button type="button" class="button dark" [disabled]="!canStart" (click)="start()"><i [class]="saving || active ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-cloud-arrow-down'" aria-hidden="true"></i>{{ saving ? 'Iniciando…' : active ? update?.status === 'importing' ? 'Importando pedidos…' : 'Buscando pedidos…' : update?.can_resume ? 'Reintentar búsqueda' : 'Buscar nuevos pedidos' }}</button>
+  </div>
+  @if (error) { <div class="sync-warning" role="alert">{{ error }}</div> }
+  @if (active && update) {
+    <div class="sync-status" role="status"><strong>{{ update.status === 'queued' ? 'La búsqueda está en cola.' : update.status === 'scanning' ? 'Consultando pedidos en Shopify…' : 'Recuperando los detalles de los pedidos nuevos…' }}</strong><span>{{ update.checked_orders | number }} pedidos revisados · {{ update.added_orders | number }} nuevos</span>@if (update.total_tasks) { <span>{{ update.completed_tasks | number }} de {{ update.total_tasks | number }} detalles verificados</span> }<small>Puedes salir de esta pantalla. La importación continuará en segundo plano.</small></div>
+  } @else if (update?.status === 'completed') {
+    <div class="sync-status success" role="status"><strong><i class="fa-solid fa-circle-check" aria-hidden="true"></i> {{ update!.added_orders ? update!.added_orders === 1 ? '1 pedido nuevo importado con sus datos disponibles.' : (update!.added_orders | number) + ' pedidos nuevos importados con sus datos disponibles.' : 'No hay pedidos nuevos pendientes de importar.' }}</strong><span>Última consulta: {{ view.date(update!.completed_at, true) }}</span></div>
+  } @else if (update?.status === 'failed') {
+    <div class="sync-warning" role="alert"><strong>La búsqueda o la importación se detuvo.</strong><p>{{ update?.error_message }} El avance guardado se conserva; puedes reintentar.</p></div>
+  } @else if (run && run.status !== 'completed') { <small class="sync-hint">Termina la importación actual para buscar nuevos pedidos.</small> }
+  @if (pollError) { <div class="sync-warning" role="alert">No se pudo actualizar el progreso. El proceso continúa y volveremos a comprobarlo automáticamente.</div> }
+</section>

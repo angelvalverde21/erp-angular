@@ -32,7 +32,7 @@
         <app-loading></app-loading>
         }@else{
         <app-kardex-register-in [variants]="variants" [kardexable_type]="'manufacture'" [kardexable_id]="production_id"
-            (emitKardexes)="receiveKardexes($event)"></app-kardex-register-in>
+            (emitKardexes)="receiveKardexes($event)" (cancelled)="modal.dismiss('cancel')"></app-kardex-register-in>
         }
     </div>
 

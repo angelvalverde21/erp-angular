@@ -1,0 +1,8 @@
+.location-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.15rem; }
+.wide { grid-column: 1 / -1; } .rate-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+.invalid { display: block; color: #b15166; font-size: .7rem; margin-top: .4rem; }
+.address-section { margin-top: .3rem; padding-top: 1.1rem; border-top: 1px solid #e6ebf3; }
+.address-heading { margin-bottom: 1rem; }
+details summary { font-size: .75rem; color: #7f719d; cursor: pointer; }
+.coordinates { margin-top: .9rem; }
+@media(max-width: 650px) { .location-form { grid-template-columns: 1fr; } }

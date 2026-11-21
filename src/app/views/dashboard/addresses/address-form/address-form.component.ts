@@ -17,7 +17,7 @@ import { IdentitySelectedComponent } from '../../identities/identity-selected/id
     IdentitySelectedComponent
   ],
   templateUrl: './address-form.component.html',
-  styleUrl: './address-form.component.scss',
+  styleUrls: ['./address-form.component.scss', '../../users/shared/contact-ui.scss'],
   viewProviders: [
     {
       provide: ControlContainer,
@@ -26,7 +26,7 @@ import { IdentitySelectedComponent } from '../../identities/identity-selected/id
   ]
 })
 export class AddressFormComponent {
-  @Input() presentation: 'default' | 'branch' = 'default';
+  @Input() presentation: 'default' | 'branch' | 'supplier' = 'default';
 
   faUser = faUser;
   faHome = faHome;

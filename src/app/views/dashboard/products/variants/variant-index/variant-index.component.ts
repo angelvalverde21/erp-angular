@@ -46,41 +46,23 @@ export class VariantIndexComponent implements OnInit {
     console.log(this.variant_select);
   }
 
-  addVariant(variantId: number) {
+  get allSelected(): boolean { return this.variants.length > 0 && this.variants.every(variant => !!this.variant_select[variant.id]); }
 
-    if (this.variant_select[variantId]) {
-      this.variant_select[variantId] = false;
-    } else {
-      this.variant_select[variantId] = true;
-    }
+  toggleAll(): void {
+    const selected = !this.allSelected;
+    this.variant_select = Object.fromEntries(this.variants.map(variant => [variant.id, selected]));
+    this.emitSelection();
+  }
 
-    console.log(this.variant_select);
+  addVariant(variantId: number): void {
+    this.variant_select[variantId] = !this.variant_select[variantId];
+    this.emitSelection();
+  }
 
-    // {333: true, 334: false, 335: true, 378: false, 395: true, 2652: false, 2653: false}
-
-    //Esto convierte el objeto en un array con los ids seleccionados (el objeto de arriba quedaría [333, 335, 395])
-    const variantsSelected = Object.entries(this.variant_select)
-      .filter(([_, value]) => value === true)
-      .map(([key]) => Number(key));
-
-    // y aqui se exporta o emite el array
-    this.variantArraySelected.emit(variantsSelected);
-
-    // this.variantArraySelected.emit(variantsSelected);
-    // const variant = this.variants.find(v => v.id === variantId);
-
-    // if (variant) {
-    //   this.variantAdded.emit(this.variant_select);
-    // }
-    
-    const obj = this.variants.filter(v => variantsSelected.includes(v.id));
-
-    console.log(obj);
-    
-
-    this.emitVariantsSelected.emit(obj);
-
-
+  private emitSelection(): void {
+    const selected = this.variants.filter(variant => this.variant_select[variant.id]);
+    this.variantArraySelected.emit(selected.map(variant => Number(variant.id)));
+    this.emitVariantsSelected.emit(selected);
   }
 
   ngOnChanges({ variants }: SimpleChanges) {

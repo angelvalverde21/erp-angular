@@ -1,7 +1,7 @@
 .product-primary-action, .product-secondary-action {
   display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
-  min-height: 42px; padding: .65rem 1rem; border: 1px solid transparent;
-  border-radius: .65rem; font-size: .82rem; font-weight: 600; line-height: 1.25;
+  height: 44px; min-height: 44px; padding: 0 1rem; border: 1px solid transparent;
+  border-radius: .5rem; font-size: .82rem; font-weight: 600; line-height: 1.25;
   text-decoration: none; white-space: nowrap; transition: background .15s, border-color .15s;
   &:focus-visible { outline: 2px solid #64748b; outline-offset: 3px; }
 }

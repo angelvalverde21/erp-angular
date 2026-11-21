@@ -3,9 +3,17 @@
 } @else {
 <form [formGroup]="form" (ngSubmit)="createProduction()">
   <app-manufacture-production-form [form]="form"></app-manufacture-production-form>
+  <section class="mt-4" aria-labelledby="new-production-sections">
+    <h3 id="new-production-sections" class="fs-6">Secciones de esta producción</h3>
+    <p class="text-body-secondary small">Las 8 vienen seleccionadas. Desmarca las que no necesites; podrás ajustar esta selección después.</p>
+    @if (loadingSections) { <p role="status">Cargando secciones…</p> }
+    @else if (sectionsError) { <p role="alert" class="text-danger">{{ sectionsError }} <button type="button" class="btn btn-link" (click)="loadSections()">Reintentar</button></p> }
+    @else { <app-production-section-picker [options]="sectionOptions" [(selectedIds)]="selectedSectionIds" [disabled]="disabledButton"></app-production-section-picker> }
+  </section>
+  @if (error) { <p role="alert" class="text-danger mt-3">{{ error }}</p> }
   <div class="production-form-actions">
     <p>Podrás completar el resto de la información en el detalle.</p>
-    <button type="submit" class="manufacture-primary-action" [disabled]="disabledButton">
+    <button type="submit" class="manufacture-primary-action" [disabled]="disabledButton || loadingSections || !!sectionsError || !selectedSectionIds.length">
       @if (disabledButton) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }
       {{ disabledButton ? 'Creando...' : 'Crear producción' }}
     </button>

@@ -1,18 +1,39 @@
 <div class="production-page manufacture-theme-production">
-  <header class="production-header">
-    <nav aria-label="Ruta de navegación"><a [routerLink]="['../']">Fabricación / Producciones</a><span>/ PRD-{{ manufacture_id.toString().padStart(4, '0') }}</span></nav>
+  @if (!sectionMode) {
+  <header class="production-header" [class.production-header-panel]="!overviewMode">
+    @if (!overviewMode) { <a class="production-back" [routerLink]="['overview']"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Retroceder</a> }
     <div class="production-header-main">
-      <div><div class="production-title-row"><h1>{{ manufacture?.name || 'Detalle de producción' }}</h1><span class="production-status">{{ productionStatus }}</span></div><p>PRD-{{ manufacture_id.toString().padStart(4, '0') }} · Gestión y seguimiento de fabricación</p></div>
-      <div class="production-header-actions"><a [routerLink]="['details']">Editar datos</a><a [routerLink]="['../create']">Nueva producción</a></div>
+      <div><div class="production-title-row"><h1>{{ manufacture?.name || 'Detalle de producción' }}</h1><span class="production-status" [class.in-progress]="productionStatus === 'En proceso'" [class.completed]="productionStatus === 'Completada'">{{ productionStatus }}</span></div><p>PRD-{{ manufacture_id.toString().padStart(4, '0') }} · Gestión y seguimiento de fabricación</p></div>
+      <div class="production-header-actions"><a [routerLink]="['details']">Editar datos</a><a class="production-new-action" [routerLink]="['../create']">Nueva producción</a></div>
     </div>
   </header>
+  }
   @if (loading) {
   <div class="production-panel production-empty" role="status"><app-loading></app-loading><p>Cargando producción...</p></div>
   } @else if (error) {
   <div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar la producción</h3><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary" (click)="productionInit()">Reintentar</button></div>
   } @else {
-  <app-production-widget [summary]="summary"></app-production-widget>
-  @if (showWorkflow && workflowStages.length) { <app-production-stage-stepper [stages]="workflowStages" [productionId]="manufacture_id" [selectedId]="selectedStageId" [otherExpenses]="otherExpenses" (choose)="openStage($event)"></app-production-stage-stepper> }
+  @if (!sectionMode) {
+  <div class="production-summary-strip" aria-label="Resumen de producción">
+    <span>Gasto total <strong>{{ summary.sum_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></span>
+    <span>Costo por unidad <strong>{{ unitCost | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></span>
+    <span>Planificadas <a [routerLink]="[cuttingSection ? 'purchases' : 'variants']" [queryParams]="cuttingSection ? { stage: cuttingSection.slug || cuttingSection.id, view: 'products' } : null" aria-label="Ver productos y cantidades de Corte"><strong>{{ summary.sum_variants }}</strong></a></span>
+    <span>Recibidas <a [routerLink]="[receptionSection ? 'purchases' : 'kardexes']" [queryParams]="receptionSection ? { stage: receptionSection.slug || receptionSection.id, view: 'receptions' } : null" aria-label="Ver recepciones de mercadería"><strong>{{ summary.sum_kardexes }}</strong></a></span>
+    <a [routerLink]="['deliveries']"><i class="fa-regular fa-calendar-check" aria-hidden="true"></i> Seguimiento de compras <strong>{{ summary.tracked_purchases_count ?? 0 }}</strong> <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+  </div>
+  }
+  @if (overviewMode && navigationStages.length) { <app-production-stage-stepper [stages]="navigationStages" [productionId]="manufacture_id" [selectedId]="0" (choose)="openStage($event)" (configure)="manageSections()">
+    @if (configuringSections) {
+      <section class="stage-panel section-configuration" aria-labelledby="section-configuration-heading">
+        <h3 id="section-configuration-heading">Secciones de esta producción</h3>
+        <p>Marca las que necesitas. Las secciones que quites conservarán su historial y podrás volver a incluirlas.</p>
+        @if (loadingSections) { <p role="status">Cargando secciones…</p> }
+        @else { <app-production-section-picker [options]="sectionOptions" [(selectedIds)]="selectedSectionIds" [disabled]="savingSections"></app-production-section-picker> }
+        @if (sectionError) { <p role="alert" class="field-error">{{ sectionError }}</p> }
+        <div class="workspace-buttons mt-3"><button type="button" class="btn btn-outline-secondary" [disabled]="savingSections" (click)="configuringSections = false">Cancelar</button><button type="button" class="btn btn-primary" [disabled]="savingSections || loadingSections || !selectedSectionIds.length" (click)="saveSections()">{{ savingSections ? 'Guardando…' : 'Aplicar selección' }}</button></div>
+      </section>
+    }
+</app-production-stage-stepper> }
   @if (stagesError) { <p class="text-danger" role="alert">{{ stagesError }} <button type="button" class="btn btn-link btn-sm" (click)="loadStages()">Reintentar</button></p> }
   <router-outlet></router-outlet>
   }

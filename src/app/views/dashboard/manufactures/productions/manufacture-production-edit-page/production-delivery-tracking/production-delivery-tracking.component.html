@@ -1,5 +1,5 @@
-﻿<section class="production-deliveries" aria-labelledby="delivery-page-title">
-  <header class="delivery-page-heading"><div><h2 id="delivery-page-title">Seguimiento de entregas</h2><p>Compras y servicios con fechas de entrega, en todas las etapas.</p></div><button type="button" class="delivery-refresh" [disabled]="loading" (click)="reload()"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>Actualizar</button></header>
+<section class="production-deliveries mb-3" aria-labelledby="delivery-page-title">
+  <header class="delivery-page-heading"><div><h2 id="delivery-page-title">Seguimiento de compras</h2><p>{{ embedded ? 'Compras de esta sección que tienen fecha de entrega.' : 'Compras y servicios con fechas de entrega, en todas las etapas.' }}</p></div>@if (!embedded) { <button type="button" class="delivery-refresh" [disabled]="loading" (click)="reload()"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>Actualizar</button> }</header>
   @if (loading) { <p class="delivery-empty" role="status">Cargando compras con seguimiento…</p> }
   @else if (error) { <div class="delivery-empty delivery-error" role="alert">{{ error }}<button type="button" (click)="reload()">Reintentar</button></div> }
   @else {
@@ -11,15 +11,35 @@
     </div>
     <div class="delivery-purchase-list">
       @for (purchase of visiblePurchases; track purchase.id) {
-        <a class="delivery-purchase" [routerLink]="purchaseLink(purchase.id)" [queryParams]="{ production: productionId, returnTo: 'deliveries' }" [attr.aria-label]="'Gestionar compra #' + purchase.id">
+        <article class="delivery-purchase mb-3" [attr.aria-label]="'Seguimiento de compra #' + purchase.id">
           <header><div><span class="delivery-stage">{{ stageName(purchase) }} · Compra #{{ purchase.id }}</span><h3>{{ purchaseLabel(purchase) }}</h3><p>{{ concepts(purchase) }}</p></div><span class="delivery-status" [class]="'delivery-status ' + purchase.delivery_tracking!.status">{{ purchase.delivery_tracking!.status === 'received' ? 'Recibida' : purchase.delivery_tracking!.status === 'overdue' ? 'Vencida' : 'Pendiente' }}</span></header>
           <div class="delivery-purchase-footer">
-            <dl><div><dt>Encargo / materiales entregados</dt><dd>{{ (purchase.delivery_tracking!.handed_over_on | date:'dd MMM yyyy') || 'Sin registrar' }}</dd></div><div><dt>Compromiso vigente</dt><dd [class.overdue]="purchase.delivery_tracking!.status === 'overdue'">{{ purchase.delivery_tracking!.expected_on | date:'dd MMM yyyy' }}</dd></div><div><dt>Recepción real</dt><dd>{{ (purchase.delivery_tracking!.received_on | date:'dd MMM yyyy') || 'Por recibir' }}</dd></div></dl>
-            <span class="delivery-open">Gestionar compra<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+            <table class="delivery-dates-table" [attr.aria-label]="'Fechas de la compra #' + purchase.id">
+              <thead><tr><th scope="col">Evento</th><th scope="col">Fecha</th><th scope="col">Estado</th></tr></thead>
+              <tbody>
+                @for (row of dateRows(purchase.delivery_tracking!); track row.key) {
+                  <tr [class.date-priority]="row.current" [class.date-rescheduled]="row.event === 'Reprogramado'" [class.date-overdue]="row.tone === 'overdue'" [class.date-received]="row.tone === 'received'" [class.date-previous]="row.tone === 'previous'">
+                    <th scope="row">{{ row.event }}@if (row.current) { <small class="date-current-label">Vigente</small> }@if (row.reason) { <small class="date-reason">{{ row.reason }}</small> }</th>
+                    <td>{{ row.date | date:'dd MMM yyyy' }}</td>
+                    <td><span [class]="'date-status ' + row.tone">{{ row.status }}</span></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            <div class="delivery-list-actions">
+              <a class="delivery-open" [routerLink]="purchaseLink(purchase.id)" [queryParams]="returnQuery">Ver compra<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+              @if (!purchase.delivery_tracking!.received_on) {
+                <div class="delivery-update-actions">
+                  <button type="button" [disabled]="trackingEditor.saving" (click)="trackingEditor.begin('reschedule')"><i class="fa-regular fa-calendar" aria-hidden="true"></i>Reprogramar</button>
+                  <button type="button" class="delivery-receive" [disabled]="trackingEditor.saving" (click)="trackingEditor.begin('receive')"><i class="fa-solid fa-check" aria-hidden="true"></i>Marcar como recibido</button>
+                </div>
+              }
+            </div>
           </div>
-        </a>
+          <app-delivery-tracking #trackingEditor [ownerId]="purchase.id" [tracking]="purchase.delivery_tracking!" [controlsOnly]="true" (trackingChanged)="trackingUpdated(purchase.id, $event)"></app-delivery-tracking>
+        </article>
       } @empty {
-        <div class="delivery-empty"><i class="fa-regular fa-calendar-check" aria-hidden="true"></i><h3>{{ trackedPurchases.length ? 'Sin resultados para este filtro' : 'Todavía no hay compras con seguimiento' }}</h3><p>{{ trackedPurchases.length ? 'Prueba otro estado o cambia la búsqueda.' : 'Activa el seguimiento de entrega en una compra del flujo de producción.' }}</p><a [routerLink]="['../purchases']">Ir al flujo de producción<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+        <div class="delivery-empty"><i class="fa-regular fa-calendar-check" aria-hidden="true"></i><h3>{{ trackedPurchases.length ? 'Sin resultados para este filtro' : 'No hay compras con fecha de entrega' }}</h3><p>{{ trackedPurchases.length ? 'Prueba otro estado o cambia la búsqueda.' : (embedded ? 'Registra una fecha de entrega en las compras de esta sección.' : 'Activa el seguimiento de entrega en una compra de esta producción.') }}</p>@if (embedded) { <button type="button" (click)="openPurchases.emit()">Ir a compras<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button> } @else { <a [routerLink]="['../purchases']">Ir a compras<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a> }</div>
       }
     </div>
   }

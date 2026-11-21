@@ -1,0 +1,32 @@
+<div class="model-profile">
+  <div class="model-content">
+    <div class="model-tabs" role="tablist" aria-label="Ficha del modelo" (keydown)="onTabKeydown($event)">
+      <button type="button" id="model-tab-data" role="tab" aria-controls="model-data" [attr.aria-selected]="tab === 'data'" [attr.tabindex]="tab === 'data' ? 0 : -1" (click)="selectTab('data')">
+        <i class="fa-regular fa-address-card" aria-hidden="true"></i>Datos
+      </button>
+      <button type="button" id="model-tab-gallery" role="tab" aria-controls="model-gallery" [attr.aria-selected]="tab === 'gallery'" [attr.tabindex]="tab === 'gallery' ? 0 : -1" (click)="selectTab('gallery')">
+        <i class="fa-regular fa-images" aria-hidden="true"></i>Galería<span class="tab-count">{{ contact.images?.length || 0 }}</span>
+      </button>
+    </div>
+    <!-- Both panels remain mounted to preserve unsaved edits and upload progress. -->
+    <div id="model-data" role="tabpanel" aria-labelledby="model-tab-data" [hidden]="tab !== 'data'">
+      <app-photo-contact-edit kind="model" [contact]="contact" [saving]="saving" (save)="save.emit($event)" />
+    </div>
+    <div id="model-gallery" role="tabpanel" aria-labelledby="model-tab-gallery" [hidden]="tab !== 'gallery'">
+      <app-photo-model-image-index [modelId]="contact.id" [images]="contact.images || []" (imagesChange)="updateImages($event)" />
+    </div>
+  </div>
+
+  <aside class="model-portrait panel" aria-label="Foto principal del modelo">
+    <header class="portrait-heading"><i class="fa-regular fa-user" aria-hidden="true"></i>Foto principal</header>
+    <div class="portrait-image">
+      @if (primaryImage; as image) {
+        <app-image-preview [image]="image" [title]="contact.name" [height]="320" [width]="280" objectFit="contain" previewVariant="large" />
+      } @else {
+        <div class="portrait-empty"><i class="fa-regular fa-user" aria-hidden="true"></i><strong>Sin foto de referencia</strong><span>Agrega una imagen a su galería.</span></div>
+      }
+    </div>
+    <div class="portrait-details"><strong>{{ contact.name }}</strong><span class="availability" [class.inactive]="!contact.active"><i class="fa-solid fa-circle" aria-hidden="true"></i>{{ contact.active ? 'Modelo activo' : 'Modelo inactivo' }}</span></div>
+    <button type="button" class="button" (click)="selectTab('gallery')"><i class="fa-regular fa-images" aria-hidden="true"></i>{{ primaryImage ? 'Ver galería' : 'Agregar foto' }}</button>
+  </aside>
+</div>

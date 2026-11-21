@@ -1,71 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SupplierCreateComponent } from '../supplier-create/supplier-create.component';
-import { ButtonBackComponent } from '../../../../shared/components/buttons/button-back/button-back.component';
-import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
-import { Subject, takeUntil } from 'rxjs';
-import { RoleService } from '../../../roles/role.service';
-import Swal from 'sweetalert2';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
-import { ActivatedRoute, Router } from '@angular/router';
-
-@Component({
-  selector: 'app-supplier-create-page',
-  imports: [
-    SupplierCreateComponent,
-    ButtonBackComponent,
-    HeadPageComponent,
-    LoadingComponent
-  ],
-  templateUrl: './supplier-create-page.component.html',
-  styleUrl: './supplier-create-page.component.scss'
-})
-export class SupplierCreatePageComponent implements OnInit, OnDestroy{
-
-  roles: any[] = [];
-  loading: boolean = false;
-  private destroy$ = new Subject<void>();
-
-  constructor(
-      private _role: RoleService,
-      private router: Router,
-      private route: ActivatedRoute
-  ){}
-  
-  ngOnInit(): void {
-    this.rolesInit();
+@Component({ selector: 'app-supplier-create-page', imports: [RouterLink, SupplierCreateComponent], templateUrl: './supplier-create-page.component.html', styleUrl: '../../shared/contact-ui.scss' })
+export class SupplierCreatePageComponent {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  receiveSupplierCreate(record: any): void {
+    if (record) void this.router.navigate(['../', record.id], { relativeTo: this.route });
   }
-
-  rolesInit() {
-
-    this.loading = true;
-    this._role.index().pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        console.log(resp);
-        this.roles = resp.data;
-        this.loading = false;
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'OcurriA3 un problema al listar los roles del sistema', 'error');
-        console.error(error);
-      },
-
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  receiveSupplierCreate(supplier: any) {
-      console.log(supplier);
-      if (supplier) {
-        this.router.navigate(['../', supplier.id], { relativeTo: this.route })
-          .then(() => {
-            console.log('Nueva URL:', this.router.url);
-          });
-      }
-    }
 }

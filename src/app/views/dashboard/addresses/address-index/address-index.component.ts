@@ -1,3 +1,4 @@
+import { SupplierAddressService } from '../../users/suppliers/supplier-address-selection/supplier-address.service';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { AddressEditComponent } from '../address-edit/address-edit.component';
@@ -22,12 +23,23 @@ export class AddressIndexComponent implements OnInit, OnDestroy {
   @Input() addressable_type: string = '';
   @Output() emitUpdateAddress = new EventEmitter<any>();
 
+  defaultSaving = false;
+  defaultError = '';
+  makeDefault(id: number): void {
+    if (this.defaultSaving) return;
+    this.defaultSaving = true; this.defaultError = '';
+    this.supplierAddresses.makeDefault(this.addressable_id, id).subscribe({
+      next: response => { this.addresses = response.data; this.defaultSaving = false; this.emitUpdateAddress.emit(response.data); },
+      error: () => { this.defaultSaving = false; this.defaultError = 'No se pudo cambiar la direccion predeterminada.'; },
+    });
+  }
   modal: any;
   current_address: any;
 
   constructor(
     config: NgbModalConfig,
     private modalService: NgbModal,
+    private supplierAddresses: SupplierAddressService,
   ) {
     // customize default values of modals used by this component tree
     config.backdrop = 'static';
@@ -48,7 +60,7 @@ export class AddressIndexComponent implements OnInit, OnDestroy {
     this.addresses = this.addresses.map(address =>
       address.id === updatedAddress.id ? updatedAddress : address
     );
-    if (this.addressable_type === 'courier') {
+    if (['courier', 'supplier'].includes(this.addressable_type)) {
       this.modal?.close();
     }
     this.emitUpdateAddress.emit(updatedAddress);
@@ -58,7 +70,7 @@ export class AddressIndexComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.addressable_type === 'courier') {
+    if (['courier', 'supplier'].includes(this.addressable_type)) {
       this.modal?.dismiss();
     }
   }

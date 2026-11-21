@@ -156,7 +156,7 @@
     </div>
     <div class="modal-body">
         <app-kardex-register-in [variants]="variants" [kardexable_type]="'manufacture'" [kardexable_id]="manufacture.id"
-            (emitKardexes)="receiveKardexes($event)"></app-kardex-register-in>
+            (emitKardexes)="receiveKardexes($event)" (cancelled)="modal.dismiss('cancel')"></app-kardex-register-in>
     </div>
 
 </ng-template>

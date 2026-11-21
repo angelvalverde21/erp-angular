@@ -1,0 +1,9 @@
+<div class="table-scroll"><table><thead><tr><th>Nombre</th><th>Contacto</th><th>Instagram / portafolio</th><th>Estado</th><th><span class="sr-only">Editar ficha</span></th></tr></thead><tbody>
+  @for (contact of contacts; track contact.id) {
+    <tr><td><div class="record-identity"><span class="record-icon"><i [class]="kind === 'model' ? 'fa-regular fa-user' : 'fa-solid fa-camera'" aria-hidden="true"></i></span><div><a class="contact-name" [routerLink]="[contact.id]">{{ contact.name }}</a>@if (contact.company) { <small>{{ contact.company }}</small> }</div></div></td>
+      <td><span>{{ contact.phone || 'Sin teléfono' }}</span>@if (contact.email) { <small>{{ contact.email }}</small> }</td>
+      <td>@if (contact.instagram) { <span>{{ contact.instagram }}</span> }@if (contact.portfolio_url) { <a class="portfolio" [href]="contact.portfolio_url" target="_blank" rel="noopener noreferrer">Ver portafolio<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a> }@if (!contact.instagram && !contact.portfolio_url) { <span class="muted">Sin referencias</span> }</td>
+      <td><span class="contact-status" [class.active]="contact.active">{{ contact.active ? 'Activo' : 'Inactivo' }}</span></td>
+      <td><div class="contact-actions">@if (kind === 'model') { <a class="button" [routerLink]="[contact.id]" fragment="reference-images"><i class="fa-regular fa-images" aria-hidden="true"></i>Galería ({{ contact.images_count || 0 }})</a> }<a class="button" [routerLink]="[contact.id]"><i class="fa-solid fa-pen" aria-hidden="true"></i>Editar</a></div></td></tr>
+  }
+</tbody></table></div>

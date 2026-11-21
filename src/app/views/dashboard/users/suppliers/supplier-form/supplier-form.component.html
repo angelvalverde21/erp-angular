@@ -1,77 +1,16 @@
-<form [formGroup]="form">
-
-    <div class="card mb-3">
-
-        <div class="card-body">
-
-            <div class="row">
-                <div class="col-lg-8 col-md-8 col-12">
-                    <app-input-group text="Nombre completo" [icon]="faPenToSquare">
-                        <input formControlName="name" type="text" class="form-control"
-                            [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
-                            placeholder="Nombre completo" aria-label="name" aria-describedby="basic-name" />
-                    </app-input-group>
-
-                    <!-- hay texto: 
-                {{ form.get('name')?.valid  }} <br>
-                No hay texto:
-                {{ form.get('name')?.invalid  }} <br>
-                Me fui del input
-                {{ form.get('name')?.touched  }} -->
-
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-12">
-                    <app-input-group text="Telefono" [icon]="faPhone">
-                        <input formControlName="phone" type="text" class="form-control" placeholder="Telefono"
-                            [class.is-invalid]="form.get('phone')?.invalid && form.get('phone')?.touched"
-                            aria-label="phone" aria-describedby="basic-name" />
-                    </app-input-group>
-                </div>
-
-                <!-- <div class="col-lg-6 col-md-12 col-12">
-                    <app-input-group text="Email" [icon]="faEnvelope">
-                        <input formControlName="email" type="text" class="form-control" placeholder="Email"
-                            aria-label="email"
-                            [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
-                            aria-describedby="basic-name" />
-                    </app-input-group>
-                </div> -->
-
-
-                <div class="col-lg-12 col-md-12 col-12">
-                    <app-input-group text="Direccion" [icon]="faHouse">
-                        <input formControlName="address" type="text" class="form-control" placeholder="Direccion"
-                            aria-label="address"
-                            [class.is-invalid]="form.get('address')?.invalid && form.get('address')?.touched"
-                            aria-describedby="basic-name" />
-                    </app-input-group>
-                </div>
-
-                <div class="col-lg-12 col-md-12 col-12">
-                    <label for="district_id" class="mb-2">Distrito</label>
-                    <app-input-district-id formControlName="district_id"></app-input-district-id>
-                </div>
-
-                <div class="col-lg-6 col-md-6 col-12">
-                    <label for="identity_id" class="mb-2">Tipo de documento</label>
-                    <app-identity-selected formControlName="identity_id"></app-identity-selected>
-                </div>
-
-                <div class="col-lg-6 col-md-6 col-12">
-                    <app-input-group text="DNI" [icon]="faIdBadge">
-                        <input formControlName="document_number" type="text" class="form-control" placeholder="DNI"
-                            [class.is-invalid]="form.get('document_number')?.invalid && form.get('document_number')?.touched"
-                            aria-label="dni" aria-describedby="basic-name" />
-                    </app-input-group>
-                </div>
-
-                <!-- {{ form.value | json }} -->
-
-            </div>
-
-        </div>
-
+<div [formGroup]="form">
+  <section class="contact-panel"><header class="contact-panel-header"><div><h2><i class="fa-solid fa-building" aria-hidden="true"></i>Información del proveedor</h2><p>Datos para identificar y contactar a tu proveedor.</p></div></header>
+    <div class="contact-panel-body contact-grid">
+      <div class="contact-field contact-wide"><label for="supplier-name">Nombre o razón social *</label><input id="supplier-name" formControlName="name" autocomplete="name" maxlength="255" placeholder="Ej. Textiles del Sur S.A.C." [class.is-invalid]="invalid('name')">@if (invalid('name')) { <small class="contact-field-error">Escribe un nombre de hasta 255 caracteres.</small> }</div>
+      <div class="contact-field"><label for="supplier-phone">Teléfono <small>Opcional</small></label><input id="supplier-phone" type="tel" formControlName="phone" autocomplete="tel" maxlength="20" placeholder="Ej. 999 888 777" [class.is-invalid]="invalid('phone')">@if (invalid('phone')) { <small class="contact-field-error">Revisa el número de teléfono.</small> }</div>
+      <div class="contact-field"><label for="supplier-email">Correo electrónico <small>Opcional</small></label><input id="supplier-email" type="email" formControlName="email" autocomplete="email" maxlength="255" placeholder="nombre@empresa.com" [class.is-invalid]="invalid('email')">@if (invalid('email')) { <small class="contact-field-error">Escribe un correo electrónico válido.</small> }</div>
+      @if (form.contains('status')) { <div class="contact-field"><label for="supplier-status">Estado</label><select id="supplier-status" formControlName="status"><option [ngValue]="1">Activo</option><option [ngValue]="0">Bloqueado</option></select></div> }
     </div>
-
-</form>
+  </section>
+  <section class="contact-panel"><header class="contact-panel-header"><div><h2><i class="fa-regular fa-id-card" aria-hidden="true"></i>Identificación</h2><p>Información documental para tus compras y comprobantes.</p></div></header>
+    <div class="contact-panel-body contact-grid">
+      <div class="contact-field"><label for="supplier-identity">Tipo de documento <small>Opcional</small></label><app-identity-selected labelForId="supplier-identity" [clearable]="true" formControlName="identity_id" /></div>
+      <div class="contact-field"><label for="supplier-document">Número de documento <small>Opcional</small></label><input id="supplier-document" formControlName="document_number" maxlength="20" placeholder="DNI, RUC u otro documento" [class.is-invalid]="invalid('document_number')">@if (invalid('document_number')) { <small class="contact-field-error">El documento admite hasta 20 caracteres.</small> }</div>
+    </div>
+  </section>
+</div>

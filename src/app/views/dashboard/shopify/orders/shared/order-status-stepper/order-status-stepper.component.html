@@ -18,7 +18,13 @@
       <div class="status-stepper-copy">
         <span class="status-stepper-label">{{ step.label }}</span>
         <span class="status-stepper-description">{{ step.description }}</span>
-        <span class="status-stepper-state">{{ cancelled ? 'Flujo cancelado' : onHold ? 'En espera' : currentStep < 0 ? 'Sin confirmar' : index < currentStep ? 'Completado' : index === currentStep ? 'Estado actual' : 'Pendiente' }}</span>
+        <span class="status-stepper-state">
+          @if (!cancelled && !onHold && currentStep >= 0 && index <= currentStep && dates[step.status]; as date) {
+            <time [attr.datetime]="date" [title]="date | DateShopify">{{ date | DateShopify:'short' }}</time>
+          } @else {
+            {{ cancelled ? 'Flujo cancelado' : onHold ? 'En espera' : currentStep < 0 ? 'Sin confirmar' : index < currentStep ? 'Sin fecha' : index === currentStep ? 'Estado actual' : 'Pendiente' }}
+          }
+        </span>
       </div>
     </li>
     }

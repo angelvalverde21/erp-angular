@@ -59,4 +59,51 @@ describe('KardexIndexComponent', () => {
     expect(fixture.nativeElement.querySelector('.kardex-quantity-badge').textContent.trim()).toBe('+4');
     expect(emitSummary).toHaveBeenCalledWith(jasmine.objectContaining({ reception: 4 }));
   });
+
+  it('renders the production API date and direction groups as four real movements', () => {
+    const records = [432, 431, 430, 429].map((id, index) => ({
+      id, variant_id: 3131 - index, direction: 'in', quantity: '1', created_at: '2026-11-18T10:00:00-05:00',
+      variant: { id: 3131 - index, product: { id: 12, name: 'Blusa Renata' } },
+    }));
+    const emitSummary = spyOn(component.emitKardexSummary, 'emit');
+    fixture.componentRef.setInput('kardexes', [{ date: '2026-11-18', groups: [{ direction: 'in', total_quantity: 4, kardexes: records }] }]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('tbody tr').length).toBe(4);
+    expect(component.kardexesFlat.map(record => record.id)).toEqual([432, 431, 430, 429]);
+    expect(fixture.nativeElement.textContent).not.toContain('NaN');
+    expect(fixture.nativeElement.textContent).not.toContain('Variante #—');
+    expect(fixture.nativeElement.querySelector('.kardex-balance').textContent.trim()).toBe('4');
+    expect(emitSummary).toHaveBeenCalledWith(jasmine.objectContaining({ reception: 4 }));
+  });
+
+  it('combines nested, legacy and newly appended movements without counting group totals twice', () => {
+    fixture.componentRef.setInput('kardexes', [
+      { date: '2026-11-18', groups: [{ direction: 'in', total_quantity: 500, kardexes: [{ id: 1, direction: 'in', quantity: '8' }] }] },
+      { date: '2026-11-17', items: [{ id: 2, direction: 'out', quantity: '2' }] },
+      { id: 3, direction: 'out', quantity: 1 },
+    ]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('.kardex-quantity-badge').length).toBe(3);
+    expect(fixture.nativeElement.querySelector('.kardex-balance').textContent.trim()).toBe('5');
+  });
+
+  it('sums decimal strings numerically and keeps invalid quantities from corrupting the summary', () => {
+    expect(KardexService.prototype.summary([
+      { direction: 'in', quantity: '5.5' },
+      { direction: 'out', quantity: '2', comment: 'Fallado' },
+      { direction: 'out', quantity: '3', comment: 'Fallado' },
+      { direction: 'in', quantity: '1', comment: 'Reparado' },
+      { direction: 'out', quantity: undefined },
+      { direction: 'out', quantity: 'invalid' },
+      { direction: 'out', quantity: Infinity },
+    ])).toEqual({ reception: 1.5, fallados: 5, reparados: 1, saldo: 4 });
+  });
+
+  it('does not render empty direction groups as phantom movements', () => {
+    fixture.componentRef.setInput('kardexes', [{ date: '2026-11-18', groups: [{ direction: 'in', kardexes: [] }] }]);
+    fixture.detectChanges();
+    expect(component.kardexesFlat).toEqual([]);
+    expect(fixture.nativeElement.querySelector('.kardex-empty')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.kardex-balance').textContent.trim()).toBe('0');
+  });
 });

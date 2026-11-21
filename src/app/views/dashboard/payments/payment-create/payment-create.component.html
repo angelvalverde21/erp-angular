@@ -1,7 +1,7 @@
-<app-payment-form [form]="form"></app-payment-form>
-
-<!-- {{ form.value | json }} -->
-
-<div class="mb-3">
-    <app-button-save (click)="createPayment()" [disabled]="disabledButton" [spinner]="loading">Registrar Pago</app-button-save>
-</div>
+<form class="payment-editor" [formGroup]="form" (ngSubmit)="createPayment()" [attr.aria-busy]="loading">
+  <div class="payment-editor-body">
+    @if (error) { <div class="payment-editor-error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ error }}</div> }
+    <app-payment-form [form]="form" [disabled]="loading" />
+  </div>
+  <footer class="payment-editor-footer"><small><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Revisa los datos antes de guardar.</small><div class="payment-editor-actions"><button type="button" [disabled]="loading" (click)="cancelled.emit()">Cancelar</button><button type="submit" class="payment-submit" [disabled]="disabledButton"><i class="fa-solid" [class.fa-spinner]="loading" [class.fa-spin]="loading" [class.fa-check]="!loading" aria-hidden="true"></i>{{ loading ? 'Guardando…' : 'Registrar pago' }}</button></div></footer>
+</form>

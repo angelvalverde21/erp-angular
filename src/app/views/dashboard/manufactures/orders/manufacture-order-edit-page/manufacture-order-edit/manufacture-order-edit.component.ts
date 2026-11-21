@@ -60,7 +60,7 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
 
     this.form = this.fb.group({
       name: ['', Validators.required], //Nombre del proyecto, no del producto
-      supplier_id: [null],
+      supplier_id: [null], supplier_address_id: [null],
       manufacture_start: ['', Validators.required],
       manufacture_end: ['', Validators.required],
       // quantity_total: ['', Validators.required],

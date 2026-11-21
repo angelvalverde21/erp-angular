@@ -1,6 +1,7 @@
 import {
   Component,
   forwardRef,
+  Input,
   OnDestroy,
   OnInit,
   Optional,
@@ -49,6 +50,8 @@ export class IdentitySelectedComponent
   identity_id: number | null = null;
   identities: any[] = [];
   loading = false;
+  @Input() labelForId = 'identity-selected';
+  @Input() clearable = false;
 
   private destroy$ = new Subject<void>();
   private pendingIdentityId: number | null = null;
@@ -63,6 +66,7 @@ export class IdentitySelectedComponent
   }
 
   writeValue(value: number | null): void {
+    if (value == null) this.identity_id = null;
     this.pendingIdentityId = value;
     this.trySetIdentity();
   }

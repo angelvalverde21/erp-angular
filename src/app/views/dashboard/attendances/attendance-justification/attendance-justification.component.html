@@ -1,0 +1,28 @@
+<div class="personnel-note mb-3"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>El día se contabilizará como jornada cumplida, sin descuento por falta ni horas extra.</div>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <label class="personnel-field"><span class="personnel-label">Motivo de la justificación *</span>
+    <textarea class="form-control" rows="3" maxlength="1000" formControlName="reason" placeholder="Indica por qué se justifica la falta"></textarea>
+  </label>
+  @if (form.invalid && form.touched) { <small class="text-danger">Escribe el motivo de la justificación.</small> }
+  @if (error) { <p class="personnel-error" role="alert">{{ error }}</p> }
+</form>
+<section class="justification-documents">
+  <h3><i class="fa-solid fa-paperclip" aria-hidden="true"></i>Documento de sustento</h3>
+  <p>Recomendado para respaldar la justificación. Puedes adjuntarlo ahora o más adelante. PDF o imagen, hasta 10 MB por archivo.</p>
+  @if (record) {
+    <span class="personnel-badge active mb-3">Falta justificada · Día contabilizado</span>
+    @for (document of record.justification_documents; track document.id) {
+      <button class="personnel-button justification-document" type="button" (click)="download(document)"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>{{ document.name }}</button>
+    } @empty { <p class="text-warning">Documento de sustento pendiente. La justificación ya es válida.</p> }
+    @if (loadingImages.size) { <p role="status">Cargando imágenes de sustento…</p> }
+    @if (previewError) { <p class="personnel-error" role="alert">{{ previewError }} <button type="button" class="personnel-button" (click)="loadImagePreviews()">Reintentar</button></p> }
+    @if (imagePreviews.length) { <app-image-index [images]="imagePreviews" [showUpload]="false" [allowRemove]="false"></app-image-index> }
+  }
+  <app-upload-dropzone [path]="record ? 'attendances/' + record.id + '/justification-documents' : ''" [autoUpload]="false" title="Arrastra aquí tu documento o haz clic para seleccionarlo" acceptedFiles=".pdf,.jpg,.jpeg,.png,.webp" (pendingFilesChange)="pendingFiles = $event" (uploadingChange)="uploading = $event" (fileUpload)="uploaded($event)" (errorUpload)="uploadError = 'No se pudo subir el archivo. Revisa el formato y el tamaño e inténtalo nuevamente.'"></app-upload-dropzone>
+  @if (pendingFiles) { <p>{{ pendingFiles }} archivos seleccionados. Se adjuntarán al guardar.</p> }
+  @if (uploadError) { <p class="personnel-error" role="alert">{{ uploadError }}</p> }
+</section>
+<div class="justification-actions">
+  <button type="button" class="personnel-button" [disabled]="loading || uploading" (click)="closed.emit()">{{ record ? 'Listo' : 'Cancelar' }}</button>
+  <button type="button" class="personnel-button personnel-primary" [disabled]="loading || uploading || (record && form.pristine && !pendingFiles)" (click)="save()">{{ uploading ? 'Adjuntando archivos…' : loading ? 'Guardando…' : record ? 'Guardar cambios' : 'Guardar justificación' }}</button>
+</div>

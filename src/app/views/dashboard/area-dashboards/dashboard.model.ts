@@ -30,7 +30,15 @@ export interface AreaReport {
   production_progress?: ProductionProgress;
 }
 
+export interface ProductionReportVariant {
+  id: number; product_name: string; variant_name: string | null; sku: string | null; quantity: number;
+  options: { name: string; value: string }[];
+}
 export interface ProductionProgressItem {
+  total_expense?: number | null;
+  unit_cost?: number | null;
+  details_available?: boolean;
+  variants?: ProductionReportVariant[];
   stages?: { id: number; code: string; name: string; slug?: string; show_in_stepper?: boolean; status: string; expected_end: string | null; responsible: string | null; sample_quantity: number | null; sample_review: string; overdue: boolean }[];
   id: number;
   name: string;
@@ -47,6 +55,7 @@ export interface ProductionProgressItem {
 }
 
 export interface ProductionProgress {
+  report_limit?: number;
   available: boolean;
   total_count?: number;
   active_count?: number;
@@ -58,5 +67,6 @@ export interface ProductionProgress {
   progress_percent?: number | null;
   visible_count?: number;
   items: ProductionProgressItem[];
+  recent_items?: ProductionProgressItem[];
   note: string;
 }

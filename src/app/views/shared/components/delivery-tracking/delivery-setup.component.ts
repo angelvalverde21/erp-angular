@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@a
 import { todayInLima } from './delivery-tracking.model';
 
 export function createDeliveryForm(fb: FormBuilder, enabled: boolean): FormGroup {
-  return fb.group({ enabled, handed_over_on: [null], expected_on: [null] }, {
+  return fb.group({ enabled, handed_over_on: [todayInLima()], expected_on: [null] }, {
     validators: (control: AbstractControl) => control.value.enabled && !control.value.expected_on ? { expectedDateRequired: true } : null,
   });
 }

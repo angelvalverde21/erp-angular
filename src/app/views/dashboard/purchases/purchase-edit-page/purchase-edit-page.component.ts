@@ -19,6 +19,8 @@ export class PurchaseEditPageComponent {
   private readonly productionId = Number(this.route.snapshot.queryParamMap.get('production'));
   readonly fromProduction = Number.isInteger(this.productionId) && this.productionId > 0;
   readonly fromTracking = this.fromProduction && this.route.snapshot.queryParamMap.get('returnTo') === 'deliveries';
+  readonly fromSectionTracking = this.fromProduction && this.route.snapshot.queryParamMap.get('returnTo') === 'section-tracking';
+  readonly backQuery = this.fromSectionTracking ? { stage: this.route.snapshot.queryParamMap.get('stage'), view: 'process' } : null;
   readonly backLink = this.fromProduction
     ? ['/', this.base.store ?? '', 'dashboard', 'manufactures', 'productions', this.productionId, this.fromTracking ? 'deliveries' : 'purchases']
     : ['/', this.base.store ?? '', 'dashboard', 'purchases'];
@@ -36,5 +38,5 @@ export class PurchaseEditPageComponent {
     if (purchase) this.purchaseLoaded(purchase);
     this.message = 'Compra actualizada correctamente.';
   }
-  cancel(): void { void this.router.navigate(this.backLink); }
+  cancel(): void { void this.router.navigate(this.backLink, { queryParams: this.backQuery }); }
 }

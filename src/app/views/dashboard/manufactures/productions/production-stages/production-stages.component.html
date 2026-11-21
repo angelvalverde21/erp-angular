@@ -1,21 +1,112 @@
 @if (loading) {
-  <div class="stage-panel stage-empty" role="status"><span class="spinner-border spinner-border-sm"></span>Cargando etapas de producción…</div>
+  <div class="stage-panel stage-empty stage-loading" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span>Cargando etapas de producción…</span></div>
 } @else {
   @if (!selected) { <div class="stage-panel stage-empty"><p>{{ error || 'No hay etapas disponibles.' }}</p><button class="btn btn-outline-secondary" (click)="load()">Reintentar</button></div> }
   @if (selected && form) {
-    <app-purchase-index [productionView]="true" [purchases]="stagePurchases" [productionStageId]="selected.id" [stageName]="selected.code === 'others' ? 'Otros gastos' : selected.name" [stageDescription]="selected.code === 'others' ? 'Estibadores, transporte, carga, descarga y demás gastos de esta producción.' : 'Materiales, insumos y servicios asociados a esta etapa.'" [deliveryDefault]="deliveryDefault"
+    <section class="stage-workspace" aria-labelledby="stage-workspace-heading">
+      <button type="button" class="production-back" [disabled]="saving || uploadingFiles" (click)="backToSections()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Retroceder</button>
+    <div class="workspace-chrome">
+      <header class="workspace-header">
+        <div class="workspace-heading">
+          @if (productionName) { <p class="workspace-production-name">{{ productionName }}</p> }
+          <div class="workspace-context"><span class="workspace-eyebrow">PRD-{{ productionId.toString().padStart(4, '0') }} · ETAPA {{ selectedIndex + 1 }} DE {{ stages.length }}</span><button type="button" class="workspace-files" [disabled]="saving || uploadingFiles" (click)="openFiles()"><i class="fa-solid fa-paperclip" aria-hidden="true"></i> Archivos</button></div>
+          <div class="workspace-title-row"><h2 #workspaceHeading id="stage-workspace-heading" tabindex="-1">{{ selected.name }}</h2><span class="workspace-status" [class.completed]="selected.status === 'completed'" [class.in-progress]="selected.status === 'in_progress'">{{ selected.locked ? 'Bloqueada' : labels[selected.status || 'pending'] }}</span></div>
+        </div>
+      </header>
+      <div class="workspace-navigation">
+        <nav class="section-switcher" aria-label="Navegar entre etapas">
+          <label for="section-switch">Cambiar de sección<select id="section-switch" [formControl]="sectionControl" [attr.disabled]="saving || uploadingFiles ? '' : null" (change)="changeSection($any($event.target))">@for (stage of stages; track stage.id) { <option [value]="stage.id">{{ sectionOptionLabel(stage) }}</option> }</select></label>
+          <div class="section-direction">
+          <button type="button" class="btn btn-secondary section-next" [disabled]="!followingSection || saving || uploadingFiles" [attr.aria-label]="followingSection ? 'Siguiente: ' + followingSection.name : 'No hay etapa siguiente'" (click)="goTo(followingSection)">Siguiente proceso <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+          </div>
+        </nav>
+      </div>
+    <div class="workspace-panels" [class.reception-only]="selected.code === 'reception'">
+    @if (selected.code === 'reception') {
+      <div class="section-tabpanel" id="section-panel-receptions" aria-label="Recepciones de mercadería">
+        <app-manufacture-production-kardex-index [manufactureId]="productionId"></app-manufacture-production-kardex-index>
+      </div>
+    } @else {
+    <nav class="section-tabs" role="tablist" aria-label="Contenido de la sección" (keydown)="tabKey($event)">
+      @for (tab of tabs; track tab.id) {
+        <button type="button" role="tab" [disabled]="uploadingFiles" [id]="'section-tab-' + tab.id" [attr.aria-controls]="'section-panel-' + tab.id" [attr.aria-selected]="activeTab === tab.id" [attr.tabindex]="activeTab === tab.id ? 0 : -1" [class.active]="activeTab === tab.id" (click)="setTab(tab.id)"><i [class]="tab.icon" aria-hidden="true"></i> {{ tab.label }}</button>
+      }
+    </nav>
+    <div class="section-tabpanel" id="section-panel-process" role="tabpanel" aria-labelledby="section-tab-process" [hidden]="activeTab !== 'process'">
+    <app-production-delivery-tracking [embedded]="true" [manufactureId]="productionId" [stageId]="selected.id" [stageSlug]="selected.slug || selected.code" [purchases]="stagePurchases" [stages]="stages" (purchasesChanged)="purchasesUpdated($event)" (openPurchases)="setTab('purchases')"></app-production-delivery-tracking>
+    </div>
+    @if (selected.code === 'cutting') {
+      <div class="section-tabpanel" id="section-panel-products" role="tabpanel" aria-labelledby="section-tab-products" [hidden]="activeTab !== 'products'">
+        <app-manufacture-production-variant-index [manufacture_id]="productionId" (emitSumProductionVariant)="cuttingQuantity = $event"></app-manufacture-production-variant-index>
+      </div>
+    }
+    <div class="section-tabpanel" id="section-panel-purchases" role="tabpanel" aria-labelledby="section-tab-purchases" [hidden]="activeTab !== 'purchases'">
+    <app-purchase-index [productionView]="true" [compactHeader]="true" [purchases]="stagePurchases" [productionStageId]="selected.id" [productionSections]="purchaseStages" [stageName]="selected.code === 'others' ? 'Otros gastos' : selected.name" [stageDescription]="selected.code === 'others' ? 'Estibadores, transporte, carga, descarga y demás gastos de esta producción.' : 'Materiales, insumos y servicios asociados a esta etapa.'" [deliveryDefault]="deliveryDefault"
       purchaseable_type="manufacture" [purchaseable_id]="productionId" (purchasesChanged)="purchasesUpdated($event)"></app-purchase-index>
-    <details class="stage-panel stage-classify mt-3" [open]="unclassified.length > 0">
+    @if (classificationMessage) { <p class="stage-classification-message" role="status">{{ classificationMessage }}</p> }
+    @if (unclassified.length > 0) {
+    <details class="stage-panel stage-classify mt-3" open>
       <summary>Clasificar o reasignar compras <span>{{ unclassified.length }} sin clasificar</span></summary>
     @if (unclassified.length) {
-      <aside class="stage-classification-callout"><span class="stage-callout-icon" aria-hidden="true"><i class="fa-solid fa-folder-open"></i></span><div><strong>{{ unclassified.length }} compras necesitan un grupo</strong><p>Clasifica por los conceptos de la compra. Las compras sin una coincidencia clara se asignarán a Otros y podrás reasignarlas después.</p></div><button type="button" class="btn btn-dark" [disabled]="assigning" (click)="classify()">@if (assigning) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }Clasificar por descripción</button></aside>
+      <aside class="stage-classification-callout"><span class="stage-callout-icon" aria-hidden="true"><i class="fa-solid fa-folder-open"></i></span><div><strong>{{ unclassified.length }} compras necesitan un grupo</strong><p>{{ hasOtherSection ? 'Clasifica por los conceptos de la compra. Las compras sin una coincidencia clara se asignarán a Otros y podrás reasignarlas después.' : 'Solo se usarán las secciones de esta producción. Las compras sin coincidencia quedarán pendientes para que las asignes manualmente.' }}</p></div><button type="button" class="btn btn-dark" [disabled]="assigning" (click)="classify()">@if (assigning) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }Clasificar por descripción</button></aside>
     }
-    @if (classificationMessage) { <p class="stage-classification-message" role="status">{{ classificationMessage }}</p> }
       <p>Revisa los conceptos completos y elige el grupo más cercano a cada compra.</p>
       <div class="stage-classify-tools"><label for="classification-search" class="visually-hidden">Buscar compra por concepto o proveedor</label><input id="classification-search" type="search" placeholder="Buscar concepto, proveedor o número…" [value]="purchaseSearch" (input)="purchaseSearch = $any($event.target).value"><label class="stage-show-all"><input type="checkbox" [checked]="showAllPurchases" (change)="showAllPurchases = $any($event.target).checked"> Mostrar también las clasificadas</label></div>
       @for (purchase of classificationPurchases; track purchase.id) {
-        <div class="stage-classify-row"><div><strong>Compra #{{ purchase.id }} · {{ purchase.supplier?.user?.name || purchase.supplier?.name || 'Sin proveedor' }}</strong><p>{{ concepts(purchase) }}</p><small>{{ amount(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</small></div><label class="stage-assignment-label"><span>Grupo de la compra</span><select #targetStage [attr.aria-label]="'Grupo de la compra ' + purchase.id" [value]="assignmentTargets[purchase.id] || purchase.production_stage_id || ''" (change)="assignmentTargets[purchase.id] = +targetStage.value" [disabled]="assigning"><option value="" disabled>Selecciona un grupo</option>@for (stage of stages; track stage.id) { <option [value]="stage.id">{{ stage.name }}</option> }</select></label><button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="assigning || !assignmentTargets[purchase.id] || assignmentTargets[purchase.id] === +purchase.production_stage_id" (click)="assign(purchase.id, targetStage.value)">Asignar</button></div>
+        <div class="stage-classify-row"><div><strong>Compra #{{ purchase.id }} · {{ purchase.supplier?.user?.name || purchase.supplier?.name || 'Sin proveedor' }}</strong><p>{{ concepts(purchase) }}</p><small>{{ amount(purchase) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</small></div><label class="stage-assignment-label"><span>Grupo de la compra</span><select #targetStage [attr.aria-label]="'Grupo de la compra ' + purchase.id" [value]="assignmentTargets[purchase.id] || purchase.production_stage_id || ''" (change)="assignmentTargets[purchase.id] = +targetStage.value" [disabled]="assigning"><option value="" disabled>Selecciona un grupo</option>@for (stage of purchaseStages; track stage.id) { <option [value]="stage.id">{{ stage.name }}</option> }</select></label><button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="assigning || !assignmentTargets[purchase.id] || assignmentTargets[purchase.id] === +purchase.production_stage_id" (click)="assign(purchase.id, targetStage.value)">Asignar</button></div>
       } @empty { <div class="stage-classify-empty"><i class="fa-solid fa-check-circle" aria-hidden="true"></i><p>{{ purchaseSearch ? 'No hay compras que coincidan con tu búsqueda.' : 'Todas las compras tienen un grupo asignado.' }}</p></div> }
     </details>
+    }
+    </div>
+    <div class="section-tabpanel" id="section-panel-history" role="tabpanel" aria-labelledby="section-tab-history" [hidden]="activeTab !== 'history'">
+      <app-production-stage-history [stage]="selected" [purchases]="stagePurchases"></app-production-stage-history>
+    </div>
+
+    }
+    </div>
+    </div>
+    @if (message) { <div class="workspace-success" role="status"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> {{ message }} @if (nextStage; as next) { <button type="button" class="btn btn-link" (click)="goTo(next)">Continuar con {{ next.name }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button> }</div> }
+    @if (canTrackProgress) {
+      <footer class="stage-finish-footer" aria-label="Acciones del proceso"><div class="stage-finish-container"><button type="button" class="btn btn-dark stage-finish-action" [disabled]="saving || uploadingFiles" (click)="openCompletion()"><i class="fa-solid fa-check" aria-hidden="true"></i> {{ selected.status === 'completed' ? 'Proceso completado' : 'Finalizar este proceso' }}</button></div></footer>
+    }
+    <dialog #completionDialog class="stage-dialog" aria-labelledby="completion-title" (cancel)="saving && $event.preventDefault()">
+      <header class="stage-dialog-header"><h3 id="completion-title">{{ selected.status === 'completed' ? selected.name : 'Culminar ' + selected.name }}</h3><button type="button" class="dialog-close" [disabled]="saving" aria-label="Cerrar" (click)="closeCompletion()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></header>
+    @if (canTrackProgress) {
+      <form [formGroup]="form" (ngSubmit)="save()" class="stage-panel workspace-form" aria-label="Datos de la etapa">
+        <fieldset class="stage-fields" [disabled]="saving">
+          <legend class="visually-hidden">Datos de {{ selected.name }}</legend>
+          @if (selected.code === 'molds') {
+            <div class="stage-field stage-wide"><label class="workspace-check"><input type="checkbox" formControlName="reuses_mold"> Reutilizar un molde existente</label><small>Si el molde ya está listo, puedes completar esta etapa sin registrar una compra nueva.</small></div>
+          }
+          @if (selected.code === 'samples') {
+            <div class="stage-field"><label for="sample-quantity">Cantidad de muestras</label><input id="sample-quantity" type="number" min="1" max="100000" step="1" formControlName="sample_quantity" placeholder="Ej. 3" [attr.aria-invalid]="!!fieldErrors['sample_quantity']" aria-describedby="sample-quantity-error"><small id="sample-quantity-error" class="field-error">{{ fieldErrors['sample_quantity'] }}</small></div>
+            <div class="stage-field"><label for="sample-review">Resultado de la revisión</label><select id="sample-review" formControlName="sample_review" [attr.aria-invalid]="!!fieldErrors['sample_review']" aria-describedby="sample-review-error"><option value="pending">Pendiente de revisión</option><option value="changes_requested">Necesita correcciones</option><option value="approved">Muestras revisadas y aprobadas</option></select><small id="sample-review-error" class="field-error">{{ fieldErrors['sample_review'] }}</small></div>
+            <div class="stage-field stage-wide"><label for="sample-details">Detalles de las muestras <span>Opcional</span></label><textarea id="sample-details" formControlName="sample_details" maxlength="5000" placeholder="Tallas revisadas, ajustes y observaciones del modelo"></textarea></div>
+          }
+          @if (selected.code === 'sewing' || selected.code === 'finishing' || selected.code === 'cutting') {
+            <div class="stage-field"><label for="stage-responsible">{{ selected.code === 'sewing' ? 'Taller o responsable' : 'Responsable' }} <span>Opcional</span></label><input id="stage-responsible" formControlName="responsible" maxlength="255" placeholder="Nombre del taller o de la persona" [attr.aria-invalid]="!!fieldErrors['responsible']"><small class="field-error">{{ fieldErrors['responsible'] }}</small></div>
+            <div class="stage-field"><label for="stage-expected-end">Fecha de entrega acordada <span>Opcional</span></label><input id="stage-expected-end" type="date" formControlName="expected_end" [attr.aria-invalid]="!!fieldErrors['expected_end']"><small class="field-error">{{ fieldErrors['expected_end'] }}</small></div>
+            @if (dateChanged) { <div class="stage-field stage-wide"><label for="stage-date-reason">Motivo del cambio de fecha</label><input id="stage-date-reason" formControlName="date_change_reason" maxlength="2000" placeholder="Explica el nuevo acuerdo de entrega" [attr.aria-invalid]="!!fieldErrors['date_change_reason']"><small class="field-error">{{ fieldErrors['date_change_reason'] }}</small></div> }
+          }
+          <div class="stage-field stage-wide"><label for="stage-notes">{{ selected.code === 'finishing' ? 'Trabajos de acabado y observaciones' : 'Observaciones' }} <span>Opcional</span></label><textarea id="stage-notes" formControlName="notes" maxlength="5000" placeholder="Añade las indicaciones que necesita el equipo" [attr.aria-invalid]="!!fieldErrors['notes']"></textarea><small class="field-error">{{ fieldErrors['notes'] }}</small></div>
+          @if (selected.code === 'samples') {
+            <details class="stage-wide workspace-optional"><summary>Fotos y comentarios de revisión · Opcional</summary><div class="stage-field"><label for="sample-photos">Enlaces a las fotos</label><textarea id="sample-photos" formControlName="photos" placeholder="Un enlace https:// por línea"></textarea><small class="field-error">{{ fieldErrors['sample_photos'] }}</small></div><div class="stage-field"><label for="sample-review-notes">Comentarios de revisión</label><textarea id="sample-review-notes" formControlName="review_notes" maxlength="5000"></textarea></div></details>
+          }
+        </fieldset>
+        <button type="submit" class="visually-hidden" tabindex="-1">Guardar cambios</button>
+      </form>
+    }
+
+      <footer class="stage-dialog-footer">
+        @if (error) { <p class="field-error" role="alert">{{ error }}</p> }
+        @if (fieldErrors['status']) { <p class="field-error">{{ fieldErrors['status'] }}</p> }
+        <div class="workspace-buttons"><button type="button" class="btn btn-outline-secondary" [disabled]="saving" (click)="closeCompletion()">Cancelar</button><button type="button" class="btn btn-outline-secondary" [disabled]="saving || !form.dirty" (click)="save()">Guardar cambios</button>@if (selected.status === 'completed') { <button type="button" class="btn btn-dark" [disabled]="saving" (click)="save('reopen')">Reabrir etapa</button> } @else { <button type="button" class="btn btn-dark" [disabled]="saving || selected.locked" (click)="save('complete')"><i class="fa-solid fa-check" aria-hidden="true"></i> {{ saving ? 'Guardando…' : 'Finalizar este proceso' }}</button> }</div>
+      </footer>
+    </dialog>
+    <dialog #filesDialog class="stage-dialog" aria-labelledby="files-title" (close)="filesOpen = false" (cancel)="uploadingFiles && $event.preventDefault()">
+      <header class="stage-dialog-header"><h3 id="files-title">Archivos · {{ selected.name }}</h3><button type="button" class="dialog-close" [disabled]="uploadingFiles" aria-label="Cerrar archivos" (click)="filesDialog.close()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></header>
+      @if (filesOpen) { <app-production-stage-attachments [productionId]="productionId" [stageId]="selected.id" (busyChange)="uploadingFiles = $event"></app-production-stage-attachments> }
+    </dialog>
+    </section>
   }
 }

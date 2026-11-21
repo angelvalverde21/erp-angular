@@ -1,100 +1,40 @@
-﻿import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
-import { CustomerEditComponent } from '../customer-edit/customer-edit.component';
-import { ButtonBackComponent } from '../../../../shared/components/buttons/button-back/button-back.component';
-import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
-import { Subject, takeUntil } from 'rxjs';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize, Subscription } from 'rxjs';
 import { CustomerService } from '../customer.service';
-import { ActivatedRoute } from '@angular/router';
-import Swal from 'sweetalert2';
+import { CustomerEditComponent } from '../customer-edit/customer-edit.component';
 import { RoleService } from '../../../roles/role.service';
-@Component({
-  selector: 'app-customer-edit-page',
-  imports: [
-    LoadingComponent,
-    CustomerEditComponent,
-    HeadPageComponent,
-    ButtonBackComponent
 
-  ],
-  templateUrl: './customer-edit-page.component.html',
-  styleUrl: './customer-edit-page.component.scss'
-})
-export class CustomerEditPageComponent implements OnInit, OnDestroy {
-
-  ngOnInit(): void {
-    this.CustomerInit();
-    this.rolesInit();
-  }
-
+@Component({ selector: 'app-customer-edit-page', imports: [RouterLink, CustomerEditComponent], templateUrl: './customer-edit-page.component.html', styleUrl: '../../shared/contact-ui.scss' })
+export class CustomerEditPageComponent implements OnInit {
+  private readonly service = inject(CustomerService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly roleService = inject(RoleService);
+  customer: any = null;
   roles: any[] = [];
-  loading: boolean = false;
-  customer_id: number = 0
-  customer: any;
-
-  constructor(
-    private _Customer: CustomerService,
-    private route: ActivatedRoute,
-      private _role: RoleService,
-  ) {
-    this.route.params.subscribe(params => {
-      this.customer_id = params['customer_id'];
+  loading = false; error = '';
+  private loadSubscription?: Subscription;
+  rolesError = false;
+  ngOnInit(): void {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.load());
+    this.loadRoles();
+  }
+  load(): void {
+    this.loadSubscription?.unsubscribe();
+    const id = Number(this.route.snapshot.paramMap.get('customer_id'));
+    this.loading = true; this.error = '';
+    this.loadSubscription = this.service.get(id).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading = false)).subscribe({
+      next: response => this.customer = response.data,
+      error: () => this.error = 'No se pudo cargar la ficha del cliente. Vuelve a intentarlo.',
     });
   }
-
-  CustomerInit() {
-
-    this.loading = true;
-
-    this._Customer.get(this.customer_id).pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        console.log(resp);
-        this.customer = resp.data;
-        this.loading = false;
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'OcurriÃ³ un problema al traer los datos del Cliente.', 'error');
-        console.error(error);
-      },
-
+  loadRoles(): void {
+    this.rolesError = false;
+    this.roleService.index().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (response: any) => this.roles = response.data ?? [],
+      error: () => this.rolesError = true,
     });
   }
-
-  roles_loading: boolean = false;
-
-  rolesInit() {
-
-    this.roles_loading = true;
-    this._role.index().pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        // Swal.fire('Guardado', 'El registro ha sido creado', 'success');
-        console.log(resp);
-        this.roles = resp.data;
-        this.roles_loading = false;
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'OcurriÃ³ un problema al listar los roles del sistema', 'error');
-        console.error(error);
-      },
-
-    });
-
-
-  }
-
-  destroy$ = new Subject<void>();
-
-  ngOnDestroy(): void {
-
-    this.destroy$.next();
-    this.destroy$.complete();
-
-  }
-
 }
-
-

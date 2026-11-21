@@ -1,0 +1,9 @@
+﻿:host { display: block; margin-bottom: 1.5rem; }
+.workspace-heading { display: flex; align-items: center; gap: 1rem; padding: .4rem 0 1.5rem; }
+.heading-copy { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.section-symbol { display: grid; place-items: center; flex: 0 0 58px; height: 58px; border-radius: 17px; color: var(--photo-accent, #7056c5); background: var(--photo-tint, #f3effc); border: 1px solid var(--photo-line, #e5ddf7); font-size: 1.4rem; }
+@media(max-width: 767px) {
+  .workspace-heading { flex-wrap: wrap; gap: .8rem; }
+  .heading-copy { flex: 1 0 calc(100% - 60px); }
+  .section-symbol { flex-basis: 44px; height: 44px; font-size: 1.1rem; }
+}

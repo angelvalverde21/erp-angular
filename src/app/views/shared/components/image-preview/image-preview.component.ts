@@ -12,6 +12,8 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
   @Input() height = 45;
   @Input() width: number | null = null;
   @Input() previewSize: number | null = null;
+  @Input() previewVariant: 'medium' | 'large' = 'medium';
+  @Input() objectFit: 'cover' | 'contain' = 'cover';
   @Output() imageError = new EventEmitter<void>();
 
   constructor(private elRef: ElementRef<HTMLElement>) {}
@@ -22,7 +24,9 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
   }
 
   get previewUrl(): string | null {
-    const source = this.image?.url_medium || this.image?.url_thumbnail || this.image?.url_large;
+    const source = this.previewVariant === 'large'
+      ? this.image?.url_large || this.image?.url_medium || this.image?.url_thumbnail
+      : this.image?.url_medium || this.image?.url_thumbnail || this.image?.url_large;
     if (!source) return null;
     return this.previewSize ? this.resizeShopifyImage(source, this.previewSize) : source;
   }

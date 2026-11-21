@@ -5,7 +5,7 @@ import { AreaReport, DashboardArea } from './dashboard.model';
 @Injectable({ providedIn: 'root' })
 export class AreaDashboardService extends BaseCrudDashboardService {
   constructor(http: HttpClient) { super(http, 'panels'); }
-  report(area: DashboardArea, days: number) {
-    return this.http.get<{ data: AreaReport }>(`${this.baseUrl}/${area}`, { params: { days } });
+  report(area: DashboardArea, days: number, productionLimit = 6) {
+    return this.http.get<{ data: AreaReport }>(`${this.baseUrl}/${area}`, { params: area === 'ceo' ? { days, production_limit: productionLimit } : { days } });
   }
 }

@@ -15,7 +15,7 @@
         @if (loading) {
             <div class="p-4 text-center" role="status"><app-loading></app-loading></div>
         } @else {
-            <app-product-index [products]="products"></app-product-index>
+            <app-product-index [bulkActions]="true" [products]="products" [insertedProductId]="insertedProductId" (productDuplicated)="insertDuplicate($event)"></app-product-index>
         }
 
     </div>

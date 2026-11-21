@@ -44,6 +44,45 @@ describe('Variant search and missing products', () => {
     fixture.detectChanges();
   }
 
+  it('selects all current results, handles partial selection and clears all without submitting automatically', () => {
+    lookup('Blusa');
+    const variants = [1, 2].map(id => ({ id, sku: 'BL-' + id, stock: 0, product: { name: 'Blusa' }, variant_option_values: [] }));
+    result.next({ data: [{ id: 1, name: 'Blusa', variants }] }); fixture.detectChanges();
+    const add = spyOn(component.emitVariantsSelected, 'emit');
+    const toggle = fixture.nativeElement.querySelector('.variant-search-select-all') as HTMLButtonElement;
+    toggle.click(); fixture.detectChanges();
+    expect(component.variantsSelected.map((variant: any) => variant.id)).toEqual([1, 2]);
+    expect(toggle.getAttribute('aria-pressed')).toBe('true');
+    expect(toggle.textContent).toContain('Deseleccionar todo');
+    expect(fixture.nativeElement.querySelectorAll('.variant-picker-choice input:checked').length).toBe(2);
+    expect(add).not.toHaveBeenCalled();
+    (fixture.nativeElement.querySelector('.variant-picker-choice input') as HTMLInputElement).click(); fixture.detectChanges();
+    expect(component.variantsSelected.map((variant: any) => variant.id)).toEqual([2]);
+    expect(toggle.textContent).toContain('Seleccionar todo');
+    toggle.click(); fixture.detectChanges();
+    expect(component.variantsSelected.length).toBe(2);
+    toggle.click(); fixture.detectChanges();
+    expect(component.variantsSelected).toEqual([]);
+    expect(component.buttonDisabled).toBeTrue();
+    toggle.click(); fixture.detectChanges();
+    (fixture.nativeElement.querySelector('.variant-search-add') as HTMLButtonElement).click();
+    expect(add).toHaveBeenCalledOnceWith(variants);
+    expect(search).toHaveBeenCalledTimes(1);
+  });
+
+  it('resets select-all when searching a different set of variants', () => {
+    lookup('Primero');
+    result.next({ data: [{ variants: [{ id: 1, variant_option_values: [] }] }] }); fixture.detectChanges();
+    (fixture.nativeElement.querySelector('.variant-search-select-all') as HTMLButtonElement).click(); fixture.detectChanges();
+    expect(component.variantsSelected.length).toBe(1);
+    lookup('Segundo');
+    result.next({ data: [{ variants: [{ id: 2, variant_option_values: [] }] }] }); fixture.detectChanges();
+    expect(component.variantsSelected).toEqual([]);
+    expect(component.buttonDisabled).toBeTrue();
+    expect(fixture.nativeElement.querySelector('.variant-search-select-all').getAttribute('aria-pressed')).toBe('false');
+    expect(fixture.nativeElement.querySelectorAll('.variant-picker-choice input:checked').length).toBe(0);
+  });
+
   it('offers creation only after a successful empty search, and closes before navigating', () => {
     expect(fixture.nativeElement.querySelector('.variant-search-create')).toBeNull();
     lookup();

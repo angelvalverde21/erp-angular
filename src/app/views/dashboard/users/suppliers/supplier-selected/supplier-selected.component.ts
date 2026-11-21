@@ -1,115 +1,56 @@
-import {
-  Component,
-  forwardRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  Optional,
-  Self,
-  SimpleChanges
-} from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-  NgControl
-} from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-
-import { InputGroupComponent } from '@shared/components/form/input-group/input-group.component';
-import { LoadingComponent } from '@shared/components/loading/loading.component';
-import Swal from 'sweetalert2';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Component, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { SupplierService } from '../supplier.service';
-import { Supplier } from '@interfaces/supplier.interface';
+
+export interface SupplierOption {
+  id: number;
+  name: string;
+  detail: string;
+}
+
+/** Supports both supplier resources and flattened supplier/user responses. IDs always belong to suppliers. */
+export function supplierOptions(records: readonly unknown[] | null | undefined): SupplierOption[] {
+  return (records ?? []).flatMap(record => {
+    if (!record || typeof record !== 'object') return [];
+    const supplier = record as Record<string, unknown>;
+    const user = supplier['user'] && typeof supplier['user'] === 'object'
+      ? supplier['user'] as Record<string, unknown> : {};
+    const id = Number(supplier['id']);
+    if (!Number.isSafeInteger(id) || id <= 0) return [];
+    const name = String(supplier['name'] || user['name'] || '').trim() || `Proveedor #${id}`;
+    const detail = [supplier['document_number'] || user['document_number'], supplier['phone'] || user['phone']]
+      .filter(Boolean).join(' · ');
+    return [{ id, name, detail }];
+  });
+}
 
 @Component({
   selector: 'app-supplier-selected',
-  standalone: true,
-  imports: [
-    FormsModule,
-    CommonModule,
-    LoadingComponent,
-    NgSelectModule
-  ],
+  imports: [FormsModule, NgSelectModule],
   templateUrl: './supplier-selected.component.html',
   styleUrl: './supplier-selected.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SupplierSelectedComponent),
-      multi: true,
-    }
-  ]
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SupplierSelectedComponent), multi: true }],
 })
-export class SupplierSelectedComponent implements ControlValueAccessor, OnDestroy, OnInit{
-
-  isDisabled = false;
+export class SupplierSelectedComponent implements ControlValueAccessor {
+  @Input() loading = false;
+  @Input() labelForId = 'supplier-selected';
+  @Input() set suppliers(value: readonly unknown[] | null | undefined) {
+    this.options = supplierOptions(value);
+  }
+  options: SupplierOption[] = [];
   supplier_id: number | null = null;
-  loading = false;
+  isDisabled = false;
+  private onChange: (value: number | null) => void = () => {};
+  private onTouched: () => void = () => {};
 
-  @Input() suppliers: Supplier[] = [];
-
-  private destroy$ = new Subject<void>();
-  private pendingSupplierId: number | null = null;
-
-  onChangeCb: (value: number | null) => void = () => { };
-  onTouchedCb: () => void = () => { };
-
-  constructor(private _supplier: SupplierService) { }
-
-  ngOnInit(): void {
-
-    console.log(this.suppliers);
-    
-
-    this.suppliers = this.suppliers.map((supplier: Supplier) => {
-      return {
-        name: supplier?.user?.name,
-        id: supplier.id
-      }
-    });
-
-    console.log(this.suppliers);
-    
-
+  writeValue(value: number | null): void { this.supplier_id = value == null || !value ? null : Number(value); }
+  registerOnChange(fn: (value: number | null) => void): void { this.onChange = fn; }
+  registerOnTouched(fn: () => void): void { this.onTouched = fn; }
+  setDisabledState(value: boolean): void { this.isDisabled = value; }
+  setSupplier(value: number | null): void {
+    this.supplier_id = value ?? null;
+    this.onChange(this.supplier_id);
+    this.touch();
   }
-
-
-  writeValue(value: number | null): void {
-    this.pendingSupplierId = value;
-    this.trySetSupplier();
-  }
-
-  registerOnChange(fn: any): void {
-    this.onChangeCb = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouchedCb = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
-  }
-
-  setSupplier(supplierId: number | null) {
-    this.supplier_id = supplierId;
-    this.onChangeCb(supplierId);
-    this.onTouchedCb();
-  }
-
-
-  private trySetSupplier() {
-    if (!this.suppliers.length || this.pendingSupplierId == null) return;
-    this.supplier_id = this.pendingSupplierId;
-    this.pendingSupplierId = null;
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+  touch(): void { this.onTouched(); }
 }

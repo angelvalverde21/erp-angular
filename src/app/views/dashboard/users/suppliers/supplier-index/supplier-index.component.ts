@@ -1,29 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { DateShopifyPipe } from '../../../../shared/pipes/date-shopify.pipe';
-import { ActivatedRoute, Router } from '@angular/router';
-import { JsonPipe } from '@angular/common';
-import { ButtonEditComponent } from '@buttons/button-edit/button-edit.component';
-
-@Component({
-  selector: 'app-supplier-index',
-  imports: [
-    DateShopifyPipe,
-    JsonPipe,
-    ButtonEditComponent
-  ],
-  templateUrl: './supplier-index.component.html',
-  styleUrl: './supplier-index.component.scss'
-})
-export class SupplierIndexComponent {
-
-  @Input() suppliers: any[] = [];
-
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
-
-  getSupplierId(id: number = 0) {
-    this.router.navigate([id], { relativeTo: this.route });
-  }
-}
+import { ContactDirectoryComponent } from '../../shared/contact-directory/contact-directory.component';
+@Component({ selector: 'app-supplier-index', imports: [ContactDirectoryComponent], templateUrl: './supplier-index.component.html', styleUrl: './supplier-index.component.scss' })
+export class SupplierIndexComponent { @Input() suppliers: any[] = []; }

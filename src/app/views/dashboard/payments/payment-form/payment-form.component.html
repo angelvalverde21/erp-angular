@@ -1,120 +1,36 @@
-<form [formGroup]="form">
-
-    <div class="row mb-3">
-        <div class="col-lg-12">
-
-            <app-input-group text="Monto">
-
-                <div class="input-wrapper">
-                    <span class="prefix">S/.</span>
-                    <input formControlName="amount" type="number" step="0.01" class="form-control text-center input-big"
-                        [class.is-invalid]="form.get('amount')?.invalid && form.get('amount')?.touched"
-                        placeholder="0.00" aria-label="amount" aria-describedby="basic-amount" twoDecimals />
-                </div>
-
-
-            </app-input-group>
-
-        </div>
-
-        <div class="col-12 col-md-12 col-lg-12">
-            <label class="mb-2">Comentarios</label>
-            <textarea formControlName="comment" class="form-control mb-3" placeholder="Detalles"></textarea>
-        </div>
-
-
-        <div class="col-6 col-md-6 col-lg-6">
-            <label for="Metodo de pago" class="mb-2">Metodo de pago</label>
-
-            <app-gateway-selected formControlName="gateway_id"
-                [class.is-invalid]="form.get('gateway_id')?.invalid && form.get('gateway_id')?.touched"></app-gateway-selected>
-
-            <!-- <select formControlName="method" class="form-select mb-3" aria-label="Default select example">
-                <option [value]="null" selected>Metodo de pago</option>
-                @for (method of METHODS; track method.id) {
-                <option value="{{ method.name }}">{{ method.title }}</option>
-                }
-
-            </select> -->
-
-        </div>
-
-        <div class="col-6 col-md-6 col-lg-6">
-
-            <label for="" class="mb-2">Tipo de movimiento</label>
-
-            <select class="form-select form-select-sm py-1 mb-3" aria-label="Default select example"
-                formControlName="direction"
-                [class.is-invalid]="form.get('direction')?.invalid && form.get('direction')?.touched">
-
-                <option selected>Tipo</option>
-                <option value="out">Salida</option>
-                <option value="in">Ingreso</option>
-
-            </select>
-
-        </div>
-
-        <div class="col-12 col-md-12 col-lg-12">
-            <app-input-group text="Fecha de pago">
-                <input formControlName="date" type="date" class="form-control"
-                    [class.is-invalid]="form.get('date')?.invalid && form.get('date')?.touched" placeholder=""
-                    aria-label="fecha" aria-describedby="basic-fecha" />
-            </app-input-group>
-        </div>
-
-        <div ngbAccordion #accordion="ngbAccordion">
-            <div ngbAccordionItem="second">
-                <h2 ngbAccordionHeader>
-                    <button ngbAccordionButton><fa-icon [icon]="faReceipt" class="me-2"></fa-icon>Recibos</button>
-                </h2>
-                <div ngbAccordionCollapse>
-                    <div ngbAccordionBody>
-                        <ng-template>
-
-                            <div class="col-lg-12">
-
-                                @if(payment != null){
-
-                                <div class="alert alert-info">
-                                    <fa-icon [icon]="faReceipt" class="me-2"></fa-icon>Comprobantes
-                                </div>
-
-                                <app-image-index [images]="payment.images" [imageable_type]="'payment'"
-                                    [imageable_id]="payment.id"
-                                    (emitImagePreview)="receiveImage($event)"></app-image-index>
-
-                                }@else{
-                                <ngx-dropzone (change)="onSelect($event)" [multiple]="true" accept="image/*">
-
-                                    <ngx-dropzone-label>
-                                        <div class="message">
-                                            <fa-icon [icon]="faFileCirclePlus" class="me-2"></fa-icon>
-                                            <span>Arrastra Comprobantes</span>
-                                        </div>
-                                    </ngx-dropzone-label>
-
-                                    @for (file of images; track file) {
-                                    <ngx-dropzone-image-preview (removed)="onRemove($event)" [file]="file"
-                                        [removable]="true">
-                                    </ngx-dropzone-image-preview>
-                                    }
-                                </ngx-dropzone>
-
-                                }
-
-                            </div>
-
-                        </ng-template>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-
-
-
+<div class="payment-fields" [formGroup]="form">
+  <section class="payment-amount-block">
+    <label class="payment-label"><span><i class="fa-solid fa-coins" aria-hidden="true"></i>Monto del pago <span aria-hidden="true">*</span></span>
+      <span class="payment-amount-input"><span>S/</span><input class="payment-amount-number" type="number" formControlName="amount" step="0.01" min="0.01" inputmode="decimal" placeholder="0.00" aria-label="Monto del pago en soles" twoDecimals (wheel)="$event.preventDefault()" [attr.aria-invalid]="form.get('amount')?.invalid && form.get('amount')?.touched"></span>
+    </label>
+    @if (form.get('amount')?.invalid && form.get('amount')?.touched) { <small class="payment-field-error" role="alert">Ingresa un monto mayor que cero, con hasta dos decimales.</small> }
+    <p>Importe de este movimiento en soles.</p>
+  </section>
+  <div class="payment-field-grid">
+    <div class="payment-field">
+      <label class="payment-label" id="payment-method-label"><span><i class="fa-solid fa-wallet" aria-hidden="true"></i>Medio de pago <span aria-hidden="true">*</span></span></label>
+      <app-gateway-selected formControlName="gateway_id" aria-labelledby="payment-method-label" />
+      @if (form.get('gateway_id')?.invalid && form.get('gateway_id')?.touched) { <small class="payment-field-error">Selecciona un medio de pago.</small> }
     </div>
-
-</form>
+    <label class="payment-field payment-label"><span><i class="fa-regular fa-calendar" aria-hidden="true"></i>Fecha del pago <span aria-hidden="true">*</span></span><input type="date" formControlName="date" required></label>
+  </div>
+  <fieldset class="payment-direction"><legend>Tipo de movimiento</legend>
+    <label [class.payment-direction-selected]="form.get('direction')?.value === 'out'" class="payment-direction-out"><input type="radio" formControlName="direction" value="out"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i><span><strong>Salida de dinero</strong><small>Pago realizado</small></span></label>
+    <label [class.payment-direction-selected]="form.get('direction')?.value === 'in'" class="payment-direction-in"><input type="radio" formControlName="direction" value="in"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i><span><strong>Ingreso de dinero</strong><small>Dinero recibido</small></span></label>
+  </fieldset>
+  <label class="payment-field payment-label"><span>Concepto u observación <small>Opcional</small></span><textarea formControlName="comment" rows="2" maxlength="255" placeholder="Ej. Adelanto al proveedor o saldo de la orden"></textarea></label>
+  <details class="payment-receipts">
+    <summary><span class="payment-receipts-icon"><i class="fa-solid fa-paperclip" aria-hidden="true"></i></span><span><strong>Comprobantes</strong><small>Adjunta la constancia o captura del pago</small></span><span class="payment-receipts-count">{{ payment ? (payment.images?.length || 0) : images.length }}</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
+    <fieldset class="payment-receipts-body" [disabled]="disabled">
+      @if (payment) {
+        <app-image-index [images]="payment.images || []" imageable_type="payment" [imageable_id]="payment.id" [allowRemove]="!disabled" [maxFileSize]="2097152" previewVariant="large" (imagesChange)="receiveImages($event)" />
+      } @else {
+        <ngx-dropzone class="payment-dropzone" (change)="onSelect($event)" [multiple]="true" accept="image/*" [maxFileSize]="2097152" [disabled]="disabled">
+          <ngx-dropzone-label><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i><strong>Arrastra tus comprobantes o selecciona imágenes</strong><small>JPG, PNG o WebP · Hasta 2 MB por archivo</small></ngx-dropzone-label>
+          @for (file of images; track file) { <ngx-dropzone-image-preview [file]="file" [removable]="!disabled" (removed)="onRemove(file)" /> }
+        </ngx-dropzone>
+        @if (fileError) { <p class="payment-field-error" role="alert">{{ fileError }}</p> }
+      }
+    </fieldset>
+  </details>
+</div>

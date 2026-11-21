@@ -1,0 +1,20 @@
+<main class="photo-page" data-section="sessions">
+  <a class="back-link" routerLink="../"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Sesiones fotográficas</a>
+  @if (loading) { <div class="panel feedback" role="status">Cargando sesión…</div> }
+  @if (error) { <div class="error" role="alert">{{ error }}@if (!session) { <button class="button" (click)="retry()">Reintentar</button> }</div> }
+  @if (session; as current) {
+    <div id="photo-session-overview" tabindex="-1" class="session-overview-anchor"><app-photo-section-header section="sessions"><div><span class="eyebrow">SESIÓN FOTOGRÁFICA #{{ current.id }}</span><h1>{{ current.name }}</h1><p>@if (current.collection) { {{ current.collection }} · }@if (current.shoot_date) { <i class="fa-regular fa-calendar" aria-hidden="true"></i> {{ current.shoot_date | date:'dd/MM/yyyy' }} }@if (current.starts_at) { · {{ current.starts_at.slice(0, 5) }}@if (current.ends_at) { — {{ current.ends_at.slice(0, 5) }} } }</p></div><button class="button" [disabled]="saving || assignmentSaving || relatedSaving" [attr.aria-expanded]="editing" (click)="toggleDetailsEdit()"><i class="fa-solid fa-pen" aria-hidden="true"></i>{{ editing ? 'Cerrar edición' : 'Editar datos' }}</button></app-photo-section-header></div>
+    @if (saved) { <p class="saved-message" role="status"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Sesión actualizada.</p> }
+    <app-photo-session-workspace [session]="current" [options]="options" [assetCount]="assetCount" [editing]="editing" [saving]="assignmentSaving || relatedSaving || saving" (changeAssignment)="changeAssignment($event)" (createRelated)="addingKind = $event">
+      <div sessionDetails>
+        @if (editing) { <app-photo-session-edit [session]="current" [options]="options" [saving]="saving || assignmentSaving || relatedSaving" (save)="save($event)" /> }
+        @else { <app-photo-session-details [session]="current" /> }
+      </div>
+      <app-photo-session-asset-index sessionLibrary [sessionId]="current.id" [uploading]="uploading" (uploadRequested)="openUpload()" (totalChange)="assetCount = $event" />
+    </app-photo-session-workspace>
+    <app-photo-session-upload-dialog [sessionId]="current.id" [configured]="options?.storage?.configured || false" [maxBytes]="options?.storage?.max_bytes || 107374182400" (completed)="refreshAssets()" (uploading)="uploading = $event" />
+  }
+  @if (addingKind; as kind) { <app-photo-related-create [kind]="kind" (busy)="relatedSaving = $event" (created)="relatedCreated($event)" (cancel)="addingKind = null" /> }
+</main>
+
+

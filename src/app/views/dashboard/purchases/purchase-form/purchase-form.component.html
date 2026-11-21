@@ -1,134 +1,33 @@
-<form [formGroup]="form" class="px-2">
-
-    <div class="row">
-
-        <div class="col-lg-12 col-md-12 col-12" [ngClass]="{'d-none': supplier_id != null  ? false : true }">
-
-            <label class="mb-2">Escoger Proveedor</label>
-
-            <div class="proveedor mb-3 d-flex justify-content-between align-items-center">
-
-                <!-- <ng-select class="w-100 me-2" formControlName="supplier_id" bindValue="id"
-                                            [items]="suppliers" [addTag]="false" bindLabel="name"
-                                            placeholder="Escoja una marca">
-                                            <ng-template ng-label-tmp let-item="item">
-                                                <fa-icon [icon]="faUser" class="me-2"></fa-icon>
-                                                {{ item.name }}
-                                            </ng-template>
-                                        </ng-select> -->
-
-                <app-supplier-selected class="w-100 me-2" formControlName="supplier_id" [suppliers]="suppliers"></app-supplier-selected>
-
-                <app-button [icon]="faPlus" (click)="openVerticallyCentered(newSupplier)">Crear</app-button>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-6 col-6 col-md-6">
-            <app-input-group text="Fecha Pedido">
-                <input formControlName="purchase_start" type="date" class="form-control" placeholder="Fecha Pedido"
-                    aria-label="purchase_start" aria-describedby="purchase_start" />
-            </app-input-group>
-        </div>
-
-        <div class="col-lg-6 col-6 col-md-6">
-            <app-input-group text="Fecha de entrega">
-                <input formControlName="purchase_end" type="date" class="form-control" placeholder="Fecha Entrega"
-                    aria-label="purchase_end" aria-describedby="purchase_end" />
-            </app-input-group>
-        </div>
-
-
-        <!-- {{ form.value | json }} -->
-
+<div [formGroup]="form" class="purchase-details-grid">
+  @if (supplier_id !== null) {
+    <div class="purchase-detail-field purchase-detail-wide">
+      <label for="purchase-supplier"><i class="fa-solid fa-building" aria-hidden="true"></i>Proveedor</label>
+      <div class="purchase-supplier-control">
+        <app-supplier-selected labelForId="purchase-supplier" formControlName="supplier_id" [suppliers]="suppliers" [loading]="suppliersLoading" />
+        <button type="button" class="purchase-supplier-create" [disabled]="suppliersLoading" (click)="openVerticallyCentered(newSupplier)">
+          <i class="fa-solid fa-user-plus" aria-hidden="true"></i>Crear proveedor
+        </button>
+      </div>
+      <app-supplier-address-selection [form]="form" />
     </div>
-    <!-- Purchase Items -->
-
-
-
-    <div class="row">
-        <div class="col-lg-12 col-12">
-            <label class="mb-2">Observaciones</label>
-            <textarea formControlName="observations" class="form-control mb-3" placeholder="Observaciones"></textarea>
-        </div>
+  }
+  <div class="purchase-detail-wide">
+    <div class="purchase-date-controls" [class.with-delivery]="!!deliveryForm || manageDelivery">
+      <div class="purchase-detail-field"><label for="purchase-start"><i class="fa-regular fa-calendar" aria-hidden="true"></i>Fecha de compra</label><input id="purchase-start" formControlName="purchase_start" type="date"></div>
+      @if (deliveryForm || manageDelivery) { <div class="purchase-delivery-action"><button type="button" class="purchase-delivery-toggle" [class.active]="deliveryOpen" [attr.aria-expanded]="deliveryOpen" [attr.aria-controls]="manageDelivery ? 'purchase-edit-delivery' : 'purchase-delivery-dates'" (click)="toggleDelivery()"><i class="fa-regular fa-calendar-check" aria-hidden="true"></i>{{ deliveryButtonText }}<i class="fa-solid fa-chevron-down" [class.expanded]="deliveryOpen" aria-hidden="true"></i></button></div> }
     </div>
-
-
-
-
-    <!-- <div class="row mb-3">
-
-        <div class="col-lg-12 col-md-6 col-12">
-            <app-input-group text="Registrar insumo" [icon]="faEdit">
-                <input formControlName="name" type="text" class="form-control"
-                    [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
-                    placeholder="Nombre del insumo" aria-label="name" aria-describedby="basic-name" />
-            </app-input-group>
-        </div>
-
-        <div class="col-lg-3 col-6 col-md-6">
-            <app-input-group text="Cantidad (*)">
-                <input formControlName="quantity" type="number" step="0.01" class="form-control"
-                    [class.is-invalid]="form.get('quantity')?.invalid && form.get('quantity')?.touched"
-                    placeholder="Cantidad" aria-label="quantity" aria-describedby="quantity-price" />
-            </app-input-group>
-        </div>
-
-        <div class="col-lg-3 col-6 col-md-6">
-
-            <label class="mb-2">Unidades</label>
-            <app-unit-selected formControlName="unit_id"
-                [class.is-invalid]="form.get('unit_id')?.invalid && form.get('unit_id')?.touched"></app-unit-selected>
-
-        </div>
-
-        <div class="col-lg-3 col-6 col-md-6">
-            <app-input-group text="Precio (*)" icontext="S/.">
-                <input formControlName="price" type="number" step="0.01" class="form-control"
-                    [class.is-invalid]="form.get('price')?.invalid && form.get('price')?.touched" placeholder="0.00"
-                    aria-label="price" aria-describedby="basic-price" />
-            </app-input-group>
-        </div>
-
-        <div class="col-lg-3 col-6 col-md-6">
-            <app-input-group text="Total" icontext="S/.">
-                <input formControlName="total" type="number"
-                    [class.is-invalid]="form.get('total')?.invalid && form.get('total')?.touched" step="0.01"
-                    class="form-control" placeholder="0.00" aria-label="total" aria-describedby="basic-total" />
-            </app-input-group>
-        </div>
-
-        <div ngbAccordion class="mb-3">
-            <div ngbAccordionItem>
-                <h2 ngbAccordionHeader>
-                    <button ngbAccordionButton>+ Mas opciones</button>
-                </h2>
-                <div ngbAccordionCollapse>
-                    <div ngbAccordionBody>
-                        <ng-template>
-
-
-                        </ng-template>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </div> -->
-
-</form>
-
-
+    @if (deliveryForm; as delivery) { <app-delivery-setup [form]="delivery" /> }
+    <ng-content select="[purchase-delivery-panel]" />
+  </div>
+  <div class="purchase-detail-field purchase-detail-wide">
+    <label for="purchase-observations"><i class="fa-regular fa-comment" aria-hidden="true"></i>Observaciones</label>
+    <textarea id="purchase-observations" formControlName="observations" rows="3" placeholder="Añade una referencia o indicación sobre esta compra"></textarea>
+  </div>
+</div>
 <ng-template #newSupplier let-modal>
-
-    <div class="modal-header">
-        <h4 class="modal-title">Crear proveedor</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body pb-4">
-        <app-supplier-create (emitSupplierCreate)="supplierReceiveCreate($event)"></app-supplier-create>
-    </div>
-
+  <div class="modal-header">
+    <h4 class="modal-title">Crear proveedor</h4>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body pb-4"><app-supplier-create (emitSupplierCreate)="supplierReceiveCreate($event)" /></div>
 </ng-template>

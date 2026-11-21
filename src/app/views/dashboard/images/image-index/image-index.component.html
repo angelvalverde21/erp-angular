@@ -1,25 +1,43 @@
-<div class="upload mb-3">
-    <app-image-upload [imageable_type]="imageable_type" [imageable_id]="imageable_id" (emitImagesUpload)="receiveImagesUpload($event)"></app-image-upload>
-</div>
-
-<div class="table-responsive">
-
-    <table class="table table-striped table-bordered align-middle">
-        <thead>
-            <tr>
-                <th class="text-center" scope="col">#</th>
-                <th class="text-center" scope="col">Image</th>
-                <th class="text-center" scope="col">Name</th>
-                <th class="text-center" scope="col"></th>
-            </tr>
-        </thead>
+﻿@if (showUpload) {
+  <div class="image-library-upload">
+    <app-image-upload [imageable_type]="imageable_type" [imageable_id]="imageable_id" [acceptedFiles]="acceptedFiles" [maxFileSize]="maxFileSize" (emitImagesUpload)="receiveImagesUpload($event)"></app-image-upload>
+  </div>
+}
+<section class="image-library" aria-label="Imágenes adjuntas">
+  <header class="image-library-heading">
+    <span><i class="fa-regular fa-images" aria-hidden="true"></i>Imágenes <span class="image-library-count">{{ images?.length || 0 }}</span></span>
+    @if (images?.length) { <small>Selecciona una miniatura para ampliar</small> }
+  </header>
+  @if (error) { <p class="image-library-error" role="alert">{{ error }}</p> }
+  @if (images?.length) {
+    @if (layout === 'grid') {
+      <div class="image-gallery-grid">
+        @for (image of images; track image.id) {
+          <article class="image-gallery-card">
+            <div class="image-gallery-preview"><app-image-preview [image]="image" [title]="image.name || 'Imagen referencial'" [height]="190" objectFit="contain" [previewVariant]="previewVariant" /></div>
+            <div class="image-gallery-description"><strong [title]="image.name">{{ image.name || 'Imagen referencial' }}</strong>
+              @if (allowRemove) { <button type="button" class="image-gallery-remove" [disabled]="loading" (click)="onRemoveImage(image.id)" [attr.aria-label]="'Eliminar ' + (image.name || 'imagen')">@if (removingImageId === image.id) { <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> } @else { <i class="fa-regular fa-trash-can" aria-hidden="true"></i> }Eliminar</button> }
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+    <div class="table-responsive">
+      <table class="image-table">
+        <thead><tr>
+          <th scope="col" class="image-preview-column">Vista previa</th>
+          <th scope="col">Archivo</th>
+          @if (allowRemove) { <th scope="col" class="image-actions-column">Acciones</th> }
+        </tr></thead>
         <tbody>
-
-            @for (image of images; track image.id) {
-                <tr app-image-index-row [image]="image" (emitRemoveImage)="onRemoveImage($event)"></tr>
-            }
-            
+          @for (image of images; track image.id) {
+            <tr app-image-index-row [image]="image" [allowRemove]="allowRemove" [disabled]="loading" [removing]="removingImageId === image.id" (emitRemoveImage)="onRemoveImage($event)"></tr>
+          }
         </tbody>
-    </table>
-
-</div>
+      </table>
+    </div>
+    }
+  } @else {
+    <div class="image-library-empty"><i class="fa-regular fa-image" aria-hidden="true"></i><strong>Aún no hay imágenes adjuntas</strong><span>Las imágenes que agregues aparecerán aquí.</span></div>
+  }
+</section>

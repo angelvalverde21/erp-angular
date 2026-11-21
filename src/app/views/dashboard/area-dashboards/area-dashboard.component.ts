@@ -20,22 +20,25 @@ export class AreaDashboardComponent implements OnInit, OnDestroy {
   report: AreaReport | null = null;
   loading = false;
   error = '';
+  private readonly productionLimit$ = new BehaviorSubject(6);
   private readonly days$ = new BehaviorSubject(30);
   private readonly refresh$ = new BehaviorSubject(0);
   private readonly destroy$ = new Subject<void>();
   constructor(private service: AreaDashboardService, private route: ActivatedRoute, public base: BaseService, @Inject(DOCUMENT) private document: Document) {}
+  get productionLimit(): number { return this.productionLimit$.value; }
+  changeProductionLimit(limit: number): void { if (Number.isInteger(limit) && limit >= 2 && limit <= 10) this.productionLimit$.next(limit); }
   get days(): number { return this.days$.value; }
   ngOnInit(): void {
     combineLatest([
       this.route.paramMap.pipe(map(params => params.get('area')), distinctUntilChanged()),
-      this.days$.pipe(distinctUntilChanged()), this.refresh$,
+      this.days$.pipe(distinctUntilChanged()), this.refresh$, this.productionLimit$.pipe(distinctUntilChanged()),
     ]).pipe(
       tap(([key, days]) => {
         this.definition = DASHBOARDS.find(area => area.key === key) ?? DASHBOARDS[0];
         if (this.report?.area !== key || this.report?.range.days !== days) this.report = null;
         this.loading = true; this.error = '';
       }),
-      switchMap(([, days]) => this.service.report(this.definition.key, days).pipe(
+      switchMap(([, days, , limit]) => (this.definition.key === 'ceo' ? this.service.report(this.definition.key, days, limit) : this.service.report(this.definition.key, days)).pipe(
         catchError(error => { this.error = error.status === 403 ? 'No tienes acceso a este dashboard.' : 'No se pudo cargar la información. Inténtalo nuevamente.'; return of(null); }),
       )),
       takeUntil(this.destroy$),

@@ -27,7 +27,7 @@ export class ProductionStageStatusComponent implements OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   get label(): string { return this.options.find(option => option.value === this.stage.status)?.label ?? 'No aplica'; }
-  get canComplete(): boolean { return Number(this.stage.purchases_count ?? 0) > 0; }
+  get canComplete(): boolean { return !this.stage.locked && (this.stage.manual_status === true || this.stage.reuses_mold === true || Number(this.stage.purchases_count ?? 0) > 0); }
 
   complete(menu: NgbDropdown): void {
     this.select('completed', menu);
@@ -35,7 +35,7 @@ export class ProductionStageStatusComponent implements OnDestroy {
   }
 
   select(status: string, menu: NgbDropdown): void {
-    if (this.saving || this.stage.revision == null || status === this.stage.status) return;
+    if (this.stage.locked || this.saving || this.stage.revision == null || status === this.stage.status) return;
     if (status === 'completed' && !this.canComplete) return;
     this.error = '';
     this.reviewing = status === 'completed' && this.stage.code === 'samples'
@@ -45,7 +45,7 @@ export class ProductionStageStatusComponent implements OnDestroy {
   }
 
   save(status: string, menu: NgbDropdown): void {
-    if (this.saving || this.stage.revision == null || (this.reviewing && (!this.quantity || this.quantity < 1 || !Number.isInteger(this.quantity)))) return;
+    if (this.stage.locked || this.saving || this.stage.revision == null || (this.reviewing && (!this.quantity || this.quantity < 1 || !Number.isInteger(this.quantity)))) return;
     if (status === 'completed' && !this.canComplete) return;
     this.saving = true;
     this.error = '';

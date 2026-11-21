@@ -1,24 +1,24 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { isProcessStage, ProductionStage, STAGE_STATUS } from './production-stage.service';
-import { ProductionStageStatusComponent } from './production-stage-status.component';
+import { ProductionStage, STAGE_STATUS } from './production-stage.service';
 
 type StepperStage = Pick<ProductionStage, 'id' | 'name' | 'status' | 'expected_end'> & Partial<ProductionStage>;
 
 @Component({
   selector: 'app-production-stage-stepper',
-  imports: [ProductionStageStatusComponent],
+  imports: [],
   templateUrl: './production-stage-stepper.component.html',
   styleUrl: './production-stage-stepper.component.scss',
 })
 export class ProductionStageStepperComponent {
   private processStages: (StepperStage & { status: string })[] = [];
   @Input() set stages(value: StepperStage[]) {
-    this.processStages = value.filter(isProcessStage);
+    this.processStages = value.filter(stage => stage.show_in_stepper !== false && stage.status !== null) as (StepperStage & { status: string })[];
   }
   get stages(): (StepperStage & { status: string })[] { return this.processStages; }
   @Input() selectedId = 0;
   @Input() productionId = 0;
   @Input() otherExpenses: { id: number; count: number } | null = null;
+  @Output() configure = new EventEmitter<void>();
   @Output() choose = new EventEmitter<number>();
   get selectedIndex(): number {
     return this.stages.findIndex(stage => stage.id === this.selectedId);
@@ -26,6 +26,9 @@ export class ProductionStageStepperComponent {
   readonly labels: Readonly<Record<string, string>> = {
     ...STAGE_STATUS,
     completed: 'Completado',
+  };
+  readonly shortLabels: Readonly<Record<string, string>> = {
+    pending: 'Pendiente', in_progress: 'En curso', completed: 'Listo', not_applicable: 'No aplica',
   };
 
   readonly stageIcons: Readonly<Record<string, string>> = {
@@ -35,12 +38,8 @@ export class ProductionStageStepperComponent {
     cutting: 'fa-solid fa-scissors',
     sewing: 'fa-solid fa-gears',
     finishing: 'fa-solid fa-wand-magic-sparkles',
-  };
-
-  readonly statusIcons: Readonly<Record<string, string>> = {
-    completed: 'fa-solid fa-check',
-    in_progress: 'fa-solid fa-clock',
-    not_applicable: 'fa-solid fa-minus',
+    reception: 'fa-solid fa-box-open',
+    others: 'fa-solid fa-boxes-stacked',
   };
 
   private readonly dateFormatter = new Intl.DateTimeFormat('en-CA', {

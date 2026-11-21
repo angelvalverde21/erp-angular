@@ -43,6 +43,14 @@ export class ProductIndexPageComponent implements OnInit, OnDestroy {
     this.loadProducts(true);
   }
 
+  insertedProductId: number | null = null;
+  insertDuplicate(product: Product): void {
+    if (this.products.some(item => item.id === product.id)) return;
+    this.products = [product, ...this.products];
+    this.insertedProductId = product.id;
+    if (this.total !== null) this.total++;
+  }
+
   changeSort(sortBy: ProductSort): void {
     if (sortBy === this.sortBy) {
       this.sortDirection = this.sortDirection === 'desc' ? 'asc' : 'desc';

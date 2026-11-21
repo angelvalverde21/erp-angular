@@ -121,6 +121,13 @@
 .purchase-edit-modal-body {
   padding: 0;
 }
+.purchase-edit-modal-delivery {
+  padding: 0;
+}
+.purchase-edit-delivery-collapse { display: grid; grid-template-rows: 0fr; opacity: 0; visibility: hidden; transition: grid-template-rows .24s ease, opacity .18s ease, visibility .24s; }
+.purchase-edit-delivery-collapse.expanded { grid-template-rows: 1fr; opacity: 1; visibility: visible; }
+.purchase-edit-delivery-content { overflow: hidden; min-height: 0; }
+@media(prefers-reduced-motion: reduce) { .purchase-edit-delivery-collapse { transition: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   .purchase-actions-toggle {

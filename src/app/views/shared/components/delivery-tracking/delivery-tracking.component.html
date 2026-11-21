@@ -1,4 +1,5 @@
-﻿<section class="purchase-delivery" [class.delivery-footer]="footer" [class.needs-setup]="!tracking" [attr.aria-label]="'Seguimiento de entrega del registro ' + ownerId">
+﻿<section class="purchase-delivery" [class.delivery-footer]="footer" [class.needs-setup]="!tracking" [class.delivery-embedded]="embedded" [attr.aria-label]="'Seguimiento de entrega del registro ' + ownerId">
+  @if (!controlsOnly) {
   <header class="delivery-card-header" [class.delivery-collapsed]="!tracking && !mode" [class.delivery-actions-first]="actionsFirst">
     @if (footer && tracking && !actionsFirst) {
       <ng-container [ngTemplateOutlet]="deliveryStatus"></ng-container>
@@ -13,13 +14,13 @@
         <ng-container [ngTemplateOutlet]="deliveryActions"></ng-container>
       }
       @if (tracking) {
-        @if (!historyAlwaysVisible) {
+        @if (!historyAlwaysVisible && !externalToggle) {
         <button type="button" class="delivery-history-toggle" [attr.aria-expanded]="historyOpen" [attr.aria-controls]="'delivery-history-' + ownerType + '-' + ownerId" (click)="toggleHistory()">
           <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>Seguimiento de entrega
           <i class="fa-solid" [class.fa-chevron-up]="historyOpen" [class.fa-chevron-down]="!historyOpen" aria-hidden="true"></i>
         </button>
         }
-      } @else {
+      } @else if (!externalToggle) {
         <button type="button" class="delivery-start-button" [disabled]="saving" [attr.aria-expanded]="mode === 'create'" [attr.aria-controls]="'delivery-editor-' + ownerType + '-' + ownerId" (click)="mode === 'create' ? mode = null : begin('create')">
           <i class="fa-solid fa-plus" aria-hidden="true"></i>Seguimiento de entrega
         </button>
@@ -36,30 +37,13 @@
     </div>
   }
 
+  }
   @if (mode) {
-    <form class="delivery-editor" [id]="'delivery-editor-' + ownerType + '-' + ownerId" [formGroup]="form" (ngSubmit)="save()">
-      <h4>{{ titles[mode] }}</h4>
-      <fieldset [disabled]="saving">
-        @if (mode === 'create' || mode === 'correct') {
-          <label>Se mandó a hacer / materiales entregados<input type="date" formControlName="handed_over_on" [max]="today"></label>
-        }
-        @if (mode === 'create' || mode === 'reschedule') {
-          <label>Fecha tentativa de entrega *<input type="date" formControlName="expected_on" required></label>
-        }
-        @if (mode === 'receive' || mode === 'correct') {
-          <label>Fecha real de recepción<input type="date" formControlName="received_on" [max]="today" [required]="mode === 'receive'"></label>
-        }
-        @if (mode === 'reschedule' || mode === 'correct') {
-          <label class="delivery-wide">Motivo del cambio *<textarea formControlName="reason" maxlength="2000" required placeholder="Explica el acuerdo con el proveedor o el motivo de la corrección"></textarea></label>
-        }
-      </fieldset>
-      @if (form.touched && form.invalid) { <p class="delivery-error" role="alert">Completa los campos obligatorios.</p> }
-      <div class="delivery-editor-actions">
-        <small>Los cambios quedan registrados con tu usuario.</small>
-        <button type="button" [disabled]="saving" (click)="mode = null">Cancelar</button>
-        <button type="submit" class="delivery-primary" [disabled]="saving">{{ saving ? 'Guardando…' : 'Guardar fechas' }}</button>
-      </div>
-    </form>
+    @if (embedded) {
+      <div class="delivery-editor" role="group" aria-label="Fechas de entrega" [id]="'delivery-editor-' + ownerType + '-' + ownerId" (keydown.enter)="editorKeydown($event)"><ng-container [ngTemplateOutlet]="deliveryEditorFields" /></div>
+    } @else {
+      <form class="delivery-editor" [id]="'delivery-editor-' + ownerType + '-' + ownerId" [formGroup]="form" (ngSubmit)="save()"><ng-container [ngTemplateOutlet]="deliveryEditorFields" /></form>
+    }
   }
   @if (error) {
     <div class="delivery-error" role="alert">{{ error }} @if (tracking) { <button type="button" [disabled]="saving" (click)="reload()">Recargar datos</button> }</div>
@@ -97,4 +81,30 @@
     <button type="button" [disabled]="saving" (click)="begin('reschedule')">Reprogramar</button>
     <button type="button" class="delivery-primary" [disabled]="saving" (click)="begin('receive')"><i class="fa-solid fa-check" aria-hidden="true"></i>Registrar recepción</button>
   }
+</ng-template>
+
+<ng-template #deliveryEditorFields>
+  <div [formGroup]="form">
+      @if (mode && !(embedded && mode === 'create')) { <h4>{{ titles[mode] }}</h4> }
+      <fieldset [disabled]="saving">
+        @if (mode === 'create' || mode === 'correct') {
+          <label>Fecha del encargo<input type="date" formControlName="handed_over_on" [max]="today"></label>
+        }
+        @if (mode === 'create' || mode === 'reschedule') {
+          <label>Entrega prevista *<input type="date" formControlName="expected_on" required></label>
+        }
+        @if (mode === 'receive' || mode === 'correct') {
+          <label>Fecha real de recepción<input type="date" formControlName="received_on" [max]="today" [required]="mode === 'receive'"></label>
+        }
+        @if (mode === 'reschedule' || mode === 'correct') {
+          <label class="delivery-wide">Motivo del cambio *<textarea formControlName="reason" maxlength="2000" required placeholder="Explica el acuerdo con el proveedor o el motivo de la corrección"></textarea></label>
+        }
+      </fieldset>
+      @if (form.touched && form.invalid) { <p class="delivery-error" role="alert">Completa los campos obligatorios.</p> }
+      <div class="delivery-editor-actions">
+        <small>Los cambios quedan registrados con tu usuario.</small>
+        <button type="button" [disabled]="saving" (click)="mode = null">Cancelar</button>
+        <button [type]="embedded ? 'button' : 'submit'" (click)="saveEmbedded()" class="delivery-primary" [disabled]="saving">{{ saving ? 'Guardando…' : 'Guardar fechas' }}</button>
+      </div>
+  </div>
 </ng-template>

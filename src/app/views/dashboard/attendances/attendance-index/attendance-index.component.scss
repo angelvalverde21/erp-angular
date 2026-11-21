@@ -1,4 +1,5 @@
 @use '../../_personnel-ui';
+.attendance-row-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .4rem; }
 
 .personnel-table {
   th { padding: .65rem 1rem; }

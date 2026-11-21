@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { VariantIndexComponent } from '../variant-index/variant-index.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subject, Subscription, takeUntil } from 'rxjs';
@@ -35,6 +35,10 @@ export class VariantSearchComponent implements OnInit, OnDestroy {
   @Input() type_form: boolean = false; //indica que el tipo de listado que desplegara sera del tipo formulario para que el cliente pueda seleccionar la cantidad de cada variante que desea agregar al lote, en lugar de solo seleccionar las variantes.
 
   @Input() title: string = 'Agregar seleccionados';
+
+  @ViewChild(VariantIndexComponent) variantIndex?: VariantIndexComponent;
+  get allSelected(): boolean { return this.variantIndex?.allSelected ?? false; }
+  toggleAllVariants(): void { this.variantIndex?.toggleAll(); }
 
   buttonDisabled: boolean = true;
 

@@ -1,0 +1,15 @@
+﻿<main class="photo-page" data-section="sessions">
+  <app-photo-section-header section="sessions"><div><span class="eyebrow">PRODUCCIÓN VISUAL</span><h1>Sesiones fotográficas</h1><p>Planificación, equipo y biblioteca de fotos y videos en calidad original.</p></div>@if (data?.can_create) { <a class="button primary" routerLink="create"><i class="fa-solid fa-plus" aria-hidden="true"></i>Nueva sesión</a> }</app-photo-section-header>
+  <section class="panel"><header class="panel-header"><div><h2><i class="fa-solid fa-camera-retro" aria-hidden="true"></i>Sesiones registradas</h2><p>Consulta, filtra y gestiona tus registros.</p></div>@if (data && !loading) { <span class="result-count">{{ data.total }} registros</span> }</header>
+    <form class="filters" (ngSubmit)="filter()"><label class="search"><span class="sr-only">Buscar sesión</span><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input name="search" [(ngModel)]="search" maxlength="150" placeholder="Buscar sesión, colección o ubicación"></label><label><span class="sr-only">Estado</span><select name="status" [(ngModel)]="status" (ngModelChange)="filter()"><option value="all">Todos los estados</option>@for (option of statuses; track option.value) { <option [value]="option.value">{{ option.label }}</option> }</select></label><button type="submit" class="button">Buscar</button></form>
+    @if (error) { <div class="feedback" role="alert"><p>{{ error }}</p><button class="button" (click)="retry()">Reintentar</button></div> }
+    @else if (loading) { <div class="feedback" role="status">Cargando sesiones…</div> }
+    @else if (data?.data?.length) {
+      <app-photo-session-index [sessions]="data!.data" [employeeView]="data?.can_create === false" />
+      <footer class="actions"><span>{{ data!.total }} sesiones · Página {{ data!.current_page }} de {{ data!.last_page }}</span><button class="button" [disabled]="data!.current_page <= 1" (click)="page(data!.current_page - 1)">Anterior</button><button class="button" [disabled]="data!.current_page >= data!.last_page" (click)="page(data!.current_page + 1)">Siguiente</button></footer>
+    } @else {
+      <div class="feedback"><i class="fa-solid fa-camera-retro empty-icon" aria-hidden="true"></i><h2>{{ search || status !== 'all' ? 'No hay sesiones con estos filtros' : data?.can_create === false ? 'No tienes sesiones asignadas' : 'Organiza tu primera sesión fotográfica' }}</h2><p>{{ data?.can_create === false ? 'Las sesiones con tareas a tu cargo aparecerán aquí.' : 'Reúne la planificación, las fotos originales y los videos en un solo lugar.' }}</p>@if (data?.can_create) { <a class="button primary" routerLink="create">Crear sesión</a> }</div>
+    }
+  </section>
+</main>
+

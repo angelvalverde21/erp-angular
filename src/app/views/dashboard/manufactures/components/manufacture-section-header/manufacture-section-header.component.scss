@@ -1,4 +1,6 @@
 @use '../../manufacture-theme';
+.manufacture-primary-action.manufacture-primary-action-dark { background: #252b36; border-color: #252b36; color: #fff; }
+.manufacture-primary-action.manufacture-primary-action-dark:hover { background: #191e27; border-color: #191e27; }
 .manufacture-section-header { margin-bottom: 1.5rem; }
 .manufacture-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
 .manufacture-heading-identity { display: flex; align-items: center; gap: 1rem; min-width: 0; }

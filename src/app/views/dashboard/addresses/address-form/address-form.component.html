@@ -1,4 +1,56 @@
-@if (presentation === 'branch') {
+@if (presentation === 'supplier') {
+<div class="supplier-address-fields" [formGroup]="form">
+    <section class="contact-panel">
+        <header class="contact-panel-header"><div><h2><i class="fa-solid fa-building" aria-hidden="true"></i>Datos del proveedor</h2><p>Estos datos identificarán al proveedor y al contacto de su dirección principal.</p></div></header>
+        <div class="contact-panel-body contact-grid">
+            <div class="contact-field contact-wide">
+                <label for="supplier-address-name">Nombre o razón social *</label>
+                <input id="supplier-address-name" formControlName="name" maxlength="255" autocomplete="organization" placeholder="Ej. Textiles del Sur S.A.C." [class.is-invalid]="isInvalid('name')">
+                @if (isInvalid('name')) { <small class="contact-field-error">Ingresa el nombre o razón social del proveedor.</small> }
+            </div>
+            <div class="contact-field">
+                <label for="supplier-address-phone">Teléfono *</label>
+                <input id="supplier-address-phone" type="tel" formControlName="phone" maxlength="20" autocomplete="tel" placeholder="Ej. 999 888 777" [class.is-invalid]="isInvalid('phone')">
+                @if (isInvalid('phone')) { <small class="contact-field-error">Revisa el teléfono del proveedor.</small> }
+            </div>
+            <div class="contact-field">
+                <label for="supplier-address-email">Correo electrónico <small>Opcional</small></label>
+                <input id="supplier-address-email" type="email" formControlName="email" maxlength="255" autocomplete="email" placeholder="nombre@empresa.com" [class.is-invalid]="isInvalid('email')">
+                @if (isInvalid('email')) { <small class="contact-field-error">Escribe un correo electrónico válido.</small> }
+            </div>
+            <div class="contact-field"><label for="supplier-address-identity">Tipo de documento <small>Opcional</small></label><app-identity-selected labelForId="supplier-address-identity" [clearable]="true" formControlName="identity_id" /></div>
+            <div class="contact-field">
+                <label for="supplier-address-document">Número de documento <small>Opcional</small></label>
+                <input id="supplier-address-document" formControlName="document_number" maxlength="20" placeholder="DNI, RUC u otro documento" [class.is-invalid]="isInvalid('document_number')">
+                @if (isInvalid('document_number')) { <small class="contact-field-error">El documento admite hasta 20 caracteres.</small> }
+            </div>
+        </div>
+    </section>
+    <section class="contact-panel">
+        <header class="contact-panel-header"><div><h2><i class="fa-solid fa-location-dot" aria-hidden="true"></i>Dirección principal</h2><p>Se guardará como dirección predeterminada para las compras.</p></div><span class="contact-status active"><i class="fa-solid fa-check" aria-hidden="true"></i>Predeterminada</span></header>
+        <div class="contact-panel-body contact-grid">
+            <div class="contact-field contact-wide">
+                <label for="supplier-address-primary">Dirección *</label>
+                <input id="supplier-address-primary" formControlName="primary" maxlength="255" autocomplete="address-line1" placeholder="Calle, número e interior" [class.is-invalid]="isInvalid('primary')">
+                @if (isInvalid('primary')) { <small class="contact-field-error">Ingresa la dirección del proveedor.</small> }
+            </div>
+            <div class="contact-field">
+                <label for="supplier-address-district">Distrito *</label>
+                <app-input-district-id inputId="supplier-address-district" formControlName="district_id" placeholder="Busca y selecciona un distrito" [isInvalid]="isInvalid('district_id')" />
+                @if (isInvalid('district_id')) { <small class="contact-field-error">Selecciona un distrito de la lista.</small> }
+            </div>
+            <div class="contact-field">
+                <label for="supplier-address-secondary">Complemento <small>Opcional</small></label>
+                <input id="supplier-address-secondary" formControlName="secondary" maxlength="255" autocomplete="address-line2" placeholder="Piso, oficina o urbanización">
+            </div>
+            <div class="contact-field contact-wide">
+                <label for="supplier-address-references">Referencia <small>Opcional</small></label>
+                <textarea id="supplier-address-references" formControlName="references" rows="2" maxlength="255" placeholder="Una indicación para llegar al local"></textarea>
+            </div>
+        </div>
+    </section>
+</div>
+} @else if (presentation === 'branch') {
 <div class="branch-address-fields" [formGroup]="form">
     <section>
         <div class="address-section-heading"><h3>Ubicación de la sucursal</h3><p>Ingresa los datos necesarios para ubicar este local.</p></div>
@@ -49,7 +101,7 @@
     </details>
 </div>
 } @else {
-<form [formGroup]="form">
+<div [formGroup]="form">
     <div class="row">
 
         <!-- {{ addressForm.valid }} -->
@@ -116,5 +168,5 @@
 
     </div>
 
-</form>
+</div>
 }

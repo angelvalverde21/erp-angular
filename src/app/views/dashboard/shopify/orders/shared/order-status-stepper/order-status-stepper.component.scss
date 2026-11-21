@@ -71,6 +71,7 @@ li {
 .status-stepper-label { font-size: .85rem; font-weight: 600; }
 .status-stepper-description { font-size: .75rem; }
 .status-stepper-state { font-size: .7rem; margin-top: .2rem; }
+.status-stepper-state time { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .is-current {
   .status-stepper-icon { border-color: var(--stepper-primary); color: var(--stepper-primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--stepper-primary) 12%, transparent); }
   .status-stepper-label, .status-stepper-state { color: var(--stepper-primary); font-weight: 700; }

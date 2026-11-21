@@ -53,7 +53,7 @@ export class AddressEditComponent implements OnInit, OnDestroy {
       primary: ['', [Validators.required]],
       secondary: [''],
       district_id: ['', [Validators.required]],
-      phone: ['', ['courier', 'store'].includes(this.addressable_type) ? [] : [Validators.required]],
+      phone: ['', ['courier', 'store', 'photo_location'].includes(this.addressable_type) ? [] : [Validators.required]],
       references: [''],
       document_number: [''],
       identity_id: [''],

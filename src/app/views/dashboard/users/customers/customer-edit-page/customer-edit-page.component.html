@@ -1,21 +1,11 @@
-﻿@if(loading || roles_loading){
-<app-loading></app-loading>
-}@else{
+<main class="contact-page">
+  <a class="contact-back" routerLink="../"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver a clientes</a>
+  <header class="contact-page-header"><div class="contact-page-title"><span class="contact-page-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span><div><span class="contact-eyebrow">Directorio · Ficha del cliente</span><h1>{{ customer?.name || customer?.name || 'Ficha del cliente' }}</h1><p>Consulta y actualiza la información de contacto de tu cliente.</p></div></div>@if (customer) { <span class="contact-status" [class.active]="+(customer?.status ?? customer?.status) === 1" [class.blocked]="+(customer?.status ?? customer?.status) === 0"><i class="fa-solid fa-circle" aria-hidden="true"></i>{{ +(customer?.status ?? customer?.status) === 1 ? 'Activo' : 'Bloqueado' }}</span> }</header>
+  @if (error) { <div class="contact-alert" role="alert">{{ error }}<button class="contact-button light" type="button" (click)="load()">Reintentar</button></div> }
+  @if (loading) { <div class="contact-panel contact-feedback" role="status"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Cargando ficha…</div> }
+  @else if (customer && !error) {
+    @if (rolesError) { <div class="contact-alert" role="alert">No se pudieron cargar los roles de acceso. Puedes editar los datos de contacto.<button class="contact-button light" type="button" (click)="loadRoles()">Reintentar roles</button></div> }
+    <app-customer-edit [customer]="customer" [roles]="roles" (updated)="load()" />
 
-<app-head-page title="Editar Cliente">
-    <app-button-back></app-button-back>
-</app-head-page>
-
-
-<div class="card mb-3">
-
-    <!-- {{ Customer | json }} -->
-
-    <div class="card-body">
-        <app-customer-edit [customer]="customer" [roles]="roles"></app-customer-edit>
-    </div>
-
-</div>
-
-}
-
+  }
+</main>

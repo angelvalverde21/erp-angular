@@ -54,7 +54,7 @@ describe('Production screens', () => {
     expect(fixture.componentInstance.loading).toBeTrue();
   });
 
-  it('aligns production data and preserves the link to its products', () => {
+  it('aligns production data and links the name to its panel', () => {
     const fixture = TestBed.createComponent(ManufactureProductionIndexPageComponent);
     fixture.detectChanges();
     listing.next({ data: [{ id: 25, name: 'Colección verano', sum_variants: 20, sum_kardexes: 8, sum_purchases: 400, count_variants: 2 }] });
@@ -64,8 +64,8 @@ describe('Production screens', () => {
     expect(element.querySelectorAll('thead th').length).toBe(7);
     expect(element.querySelectorAll('tbody tr:first-child td').length).toBe(7);
     expect(element.querySelector('.production-received')?.textContent?.trim()).toBe('8');
-    expect(element.querySelector('.production-name')?.getAttribute('href')).toBe('/sorelle/dashboard/manufactures/productions/25/variants');
-    expect(element.querySelector('.production-list-count')?.textContent).toContain('1 registros');
+    expect(element.querySelector('.production-name')?.getAttribute('href')).toBe('/sorelle/dashboard/manufactures/productions/25/overview');
+    expect(element.querySelector('.production-list-count')?.textContent).toContain('1 producción');
   });
 
   it('shows an actionable empty state without hiding the filters', () => {

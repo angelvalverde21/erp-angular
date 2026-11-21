@@ -19,5 +19,8 @@
 .contact-optional i { font-size: .65rem; transition: transform .15s; }
 .address-contact-details[open] .contact-optional i { transform: rotate(180deg); }
 .contact-fields { margin: 0; padding: 0 .1rem 1rem; }
+.supplier-address-fields textarea { display: block; width: 100%; min-height: 76px; padding: .65rem .8rem; border: 1px solid #d9e1ed; border-radius: 8px; color: #344b68; background: #fff; font-size: .8rem; resize: vertical; }
+.supplier-address-fields textarea:focus { outline: 0; border-color: #94a9c8; box-shadow: 0 0 0 3px #8099be14; }
+.supplier-address-fields .contact-status i { font-size: .65rem; }
 :host ::ng-deep .branch-address-fields app-input-district-id .input-group { margin-bottom: 0; }
 :host ::ng-deep .branch-address-fields app-input-district-id input { min-height: 44px; font-size: .8rem; }

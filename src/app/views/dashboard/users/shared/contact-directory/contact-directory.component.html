@@ -1,0 +1,25 @@
+<section class="contact-panel directory-panel">
+  <div class="directory-toolbar">
+    <div class="directory-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input type="search" aria-label="Buscar contacto" placeholder="Buscar por nombre, teléfono, correo o documento" [(ngModel)]="query" (ngModelChange)="applyFilters()"></div>
+    <select aria-label="Filtrar por estado" [(ngModel)]="status" (ngModelChange)="applyFilters()"><option value="all">Todos los estados</option><option value="active">Activos</option><option value="blocked">Bloqueados</option></select>
+    <span class="directory-count">{{ filtered.length }} {{ filtered.length === 1 ? 'registro' : 'registros' }}</span>
+  </div>
+  @if (visible.length) {
+    <div class="directory-table-wrap"><table class="directory-table">
+      <thead><tr><th>{{ kind === 'supplier' ? 'Proveedor' : 'Cliente' }}</th><th>Contacto</th><th>Documento</th><th>Estado</th><th>Registro</th><th><span class="visually-hidden">Acciones</span></th></tr></thead>
+      <tbody>@for (row of visible; track row.id) {
+        <tr>
+          <td><div class="directory-person"><span class="contact-avatar" aria-hidden="true">{{ row.initials }}</span><div><a class="contact-name" [routerLink]="[row.routeId]">{{ row.name }}</a><small>{{ kind === 'supplier' ? 'Proveedor' : 'Cliente' }} #{{ row.id }}</small></div></div></td>
+          <td data-label="Contacto"><div class="directory-contact">@if (row.phone) { <a [href]="'tel:' + row.phone"><i class="fa-solid fa-phone" aria-hidden="true"></i>{{ row.phone }}</a> }@if (row.email) { <a [href]="'mailto:' + row.email"><i class="fa-regular fa-envelope" aria-hidden="true"></i>{{ row.email }}</a> }@if (!row.phone && !row.email) { <span class="contact-muted">Sin datos de contacto</span> }</div></td>
+          <td data-label="Documento">{{ row.document || '—' }}</td>
+          <td data-label="Estado"><span class="contact-status" [class.active]="row.active === true" [class.blocked]="row.active === false"><i class="fa-solid fa-circle" aria-hidden="true"></i>{{ row.active === true ? 'Activo' : row.active === false ? 'Bloqueado' : 'Sin estado' }}</span></td>
+          <td data-label="Registro"><span class="contact-muted">{{ row.createdAt ? (row.createdAt | DateShopify) : 'Sin fecha' }}</span></td>
+          <td class="directory-action"><a class="contact-button light" [routerLink]="[row.routeId]">Ver ficha<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></td>
+        </tr>
+      }</tbody>
+    </table></div>
+    <footer class="directory-pagination"><span>{{ first }}–{{ last }} de {{ filtered.length }}</span><div><button type="button" class="contact-button light" [disabled]="page <= 1" (click)="page = page - 1" aria-label="Página anterior"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button><span>Página {{ page }} de {{ pages }}</span><button type="button" class="contact-button light" [disabled]="page >= pages" (click)="page = page + 1" aria-label="Página siguiente"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button></div></footer>
+  } @else {
+    <div class="contact-empty"><span class="contact-empty-icon"><i class="fa-solid" [class.fa-building]="kind === 'supplier'" [class.fa-users]="kind === 'customer'" aria-hidden="true"></i></span><h2>{{ rows.length ? 'No encontramos coincidencias' : kind === 'supplier' ? 'Tu directorio de proveedores comienza aquí' : 'Tu directorio de clientes comienza aquí' }}</h2><p>{{ rows.length ? 'Prueba otro nombre o cambia el filtro de estado.' : 'Registra un contacto para consultar y mantener sus datos en un solo lugar.' }}</p>@if (rows.length) { <button class="contact-button light" type="button" (click)="clear()">Limpiar filtros</button> } @else { <a class="contact-button dark" routerLink="create"><i class="fa-solid fa-plus" aria-hidden="true"></i>{{ kind === 'supplier' ? 'Crear proveedor' : 'Crear cliente' }}</a> }</div>
+  }
+</section>

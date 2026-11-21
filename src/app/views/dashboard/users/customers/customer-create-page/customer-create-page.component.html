@@ -1,23 +1,5 @@
-﻿@if(loading){
-<app-loading></app-loading>
-}@else{
-<app-head-page title="Agregar Cliente" [icon]="faUserPlus">
-    <app-button-back></app-button-back>
-</app-head-page>
-
-
-<div class="card">
-
-    <div class="card-body">
-
-        <app-customer-create [roles]="roles" (emitCustomerCreate)="receiveCustomerCreate($event)"></app-customer-create>
-
-    </div>
-    <!-- 
-    <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Total de productos: 2</small>
-    </div> -->
-
-</div>
-}
-
+<main class="contact-page">
+  <a routerLink="../" class="contact-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Volver a clientes</a>
+  <header class="contact-page-header"><div class="contact-page-title"><span class="contact-page-icon"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></span><div><span class="contact-eyebrow">Directorio · Nuevo registro</span><h1>Nuevo cliente</h1><p>Registra sus datos para mantener tu directorio organizado.</p></div></div></header>
+  <app-customer-create (emitCustomerCreate)="receiveCustomerCreate($event)" />
+</main>

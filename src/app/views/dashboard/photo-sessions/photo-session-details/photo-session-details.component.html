@@ -1,0 +1,10 @@
+<section class="panel">
+  <header class="panel-header"><div><h2><i class="fa-solid fa-calendar-days" aria-hidden="true"></i>Detalles de la sesión</h2><p>Datos generales, fecha y persona responsable de esta sesión.</p></div><span class="session-status" [attr.data-status]="session.status"><i class="fa-solid fa-circle" aria-hidden="true"></i>{{ statusLabel }}</span></header>
+  <dl class="session-details">
+    <div><dt>Nombre de la sesión</dt><dd>{{ session.name }}</dd></div>
+    @if (session.collection) { <div><dt>Colección / campaña</dt><dd>{{ session.collection }}</dd></div> }
+    <div><dt><i class="fa-regular fa-calendar" aria-hidden="true"></i>Fecha de la sesión</dt><dd>{{ session.shoot_date ? (session.shoot_date | date:'dd/MM/yyyy') : 'Fecha por definir' }}</dd></div>
+    <div><dt><i class="fa-regular fa-clock" aria-hidden="true"></i>Horario</dt><dd>{{ session.starts_at?.slice(0, 5) || 'Por definir' }}@if (session.ends_at) { — {{ session.ends_at.slice(0, 5) }} }</dd></div>
+    <div><dt><i class="fa-solid fa-user-tie" aria-hidden="true"></i>Responsable de la sesión</dt><dd>{{ session.responsible?.name || 'Por asignar' }}</dd></div>
+  </dl>
+</section>

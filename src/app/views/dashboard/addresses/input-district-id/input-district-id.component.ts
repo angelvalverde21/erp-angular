@@ -41,7 +41,7 @@ export class InputDistrictIdComponent implements ControlValueAccessor, OnInit, O
 
   isDisabled: boolean = false;
 
-  district_id: number = 150101; //150101 es Lima
+  district_id: number | null = null;
   name: string = "";
   nameSubscription!: Subscription;
   districts: any[] = [];
@@ -59,9 +59,9 @@ export class InputDistrictIdComponent implements ControlValueAccessor, OnInit, O
   ngOnInit(): void {
 
     this.searchSubject
-      .pipe(debounceTime(500))  // Retrasa la búsqueda 300ms después del último evento
+      .pipe(debounceTime(500), takeUntil(this.destroy$))
       .subscribe((searchTerm: string) => {
-        this.searchDistrict(searchTerm);
+        if (searchTerm.length >= 3 && searchTerm === this.name) this.searchDistrict(searchTerm);
       });
 
     // Esto se hace para recibir el valor de district_id en caso se este editando una direccion
@@ -77,13 +77,19 @@ export class InputDistrictIdComponent implements ControlValueAccessor, OnInit, O
     console.log($event.target.value);
 
     const searchTerm = $event.target.value;
+    this.name = searchTerm;
+    this.district_id = null;
+    this.onChangeCb?.(null);
+    this.districts = [];
+    this.showDistricts = true;
+    this.searchSubject.next(searchTerm);
 
     if (searchTerm.length >= 3) { //permite la busqueda si hay mas de 3 caracteres
 
       this.loading = true;
 
-      this.searchSubject.next(searchTerm); // Emite el término de búsqueda
     } else {
+      this.loading = false;
       this.onChangeCb?.(null);
     }
   }
@@ -92,6 +98,7 @@ export class InputDistrictIdComponent implements ControlValueAccessor, OnInit, O
 
     this.name = `${district.name} - ${district.province.name} - ${district.province.department.name}`;
     this.district_id = district.id;
+    this.loading = false;
     this.onChangeCb?.(this.district_id);
     this.showDistricts = true;
 
@@ -102,6 +109,7 @@ export class InputDistrictIdComponent implements ControlValueAccessor, OnInit, O
     this._district.searchText(name).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
+        if (name !== this.name) return;
 
         this.showDistricts = false;
         this.loading = false;
@@ -138,17 +146,21 @@ export class InputDistrictIdComponent implements ControlValueAccessor, OnInit, O
   onChangeCb?: (district_id: number | null) => void; //esta funcion es un callback para registerOnChange
   onTouchedCb?: () => void;
 
-  writeValue(district_id: number): void {
+  writeValue(district_id: number | null): void {
 
     this.district_id = district_id;
+    this.name = '';
+    this.showDistricts = true;
+    this.loading = false;
     console.log(this.district_id);
 
-    if (this.district_id > 0) {
+    if (this.district_id != null && this.district_id > 0) {
 
 
       this._district.get(this.district_id).pipe(takeUntil(this.destroy$)).subscribe({
 
         next: (resp: any) => {
+          if (this.district_id !== district_id) return;
           const district = resp.data;
           this.name = `${district.name} - ${district.province.name} - ${district.province.department.name}`;
           console.log(resp.data);

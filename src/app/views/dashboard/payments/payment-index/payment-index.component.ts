@@ -1,82 +1,31 @@
-
-import { Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { Component, EventEmitter, Input, OnChanges, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import { NgbModal, NgbModalConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { PaymentIndexRowComponent } from '../payment-index-row/payment-index-row.component';
-import { ButtonAddComponent } from 'src/app/views/shared/components/buttons/button-add/button-add.component';
 import { PaymentCreateComponent } from '../payment-create/payment-create.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMoneyBill1 } from '@fortawesome/free-solid-svg-icons';
-import { CommonModule } from '@angular/common';
-import { VoidIndexComponent } from 'src/app/views/shared/components/void-index/void-index.component';
 
 @Component({
-  selector: 'app-payment-index',
-  imports: [
-    PaymentIndexRowComponent,
-    ButtonAddComponent,
-    PaymentCreateComponent,
-    FontAwesomeModule,
-    CommonModule,
-    VoidIndexComponent
-  ],
-  templateUrl: './payment-index.component.html',
-  styleUrl: './payment-index.component.scss',
-  encapsulation: ViewEncapsulation.None
+  selector: 'app-payment-index', imports: [CurrencyPipe, PaymentIndexRowComponent, PaymentCreateComponent],
+  templateUrl: './payment-index.component.html', styleUrl: './payment-index.component.scss', encapsulation: ViewEncapsulation.None,
 })
 export class PaymentIndexComponent implements OnChanges {
-
-  @Input() paymentable_type: string = "";
-  @Input() paymentable_id: number = 0;
-
+  @Input() paymentable_type = '';
+  @Input() paymentable_id = 0;
   @Input() payments: any[] = [];
-  faMoneyBill1 = faMoneyBill1;
-  modal: any;
-
-  sum_payments: number = 0;
-
-  constructor(
-    config: NgbModalConfig,
-    private modalService: NgbModal,
-  ) {
-    // customize default values of modals used by this component tree
-    config.backdrop = 'static';
-    config.keyboard = false;
+  @Input() title = 'Pagos y movimientos';
+  @Output() paymentsChange = new EventEmitter<any[]>();
+  modal?: NgbModalRef;
+  creating = false;
+  sum_payments = 0;
+  constructor(config: NgbModalConfig, private modalService: NgbModal) { config.backdrop = 'static'; config.keyboard = false; }
+  ngOnChanges(): void { this.payments = Array.isArray(this.payments) ? this.payments : []; this.calculate(); }
+  private calculate(): void {
+    this.sum_payments = this.payments.reduce((sum, payment) => sum + (Number(payment.amount) || 0) * (payment.direction === 'in' ? 1 : -1), 0);
   }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    
-    if (changes['payments']) {
-      
-      // Asegurar que siempre sea un array
-      const paymentsArray = Array.isArray(this.payments) ? this.payments : [];
-      
-      // Normalizar la propiedad
-      this.payments = paymentsArray;
-      
-      console.log(this.payments);
-      // Calcular suma
-      this.sum_payments = paymentsArray.reduce(
-        (acc: number, payment: any) => acc + Number(payment?.amount * (payment?.direction === 'in' ? 1 : -1) || 0),
-        0
-      );
-    }
-  }
-
-  openVerticallyCentered(content: TemplateRef<any>) {
-    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
-  }
-
-  closeModal() {
-    this.modal.close();
-  }
-
-  receiveCreatePayment(event: any) {
-    this.payments.unshift(event);
-    this.closeModal();
-  }
-
-  receiveRemovePayment(payment: any) {
-    this.payments = this.payments.filter((p: any) => p.id !== payment.id);
-  }
-
+  private publish(): void { this.calculate(); this.paymentsChange.emit(this.payments); }
+  openVerticallyCentered(content: TemplateRef<any>): void { this.modal = this.modalService.open(content, { centered: true, size: 'lg', scrollable: true }); }
+  closeModal(): void { this.modal?.close(); }
+  receiveCreatePayment(payment: any): void { this.payments = [payment, ...this.payments]; this.publish(); this.closeModal(); }
+  receiveUpdatePayment(payment: any): void { this.payments = this.payments.map(item => item.id === payment.id ? payment : item); this.publish(); }
+  receiveRemovePayment(payment: any): void { this.payments = this.payments.filter(item => item.id !== payment.id); this.publish(); }
 }

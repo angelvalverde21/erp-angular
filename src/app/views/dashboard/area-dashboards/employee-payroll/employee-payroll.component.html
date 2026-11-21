@@ -5,7 +5,7 @@
       <h2 id="employee-payroll-title">Pagos de los trabajadores</h2>
       @if (summary.available) {
         <p>{{ summary.start_date | date:'dd/MM/yyyy' }} — {{ summary.end_date | date:'dd/MM/yyyy' }} · {{ summary.employee_count }} empleados activos</p>
-        <small>Ajustes por asistencia hasta el {{ summary.computed_through | date:'dd/MM/yyyy' }}. Este resumen corresponde a la quincena actual.</small>
+        <small>Día de pago · Ajustes por asistencia hasta el {{ summary.computed_through | date:'dd/MM/yyyy' }}.</small>
       }
     </div>
     @if (summary.available) {

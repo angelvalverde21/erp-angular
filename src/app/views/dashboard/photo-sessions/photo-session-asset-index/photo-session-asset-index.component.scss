@@ -1,0 +1,17 @@
+@use '../photo-section-themes' as themes;
+:host { @include themes.apply(library); }
+@include themes.card-headers;
+.asset-filters { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; padding: 1rem 1.25rem; } .asset-filters label { margin: 0; } .asset-filters select { font-size: .74rem; }
+.asset-filters .active { background: #f6efff; border-color: #c3aee5; color: #8b6cb2; }
+.asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1rem; padding: .25rem 1.25rem 1.25rem; }
+.asset-card { border: 1px solid #e0e6f0; border-radius: 10px; overflow: hidden; background: white; } .asset-card.selected { border-color: #baa1df; box-shadow: 0 0 0 1px #e4d9f3; }
+.asset-preview { position: relative; background: #f6f7fa; height: 190px; display: flex; align-items: center; justify-content: center; } .asset-preview app-image-preview { display: block; width: 100%; }
+.select-asset { position: absolute; top: .65rem; right: .65rem; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 7px; border: 1px solid #e3deed; background: #fffffff0; color: #a8a0b5; cursor: pointer; } .select-asset.active { color: #b08834; background: #fff6dd; border-color: #ecdaa6; }
+.asset-body { padding: .85rem; } .asset-body > strong { display: block; font-size: .76rem; font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .asset-body > small { display: block; color: #8f9bb0; font-size: .68rem; margin-top: .35rem; }
+.download { margin-top: .8rem; width: 100%; font-size: .7rem; padding: .5rem; }
+.file-placeholder { display: flex; flex-direction: column; align-items: center; gap: .7rem; font-size: .74rem; color: #a29ab2; } .file-placeholder i { font-size: 2rem; color: #beb3d2; } .file-placeholder small { color: #a7a0b4; font-size: .65rem; }
+.empty { grid-column: 1 / -1; } .actions > span { margin-right: auto; color: #8493aa; font-size: .73rem; }
+.library-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; }
+.asset-heading { display: flex; align-items: center; gap: .55rem; min-width: 0; padding: .85rem; background: white; border-bottom: 1px solid #edf1f6; color: #293f5c; }
+.asset-heading strong { min-width: 0; font-size: .76rem; font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.asset-heading i { flex-shrink: 0; font-size: .85rem; color: var(--photo-accent); }

@@ -1,0 +1,33 @@
+<main class="initial-import-page">
+  <header class="initial-import-heading"><div><span class="import-kicker">PRIMERA IMPORTACIÓN</span><h1>Datos de Shopify</h1><p>Trae la información original para revisarla y organizarla antes de incorporarla al ERP.</p></div><button class="import-button" [disabled]="loading" (click)="refresh()"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Actualizar</button></header>
+  @if (error) { <div class="import-alert" role="alert">{{ error }}</div> }
+  <section class="import-card import-intro"><div class="import-intro-icon"><i class="fa-brands fa-shopify" aria-hidden="true"></i></div><div><h2>Una copia de trabajo independiente</h2><p>El historial de pedidos, sus artículos, notas, estados y datos relacionados se guardará en tablas <strong>import_shopify_*</strong>. Podrás organizarlo después sin modificar tus pedidos ni tu catálogo actuales.</p><small>Incluye pedidos antiguos y cancelados, productos, variantes, clientes, pagos, envíos y reembolsos disponibles para la aplicación.</small></div></section>
+  <section class="import-card">
+    <header class="import-card-heading"><div><h2>Preparación de la carga</h2><p>La aplicación comprobará los permisos de Shopify al iniciar.</p></div>
+      @if (latest?.can_resume) { <button class="import-button import-primary" [disabled]="saving" (click)="resume()">Reanudar importación</button> }
+      @else { <button class="import-button import-primary" [disabled]="saving || !canStart" (click)="start()"><i class="fa-solid fa-cloud-arrow-down" aria-hidden="true"></i>{{ saving ? 'Iniciando…' : active ? 'Importación en curso' : 'Iniciar primera importación' }}</button> }
+    </header>
+    <div class="import-checks">@for (check of state?.checks; track check.label) { <div><i class="fa-solid" [class.fa-circle-check]="check.ready" [class.fa-circle-exclamation]="!check.ready" [class.ready]="check.ready" aria-hidden="true"></i><span>{{ check.label }}</span><small>{{ check.ready ? 'Listo' : 'Pendiente' }}</small></div> } @empty { <p>Revisando la configuración…</p> }</div>
+  </section>
+  @if (latest; as run) {
+    <section class="import-card" aria-live="polite">
+      <header class="import-card-heading"><div><span class="import-kicker">PROGRESO</span><h2>{{ labels[run.current?.kind || run.current_task || ''] || 'Carga de datos' }}</h2><p>Iniciada {{ run.created_at | date:'dd/MM/yyyy HH:mm':'-0500' }} · Lima</p></div><span class="import-state" [class.failed]="run.status === 'failed'" [class.completed]="run.status === 'completed'">{{ statuses[run.status] }}</span></header>
+      <div class="import-progress">
+        @if (run.timeline_version === 1) { <div class="import-alert">Esta carga usa la consulta anterior del timeline. Sus adjuntos aún requieren recuperación.</div> }
+        @if (run.timeline_unavailable_orders) { <div class="import-alert" role="alert"><strong>Historial limitado en {{ run.timeline_unavailable_orders | number }} pedidos.</strong> Shopify indica que tienen comentarios, pero no los devuelve mediante la API. No se puede confirmar el respaldo de sus adjuntos históricos.</div> }
+        @if (run.attachments; as files) {
+          <p><strong>Archivos del timeline: {{ files.downloaded | number }} de {{ files.total | number }} respaldados.</strong> Se conserva una copia privada del archivo entregado por Shopify.</p>
+          @if (files.failed) { <div class="import-alert" role="alert">{{ files.failed | number }} adjuntos requieren reintento o revisión. La carga no se considera completa mientras falten archivos.</div> }
+        }
+        @if (active) { <div class="import-working" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>{{ run.status === 'queued' ? 'Esperando al procesador de la carga…' : run.current?.status === 'exporting' ? 'Shopify está preparando el archivo. Puede tardar varios minutos.' : 'Guardando datos y recuperando los detalles pendientes…' }}</div> }
+        @if (run.status === 'completed') { <p class="import-success"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>{{ run.timeline_unavailable_orders ? 'La copia de los datos disponibles está lista para revisión; hay limitaciones en el historial.' : 'La copia está completa y lista para revisión.' }} Los datos siguen separados de las tablas definitivas.</p> }
+        @if (run.error_message) { <div class="import-alert">{{ run.error_message }} <strong>El progreso guardado se conserva.</strong></div> }
+        <p>{{ run.completed_tasks | number }} de {{ run.total_tasks | number }} bloques verificados. Los detalles se consultan en lotes de hasta 250 recursos por petición.</p>
+        @if (run.current?.expected_rows != null) { <small>{{ run.current?.processed_rows | number }} de {{ run.current?.expected_rows | number }} registros leídos en el archivo actual.</small> }
+      </div>
+      <div class="import-counts">@for (entity of entities; track entity) { <article><span>{{ labels[entity] }}</span><strong>{{ run.counts[entity] || 0 | number }}</strong><small>import_shopify_{{ entity }}</small></article> }</div>
+      <footer class="import-footnote">Puedes cerrar esta pantalla: el proceso continúa en segundo plano. Actualiza el progreso al volver.</footer>
+    </section>
+  }
+  <p class="import-footnote">Las solicitudes se espacian al menos un segundo y respetan el presupuesto informado por Shopify. Los permisos de la aplicación determinan qué información puede entregarse.</p>
+</main>

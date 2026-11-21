@@ -1,27 +1,24 @@
-@if (loading) { <app-loading></app-loading> } @else if (error) {
-<div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar los movimientos</h3><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary" (click)="productionKardexesInit()">Reintentar</button></div>
-} @else {
-<section class="production-panel">
-  <header class="production-section-heading">
-    <div><h2>Movimientos de inventario</h2><p>Registra las entradas y salidas de los productos de esta producción.</p></div>
-    <div class="d-flex flex-wrap gap-2">
-      <button type="button" class="btn btn-success text-white px-3 py-2" (click)="openVerticallyCentered(ingreso)"><i class="fa-solid fa-plus me-2" aria-hidden="true"></i>Registrar ingreso</button>
-      <button type="button" class="btn btn-outline-danger px-3 py-2" (click)="openVerticallyCentered(salida)"><i class="fa-solid fa-minus me-2" aria-hidden="true"></i>Registrar salida</button>
+  <header class="inventory-workspace-heading">
+    <div><h2>Recepción de mercadería</h2><p>Guarda la hoja, revisa las cantidades y confirma su ingreso al inventario.</p></div>
+    <div class="inventory-actions">
+      <button type="button" class="inventory-action inventory-action--in" (click)="openVerticallyCentered(ingreso)"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i><span>Registrar ingreso</span></button>
+      <button type="button" class="inventory-action inventory-action--out" (click)="openVerticallyCentered(salida)"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i><span>Registrar salida</span></button>
     </div>
   </header>
-  <div class="production-panel-body"><app-kardex-index [kardexes]="kardexes" (emitKardexSummary)="receiveKardexSummary($event)"></app-kardex-index></div>
-</section>
+  <app-inventory-reception-index [manufactureId]="production_id" (changed)="inventoryChanged()" (editRequested)="openVerticallyCentered(ingreso, $event)" />
+<app-kardex-history [manufactureId]="production_id" [revision]="kardexRevision" (summaryChange)="receiveKardexSummary($event)" />
 <ng-template #ingreso let-modal>
-    <div class="modal-header bg-success text-white">
-        <h6 class="modal-title">+ Ingreso de productos</h6>
-        <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"></button>
+    <div class="modal-header production-entry-heading">
+        <span class="production-entry-icon"><i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i></span>
+        <div><h2 class="modal-title">{{ editingReception ? 'Editar recepción N.º ' + editingReception.number : 'Registrar recepción de mercadería' }}</h2><p>Indica las cantidades recibidas de cada talla y color.</p></div>
+        <button type="button" class="production-entry-close" [disabled]="registering" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body p-0">
         @if(loadingKardex){
-        <app-loading></app-loading>
-        }@else{
-        <app-kardex-register-in [variants]="variants" [kardexable_type]="'manufacture'" [kardexable_id]="production_id"
-            (emitKardexes)="receiveKardexes($event)"></app-kardex-register-in>
+        <div class="production-entry-loading" role="status"><span class="spinner-border" aria-hidden="true"></span><span>Cargando variantes…</span></div>
+        } @else if (variantsError) { <div class="production-entry-load-error" role="alert"><p>{{ variantsError }}</p><button type="button" class="btn btn-outline-secondary" (click)="loadVariants()">Reintentar</button></div> } @else {
+        <app-kardex-register-in [variants]="variants" [kardexable_type]="'manufacture'" [kardexable_id]="production_id" [documentReception]="true" [reception]="editingReception" (saved)="receptionSaved()"
+            (emitKardexes)="receiveKardexes($event)" (cancelled)="modal.dismiss('cancel')" (saving)="registering = $event"></app-kardex-register-in>
         }
     </div>
 
@@ -36,8 +33,8 @@
     <div class="modal-body">
 
         @if(loadingKardex){
-        <app-loading></app-loading>
-        }@else{
+        <div class="production-entry-loading" role="status"><span class="spinner-border" aria-hidden="true"></span><span>Cargando variantes…</span></div>
+        } @else if (variantsError) { <div class="production-entry-load-error" role="alert"><p>{{ variantsError }}</p><button type="button" class="btn btn-outline-secondary" (click)="loadVariants()">Reintentar</button></div> } @else {
         <app-kardex-register-re-in [variants]="variants" [kardexable_type]="'manufacture'"
             [kardexable_id]="production_id" (emitKardexes)="receiveKardexes($event)"></app-kardex-register-re-in>
         }
@@ -53,12 +50,11 @@
     </div>
     <div class="modal-body">
         @if(loadingKardex){
-        <app-loading></app-loading>
-        }@else{
+        <div class="production-entry-loading" role="status"><span class="spinner-border" aria-hidden="true"></span><span>Cargando variantes…</span></div>
+        } @else if (variantsError) { <div class="production-entry-load-error" role="alert"><p>{{ variantsError }}</p><button type="button" class="btn btn-outline-secondary" (click)="loadVariants()">Reintentar</button></div> } @else {
         <app-kardex-register-out [variants]="variants" [kardexable_type]="'manufacture'" [kardexable_id]="production_id"
             (emitKardexes)="receiveKardexes($event)"></app-kardex-register-out>
         }
     </div>
 
 </ng-template>
-}

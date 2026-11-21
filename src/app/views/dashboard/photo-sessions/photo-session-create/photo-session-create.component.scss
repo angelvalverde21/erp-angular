@@ -1,0 +1,12 @@
+@use '../photo-section-themes' as themes;
+:host { @include themes.apply(session); }
+@include themes.card-headers;
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.15rem; }
+.wide { grid-column: 1 / -1; }
+.time-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+.invalid { display: block; color: #b64c61; font-size: .7rem; margin-top: .4rem; }
+.initial-status { display: inline-flex; align-items: center; gap: .45rem; padding: .4rem .7rem; border-radius: 20px; background: #f4f0fc; border: 1px solid #e2d8fb; color: #7056c5; font-size: .72rem; font-weight: 650; }
+.initial-status i { font-size: .4rem; }
+.session-form-footer { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 1rem; padding: 1rem 1.25rem; background: white; border: 1px solid #dfe5ef; border-radius: 12px; }
+.session-form-footer > span { display: inline-flex; align-items: center; gap: .5rem; margin-right: auto; color: #75859b; font-size: .74rem; }
+@media(max-width: 650px) { .form-grid { grid-template-columns: 1fr; } .session-form-footer > .button { width: 100%; } }

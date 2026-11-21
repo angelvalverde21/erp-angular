@@ -1,8 +1,8 @@
 @if (loading) {
-<div class="production-panel production-empty" role="status"><app-loading></app-loading><p>Cargando compras y gastos...</p></div>
+<div class="production-panel production-empty" role="status"><app-loading></app-loading><p>Cargando sección...</p></div>
 } @else if (error) {
 <div class="production-panel production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar las compras</h3><p>{{ error }}</p><button type="button" class="manufacture-secondary-action" (click)="productionPurchaseInit()">Reintentar</button></div>
 } @else {
-<app-production-stages [productionId]="manufacture_id" [purchases]="purchases"
+<app-production-stages [productionId]="manufacture_id" [productionName]="productionName" [cuttingTotal]="cuttingTotal" [purchases]="purchases"
   (totalChanged)="receiveSumPurchases($event)"></app-production-stages>
 }

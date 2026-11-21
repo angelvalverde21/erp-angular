@@ -22,7 +22,10 @@ export class DeliveryTrackingComponent implements OnChanges, OnDestroy {
   @Input() suggested = false;
   @Input() footer = false;
   @Input() actionsFirst = false;
+  @Input() controlsOnly = false;
   @Input() historyAlwaysVisible = false;
+  @Input() externalToggle = false;
+  @Input() embedded = false;
   @Output() trackingChanged = new EventEmitter<DeliveryTracking>();
 
   readonly labels = DELIVERY_LABELS;
@@ -81,6 +84,14 @@ export class DeliveryTrackingComponent implements OnChanges, OnDestroy {
     this.form.controls.received_on.setValidators(mode === 'receive' ? Validators.required : []);
     this.form.controls.reason.setValidators(mode === 'reschedule' || mode === 'correct' ? [Validators.required, Validators.maxLength(2000)] : [Validators.maxLength(2000)]);
     Object.values(this.form.controls).forEach(control => control.updateValueAndValidity());
+  }
+
+  saveEmbedded(): void { if (this.embedded) this.save(); }
+  editorKeydown(event: Event): void {
+    if (!(event instanceof KeyboardEvent) || !this.embedded || !(event.target instanceof HTMLInputElement) || event.isComposing) return;
+    event.preventDefault();
+    event.stopPropagation();
+    this.save();
   }
 
   save(): void {

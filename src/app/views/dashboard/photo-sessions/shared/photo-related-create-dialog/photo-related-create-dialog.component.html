@@ -1,0 +1,5 @@
+﻿<app-photo-dialog [title]="title" description="Se guardará en el directorio y quedará seleccionado en esta sesión." [icon]="icon" [autoOpen]="true" [closeDisabled]="saving" (closed)="cancel.emit()">
+  @if (error) { <div class="error" role="alert">{{ error }}</div> }
+  @if (kind === 'location') { <app-photo-location-create [saving]="saving || isClosing" (save)="locationSave.emit($event)" /> }
+  @else { <app-photo-contact-create [kind]="kind" [saving]="saving || isClosing" (save)="contactSave.emit($event)" /> }
+</app-photo-dialog>

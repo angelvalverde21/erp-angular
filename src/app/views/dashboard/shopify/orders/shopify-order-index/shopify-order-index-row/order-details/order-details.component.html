@@ -11,7 +11,7 @@
 
   </div>
   <div class="modal-body">
-    <app-order-status-stepper [status]="progressStatus"
+    <app-order-status-stepper [status]="progressStatus" [dates]="progressDates"
       [cancelled]="!!order.cancelledAt || order.displayFulfillmentStatus === 'CANCELLED'"
       [onHold]="order.displayFulfillmentStatus === 'ON_HOLD'"></app-order-status-stepper>
     <app-menu-button [order]="order"></app-menu-button>

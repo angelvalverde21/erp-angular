@@ -1,3 +1,10 @@
 @use '../production-ui';
 .manufacture-list-heading { padding-block: 1rem; }
 .production-list-count { color: var(--cui-secondary-color, #64748b); background: rgba(100, 116, 139, .06); padding: .35rem .7rem; border-radius: 2rem; font-size: .75rem; }
+
+.production-list-panel { border-color: #d6dce8; border-radius: 14px; box-shadow: 0 3px 16px #24324708; }
+.manufacture-list-heading { background: linear-gradient(100deg, #f5f0ff, var(--cui-body-bg, #fff) 60%); padding: 18px 24px; }
+.manufacture-list-heading h2 { display: flex; align-items: center; gap: 10px; font-size: 16px; color: #29334b; }
+.production-list-icon { display: grid; place-items: center; width: 32px; height: 32px; background: #ebe2fa; color: #6941c6; border-radius: 8px; font-size: 14px; }
+.production-list-count { color: #6941c6; background: #eee8f8; font-size: 12px; font-weight: 500; }
+@media(max-width: 575.98px) { .manufacture-list-heading { padding: 16px; gap: 12px; } }

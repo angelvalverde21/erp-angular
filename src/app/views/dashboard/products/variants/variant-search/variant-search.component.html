@@ -25,7 +25,8 @@
     } @else if (variants.length > 0) {
       <div class="variant-search-results-heading">
         <h3>Resultados <span>{{ variants.length }}</span></h3>
-        <span>{{ type_form ? 'Completa cantidades y precios' : 'Puedes seleccionar varias variantes' }}</span>
+        @if (type_form) { <span>Completa cantidades y precios</span> }
+        @else { <button type="button" class="btn btn-outline-secondary btn-sm variant-search-select-all" [attr.aria-pressed]="allSelected" (click)="toggleAllVariants()"><i class="fa-solid" [class.fa-check-double]="!allSelected" [class.fa-xmark]="allSelected" aria-hidden="true"></i>{{ allSelected ? 'Deseleccionar todo' : 'Seleccionar todo' }}</button> }
       </div>
       @if (type_form) {
         <app-variant-index-form [variants]="variants" (formValuesChanged)="receiveFormValuesChanged($event)"></app-variant-index-form>

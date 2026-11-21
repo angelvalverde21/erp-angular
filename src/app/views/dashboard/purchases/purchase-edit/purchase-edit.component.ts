@@ -26,15 +26,21 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
   @Input() purchase_id = 0;
   @Input() purchaseable_type = '';
   @Input() purchaseable_id = 0;
+  @Input() manageDelivery = false;
+  @Input() deliveryExpanded = false;
+  @Input() deliveryTracked = false;
+  @Output() deliveryRequested = new EventEmitter<void>();
   @Output() emitPurchaseUpdated = new EventEmitter<unknown>();
   @Output() cancelled = new EventEmitter<void>();
   @Output() purchaseLoaded = new EventEmitter<any>();
 
   form!: FormGroup;
   loading = true;
+  detailsInitiallyOpen = false;
   loadingIcon = false;
   error = '';
   supplierError = '';
+  suppliersLoading = false;
   suppliers: unknown[] = [];
   private readonly destroy$ = new Subject<void>();
 
@@ -44,7 +50,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       purchase_start: [null], purchase_end: [null],
       purchaseable_type: [this.purchaseable_type], purchaseable_id: [this.purchaseable_id],
-      observations: [''], supplier_id: [null],
+      observations: [''], supplier_id: [null], supplier_address_id: [null],
       purchase_items: this.fb.array([], Validators.required),
     });
     this.loadSuppliers();
@@ -68,6 +74,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
     this.purchases.get(this.purchase_id).pipe(takeUntil(this.destroy$), finalize(() => this.loading = false)).subscribe({
       next: response => {
         const { items, ...data } = response.data;
+        this.detailsInitiallyOpen = !!(data.supplier_id || data.supplier_address_id || data.purchase_start || data.observations?.trim() || data.delivery_tracking);
         this.purchase_items.clear();
         (items ?? []).forEach((item: PurchaseItemDraft) => this.purchase_items.push(this.createPurchaseItem(item)));
         this.form.patchValue(data);
@@ -109,8 +116,10 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
   }
 
   loadSuppliers(): void {
+    if (this.suppliersLoading) return;
+    this.suppliersLoading = true;
     this.supplierError = '';
-    this.supplierService.index().pipe(takeUntil(this.destroy$)).subscribe({
+    this.supplierService.index().pipe(takeUntil(this.destroy$), finalize(() => this.suppliersLoading = false)).subscribe({
       next: (response: any) => this.suppliers = response.data ?? [],
       error: () => this.supplierError = 'No se pudieron cargar los proveedores.',
     });

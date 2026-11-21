@@ -1,5 +1,5 @@
-﻿<section class="purchase-edit-page">
-  <a class="purchase-back" [routerLink]="backLink"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>{{ fromTracking ? 'Volver al seguimiento de entregas' : fromProduction ? 'Volver al flujo de producción' : 'Volver a compras' }}</a>
+<section class="purchase-edit-page">
+  <a class="purchase-back" [routerLink]="backLink" [queryParams]="backQuery"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>{{ fromSectionTracking ? 'Volver al seguimiento de compras' : fromTracking ? 'Volver al seguimiento de compras' : fromProduction ? 'Volver a compras de producción' : 'Volver a compras' }}</a>
   <header class="purchase-page-heading">
     <span class="purchase-page-icon" aria-hidden="true"><i class="fa-solid fa-receipt"></i></span>
     <div><span class="purchase-page-eyebrow">GESTIÓN DE COMPRAS</span><h1>Compra #{{ purchaseId }}</h1><p>{{ loaded ? supplierName : 'Cargando datos de la compra…' }}</p></div>

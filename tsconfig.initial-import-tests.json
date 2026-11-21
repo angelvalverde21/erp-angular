@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.production-tests.json",
+  "include": [
+    "src/**/*.d.ts",
+    "src/app/views/dashboard/initial-import/initial-shopify-import.spec.ts",
+    "src/app/views/dashboard/initial-import/orders/imported-orders.spec.ts",
+    "src/app/views/dashboard/order-workspace/order-workspace.spec.ts",
+    "src/app/views/dashboard/photo-sessions/photo-sessions.spec.ts",
+    "src/app/views/shared/components/image-preview/image-preview.component.spec.ts",
+    "src/app/views/shared/pipes/date-shopify.pipe.spec.ts",
+    "src/app/views/dashboard/shopify/orders/shared/order-status-stepper/order-status.model.spec.ts",
+    "src/app/views/dashboard/migrations/shopify-order-migration.spec.ts"
+  ]
+}

@@ -1,0 +1,10 @@
+@use '../../photo-section-themes' as themes;
+:host { @include themes.apply(tasks); }
+.task-form { background: white; border: 1px solid #dfe5ef; border-inline-start: 3px solid var(--photo-line); border-radius: 10px; margin: 1.25rem; padding: 1.25rem; overflow: hidden; }
+.task-form-heading { margin: -1.25rem -1.25rem 1.25rem; padding: 1.15rem 1.25rem; background: white; border-bottom: 1px solid #edf1f6; }
+.task-form h2 { color: #293f5c; font-size: .93rem; font-weight: 650; }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.wide { grid-column: 1 / -1; }
+.form-actions { display: flex; justify-content: flex-end; gap: .6rem; margin-top: 1rem; }
+.invalid { color: #b54e5e; font-size: .72rem; }
+@media(max-width: 650px) { .form-grid { grid-template-columns: 1fr; } .task-form { padding: 1rem; margin: 1rem; } .task-form-heading { margin: -1rem -1rem 1rem; padding: 1rem; } }

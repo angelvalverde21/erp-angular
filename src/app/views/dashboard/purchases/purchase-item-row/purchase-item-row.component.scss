@@ -1,9 +1,11 @@
 :host {
   display: table-row;
+  --unit-select-min-height: 44px;
+  --unit-select-font-size: .85rem;
 }
 
 td {
-  padding: .85rem .65rem;
+  padding: 1rem .75rem;
   vertical-align: middle;
   border-color: var(--cui-border-color, #e0e4ef);
 }
@@ -12,11 +14,14 @@ td {
   border-bottom: 0;
 }
 
+:host:nth-child(even) td { background-color: #fafbfe; }
+:host:focus-within td { background-color: #f7f4fd; }
+
 .form-control {
-  min-height: 38px;
-  padding: .5rem .6rem;
+  min-height: 44px;
+  padding: .65rem .7rem;
   border-radius: 7px;
-  font-size: .78rem;
+  font-size: .85rem;
   border-color: var(--cui-border-color, #dce1ed);
   background: var(--cui-body-bg);
   color: var(--cui-body-color);
@@ -30,8 +35,8 @@ td {
 .purchase-item-remove {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border: 1px solid transparent;
   border-radius: 7px;
   background: transparent;

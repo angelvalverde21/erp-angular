@@ -1,0 +1,16 @@
+<main class="photo-page" data-section="locations">
+  <app-photo-section-header section="locations"><div><span class="eyebrow">SESIONES FOTOGRÁFICAS · ESPACIOS</span><h1>Locaciones</h1><p>Airbnb, cafeterías, estudios y otros lugares para tus sesiones.</p></div><a class="button primary" routerLink="create"><i class="fa-solid fa-plus" aria-hidden="true"></i>Nueva locación</a></app-photo-section-header>
+  <section class="panel"><header class="panel-header"><div><h2><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>Espacios para tus sesiones</h2><p>Consulta, filtra y gestiona tus registros.</p></div>@if (data && !loading) { <span class="result-count">{{ data.total }} registros</span> }</header>
+    <form class="filters" (ngSubmit)="filter()">
+      <label class="search"><span class="sr-only">Buscar locación</span><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input name="search" [(ngModel)]="search" maxlength="150" placeholder="Buscar nombre, dirección o distrito"></label>
+      <label><span class="sr-only">Tipo de lugar</span><select name="type" [(ngModel)]="type" (ngModelChange)="filter()"><option value="all">Todos los tipos</option>@for (option of types; track option.value) { <option [value]="option.value">{{ option.label }}</option> }</select></label>
+      <label><span class="sr-only">Estado</span><select name="active" [(ngModel)]="active" (ngModelChange)="filter()"><option value="all">Todos los estados</option><option value="1">Activas</option><option value="0">Inactivas</option></select></label><button class="button" type="submit">Buscar</button>
+    </form>
+    @if (loading) { <div class="feedback" role="status">Cargando locaciones…</div> }
+    @else if (error) { <div class="feedback" role="alert"><p>{{ error }}</p><button class="button" (click)="retry()">Reintentar</button></div> }
+    @else if (data?.data?.length) {
+      <app-photo-location-index [locations]="data!.data" />
+      <footer class="actions"><span>{{ data!.total }} locaciones · Página {{ data!.current_page }} de {{ data!.last_page }}</span><button class="button" [disabled]="data!.current_page <= 1" (click)="page(data!.current_page - 1)">Anterior</button><button class="button" [disabled]="data!.current_page >= data!.last_page" (click)="page(data!.current_page + 1)">Siguiente</button></footer>
+    } @else { <div class="feedback"><i class="fa-solid fa-location-dot empty-icon" aria-hidden="true"></i><h2>{{ search || type !== 'all' || active !== 'all' ? 'No hay locaciones con estos filtros' : 'Registra tu primera locación' }}</h2><p>Conserva direcciones, contactos y condiciones de cada espacio.</p><a class="button primary" routerLink="create">Nueva locación</a></div> }
+  </section>
+</main>

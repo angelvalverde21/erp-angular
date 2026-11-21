@@ -6,11 +6,14 @@ import { SupplierService } from '@dashboard/users/suppliers/supplier.service';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ManufactureProductionService } from '../manufacture.production.service';
 import { ManufactureProductionFormComponent } from '../manufacture-production-form/manufacture-production-form.component';
+import { ProductionStageService } from '../production-stages/production-stage.service';
+import { ProductionSectionOption, ProductionSectionPickerComponent } from '../production-stages/production-section-picker.component';
 
 @Component({
   selector: 'app-manufacture-production-create',
   imports: [
     ManufactureProductionFormComponent,
+    ProductionSectionPickerComponent,
     ReactiveFormsModule,
     LoadingComponent
   ],
@@ -27,10 +30,16 @@ export class ManufactureProductionCreateComponent implements OnInit, OnDestroy {
 
   loading: boolean = false;
   disabledButton: boolean = false;
+  sectionOptions: ProductionSectionOption[] = [];
+  selectedSectionIds: number[] = [];
+  loadingSections = false;
+  sectionsError = '';
+  error = '';
 
   constructor(
     private fb: FormBuilder,
     private _manufactureProduction: ManufactureProductionService,
+    private stageService: ProductionStageService,
   ) {
 
   }
@@ -60,11 +69,23 @@ export class ManufactureProductionCreateComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.formInit();
+    this.loadSections();
+  }
+
+  loadSections(): void {
+    this.loadingSections = true;
+    this.sectionsError = '';
+    this.stageService.templates().pipe(takeUntil(this.destroy$)).subscribe({
+      next: response => { this.sectionOptions = response.data; this.selectedSectionIds = response.data.map(section => section.id); this.loadingSections = false; },
+      error: () => { this.loadingSections = false; this.sectionsError = 'No se pudieron cargar las secciones. Intenta nuevamente.'; },
+    });
   }
 
   createProduction() {
 
-    if (this.disabledButton) return;
+    if (this.disabledButton || this.loadingSections || this.sectionsError) return;
+    this.error = '';
+    if (!this.selectedSectionIds.length) { this.error = 'Selecciona al menos una sección para esta producción.'; return; }
 
     console.log(this.form.value);
 
@@ -86,7 +107,7 @@ export class ManufactureProductionCreateComponent implements OnInit, OnDestroy {
       }
     })
 
-    this._manufactureProduction.store(this.form.value).pipe(takeUntil(this.destroy$)).subscribe({
+    this._manufactureProduction.store({ ...this.form.value, stage_ids: this.selectedSectionIds }).pipe(takeUntil(this.destroy$)).subscribe({
 
       next: (resp: any) => {
         Swal.fire('Guardado', 'El registro ha sido creado', 'success');
@@ -100,9 +121,10 @@ export class ManufactureProductionCreateComponent implements OnInit, OnDestroy {
       },
 
       error: (error: any) => {
+        this.error = error.error?.errors ? Object.values(error.error.errors).flat().join(' ') : 'No se pudo crear la producción. Tus datos se mantienen para reintentar.';
         this.disabledButton = false;
         this.loading = false;
-        Swal.fire('Error', 'Ocurrió un problema al crear. Inténtalo nuevamente.', 'error');
+        Swal.close();
         console.error(error);
       },
 

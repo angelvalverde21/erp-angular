@@ -20,7 +20,7 @@
           <caption class="visually-hidden">{{ group.name }}. Colores por fila, tallas por columna. Totales de cantidades guardadas.</caption>
           <thead>
             <tr>
-              <th scope="col" class="matrix-color-column">Producto / color</th>
+              <th scope="col" class="matrix-color-column">Color</th>
               @for (size of group.sizes; track size) {
                 <th scope="col"><span class="matrix-size-label">Talla</span><span class="matrix-size">{{ size }}</span></th>
               }
@@ -30,7 +30,7 @@
           <tbody>
             @for (row of group.rows; track row.key) {
               <tr>
-                <th scope="row" class="matrix-color-column"><strong>{{ rowName(group, row) }}</strong>@if (row.details) { <small>{{ row.details }}</small> }</th>
+                <th scope="row" class="matrix-color-column"><strong>{{ row.label }}</strong>@if (row.details) { <small>{{ row.details }}</small> }</th>
                 @for (size of group.sizes; track size) {
                   <td>
                     @for (record of row.cells.get(size) ?? []; track record.id) {

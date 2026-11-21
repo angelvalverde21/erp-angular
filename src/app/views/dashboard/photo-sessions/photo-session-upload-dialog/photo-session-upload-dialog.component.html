@@ -1,0 +1,4 @@
+<app-photo-dialog title="Subir fotos y videos" description="Archivos originales, sin reducir calidad ni resolución." icon="fa-cloud-arrow-up" [plain]="true">
+  <app-photo-session-upload [sessionId]="sessionId" [configured]="configured" [maxBytes]="maxBytes" [embedded]="true" (completed)="completed.emit()" (uploading)="progressChanged($event)" />
+  <footer photoDialogFooter class="upload-dialog-footer"><span>@if (busy) { <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>La carga continuará si ocultas esta ventana. }</span><button type="button" class="button" (click)="close()">{{ busy ? 'Ocultar y continuar' : 'Cerrar' }}</button></footer>
+</app-photo-dialog>

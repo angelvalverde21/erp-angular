@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { ProductShopifyBulkComponent } from '../product-shopify-bulk/product-shopify-bulk.component';
+import { afterNextRender, inject, Injector, OnChanges, SimpleChanges, AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Product } from 'src/app/interfaces/product.interface';
@@ -13,22 +14,64 @@ import { ProductService } from '../product.service';
 @Component({
   selector: 'app-product-index',
   imports: [
+    ProductShopifyBulkComponent,
     CurrencyPipe,
     DateShopifyPipe
   ],
   templateUrl: './product-index.component.html',
   styleUrl: './product-index.component.scss'
 })
-export class ProductIndexComponent implements AfterViewInit, OnDestroy {
+export class ProductIndexComponent implements AfterViewInit, OnChanges, OnDestroy {
+
+  @Input() bulkActions = false;
+  selectedIds = new Set<number>();
+  bulkBusy = false;
+  get selectedProducts(): Product[] { return this.products.filter(product => this.selectedIds.has(product.id)); }
+  get allProductsSelected(): boolean { return this.products.length > 0 && this.products.slice(0, 25).every(product => this.selectedIds.has(product.id)); }
+  toggleProduct(id: number): void {
+    if (this.bulkBusy) return;
+    const next = new Set(this.selectedIds);
+    if (next.has(id)) next.delete(id); else if (next.size < 25) next.add(id);
+    this.selectedIds = next;
+  }
+  toggleProducts(): void {
+    if (this.bulkBusy) return;
+    this.selectedIds = this.allProductsSelected ? new Set() : new Set(this.products.slice(0, 25).map(product => product.id));
+  }
+  clearProducts(): void { if (!this.bulkBusy) this.selectedIds = new Set(); }
 
   faTrash = faTrash;
   faPen = faPen;
   duplicating = false;
+  @Input() insertedProductId: number | null = null;
+  highlightedId: number | null = null;
+  insertionMessage = '';
+  private highlightTimer?: ReturnType<typeof setTimeout>;
+  private readonly host = inject(ElementRef<HTMLElement>, { optional: true });
+  private readonly injector = inject(Injector);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['products']) { const visible = new Set(this.products.map(product => product.id)); this.selectedIds = new Set([...this.selectedIds].filter(id => visible.has(id))); }
+    if (!changes['insertedProductId'] || this.insertedProductId == null) return;
+    if (this.highlightTimer) clearTimeout(this.highlightTimer);
+    this.highlightedId = this.insertedProductId;
+    const product = this.products.find(item => item.id === this.insertedProductId);
+    this.insertionMessage = 'Producto insertado: ' + (product?.name || 'nueva copia');
+    const id = this.insertedProductId;
+    afterNextRender(() => {
+      const row = this.host?.nativeElement.querySelector('[data-product-id="' + id + '"]') as HTMLElement | undefined;
+      if (!row || this.highlightedId !== id) return;
+      const bounds = row.getBoundingClientRect();
+      if (bounds.top < 0 || bounds.bottom > window.innerHeight) row.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'nearest' });
+    }, { injector: this.injector });
+    this.highlightTimer = setTimeout(() => { this.highlightedId = null; this.insertionMessage = ''; }, 3500);
+  }
+
   private readonly destroy$ = new Subject<void>();
 
   /** funcion que detectas si se llego al final */
 
   @Output() loadMore = new EventEmitter<void>();
+  @Output() productDuplicated = new EventEmitter<Product>();
 
   @ViewChild('bottom', { static: true }) bottom!: ElementRef;
 
@@ -76,16 +119,17 @@ export class ProductIndexComponent implements AfterViewInit, OnDestroy {
   }
 
   getProduct(id: number) {
+    if (this.bulkBusy) return;
     this.router.navigate([this._base.store, 'dashboard', 'products', id]);
   }
 
   async duplicateProduct(product: Product): Promise<void> {
-    if (this.duplicating) return;
+    if (this.duplicating || this.bulkBusy) return;
     this.duplicating = true;
     try {
       const result = await Swal.fire<Product>({
         title: 'Duplicar producto',
-        text: 'Edita el nombre de la copia. Se copiarán sus propiedades e imágenes con nuevos IDs y stock en cero.',
+        text: 'Edita el nombre de la copia. Se copiarán sus propiedades con nuevos IDs y stock en cero. La copia quedará sin imágenes para que agregues las nuevas.',
         input: 'text',
         inputValue: product.name ?? '',
         inputLabel: 'Nombre del nuevo producto',
@@ -111,13 +155,14 @@ export class ProductIndexComponent implements AfterViewInit, OnDestroy {
           }
         },
       });
-      if (result.isConfirmed && result.value) { this.getProduct(result.value.id); }
+      if (result.isConfirmed && result.value) { this.productDuplicated.emit(result.value); }
     } finally {
       this.duplicating = false;
     }
   }
 
   ngOnDestroy(): void {
+    if (this.highlightTimer) clearTimeout(this.highlightTimer);
     this.destroy$.next();
     this.destroy$.complete();
     if (this.duplicating) { Swal.close(); }

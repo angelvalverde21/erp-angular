@@ -19,3 +19,5 @@
 .variant-search-add { min-height: 2.6rem; padding-inline: 1.25rem; border-radius: .5rem; font-size: .8rem; }
 .variant-search-create { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 42px; padding-inline: 1rem; margin-top: .25rem; border-radius: .55rem; font-size: .8rem; font-weight: 600; }
 @media (max-width: 575.98px) { .variant-search-toolbar, .variant-search-results-heading, .variant-search-footer { padding: 1rem; } .variant-search-add { width: 100%; } }
+
+.variant-search-select-all { display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 8px 12px; border-radius: 7px; font-size: 12px; font-weight: 500; }

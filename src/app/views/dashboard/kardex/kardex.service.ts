@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BaseCrudDashboardService } from '../base-crud-dashboard.service';
 import { KardexSummary } from '../../../interfaces/kardexSummary.interface';
+import { flattenKardexes } from './kardex-records';
 
 @Injectable({
   providedIn: 'root',
@@ -26,28 +27,17 @@ export class KardexService extends BaseCrudDashboardService {
   }
 
   summary(kardexes: any[]): KardexSummary {
-
-    const reception = kardexes.reduce(
-      (acc, k) => acc + k.quantity * (k?.direction === 'in' ? 1 : -1),
-      0
-    );
-
-    const fallados = kardexes.reduce(
-      (acc, k) => acc + (k.comment === 'Fallado' ? k.quantity : 0),
-      0
-    );
-
-    const reparados = kardexes.reduce(
-      (acc, k) => acc + (k.comment === 'Reparado' ? k.quantity : 0),
-      0
-    );
-
-    return {
-      reception,
-      fallados,
-      reparados,
-      saldo: fallados - reparados
-    };
+    const totals = { reception: 0, fallados: 0, reparados: 0, saldo: 0 };
+    for (const movement of flattenKardexes(kardexes)) {
+      const quantity = Number(movement.quantity);
+      if (!Number.isFinite(quantity)) continue;
+      if (movement.direction === 'in') totals.reception += quantity;
+      else if (movement.direction === 'out') totals.reception -= quantity;
+      if (movement.comment === 'Fallado') totals.fallados += quantity;
+      if (movement.comment === 'Reparado') totals.reparados += quantity;
+    }
+    totals.saldo = totals.fallados - totals.reparados;
+    return totals;
   }
 
 }

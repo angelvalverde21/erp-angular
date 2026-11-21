@@ -3,12 +3,12 @@
   <div class="delivery-monitor-columns">
     <div><h3>Próximas entregas y vencidas <small>Hasta 8 compromisos prioritarios</small></h3>
       @for (item of summary.items; track item.id) {
-        <article><div><strong>{{ item.title }}</strong><small>{{ item.production }} · {{ item.stage || 'Compra' }} · #{{ item.purchase_id }}</small></div><div><span class="delivery-state" [class.overdue]="item.status === 'overdue'">{{ labels[item.status] }}</span><time>{{ item.expected_on | date:'dd/MM/yyyy' }}</time></div>@if (item.path) { <a [routerLink]="link(item.path)" [queryParams]="{ stage: item.stage_slug || item.stage_id }" [fragment]="'purchase-' + item.purchase_id" [attr.aria-label]="'Ver entrega de ' + item.title"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a> }</article>
+        <article><div><strong>{{ item.title }}</strong><small>{{ item.production }} · {{ item.stage || 'Compra' }} · #{{ item.purchase_id }}</small></div><div><span class="delivery-state" [class.overdue]="item.status === 'overdue'">{{ labels[item.status] }}</span><time>{{ item.expected_on | date:'dd/MM/yyyy' }}</time></div>@if (item.path) { <a [routerLink]="link(item.path)" [queryParams]="{ stage: item.stage_slug || item.stage_id, view: 'purchases' }" [fragment]="'purchase-' + item.purchase_id" [attr.aria-label]="'Ver entrega de ' + item.title"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a> }</article>
       } @empty { <p class="delivery-monitor-empty">No hay entregas pendientes con seguimiento.</p> }
     </div>
     <div><h3>Reprogramaciones recientes <small>Últimos 7 días · Hasta 8 compras</small></h3>
       @for (item of summary.recent_changes; track item.id) {
-        <article class="delivery-change"><div><strong>{{ item.title }}</strong><small>{{ item.production }} · {{ item.stage }}</small>@if (item.last_change; as event) { <p>{{ event.reason }}</p><small>{{ event.actor_name }} · {{ event.created_at | date:'dd/MM HH:mm':'-0500' }}</small> }</div><div><time>{{ item.expected_on | date:'dd/MM/yyyy' }}</time>@if (item.path) { <a [routerLink]="link(item.path)" [queryParams]="{ stage: item.stage_slug || item.stage_id }" [fragment]="'purchase-' + item.purchase_id">Ver compra</a> }</div></article>
+        <article class="delivery-change"><div><strong>{{ item.title }}</strong><small>{{ item.production }} · {{ item.stage }}</small>@if (item.last_change; as event) { <p>{{ event.reason }}</p><small>{{ event.actor_name }} · {{ event.created_at | date:'dd/MM HH:mm':'-0500' }}</small> }</div><div><time>{{ item.expected_on | date:'dd/MM/yyyy' }}</time>@if (item.path) { <a [routerLink]="link(item.path)" [queryParams]="{ stage: item.stage_slug || item.stage_id, view: 'purchases' }" [fragment]="'purchase-' + item.purchase_id">Ver compra</a> }</div></article>
       } @empty { <p class="delivery-monitor-empty">No hay reprogramaciones recientes.</p> }
     </div>
   </div>

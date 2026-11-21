@@ -1,128 +1,40 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
-import { SupplierEditComponent } from '../supplier-edit/supplier-edit.component';
-import { ButtonBackComponent } from '../../../../shared/components/buttons/button-back/button-back.component';
-import { HeadPageComponent } from "../../../../shared/components/head-page/head-page.component";
-import { Subject, takeUntil } from 'rxjs';
+import { Component, DestroyRef, inject, OnInit, TemplateRef } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize, Subscription } from 'rxjs';
 import { SupplierService } from '../supplier.service';
-import { ActivatedRoute } from '@angular/router';
-import Swal from 'sweetalert2';
-import { RoleService } from '../../../roles/role.service';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { AddressIndexComponent } from '../../../addresses/address-index/address-index.component';
-import { faBagShopping, faHouse } from '@fortawesome/free-solid-svg-icons';
-import { AddressCreateComponent } from '../../../addresses/address-create/address-create.component';
-import { ButtonAddComponent } from '../../../../shared/components/buttons/button-add/button-add.component';
+import { SupplierEditComponent } from '../supplier-edit/supplier-edit.component';
 
-@Component({
-  selector: 'app-supplier-edit-page',
-  imports: [
-    LoadingComponent,
-    SupplierEditComponent,
-    HeadPageComponent,
-    ButtonBackComponent,
-    AddressIndexComponent,
-    AddressCreateComponent,
-    ButtonAddComponent
-  ],
-  templateUrl: './supplier-edit-page.component.html',
-  styleUrl: './supplier-edit-page.component.scss',
-  encapsulation: ViewEncapsulation.None
-})
-export class SupplierEditPageComponent implements OnInit, OnDestroy {
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { AddressIndexComponent } from '../../../addresses/address-index/address-index.component';
+import { AddressCreateComponent } from '../../../addresses/address-create/address-create.component';
+@Component({ selector: 'app-supplier-edit-page', imports: [RouterLink, SupplierEditComponent, AddressIndexComponent, AddressCreateComponent], templateUrl: './supplier-edit-page.component.html', styleUrl: '../../shared/contact-ui.scss' })
+export class SupplierEditPageComponent implements OnInit {
+  private readonly service = inject(SupplierService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly modals = inject(NgbModal);
+  private modal?: NgbModalRef;
+  supplier: any = null;
+  roles: any[] = [];
+  loading = false; error = '';
+  private loadSubscription?: Subscription;
 
   ngOnInit(): void {
-    this.supplierInit();
-    this.rolesInit();
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.load());
   }
-
-  faHouse = faHouse;
-
-  roles: any[] = [];
-  loading: boolean = false;
-  supplier_id: number = 0;
-  supplier: any;
-  faBagShopping = faBagShopping;
-  
-  constructor(
-    private _supplier: SupplierService,
-    private route: ActivatedRoute,
-    private _role: RoleService,
-    config: NgbModalConfig,
-    private modalService: NgbModal,
-  ) {
-
-    config.backdrop = 'static';
-    config.keyboard = false;
-
-    this.route.params.subscribe(params => {
-      this.supplier_id = params['supplier_id'];
+  load(): void {
+    this.loadSubscription?.unsubscribe();
+    const id = Number(this.route.snapshot.paramMap.get('supplier_id'));
+    this.loading = true; this.error = '';
+    this.loadSubscription = this.service.get(id).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading = false)).subscribe({
+      next: response => this.supplier = response.data,
+      error: () => this.error = 'No se pudo cargar la ficha del proveedor. Vuelve a intentarlo.',
     });
   }
-
-  modal: any;
-
-  supplierInit() {
-
-    this.loading = true;
-
-    this._supplier.get(this.supplier_id).pipe(takeUntil(this.destroy$)).subscribe({
-      next: (resp: any) => {
-        console.log(resp);
-        this.supplier = resp.data;
-        this.loading = false;
-      },
-      error: (error: any) => {
-        Swal.fire('Error', 'OcurriA3 un problema al traer los datos del proveedor.', 'error');
-        console.error(error);
-      },
-    });
+  openVerticallyCentered(content: TemplateRef<unknown>): void { this.modal = this.modals.open(content, { centered: true, size: 'lg', backdrop: 'static' }); }
+  receiveCreateAddress(address: any): void {
+    this.supplier = { ...this.supplier, addresses: [address, ...(this.supplier.addresses ?? [])] };
+    this.modal?.close();
   }
-
-  roles_loading: boolean = false;
-
-  rolesInit() {
-
-    this.roles_loading = true;
-    this._role.index().pipe(takeUntil(this.destroy$)).subscribe({
-
-      next: (resp: any) => {
-        console.log(resp);
-        this.roles = resp.data;
-        this.roles_loading = false;
-      },
-
-      error: (error: any) => {
-        Swal.fire('Error', 'OcurriA3 un problema al listar los roles del sistema', 'error');
-        console.error(error);
-      },
-
-    });
-
-  }
-
-  destroy$ = new Subject<void>();
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  closeModal() {
-    this.modal.close();
-  }
-
-
-  openVerticallyCentered(content: TemplateRef<any>) {
-    this.modal = this.modalService.open(content, { centered: true, size: 'lg' });
-  }
-
-  receiveCreateAddress($event: any) {
-    console.log($event);
-    this.supplier.addresses.unshift($event);
-    this.modal.close();
-  }
-
 }
-
-

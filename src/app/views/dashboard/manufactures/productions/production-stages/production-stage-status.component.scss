@@ -11,11 +11,12 @@
   border: 1px solid var(--cui-border-color, #e0e3ee); border-radius: 20px;
   background: var(--cui-body-bg, #fff); color: var(--cui-secondary-color, #8190aa); font-size: .65rem;
   &.in_progress { color: #886020; background: #fff9ec; border-color: #efe0bc; }
-  &.completed { color: #247452; background: #edf8f1; border-color: #cce7d8; }
+  &.completed { color: #fff; background: #247b56; border-color: #247b56; font-weight: 650; &:hover { background: #1c6546; border-color: #1c6546; } }
   &:disabled { opacity: .6; }
   &:focus-visible { outline: 2px solid #9584df; outline-offset: 2px; }
 }
 .status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.status-completed-check { font-size: .65rem; }
 .stage-status-menu {
   min-width: 230px; max-width: 290px; padding: .5rem; border-radius: 12px;
   border: 1px solid var(--cui-border-color); box-shadow: 0 8px 28px #26324b20;
@@ -27,7 +28,16 @@
     background: var(--cui-warning-bg-subtle, #fff3cd);
     color: var(--cui-warning-text-emphasis, #664d03);
   }
-  > button { display: flex; justify-content: space-between; align-items: center; border-radius: 6px; padding: .6rem; font-size: .78rem; }
+  > .stage-menu-action {
+    display: flex; justify-content: center; align-items: center; gap: .55rem;
+    width: 100%; min-height: 44px; margin: .7rem 0; padding: .7rem .8rem;
+    border: 1px solid #29384e; border-radius: 8px;
+    background: #29384e; color: #fff; font-size: .77rem; font-weight: 600; cursor: pointer;
+    &:hover, &:focus { background: #1d2b40; border-color: #1d2b40; color: #fff; }
+    &:focus-visible { outline: 2px solid #95a9c9; outline-offset: 2px; }
+    &.stage-menu-reopen { background: #f1f4f8; border-color: #d8e0eb; color: #52647c; &:hover, &:focus { background: #e5ebf3; color: #344b69; } }
+    &:disabled { background: #edf0f5; border-color: #e2e7ef; color: #9aa6b6; cursor: not-allowed; }
+  }
 }
 .sample-approval {
   border-top: 1px solid var(--cui-border-color); margin-top: .5rem; padding: .75rem .5rem .25rem;

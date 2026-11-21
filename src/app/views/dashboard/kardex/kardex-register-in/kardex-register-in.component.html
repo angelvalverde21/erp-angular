@@ -1,3 +1,19 @@
-<app-kardex-index-selected [variants]="variants" [comments]="['Recepcion', 'Correccion']" [color_check]="'success'" (emitKardexVariants)="receiveKardexVariants($event)"></app-kardex-index-selected>
+<div class="entry-register-body" [attr.aria-busy]="loading">
+  @if (documentReception) {
+    <section class="reception-details" aria-label="Datos de la recepción">
+      <div class="reception-details-heading"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i><div><strong>Datos de la recepción</strong><small>Guarda los datos y confirma el ingreso al kardex desde el listado.</small></div></div>
+      <div class="reception-details-fields">
+        <label>Fecha de recepción <span aria-hidden="true">*</span><input type="date" [(ngModel)]="receivedOn" [max]="maxDate" [disabled]="loading" required></label>
+        <label>Observaciones <small>Opcional</small><input type="text" [(ngModel)]="notes" [disabled]="loading" maxlength="2000" placeholder="Ej. Entrega parcial del taller"></label>
+      </div>
+      @if (invalidReception) { <p class="reception-validation" role="alert">Indica una fecha válida hasta hoy y cantidades en unidades enteras.</p> }
+    </section>
+  }
+  @if (error) { <div class="entry-register-error" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>{{ error }}</div> }
+  <app-kardex-index-selected [variants]="variants" [initialItems]="initialSelection" [comments]="['Recepcion', 'Correccion']" color_check="success" [disabled]="loading" [showSummary]="false" (emitKardexVariants)="receiveKardexVariants($event)" />
 
-<app-button [color]="'success text-white'" mb="3" [disabled]="buttonDisabled" (click)="registerIn()">Registrar Ingreso</app-button>
+</div>
+<footer class="entry-register-footer">
+  <div class="entry-register-total"><small>{{ documentReception ? 'Total de la recepción' : 'Total a ingresar' }} · {{ variantsKardex.length }} {{ variantsKardex.length === 1 ? 'variante' : 'variantes' }}</small><strong>{{ totalQuantity | number:'1.0-2' }} <span>unidades</span></strong></div>
+  <div class="entry-register-actions"><button type="button" class="entry-cancel" [disabled]="loading" (click)="cancelled.emit()">{{ savedReceipt ? 'Cerrar' : 'Cancelar' }}</button><button type="button" class="entry-submit" [disabled]="buttonDisabled || loading || invalidReception || (documentReception && savedReceipt && !unsavedChanges)" (click)="registerIn()"><i class="fa-solid" [class.fa-spinner]="loading" [class.fa-spin]="loading" [class.fa-floppy-disk]="!loading && documentReception" [class.fa-check]="!loading && !documentReception" aria-hidden="true"></i>{{ loading ? 'Guardando…' : documentReception ? 'Guardar recepción' : 'Registrar ingreso' }}</button></div>
+</footer>

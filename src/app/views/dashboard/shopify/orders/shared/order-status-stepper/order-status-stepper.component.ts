@@ -1,8 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { OrderProgressStatus } from './order-status.model';
+import { OrderProgressDates, OrderProgressStatus } from './order-status.model';
+import { DateShopifyPipe } from '../../../../../shared/pipes/date-shopify.pipe';
 
 @Component({
   selector: 'app-order-status-stepper',
+  imports: [DateShopifyPipe],
   templateUrl: './order-status-stepper.component.html',
   styleUrl: './order-status-stepper.component.scss',
 })
@@ -10,6 +12,7 @@ export class OrderStatusStepperComponent {
   @Input() status: OrderProgressStatus = 'registrado';
   @Input() cancelled = false;
   @Input() onHold = false;
+  @Input() dates: OrderProgressDates = {};
 
   get progressLabel(): string {
     if (this.cancelled) return 'Pedido cancelado';

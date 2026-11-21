@@ -1,0 +1,42 @@
+.order-filters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .85rem; margin-bottom: 1.35rem; }
+.order-filters button { display: flex; align-items: center; gap: .85rem; text-align: left; padding: 1.15rem; background: white; border: 1px solid #e0e6f0; border-radius: 11px; color: #4d6382; cursor: pointer; }
+.order-filters button:hover { border-color: #abbcda; }
+.order-filters button.active { background: #f1effb; border-color: #aa9be2; color: #6350b4; }
+.filter-icon { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; flex-shrink: 0; border-radius: 9px; background: #f1f4f9; }
+.active .filter-icon { color: #6a56ba; background: #e7e1f8; }
+.filter-copy { flex: 1; font-size: .74rem; }
+.filter-copy strong { display: block; margin-top: .25rem; font-size: 1.5rem; line-height: 1.2; font-weight: 750; font-variant-numeric: tabular-nums; }
+.filter-indicator { width: 6px; height: 6px; border-radius: 50%; background: transparent; }
+.active .filter-indicator { background: #7660cd; }
+.list-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: .8rem; padding: 1.1rem 1.25rem; }
+.search { display: flex; gap: .5rem; flex: 1; min-width: 260px; }
+.search-field { display: flex; align-items: center; gap: .7rem; flex: 1; border: 1px solid #dfe5ef; border-radius: 7px; padding-left: .8rem; color: #91a0b5; }
+.search-field input { padding: .7rem .6rem .7rem 0; width: 100%; min-width: 0; border: 0; background: transparent; color: #3f5779; font-size: .78rem; }
+.status-filter select { padding: .65rem .75rem; border: 1px solid #dfe5ef; border-radius: 7px; color: #5c6e89; background: white; font-size: .75rem; }
+.list-title { display: flex; align-items: center; justify-content: space-between; gap: .7rem; padding: .85rem 1.25rem; border-top: 1px solid #edf0f6; }
+.list-title span { color: #8794a9; font-size: .69rem; }
+.table-scroll { overflow-x: auto; }
+.workspace-table { width: 100%; min-width: 1050px; border-collapse: collapse; text-align: left; }
+th { padding: .75rem 1.1rem; background: #edf1f7; color: #73839c; font-size: .65rem; font-weight: 650; border-block: 1px solid #e1e7f1; }
+td { padding: 1rem 1.1rem; vertical-align: top; border-bottom: 1px solid #e3e9f2; }
+tbody tr:nth-child(even) { background: #f4f6fb; }
+tbody tr:hover { background: #edf2fa; }
+tbody tr:last-child td { border-bottom: 0; }
+tr.ready td:first-child { box-shadow: inset 3px 0 #70ad91; }
+.order-number { color: #3e5d94; font-weight: 750; font-size: .98rem; text-decoration: none; }
+.order-number:hover, .more-products:hover { text-decoration: underline; }
+small { display: block; margin-top: .4rem; color: #7c8ca5; font-size: .7rem; line-height: 1.5; }
+.customer { display: block; min-width: 110px; max-width: 170px; color: #334c6b; font-size: .82rem; font-weight: 650; overflow-wrap: anywhere; }
+.destination, .comment-count { display: flex; align-items: baseline; gap: .35rem; }
+.comment-count { margin-top: .6rem; font-size: .67rem; color: #7184a2; }
+.products-column { width: 37%; min-width: 330px; }
+.units { display: block; font-size: .68rem; font-weight: 600; color: #71829d; margin-bottom: .35rem; }
+.more-products { display: inline-block; margin-top: .55rem; font-size: .71rem; color: #6371a5; }
+.payment { display: inline-block; padding: .3rem .5rem; border-radius: 5px; background: #fff1d8; color: #946320; font-size: .66rem; font-weight: 600; white-space: nowrap; }
+.payment.paid { color: #287453; background: #e5f4ec; }
+.order-total { display: block; margin-top: .6rem; white-space: nowrap; font-size: .85rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.open-order { display: flex; align-items: center; justify-content: center; width: 33px; height: 33px; border: 1px solid #dbe3f0; border-radius: 7px; color: #5974a4; background: white; text-decoration: none; }
+.open-order:hover { background: #e9edf9; }
+.pagination { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; padding: 1rem 1.25rem; margin: 0; border-top: 1px solid #e6ebf3; color: #7f8da4; font-size: .74rem; }
+.pagination > div { display: flex; gap: .5rem; }
+@media(max-width: 767px) { .order-filters { grid-template-columns: 1fr; gap: .65rem; } .order-filters button { padding: .8rem; gap: .65rem; } .filter-icon { width: 30px; height: 30px; } .filter-copy { font-size: .69rem; } .filter-copy strong { font-size: 1.25rem; } .search { min-width: 100%; } .list-title { align-items: start; flex-direction: column; } }

@@ -1,34 +1,6 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-<app-head-page title="Proveedores">
-    <app-button-link [path]="['./create']">Agregar Proveedor</app-button-link>
-</app-head-page>
-
-<div class="card">
-
-    <div class="card-header py-3">
-
-        <app-head-table (emitSearchResult)="receiveSearchResult($event)" type="supplier"></app-head-table>
-
-    </div>
-
-    <div class="card-body p-0">
-
-        @if(suppliers.length > 0){
-        <app-supplier-index [suppliers]="suppliers"></app-supplier-index>
-        }@else{
-        <p class="p-4">No se cuenta con registro de Proveedores</p>
-        }
-
-    </div>
-
-    <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Total: {{ suppliers.length }}</small>
-    </div>
-
-</div>
-
-
-
-}
+<main class="contact-page">
+  <header class="contact-page-header"><div class="contact-page-title"><span class="contact-page-icon"><i class="fa-solid fa-building" aria-hidden="true"></i></span><div><span class="contact-eyebrow">Directorio · Usuarios</span><h1>Proveedores</h1><p>Organiza tus proveedores y consulta sus datos de contacto.</p></div></div><a class="contact-button dark" routerLink="create"><i class="fa-solid fa-plus" aria-hidden="true"></i>Nuevo proveedor</a></header>
+  @if (error) { <div class="contact-alert" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ error }}<button class="contact-button light" type="button" (click)="load()">Reintentar</button></div> }
+  @if (loading) { <div class="contact-panel contact-feedback" role="status"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Cargando proveedores…</div> }
+  @else if (!error) { <app-supplier-index [suppliers]="suppliers" /> }
+</main>

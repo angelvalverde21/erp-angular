@@ -55,6 +55,13 @@ export class ProductSearchPageComponent implements OnInit, OnDestroy {
     this.initSearch();
   }
 
+  insertedProductId: number | null = null;
+  insertDuplicate(product: Product): void {
+    if (this.products.some(item => item.id === product.id)) return;
+    this.products = [product, ...this.products];
+    this.insertedProductId = product.id;
+  }
+
   initSearch() {
     this.cancelSearch$.next();
     this.loading = true;

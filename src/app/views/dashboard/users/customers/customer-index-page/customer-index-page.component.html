@@ -1,36 +1,6 @@
-﻿@if(loading){
-<app-loading></app-loading>
-}@else{
-<app-head-page title="Clientes" [icon]="faUsers">
-    <app-button-link [path]="['./create']">Agregar Cliente</app-button-link>
-</app-head-page>
-
-<div class="card">
-
-    <div class="card-header py-3">
-
-        <app-user-head-table (emitSearchResult)="receiveSearchResult($event)"></app-user-head-table>
-
-    </div>
-
-    <div class="card-body p-0">
-
-        @if(customers.length > 0){
-            <app-customer-index [customers]="customers"></app-customer-index>
-        }@else{
-            <p class="p-4">No se cuenta con registro de Clientes   </p>
-        }
-
-
-    </div>
-
-    <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Total: {{ customers.length }}</small>
-    </div>
-
-</div>
-
-
-
-}
-
+<main class="contact-page">
+  <header class="contact-page-header"><div class="contact-page-title"><span class="contact-page-icon"><i class="fa-solid fa-users" aria-hidden="true"></i></span><div><span class="contact-eyebrow">Directorio · Usuarios</span><h1>Clientes</h1><p>Consulta y actualiza la información de tus clientes.</p></div></div><a class="contact-button dark" routerLink="create"><i class="fa-solid fa-plus" aria-hidden="true"></i>Nuevo cliente</a></header>
+  @if (error) { <div class="contact-alert" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ error }}<button class="contact-button light" type="button" (click)="load()">Reintentar</button></div> }
+  @if (loading) { <div class="contact-panel contact-feedback" role="status"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Cargando clientes…</div> }
+  @else if (!error) { <app-customer-index [customers]="customers" /> }
+</main>
