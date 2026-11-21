@@ -63,9 +63,9 @@ describe('Delivery tracking', () => {
     expect(service.history).toHaveBeenCalledTimes(1);
   });
 
-  it('requires an initial date only when tracking is enabled', () => {
+  it('allows an empty initial date even when tracking is enabled', () => {
     const form = createDeliveryForm(new FormBuilder(), true);
-    expect(form.invalid).toBeTrue();
+    expect(form.valid).toBeTrue();
     form.patchValue({ enabled: false });
     expect(form.valid).toBeTrue();
     form.patchValue({ enabled: true, expected_on: '2026-12-10' });

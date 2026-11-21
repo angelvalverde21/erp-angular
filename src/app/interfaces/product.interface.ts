@@ -12,6 +12,7 @@ export interface Product {
   body?: string | null;     // text, nullable
   price?: number | null;    // decimal, nullable
   stock_total?: number | null;
+  shopify_linked?: boolean;
   user_id?: number | null;  // bigint, nullable
   store_id?: number | null; // bigint, nullable
   created_at?: string | null; // timestamp, nullable → se puede usar string o Date

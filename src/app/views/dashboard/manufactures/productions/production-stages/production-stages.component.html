@@ -41,7 +41,7 @@
       </div>
     }
     <div class="section-tabpanel" id="section-panel-purchases" role="tabpanel" aria-labelledby="section-tab-purchases" [hidden]="activeTab !== 'purchases'">
-    <app-purchase-index [productionView]="true" [compactHeader]="true" [purchases]="stagePurchases" [productionStageId]="selected.id" [productionSections]="purchaseStages" [stageName]="selected.code === 'others' ? 'Otros gastos' : selected.name" [stageDescription]="selected.code === 'others' ? 'Estibadores, transporte, carga, descarga y demás gastos de esta producción.' : 'Materiales, insumos y servicios asociados a esta etapa.'" [deliveryDefault]="deliveryDefault"
+    <app-purchase-index [productionName]="productionName" [productionView]="true" [compactHeader]="true" [purchases]="stagePurchases" [productionStageId]="selected.id" [productionSections]="purchaseStages" [stageName]="selected.code === 'others' ? 'Otros gastos' : selected.name" [stageDescription]="selected.code === 'others' ? 'Estibadores, transporte, carga, descarga y demás gastos de esta producción.' : 'Materiales, insumos y servicios asociados a esta etapa.'" [deliveryDefault]="deliveryDefault"
       purchaseable_type="manufacture" [purchaseable_id]="productionId" (purchasesChanged)="purchasesUpdated($event)"></app-purchase-index>
     @if (classificationMessage) { <p class="stage-classification-message" role="status">{{ classificationMessage }}</p> }
     @if (unclassified.length > 0) {

@@ -10,11 +10,12 @@ export interface CatalogPreview {
   connection: { ready: boolean; domain: string | null; issues: string[] };
   target_status: string; mode: string; items: CatalogPreviewItem[];
 }
-export interface CatalogPublishResult { product_id: number; status: 'synced' | 'failed'; message: string; remote_product_id?: string; remote_status?: string; }
+export interface CatalogPublishResult { product_id: number; status: 'synced' | 'reset' | 'failed'; message: string; remote_product_id?: string; remote_status?: string; }
 
 @Injectable({ providedIn: 'root' })
 export class ShopifyCatalogService extends BaseCrudDashboardService {
   constructor(http: HttpClient) { super(http, 'products'); }
-  preview(productIds: number[]) { return this.http.post<{ data: CatalogPreview }>(`${this.baseUrl}/shopify/preview`, { product_ids: productIds, target_status: 'DRAFT', mode: 'catalog' }); }
+  preview(productIds: number[], mode: 'catalog' | 'reset' = 'catalog') { return this.http.post<{ data: CatalogPreview }>(`${this.baseUrl}/shopify/preview`, { product_ids: productIds, target_status: 'DRAFT', mode }); }
+  reset(productId: number, token: string) { return this.http.post<{ data: CatalogPublishResult }>(`${this.baseUrl}/${productId}/shopify-reset`, { token }); }
   publish(productId: number, token: string) { return this.http.post<{ data: CatalogPublishResult }>(`${this.baseUrl}/${productId}/shopify-publish`, { token }); }
 }

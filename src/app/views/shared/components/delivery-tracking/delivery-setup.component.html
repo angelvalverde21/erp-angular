@@ -4,9 +4,8 @@
       <header><i class="fa-regular fa-calendar-check" aria-hidden="true"></i><div><h4>Fechas de entrega</h4><p>Conserva el compromiso y el historial de reprogramaciones.</p></div></header>
       <div class="delivery-setup-fields">
         <label for="purchase-handed-over"><span>Fecha del encargo</span><input id="purchase-handed-over" type="date" formControlName="handed_over_on" [max]="today"><small>Cuándo se hizo el encargo o se entregaron los materiales.</small></label>
-        <label for="purchase-expected"><span>Entrega prevista <span class="delivery-required" aria-hidden="true">*</span></span><input id="purchase-expected" type="date" formControlName="expected_on" [attr.aria-required]="form.value.enabled" [attr.aria-invalid]="form.touched && form.invalid ? true : null"><small>Podrás reprogramarla conservando el historial.</small></label>
+        <label for="purchase-expected"><span>Entrega prevista (opcional)</span><input id="purchase-expected" type="date" formControlName="expected_on"><small>Podrás reprogramarla conservando el historial.</small></label>
       </div>
-      @if (form.touched && form.hasError('expectedDateRequired')) { <p class="delivery-error" role="alert">Indica la fecha prevista de entrega.</p> }
     </section>
   </div>
 </div>

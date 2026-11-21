@@ -6,6 +6,19 @@
   --product-soft: var(--bs-tertiary-bg, var(--cui-tertiary-bg, #f8fafc));
 }
 
+.product-shopify-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-top: .3rem;
+  padding: .2rem .45rem;
+  border-radius: .35rem;
+  background: var(--cui-success-bg-subtle, #eaf5ee);
+  color: var(--cui-success-text-emphasis, #216443);
+  font-size: .68rem;
+  font-weight: 600;
+}
+
 .product-list-header {
   display: flex;
   align-items: center;

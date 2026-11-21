@@ -270,6 +270,20 @@ describe('Production stages', () => {
     expect(fixture.componentInstance.deliveryDefault).toBeFalse();
   });
 
+  it('moves an edited purchase to its chosen process without losing its cost', async () => {
+    const fixture = setup();
+    fixture.componentRef.setInput('productionName', 'Blusas noviembre'); fixture.detectChanges();
+    const list = fixture.debugElement.query(By.directive(PurchaseIndexComponent)).componentInstance as PurchaseIndexComponent;
+    expect(list.productionName).toBe('Blusas noviembre');
+    list.receivePurchaseUpdated({ id: 11, production_stage_id: 5, items: [{ id: 1, name: 'Costura', quantity: 2, price: 10 }] });
+    fixture.detectChanges();
+    expect(fixture.componentInstance.stagePurchases.length).toBe(0);
+    expect(fixture.componentInstance.total).toBe(85);
+    await fixture.componentInstance.select(5); fixture.detectChanges();
+    expect(fixture.componentInstance.stagePurchases.map(purchase => purchase.id)).toEqual([11]);
+    fixture.destroy();
+  });
+
   it('keeps a newly registered purchase in its corrected section and confirms its destination', async () => {
     const fixture = setup(); await fixture.componentInstance.select(3); fixture.detectChanges();
     const list = fixture.debugElement.query(By.directive(PurchaseIndexComponent)).componentInstance as PurchaseIndexComponent;

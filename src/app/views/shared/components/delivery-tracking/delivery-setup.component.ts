@@ -1,11 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { todayInLima } from './delivery-tracking.model';
 
 export function createDeliveryForm(fb: FormBuilder, enabled: boolean): FormGroup {
-  return fb.group({ enabled, handed_over_on: [todayInLima()], expected_on: [null] }, {
-    validators: (control: AbstractControl) => control.value.enabled && !control.value.expected_on ? { expectedDateRequired: true } : null,
-  });
+  return fb.group({ enabled, handed_over_on: [todayInLima()], expected_on: [null] });
 }
 
 @Component({

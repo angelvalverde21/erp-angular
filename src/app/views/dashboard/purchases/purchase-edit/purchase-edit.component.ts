@@ -7,6 +7,7 @@ import { SupplierService } from '../../users/suppliers/supplier.service';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { PurchaseFormComponent } from '../purchase-form/purchase-form.component';
 import { PurchaseItemIndexComponent } from '../purchase-item-index/purchase-item-index.component';
+import { ProductionPurchaseSection } from '../production-purchase-section.model';
 
 interface PurchaseItemDraft {
   name?: string;
@@ -26,6 +27,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
   @Input() purchase_id = 0;
   @Input() purchaseable_type = '';
   @Input() purchaseable_id = 0;
+  @Input() productionSections: readonly ProductionPurchaseSection[] = [];
   @Input() manageDelivery = false;
   @Input() deliveryExpanded = false;
   @Input() deliveryTracked = false;
@@ -51,6 +53,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
       purchase_start: [null], purchase_end: [null],
       purchaseable_type: [this.purchaseable_type], purchaseable_id: [this.purchaseable_id],
       observations: [''], supplier_id: [null], supplier_address_id: [null],
+      ...(this.productionSections.length ? { production_stage_id: [null, Validators.required] } : {}),
       purchase_items: this.fb.array([], Validators.required),
     });
     this.loadSuppliers();

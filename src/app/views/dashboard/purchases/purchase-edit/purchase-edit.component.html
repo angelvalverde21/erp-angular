@@ -8,6 +8,17 @@
           @if (!purchase_items.length) { <button type="button" (click)="purchaseInit()">Reintentar carga</button> }
         </div>
       }
+      @if (productionSections.length) {
+        <div class="purchase-production-section">
+          <label for="purchase-edit-process"><i class="fa-solid fa-folder-tree" aria-hidden="true"></i>Proceso de la producción <span aria-hidden="true">*</span></label>
+          <div><select id="purchase-edit-process" formControlName="production_stage_id" aria-required="true" [attr.aria-invalid]="form.get('production_stage_id')?.touched && form.get('production_stage_id')?.invalid ? true : null" [attr.aria-describedby]="form.get('production_stage_id')?.touched && form.get('production_stage_id')?.invalid ? 'purchase-edit-process-error' : null">
+            <option [ngValue]="null" disabled>Selecciona un proceso</option>
+            @for (section of productionSections; track section.id) { <option [ngValue]="section.id">{{ section.code === 'others' ? 'Otros gastos' : section.name }}</option> }
+          </select>
+          @if (form.get('production_stage_id')?.touched && form.get('production_stage_id')?.invalid) { <small id="purchase-edit-process-error" class="purchase-section-error">Selecciona el proceso donde se registrará esta compra.</small> }
+          </div>
+        </div>
+      }
       <section class="purchase-editor-items" aria-label="Conceptos de la compra">
         <app-purchase-item-index [purchase_items]="purchase_items" (emitAddItem)="addItem()"></app-purchase-item-index>
       </section>

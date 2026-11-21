@@ -5,6 +5,7 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
+  OnChanges,
   OnInit,
   Output,
   TemplateRef,
@@ -60,7 +61,7 @@ import { Brand } from '../../../../interfaces/brand.interface';
   styleUrl: './product-create.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
-export class ProductCreateComponent implements OnInit, OnDestroy {
+export class ProductCreateComponent implements OnInit, OnChanges, OnDestroy {
   editIcon = faPenToSquare;
   faPlus = faPlus;
   faArrowLeft = faArrowLeft;
@@ -127,6 +128,27 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
       category_id: [null, [Validators.required]],
       body: ['']
     });
+    this.selectDefaultCategory();
+  }
+
+  ngOnChanges(): void {
+    this.selectDefaultCategory();
+  }
+
+  private selectDefaultCategory(): void {
+    const control = this.form?.get('category_id');
+    if (!control || control.value != null || control.dirty) return;
+    const findWoman = (categories: Category[]): Category | undefined => {
+      const match = categories.find(category => category.name?.trim().toLowerCase() === 'mujer' || category.slug?.toLowerCase() === 'mujer');
+      if (match) return match;
+      for (const category of categories) {
+        const child = findWoman(category.children ?? []);
+        if (child) return child;
+      }
+      return undefined;
+    };
+    const category = findWoman(this.categories);
+    if (category) control.setValue(category.id);
   }
 
   ngOnDestroy(): void {
@@ -169,6 +191,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
         Swal.fire('Guardado', 'El registro ha sido creado', 'success');
         this.success = true;
         this.form.reset();
+        this.selectDefaultCategory();
         this.disabledButton = true;
         this.loadingIcon = false;
         this.emitProductCreate.emit(resp.data);

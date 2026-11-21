@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { By } from '@angular/platform-browser';
 import { of, Subject, throwError } from 'rxjs';
 import { Product } from 'src/app/interfaces/product.interface';
 import { BaseService } from 'src/app/views/base.service';
@@ -39,14 +40,27 @@ describe('Bulk product selection', () => {
     expect(fixture.componentInstance.selectedIds.size).toBe(0);
     expect(fixture.nativeElement.querySelector('app-product-shopify-bulk')).toBeNull();
   });
-  it('limits each batch to 25 and removes stale selections when the list changes', () => {
-    fixture.componentRef.setInput('products', Array.from({ length: 30 }, (_, i) => ({ id: i + 1, name: 'Producto' }))); fixture.detectChanges();
+  it('limits each batch to 30 and removes stale selections when the list changes', () => {
+    fixture.componentRef.setInput('products', Array.from({ length: 31 }, (_, i) => ({ id: i + 1, name: 'Producto' }))); fixture.detectChanges();
     fixture.componentInstance.toggleProducts(); fixture.detectChanges();
-    expect(fixture.componentInstance.selectedIds.size).toBe(25);
+    expect(fixture.componentInstance.selectedIds.size).toBe(30);
     const inputs = fixture.nativeElement.querySelectorAll('tbody .product-select-column input') as NodeListOf<HTMLInputElement>;
-    expect(inputs[25].disabled).toBeTrue();
+    expect(inputs[30].disabled).toBeTrue();
     fixture.componentRef.setInput('products', []); fixture.detectChanges();
     expect(fixture.componentInstance.selectedIds.size).toBe(0);
+  });
+
+  it('shows Shopify links and updates them after publishing or resetting', () => {
+    fixture.componentRef.setInput('products', products.map(product => ({ ...product, shopify_linked: product.id === 1 })));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('.product-shopify-badge').length).toBe(1);
+    expect(fixture.nativeElement.querySelector('.product-shopify-badge').textContent).toContain('Exportado a Shopify');
+    fixture.componentInstance.toggleProduct(2); fixture.detectChanges();
+    const bulk = fixture.debugElement.query(By.directive(ProductShopifyBulkComponent)).componentInstance as ProductShopifyBulkComponent;
+    bulk.shopifyLinkChanged.emit({ productId: 2, linked: true }); fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('.product-shopify-badge').length).toBe(2);
+    bulk.shopifyLinkChanged.emit({ productId: 1, linked: false }); fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('.product-shopify-badge').length).toBe(1);
   });
 });
 
@@ -55,13 +69,31 @@ describe('Shopify draft publishing review', () => {
   let component: ProductShopifyBulkComponent;
   let service: jasmine.SpyObj<ShopifyCatalogService>;
   beforeEach(() => {
-    service = jasmine.createSpyObj('ShopifyCatalogService', ['preview', 'publish']);
+    service = jasmine.createSpyObj('ShopifyCatalogService', ['preview', 'publish', 'reset']);
     service.preview.and.returnValue(of({ data: preview }));
     TestBed.configureTestingModule({ providers: [{ provide: ShopifyCatalogService, useValue: service }] });
     fixture = TestBed.createComponent(ProductShopifyBulkComponent); component = fixture.componentInstance;
     fixture.componentRef.setInput('products', products); fixture.detectChanges();
   });
   afterEach(() => fixture.destroy());
+  it('reviews reset before deleting and retries only products whose deletion failed', async () => {
+    const changed = spyOn(component.shopifyLinkChanged, 'emit');
+    service.preview.and.returnValue(of({ data: { ...preview, mode: 'reset' } }));
+    service.reset.and.callFake(id => id === 1 ? of({ data: { product_id: id, status: 'reset', message: 'Restablecido' } }) : throwError(() => ({ status: 500 })));
+    await component.open('reset'); fixture.detectChanges();
+    expect(service.preview).toHaveBeenCalledOnceWith([1, 2, 3], 'reset');
+    expect(service.reset).not.toHaveBeenCalled();
+    expect(fixture.nativeElement.querySelector('dialog').textContent).toContain('definitivamente');
+    await component.publish();
+    expect(service.publish).not.toHaveBeenCalled();
+    expect(service.reset.calls.allArgs()).toEqual([[1, 'token-1'], [2, 'token-2']]);
+    expect(component.successCount).toBe(1);
+    expect(changed).toHaveBeenCalledWith({ productId: 1, linked: false });
+    service.reset.and.returnValue(of({ data: { product_id: 2, status: 'reset', message: 'Restablecido' } }));
+    await component.publish();
+    expect(service.reset.calls.allArgs()).toEqual([[1, 'token-1'], [2, 'token-2'], [2, 'token-2']]);
+    expect(component.pendingItems).toEqual([]);
+  });
   it('requires reviewing the selected products before any publication and explains the scope', async () => {
     await component.open(); fixture.detectChanges();
     expect(service.preview).toHaveBeenCalledOnceWith([1, 2, 3]);
@@ -73,10 +105,12 @@ describe('Shopify draft publishing review', () => {
     expect(component.readyItems.map(item => item.id)).toEqual([1, 2]);
   });
   it('processes ready products, skips linked products and retries only failures', async () => {
+    const changed = spyOn(component.shopifyLinkChanged, 'emit');
     service.publish.and.callFake(id => id === 1 ? of({ data: { product_id: id, status: 'synced', message: 'Creado', remote_status: 'DRAFT' } }) : throwError(() => ({ status: 500 })));
     await component.open(); await component.publish(); fixture.detectChanges();
     expect(service.publish.calls.allArgs()).toEqual([[1, 'token-1'], [2, 'token-2']]);
     expect(component.successCount).toBe(1); expect(component.failedCount).toBe(1);
+    expect(changed).toHaveBeenCalledOnceWith({ productId: 1, linked: true });
     service.publish.and.returnValue(of({ data: { product_id: 2, status: 'synced', message: 'Creado', remote_status: 'DRAFT' } }));
     await component.publish(); fixture.detectChanges();
     expect(service.publish.calls.allArgs()).toEqual([[1, 'token-1'], [2, 'token-2'], [2, 'token-2']]);

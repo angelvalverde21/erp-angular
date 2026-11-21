@@ -99,7 +99,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       // color: ['', [Validators.required]],
-      material: ['', [Validators.required]],
+      material: [''],
       body: [''],
       tags: [''],
       category_id: ['null'],
@@ -124,7 +124,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.commitTags();
     this.form.markAllAsTouched();
     if (this.form.invalid) {
-      if (['category_id', 'material'].some(field => this.form.get(field)?.invalid)) {
+      if (this.form.get('category_id')?.invalid) {
         this.propertiesExpanded = true;
       }
       return;

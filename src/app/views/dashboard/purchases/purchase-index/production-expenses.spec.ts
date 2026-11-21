@@ -107,6 +107,24 @@ describe('Purchase editor', () => {
     expect(fixture.nativeElement.querySelector('.purchase-editor-save').disabled).toBeFalse();
   });
 
+  it('loads the saved process and sends a changed process with the purchase edits', () => {
+    service.get.and.returnValue(of({ data: { ...structuredClone(purchase), production_stage_id: 2 } }));
+    const fixture = TestBed.createComponent(PurchaseEditComponent);
+    fixture.componentRef.setInput('purchase_id', 89);
+    fixture.componentRef.setInput('purchaseable_type', 'manufacture');
+    fixture.componentRef.setInput('purchaseable_id', 24);
+    fixture.componentRef.setInput('productionSections', [{ id: 2, code: 'samples', name: 'Muestras' }, { id: 5, code: 'sewing', name: 'Costura' }]);
+    fixture.detectChanges();
+    const select = fixture.nativeElement.querySelector('#purchase-edit-process') as HTMLSelectElement;
+    expect(select.selectedOptions[0].textContent).toBe('Muestras');
+    select.value = Array.from(select.options).find(option => option.textContent === 'Costura')!.value;
+    select.dispatchEvent(new Event('change')); fixture.detectChanges();
+    service.update.and.returnValue(of({ data: { ...purchase, production_stage_id: 5 } }));
+    fixture.nativeElement.querySelector('.purchase-editor-save').click();
+    expect(service.update).toHaveBeenCalledOnceWith(89, jasmine.objectContaining({ production_stage_id: 5, purchaseable_id: 24 }));
+    fixture.destroy();
+  });
+
   it('opens saved purchase details and respects the user closing them while editing', () => {
     const fixture = setup();
     const details = fixture.nativeElement.querySelector('details') as HTMLDetailsElement;
@@ -189,7 +207,7 @@ describe('Production expenses', () => {
         provideRouter([]), provideHttpClient(), provideHttpClientTesting(),
         { provide: BaseService, useValue: { store: 'sorelle' } },
         { provide: NgbModal, useValue: { open } },
-        { provide: ManufactureService, useValue: { setSummary } },
+        { provide: ManufactureService, useValue: { setSummary, manufactureSingnalEvent: () => null } },
         { provide: ManufacturePurchaseService, useValue: { setManufactureId, index: () => of({ data: structuredClone(purchases) }) } },
         { provide: ProductionStageService, useValue: { changes: new Subject<number>(), list: () => of({ data: [{ id: 1, code: 'materials', name: 'Telas e insumos', status: 'pending', sample_review: 'pending' }] }) } },
         { provide: ActivatedRoute, useValue: { parent: { paramMap: of(convertToParamMap({ production_id: '41' })) }, queryParamMap: of(convertToParamMap({})), snapshot: { queryParamMap: convertToParamMap({}) } } },
@@ -279,6 +297,9 @@ describe('Production expenses', () => {
 
   it('opens delivery from the date row in the real edit template without duplicate buttons or nested forms', () => {
     const fixture = createList();
+    fixture.componentRef.setInput('productionName', 'Lote de blusas');
+    fixture.componentRef.setInput('productionSections', [{ id: 5, code: 'sewing', name: 'Costura' }]);
+    fixture.detectChanges();
     const head = fixture.debugElement.query(By.directive(PurchaseIndexHeadComponent));
     (head.nativeElement.querySelector('.dropdown-menu button') as HTMLButtonElement).click();
     const view = open.calls.mostRecent().args[0].createEmbeddedView({ $implicit: { dismiss: () => {} } });
@@ -290,6 +311,8 @@ describe('Production expenses', () => {
       ...purchases[0], supplier_id: null, purchase_start: '2026-11-19', purchase_end: null, delivery_tracking: null,
     } });
     view.detectChanges();
+    expect(host.querySelector('.purchase-edit-production-name')!.textContent).toContain('Lote de blusas');
+    expect(host.querySelector('#purchase-edit-process')).not.toBeNull();
     const toggle = host.querySelector('.purchase-delivery-toggle') as HTMLButtonElement;
     expect(toggle.textContent).toContain('Añadir entrega');
     toggle.click(); view.detectChanges();
@@ -317,6 +340,41 @@ describe('Production expenses', () => {
     request.flush({ data: { id: 55, handed_over_on: '2026-11-19', expected_on: '2026-12-10', received_on: null, status: 'pending', revision: 0, received_late: false, reschedules_count: 0 } });
     view.detectChanges();
     expect(fixture.componentInstance.purchases[0].delivery_tracking.id).toBe(55);
+    view.destroy(); fixture.destroy();
+  });
+
+  it('changes a purchase section from its action menu and preserves the choice after a failed request', async () => {
+    const fixture = createList();
+    fixture.componentRef.setInput('productionName', 'Lote noviembre');
+    fixture.componentRef.setInput('productionSections', [{ id: 1, code: 'materials', name: 'Telas e insumos' }, { id: 5, code: 'sewing', name: 'Costura' }]);
+    fixture.componentRef.setInput('purchases', [{ ...purchases[0], production_stage_id: 1 }]); fixture.detectChanges();
+    const pending = new Subject<any>();
+    const assign = jasmine.createSpy('assign').and.returnValue(pending);
+    TestBed.inject(ProductionStageService).assign = assign;
+    const head = fixture.debugElement.query(By.directive(PurchaseIndexHeadComponent));
+    head.nativeElement.querySelector('.purchase-change-section').click();
+    const view = open.calls.mostRecent().args[0].createEmbeddedView({ $implicit: { dismiss: () => {} } });
+    const host = document.createElement('div');
+    view.rootNodes.forEach((node: Node) => host.appendChild(node)); view.detectChanges();
+    await fixture.whenStable(); view.detectChanges();
+    expect(host.textContent).toContain('Lote noviembre');
+    const select = host.querySelector('select') as HTMLSelectElement;
+    expect(head.componentInstance.targetSectionId).toBe(1);
+    select.value = Array.from(select.options).find(option => option.textContent === 'Costura')!.value;
+    select.dispatchEvent(new Event('change')); view.detectChanges();
+    await fixture.whenStable(); view.detectChanges();
+    host.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); view.detectChanges();
+    head.componentInstance.changeSection();
+    expect(assign).toHaveBeenCalledOnceWith(41, 5, 11);
+    pending.error({ error: { errors: { production_stage_id: ['Reintenta el cambio.'] } } }); view.detectChanges();
+    expect(host.textContent).toContain('Reintenta el cambio.');
+    expect(head.componentInstance.targetSectionId).toBe(5);
+    expect(close).not.toHaveBeenCalled();
+    assign.and.returnValue(of({ data: { ...purchases[0], production_stage_id: 5 } }));
+    host.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); view.detectChanges();
+    await fixture.whenStable(); view.detectChanges();
+    expect(close).toHaveBeenCalledTimes(1);
+    expect(fixture.componentInstance.purchases[0].production_stage_id).toBe(5);
     view.destroy(); fixture.destroy();
   });
 
@@ -451,11 +509,12 @@ describe('Purchase registration', () => {
     fixture.destroy();
   });
 
-  it('keeps new purchase details closed even when the section suggests tracking by default', () => {
+  it('shows the supplier by default in the open purchase details', () => {
     const fixture = sectionForm(2);
-    expect(fixture.nativeElement.querySelector('details').open).toBeFalse();
-    expect(fixture.nativeElement.querySelector('summary').textContent).toContain('Completar fecha de entrega');
-    expect(fixture.nativeElement.querySelector('.purchase-delivery-toggle').getAttribute('aria-expanded')).toBe('true');
+    expect(fixture.nativeElement.querySelector('details').open).toBeTrue();
+    expect(fixture.nativeElement.querySelector('details app-supplier-selected')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('summary').textContent).toContain('Opcional');
+    expect(fixture.nativeElement.querySelector('.purchase-delivery-toggle').getAttribute('aria-expanded')).toBe('false');
     expect(fixture.nativeElement.querySelectorAll('app-delivery-setup').length).toBe(1);
     fixture.destroy();
   });
@@ -486,23 +545,26 @@ describe('Purchase registration', () => {
     expect(component.error).toContain('Tus datos se mantienen'); fixture.destroy();
   });
 
-  it('adjusts the delivery suggestion when switching sections and preserves manually entered dates', () => {
+  it('keeps delivery closed when switching sections and preserves dates entered manually', () => {
     const fixture = sectionForm(); const component = fixture.componentInstance;
     const delivery = component.form.get('delivery')!;
     expect(delivery.get('enabled')!.value).toBeFalse();
     component.form.get('production_stage_id')!.setValue(5);
-    expect(delivery.get('enabled')!.value).toBeTrue(); expect(delivery.hasError('expectedDateRequired')).toBeTrue();
-    delivery.patchValue({ handed_over_on: '2026-11-18', expected_on: '2026-11-25' }); delivery.markAsDirty();
+    expect(delivery.get('enabled')!.value).toBeFalse(); expect(delivery.valid).toBeTrue();
+    delivery.patchValue({ enabled: true, handed_over_on: '2026-11-18', expected_on: '2026-11-25' }); delivery.markAsDirty();
     component.form.get('production_stage_id')!.setValue(3);
     expect(delivery.value).toEqual(jasmine.objectContaining({ enabled: true, handed_over_on: '2026-11-18', expected_on: '2026-11-25' }));
     delivery.get('enabled')!.setValue(false); component.form.get('production_stage_id')!.setValue(2);
     expect(delivery.get('enabled')!.value).toBeFalse(); fixture.destroy();
   });
 
-  it('requires a tentative delivery date in sections with delivery enabled by default', () => {
+  it('registers without a delivery date even when tracking is suggested by the section', () => {
     const component = setup(true);
     component.purchase_items.at(0).patchValue({ name: 'Muestra', quantity: 2, price: 15, subtotal: 30 });
-    expect(component.form.invalid).toBeTrue();
+    expect(component.form.valid).toBeTrue();
+    service.store.and.returnValue(of({ data: { id: 103 } }));
+    component.create();
+    expect(service.store).toHaveBeenCalledOnceWith(jasmine.objectContaining({ delivery: jasmine.objectContaining({ enabled: false, expected_on: null }) }));
     component.form.get('delivery.expected_on')?.setValue('2026-11-20');
     expect(component.form.valid).toBeTrue();
     expect(component.totalAmount).toBe(30);

@@ -26,17 +26,21 @@ export class ProductIndexComponent implements AfterViewInit, OnChanges, OnDestro
   @Input() bulkActions = false;
   selectedIds = new Set<number>();
   bulkBusy = false;
+  updateShopifyLink(event: { productId: number; linked: boolean }): void {
+    const product = this.products.find(product => product.id === event.productId);
+    if (product) product.shopify_linked = event.linked;
+  }
   get selectedProducts(): Product[] { return this.products.filter(product => this.selectedIds.has(product.id)); }
-  get allProductsSelected(): boolean { return this.products.length > 0 && this.products.slice(0, 25).every(product => this.selectedIds.has(product.id)); }
+  get allProductsSelected(): boolean { return this.products.length > 0 && this.products.slice(0, 30).every(product => this.selectedIds.has(product.id)); }
   toggleProduct(id: number): void {
     if (this.bulkBusy) return;
     const next = new Set(this.selectedIds);
-    if (next.has(id)) next.delete(id); else if (next.size < 25) next.add(id);
+    if (next.has(id)) next.delete(id); else if (next.size < 30) next.add(id);
     this.selectedIds = next;
   }
   toggleProducts(): void {
     if (this.bulkBusy) return;
-    this.selectedIds = this.allProductsSelected ? new Set() : new Set(this.products.slice(0, 25).map(product => product.id));
+    this.selectedIds = this.allProductsSelected ? new Set() : new Set(this.products.slice(0, 30).map(product => product.id));
   }
   clearProducts(): void { if (!this.bulkBusy) this.selectedIds = new Set(); }
 

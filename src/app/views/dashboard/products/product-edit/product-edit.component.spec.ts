@@ -40,6 +40,12 @@ describe('ProductEditComponent', () => {
     expect(component.form.touched).toBeTrue();
   });
 
+  it('saves a product with no material', () => {
+    component.form.get('material')!.setValue('');
+    component.update();
+    expect(update).toHaveBeenCalledWith(7, jasmine.objectContaining({ material: '' }));
+  });
+
   it('saves once and notifies the page of the updated product', () => {
     const updated = jasmine.createSpy('updated');
     component.emitProductUpdated.subscribe(updated);

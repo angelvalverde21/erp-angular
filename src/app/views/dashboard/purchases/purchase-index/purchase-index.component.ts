@@ -53,6 +53,7 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
   @Input() compactHeader = false;
   @Input() productionStageId: number | null = null;
   @Input() productionSections: readonly ProductionPurchaseSection[] = [];
+  @Input() productionName = '';
   @Input() stageName = '';
   @Input() stageDescription = 'Materiales, insumos y servicios asociados a esta etapa.';
   @Input() deliveryDefault = false;

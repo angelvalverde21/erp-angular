@@ -18,7 +18,7 @@
         <h3>{{ purchase.supplier?.user?.name || purchase.supplier?.name || 'Compra sin proveedor' }}</h3>
         <div class="production-expense-meta"><span>Registro #{{ purchase.id }}</span><span>{{ purchase.created_at ? (purchase.created_at | DateShopify) : 'Sin fecha' }}</span></div>
       </div>
-      <app-purchase-index-head [actionsOnly]="true" [purchase]="purchase" [purchaseable_type]="purchaseable_type"
+      <app-purchase-index-head [productionName]="productionName" [productionSections]="productionSections" [actionsOnly]="true" [purchase]="purchase" [purchaseable_type]="purchaseable_type"
         [purchaseable_id]="purchaseable_id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)" (emitRemovePurchase)="receiveRemovePurchase($event)"></app-purchase-index-head>
     </header>
     <div class="production-expense-body">
@@ -121,7 +121,7 @@
 
             <div class="card-header bg-white py-3">
 
-                <app-purchase-index-head [purchase]="purchase" [purchaseable_type]="purchaseable_type"
+                <app-purchase-index-head [productionName]="productionName" [productionSections]="productionSections" [purchase]="purchase" [purchaseable_type]="purchaseable_type"
                     [purchaseable_id]="purchaseable_id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
                     (emitRemovePurchase)="receiveRemovePurchase($event)"></app-purchase-index-head>
             </div>
@@ -180,7 +180,7 @@
 <ng-template #content let-modal>
     <div class="modal-header purchase-create-heading">
         <span class="purchase-create-icon" aria-hidden="true"><i class="fa-solid fa-cart-plus"></i></span>
-        <div><h6 class="modal-title">Registrar compra</h6><p>Añade materiales o servicios y sus fechas de entrega.</p></div>
+        <div><h6 class="modal-title">Registrar compra</h6>@if (productionName) { <p class="purchase-create-production-name">Producción: <strong>{{ productionName }}</strong></p> }<p>Añade materiales o servicios y sus fechas de entrega.</p></div>
         <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body p-0">

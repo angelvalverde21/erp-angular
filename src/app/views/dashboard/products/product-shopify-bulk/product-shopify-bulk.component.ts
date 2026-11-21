@@ -8,6 +8,7 @@ export class ProductShopifyBulkComponent implements OnDestroy {
   @Input() products: Product[] = [];
   @Output() clearSelection = new EventEmitter<void>();
   @Output() busyChanged = new EventEmitter<boolean>();
+  @Output() shopifyLinkChanged = new EventEmitter<{ productId: number; linked: boolean }>();
   @ViewChild('reviewDialog') dialog?: ElementRef<HTMLDialogElement>;
   private readonly service = inject(ShopifyCatalogService);
   private readonly destroy$ = new Subject<void>();
@@ -17,17 +18,19 @@ export class ProductShopifyBulkComponent implements OnDestroy {
   loading = false;
   sending = false;
   error = '';
+  mode: 'catalog' | 'reset' = 'catalog';
   get readyItems(): CatalogPreviewItem[] { return this.preview?.items.filter(item => item.status === 'ready' && !!item.token) ?? []; }
-  get pendingItems(): CatalogPreviewItem[] { return this.readyItems.filter(item => this.results[item.id]?.status !== 'synced'); }
+  get pendingItems(): CatalogPreviewItem[] { return this.readyItems.filter(item => !['synced', 'reset'].includes(this.results[item.id]?.status)); }
   get finished(): number { return Object.values(this.results).filter(result => result.status !== 'sending').length; }
-  get successCount(): number { return Object.values(this.results).filter(result => result.status === 'synced').length; }
+  get successCount(): number { return Object.values(this.results).filter(result => result.status === 'synced' || result.status === 'reset').length; }
   get failedCount(): number { return Object.values(this.results).filter(result => result.status === 'failed').length; }
-  async open(): Promise<void> {
+  async open(mode: 'catalog' | 'reset' = this.mode): Promise<void> {
     if (!this.products.length || this.sending || this.loading) return;
+    this.mode = mode;
     this.busyChanged.emit(true);
     if (!this.dialog?.nativeElement.open) this.dialog?.nativeElement.showModal();
     this.loading = true; this.error = ''; this.preview = null; this.results = {};
-    try { this.preview = (await firstValueFrom(this.service.preview(this.products.map(product => product.id)).pipe(takeUntil(this.destroy$)))).data; }
+    try { this.preview = (await firstValueFrom((this.mode === 'reset' ? this.service.preview(this.products.map(product => product.id), 'reset') : this.service.preview(this.products.map(product => product.id))).pipe(takeUntil(this.destroy$)))).data; }
     catch (error) { if (!this.destroyed) this.error = this.errorMessage(error); }
     finally { this.loading = false; }
   }
@@ -42,8 +45,11 @@ export class ProductShopifyBulkComponent implements OnDestroy {
         if (this.destroyed) break;
         this.results = { ...this.results, [item.id]: { status: 'sending', message: 'Enviando…' } };
         try {
-          const response = await firstValueFrom(this.service.publish(item.id, item.token!).pipe(takeUntil(this.destroy$)));
+          const response = await firstValueFrom((this.mode === 'reset' ? this.service.reset(item.id, item.token!) : this.service.publish(item.id, item.token!)).pipe(takeUntil(this.destroy$)));
           this.results = { ...this.results, [item.id]: response.data };
+          if (response.data.status === 'synced' || response.data.status === 'reset') {
+            this.shopifyLinkChanged.emit({ productId: item.id, linked: response.data.status === 'synced' });
+          }
         } catch (error) {
           if (!this.destroyed) this.results = { ...this.results, [item.id]: { product_id: item.id, status: 'failed', message: this.errorMessage(error) } };
         }
@@ -52,15 +58,16 @@ export class ProductShopifyBulkComponent implements OnDestroy {
   }
   rowLabel(item: CatalogPreviewItem): string {
     const status = this.results[item.id]?.status;
+    if (status === 'reset') return 'Restablecido';
     if (status === 'synced') return 'Creado en Shopify';
-    if (status === 'sending') return 'Enviando';
+    if (status === 'sending') return this.mode === 'reset' ? 'Eliminando' : 'Enviando';
     if (status === 'failed') return 'Revisar envío';
     return item.status === 'linked' ? 'Ya vinculado' : item.status === 'invalid' ? 'Requiere revisión' : 'Listo para enviar';
   }
   variantLabel(item: CatalogPreviewItem): string { return item.variants.map(variant => variant.optionValues.map(value => value.name).join(' / ')).join(' · '); }
   private errorMessage(error: any): string {
-    if (error?.status === 403) return 'No tienes permiso para publicar productos de esta tienda.';
-    if (error?.status >= 500) return 'No se pudo confirmar la solicitud. Puedes reintentar sin duplicar el producto.';
+    if (error?.status === 403) return 'No tienes permiso para gestionar productos de Shopify de esta tienda.';
+    if (error?.status >= 500) return this.mode === 'reset' ? 'No se pudo confirmar la eliminación. Reintenta para comprobar su estado.' : 'No se pudo confirmar la solicitud. Puedes reintentar sin duplicar el producto.';
     return error?.error?.errors ? Object.values(error.error.errors).flat().join(' ') : error?.error?.message || 'No se pudo completar la solicitud. Intenta nuevamente.';
   }
   ngOnDestroy(): void { this.destroyed = true; this.destroy$.next(); this.destroy$.complete(); this.dialog?.nativeElement.close(); }

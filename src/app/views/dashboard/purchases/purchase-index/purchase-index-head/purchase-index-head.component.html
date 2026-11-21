@@ -28,6 +28,12 @@
                     <span class="purchase-action-icon"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i></span>
                     <span><strong>Editar compra</strong><small>Conceptos, proveedor y datos</small></span>
                 </button>
+                @if (productionSections.length && purchaseable_type === 'manufacture') {
+                <button ngbDropdownItem class="purchase-action purchase-change-section" (click)="openSectionChange(changeSectionDialog)">
+                    <span class="purchase-action-icon"><i class="fa-solid fa-folder-tree" aria-hidden="true"></i></span>
+                    <span><strong>Cambiar sección</strong><small>Reasignar esta compra</small></span>
+                </button>
+                }
                 <button ngbDropdownItem class="purchase-action" (click)="openVerticallyCentered(showPayments)">
                     <span class="purchase-action-icon"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i></span>
                     <span><strong>Boletas y Facturas</strong><small>Pagos y comprobantes</small></span>
@@ -59,11 +65,12 @@
 <ng-template #content let-modal>
     <div class="modal-header purchase-edit-modal-header">
         <span class="purchase-edit-modal-icon" aria-hidden="true"><i class="fa-regular fa-pen-to-square"></i></span>
-        <div><h6 class="modal-title">Editar compra</h6><p>Registro #{{ purchase.id }} · Conceptos, importes y proveedor</p></div>
+        <div><h6 class="modal-title">Editar compra</h6>@if (productionName) { <p class="purchase-edit-production-name">Producción: <strong>{{ productionName }}</strong></p> }<p>Registro #{{ purchase.id }} · Conceptos, importes y proveedor</p></div>
         <button type="button" class="btn-close ms-auto" aria-label="Cerrar edición" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body purchase-edit-modal-body">
         <app-purchase-edit [purchase_id]="purchase.id" (emitPurchaseUpdated)="receivePurchaseUpdated($event)"
+            [productionSections]="productionSections"
             [manageDelivery]="true" [deliveryExpanded]="deliveryExpanded(deliveryEditor)" [deliveryTracked]="!!purchase.delivery_tracking" (deliveryRequested)="toggleDelivery(deliveryEditor, deliveryPanel)"
             (purchaseLoaded)="purchaseLoaded($event)"
             (cancelled)="modal.dismiss('cancel')"
@@ -74,6 +81,21 @@
           </div>
         </app-purchase-edit>
     </div>
+</ng-template>
+
+<ng-template #changeSectionDialog let-modal>
+  <div class="modal-header"><div><h6 class="modal-title">Cambiar sección de la compra #{{ purchase.id }}</h6>@if (productionName) { <small>Producción: {{ productionName }}</small> }</div><button type="button" class="btn-close" aria-label="Cerrar" [disabled]="changingSection" (click)="modal.dismiss()"></button></div>
+  <form (ngSubmit)="changeSection()">
+    <div class="modal-body">
+      <label for="purchase-target-section" class="form-label">Sección de la producción</label>
+      <select id="purchase-target-section" class="form-select" name="targetSection" [(ngModel)]="targetSectionId" [disabled]="changingSection" required>
+        <option [ngValue]="null" disabled>Selecciona una sección</option>
+        @for (section of productionSections; track section.id) { <option [ngValue]="section.id">{{ section.code === 'others' ? 'Otros gastos' : section.name }}</option> }
+      </select>
+      @if (sectionError) { <p class="text-danger mt-2" role="alert">{{ sectionError }}</p> }
+    </div>
+    <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" [disabled]="changingSection" (click)="modal.dismiss()">Cancelar</button><button type="submit" class="btn btn-primary" [disabled]="changingSection || !targetSectionId || targetSectionId === purchase.production_stage_id">{{ changingSection ? 'Guardando…' : 'Guardar sección' }}</button></div>
+  </form>
 </ng-template>
 
 <ng-template #showPayments let-modal>

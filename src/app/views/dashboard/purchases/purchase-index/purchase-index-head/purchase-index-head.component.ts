@@ -6,7 +6,9 @@ import { RouterModule } from '@angular/router';
 import { faTrash, faEdit, faCashRegister, faImages, faPaperclip, faReceipt, faCircleArrowUp } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import { PurchaseService } from '../../purchase.service';
-import { Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { ProductionStageService } from '../../../manufactures/productions/production-stages/production-stage.service';
 import { NgbDropdownModule, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { PurchaseEditComponent } from '../../purchase-edit/purchase-edit.component';
 import { CapitalizePipe } from '@shared/pipes/capitalize.pipe';
@@ -20,10 +22,12 @@ import { PaymentIndexComponent } from '../../../payments/payment-index/payment-i
 import { PaymentService } from '../../../payments/payment.service';
 import { DeliveryTrackingComponent } from '@shared/components/delivery-tracking/delivery-tracking.component';
 import { DeliveryTracking } from '@shared/components/delivery-tracking/delivery-tracking.model';
+import { ProductionPurchaseSection } from '../../production-purchase-section.model';
 
 @Component({
   selector: 'app-purchase-index-head',
   imports: [
+    FormsModule,
     RecordAttachmentsComponent,
     FontAwesomeModule,
     LoadingComponent,
@@ -48,6 +52,8 @@ export class PurchaseIndexHeadComponent implements OnInit{
   @Input() actionsOnly = false;
   @Input() purchaseable_type: string = "";
   @Input() purchaseable_id: number = 0;
+  @Input() productionName = '';
+  @Input() productionSections: readonly ProductionPurchaseSection[] = [];
   @Output() emitRemovePurchase = new EventEmitter<number>();
   @Output() emitPurchaseUpdated = new EventEmitter<any>();
 
@@ -60,12 +66,16 @@ export class PurchaseIndexHeadComponent implements OnInit{
   modal: any;
   faReceipt = faReceipt;
   faCircleArrowUp = faCircleArrowUp;
+  targetSectionId: number | null = null;
+  changingSection = false;
+  sectionError = '';
   
   constructor(
     config: NgbModalConfig,
     private modalService: NgbModal,
     private _purchase: PurchaseService,
-    private _payment: PaymentService
+    private _payment: PaymentService,
+    private stages: ProductionStageService,
   ) {
     // customize default values of modals used by this component tree
     config.backdrop = 'static';
@@ -167,6 +177,30 @@ export class PurchaseIndexHeadComponent implements OnInit{
 
   closeModal() {
     this.modal.close();
+  }
+
+  openSectionChange(content: TemplateRef<any>): void {
+    this.targetSectionId = this.purchase.production_stage_id ?? null;
+    this.sectionError = '';
+    this.modal = this.modalService.open(content, { centered: true, beforeDismiss: () => !this.changingSection });
+  }
+
+  changeSection(): void {
+    if (this.changingSection || !this.targetSectionId || this.targetSectionId === this.purchase.production_stage_id) return;
+    this.changingSection = true;
+    this.sectionError = '';
+    this.stages.assign(this.purchaseable_id, this.targetSectionId, this.purchase.id)
+      .pipe(takeUntil(this.destroy$), finalize(() => this.changingSection = false)).subscribe({
+        next: response => {
+          this.purchase = { ...this.purchase, ...response.data };
+          this.modal.close();
+          this.emitPurchaseUpdated.emit(this.purchase);
+        },
+        error: response => {
+          const errors = response.error?.errors as Record<string, string[]> | undefined;
+          this.sectionError = errors ? Object.values(errors).flat().join(' ') : 'No se pudo cambiar la sección. Intenta nuevamente.';
+        },
+      });
   }
 
   receivePurchaseUpdated(purchase: any) {

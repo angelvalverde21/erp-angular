@@ -45,20 +45,10 @@ export class PurchaseCreateComponent implements OnInit, OnDestroy {
       purchaseable_type: [this.purchaseable_type], purchaseable_id: [this.purchaseable_id],
       observations: [''], supplier_id: [this.supplier_id || null], supplier_address_id: [null], gateway_id: [2, Validators.required],
       ...(this.productionSections.length || sectionId ? { production_stage_id: [sectionId, this.productionSections.length ? Validators.required : []] } : {}),
-      delivery: createDeliveryForm(this.fb, section ? this.sectionDeliveryDefault(section) : this.deliveryDefault),
+      delivery: createDeliveryForm(this.fb, false),
       purchase_items: this.fb.array([this.createPurchaseItem()], Validators.required),
     });
-    this.form.get('production_stage_id')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(id => {
-      const selected = this.productionSections.find(section => section.id === Number(id));
-      const delivery = this.form.get('delivery') as FormGroup;
-      // A section change may update the suggestion, never the user's delivery choices or dates.
-      if (selected && !delivery.dirty) delivery.patchValue({ enabled: this.sectionDeliveryDefault(selected) });
-    });
     this.loadSuppliers();
-  }
-
-  private sectionDeliveryDefault(section: ProductionPurchaseSection): boolean {
-    return section.delivery_tracking_default ?? ['samples', 'sewing'].includes(section.code);
   }
 
   get purchase_items(): FormArray<FormGroup> {
