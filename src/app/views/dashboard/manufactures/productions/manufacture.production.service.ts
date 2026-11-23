@@ -23,6 +23,9 @@ export class ManufactureProductionService extends BaseCrudDashboardService{
   setSummary(data: any) {
     this.summaryEvent.set(data);
   }
+  setArchived(id: number, archived: boolean) {
+    return this.http.put(`${this.baseUrl}/${id}/archive`, { archived });
+  }
   // base_path(path: string[] = []){
   //   return ['inventories','manufactures',...path];
   // }

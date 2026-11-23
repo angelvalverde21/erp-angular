@@ -8,3 +8,4 @@
 .production-list-icon { display: grid; place-items: center; width: 32px; height: 32px; background: #ebe2fa; color: #6941c6; border-radius: 8px; font-size: 14px; }
 .production-list-count { color: #6941c6; background: #eee8f8; font-size: 12px; font-weight: 500; }
 @media(max-width: 575.98px) { .manufacture-list-heading { padding: 16px; gap: 12px; } }
+.production-archive-tabs { display: flex; gap: 8px; padding: 16px 24px 0; button { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 1px solid var(--cui-border-color, #dde3ed); border-radius: 8px; background: transparent; color: var(--cui-secondary-color, #657187); font: inherit; cursor: pointer; &.active { background: #f0ebf8; border-color: #c7b9df; color: #7055ad; font-weight: 600; } } }

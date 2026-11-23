@@ -2,9 +2,14 @@
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
     "outDir": "./out-tsc/production-tests",
-    "types": ["jasmine", "@angular/localize"]
+    "types": [
+      "jasmine",
+      "@angular/localize"
+    ]
   },
-  "files": ["src/test.ts"],
+  "files": [
+    "src/test.ts"
+  ],
   "include": [
     "src/**/*.d.ts",
     "src/app/views/dashboard/users/shared/contact-workflow.spec.ts",
@@ -19,6 +24,7 @@
     "src/app/views/dashboard/manufactures/productions/production-stages/production-stage-attachments.spec.ts",
     "src/app/views/dashboard/manufactures/productions/production-overview.spec.ts",
     "src/app/views/dashboard/purchases/purchase-index/production-expenses.spec.ts",
-    "src/app/views/dashboard/area-dashboards/area-dashboard.spec.ts"
+    "src/app/views/dashboard/area-dashboards/area-dashboard.spec.ts",
+    "src/app/views/dashboard/manufactures/productions/manufacture-production-index-row/manufacture-production-index-row.component.spec.ts"
   ]
 }

@@ -1,16 +1,17 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { combineLatest, firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { BaseService } from '../../base.service';
 import { CollectionService } from './collection.service';
-import { CollectionRecord, CollectionProcess, CollectionWorkspace, CollectionManufactureVariant } from './collection.model';
+import { CollectionRecord, CollectionProcess, CollectionWorkspace, CollectionManufactureVariant, CollectionInventoryReview } from './collection.model';
 import { PurchaseIndexComponent } from '../purchases/purchase-index/purchase-index.component';
 import { todayInLima } from '@shared/components/delivery-tracking/delivery-tracking.model';
 
 @Component({
-  selector: 'app-collections', standalone: true, imports: [FormsModule, RouterLink, CurrencyPipe, DatePipe, PurchaseIndexComponent],
+  selector: 'app-collections', standalone: true, imports: [FormsModule, NgbDropdownModule, RouterLink, CurrencyPipe, DatePipe, PurchaseIndexComponent],
   templateUrl: './collections.component.html', styleUrl: './collections.component.scss',
 })
 export class CollectionsComponent implements OnInit, OnDestroy {
@@ -24,6 +25,33 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   private destroyed = false;
   private routeInitialized = false;
   @ViewChild('editor') editor?: ElementRef<HTMLDialogElement>;
+  @ViewChild('inventoryEditor') inventoryEditor?: ElementRef<HTMLDialogElement>;
+  inventoryBusy = false; inventoryError = ''; inventoryReview: CollectionInventoryReview | null = null;
+  async prepareInventoryExport(): Promise<void> {
+    if (this.inventoryBusy || !this.collectionId || !this.selectedInventoryVariantIds.size) return;
+    if (this.selectedInventoryVariantIds.size > 250) { this.inventoryError = 'Selecciona hasta 250 variantes por envío.'; return; }
+    const id = this.collectionId;
+    this.inventoryBusy = true; this.inventoryError = '';
+    try {
+      const response = await firstValueFrom(this.service.previewInventory(id, [...this.selectedInventoryVariantIds], this.inventoryPercentage).pipe(takeUntil(this.destroy$)));
+      if (!this.destroyed && this.collectionId === id) { this.inventoryReview = response.data; this.inventoryEditor?.nativeElement.showModal(); }
+    } catch (error) { if (!this.destroyed) this.inventoryError = this.message(error); }
+    finally { this.inventoryBusy = false; }
+  }
+  async confirmInventoryExport(): Promise<void> {
+    if (this.inventoryBusy || !this.inventoryReview || !this.collectionId) return;
+    this.inventoryBusy = true; this.inventoryError = '';
+    try {
+      const response = await firstValueFrom(this.service.sendInventory(this.collectionId, this.inventoryReview.token).pipe(takeUntil(this.destroy$)));
+      this.inventoryEditor?.nativeElement.close(); this.inventoryReview = null;
+      this.notice = `${response.data.message} ${response.data.sent_variants} variantes · ${response.data.sent_units} unidades.`;
+    } catch (error) { if (!this.destroyed) this.inventoryError = this.message(error); }
+    finally { this.inventoryBusy = false; }
+  }
+  closeInventoryReview(event?: Event): void {
+    if (this.inventoryBusy) { event?.preventDefault(); return; }
+    this.inventoryEditor?.nativeElement.close(); this.inventoryReview = null; this.inventoryError = '';
+  }
   collectionId: number | null = null;
   view = 'dashboard';
   readonly tabs = [{ id: 'dashboard', name: 'Dashboard' }, { id: 'processes', name: 'Procesos' },
@@ -54,6 +82,63 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   responsibles: { id: number; name: string }[] = [];
   purchaseProcess: CollectionProcess | null = null;
   productSearch = '';
+  readonly inventoryPercentages = [20, 30, 40, 50, 60, 70, 80, 90, 100];
+  inventoryPercentage = 100;
+  selectedInventoryVariantIds = new Set<number>();
+  get selectedInventoryPreview(): { variant_id: number; sku: string | null; planned_units: number; export_units: number }[] {
+    const variants = new Map<number, { variant_id: number; sku: string | null; planned_units: number; export_units: number }>();
+    for (const product of this.workspace?.products ?? []) {
+      for (const line of (product.manufacture_variants ?? []) as CollectionManufactureVariant[]) {
+        if (!this.selectedInventoryVariantIds.has(line.variant_id)) continue;
+        const variant = variants.get(line.variant_id) ?? { variant_id: line.variant_id, sku: line.sku, planned_units: 0, export_units: 0 };
+        variant.planned_units += Math.max(0, Math.floor(Number(line.quantity) || 0));
+        variants.set(line.variant_id, variant);
+      }
+    }
+    const percentage = this.inventoryPercentages.includes(Number(this.inventoryPercentage)) ? Number(this.inventoryPercentage) : 100;
+    return [...variants.values()].map(variant => ({ ...variant, export_units: Math.floor(variant.planned_units * percentage / 100) }));
+  }
+  get selectedPlannedUnits(): number { return this.selectedInventoryPreview.reduce((sum, variant) => sum + variant.planned_units, 0); }
+  get selectedExportUnits(): number { return this.selectedInventoryPreview.reduce((sum, variant) => sum + variant.export_units, 0); }
+  productVariantIds(products: any[]): number[] {
+    return [...new Set<number>(products.flatMap(product => (product.manufacture_variants ?? []).map((line: CollectionManufactureVariant) => line.variant_id)))];
+  }
+  get selectedInventoryProducts(): number {
+    return (this.workspace?.products ?? []).filter(product => this.productVariantIds([product]).some(id => this.selectedInventoryVariantIds.has(id))).length;
+  }
+  allInventorySelected(products: any[]): boolean {
+    const ids = this.productVariantIds(products);
+    return ids.length > 0 && ids.every(id => this.selectedInventoryVariantIds.has(id));
+  }
+  someInventorySelected(products: any[]): boolean {
+    const ids = this.productVariantIds(products);
+    return ids.some(id => this.selectedInventoryVariantIds.has(id)) && !ids.every(id => this.selectedInventoryVariantIds.has(id));
+  }
+  toggleInventoryProducts(products: any[]): void {
+    const remove = this.allInventorySelected(products);
+    for (const id of this.productVariantIds(products)) remove ? this.selectedInventoryVariantIds.delete(id) : this.selectedInventoryVariantIds.add(id);
+  }
+  toggleInventoryVariant(id: number): void {
+    this.selectedInventoryVariantIds.has(id) ? this.selectedInventoryVariantIds.delete(id) : this.selectedInventoryVariantIds.add(id);
+  }
+  highlightedSkuRows = new Set<number>();
+  private skuHighlightTimer?: ReturnType<typeof setTimeout>;
+  productSearchChanged(value: string): void {
+    this.productSearch = value;
+    clearTimeout(this.skuHighlightTimer);
+    this.highlightedSkuRows.clear();
+    const sku = value.trim().toLocaleLowerCase();
+    if (!sku) return;
+    this.skuHighlightTimer = setTimeout(() => {
+      this.highlightedSkuRows = new Set(this.filteredProducts.flatMap(product => (product.manufacture_variants ?? [])
+        .filter((line: CollectionManufactureVariant) => line.sku?.toLocaleLowerCase().includes(sku))
+        .map((line: CollectionManufactureVariant) => line.id)));
+      this.skuHighlightTimer = setTimeout(() => this.highlightedSkuRows.clear(), 2200);
+    }, 180);
+  }
+  get totalProductVariants(): number {
+    return new Set((this.workspace?.products ?? []).flatMap(product => (product.manufacture_variants ?? []).map((line: CollectionManufactureVariant) => line.variant_id))).size;
+  }
   get filteredProducts(): any[] {
     const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
     const terms = normalize(this.productSearch).trim().split(/\s+/).filter(Boolean);
@@ -88,7 +173,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       this.collectionId = collectionId;
       this.view = this.tabs.some(t => t.id === query.get('view')) ? query.get('view')! : 'dashboard';
       this.purchaseProcess = null;
-      if (changedCollection) { this.productSearch = ''; void this.load(); }
+      if (changedCollection) { this.productSearchChanged(''); this.selectedInventoryVariantIds.clear(); this.inventoryPercentage = 100; void this.load(); }
     });
   }
   async load(): Promise<void> {
@@ -97,7 +182,11 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     try {
       if (this.collectionId) {
         const response = await firstValueFrom(this.service.workspace(this.collectionId).pipe(takeUntil(this.destroy$)));
-        if (version === this.version) this.workspace = response.data;
+        if (version === this.version) {
+          this.workspace = response.data;
+          const available = new Set(this.productVariantIds(response.data.products));
+          this.selectedInventoryVariantIds = new Set([...this.selectedInventoryVariantIds].filter(id => available.has(id)));
+        }
       } else {
         const response = await firstValueFrom(this.service.list(this.page, this.search, this.status).pipe(takeUntil(this.destroy$)));
         if (version === this.version) { this.collections = response.data; this.lastPage = response.last_page; this.total = response.total; }
@@ -209,5 +298,5 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   private message(error: any): string {
     return error?.error?.errors ? Object.values(error.error.errors).flat().join(' ') : error?.error?.message || 'No se pudo completar la solicitud. Intenta nuevamente.';
   }
-  ngOnDestroy(): void { this.destroyed = true; this.destroy$.next(); this.destroy$.complete(); this.editor?.nativeElement.close(); }
+  ngOnDestroy(): void { clearTimeout(this.skuHighlightTimer); this.destroyed = true; this.destroy$.next(); this.destroy$.complete(); this.editor?.nativeElement.close(); this.inventoryEditor?.nativeElement.close(); }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BaseCrudDashboardService } from '../base-crud-dashboard.service';
-import { CollectionRecord, CollectionWorkspace } from './collection.model';
+import { CollectionRecord, CollectionWorkspace, CollectionInventoryReview } from './collection.model';
 
 @Injectable({ providedIn: 'root' })
 export class CollectionService extends BaseCrudDashboardService {
@@ -21,4 +21,6 @@ export class CollectionService extends BaseCrudDashboardService {
   sale(id: number, data: object) { return this.http.post(`${this.baseUrl}/${id}/sales`, data); }
   removeSale(id: number, sale: number) { return this.http.delete(`${this.baseUrl}/${id}/sales/${sale}`); }
   receipt(id: number, sale: number, data: object) { return this.http.post(`${this.baseUrl}/${id}/sales/${sale}/receipts`, data); }
+  previewInventory(id: number, variant_ids: number[], percentage: number) { return this.http.post<{ data: CollectionInventoryReview }>(`${this.baseUrl}/${id}/inventory/preview`, { variant_ids, percentage }); }
+  sendInventory(id: number, token: string) { return this.http.post<{ data: { sent_variants: number; sent_units: number; message: string } }>(`${this.baseUrl}/${id}/inventory/send`, { token }); }
 }

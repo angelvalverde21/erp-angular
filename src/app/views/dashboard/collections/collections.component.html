@@ -22,7 +22,7 @@
     @if (!loading && !error) {
       <div class="table-scroll"><table aria-label="Colecciones"><thead><tr><th>Colección</th><th>Estado</th><th>Procesos</th><th>Inicio</th><th>Cierre previsto</th><th>Acciones</th></tr></thead><tbody>
         @for (collection of collections; track collection.id) {
-          <tr><td class="description-cell"><strong class="collection-name">{{ collection.name }}</strong><small class="collection-description">{{ collection.description || 'Sin descripción' }}</small></td><td><span class="status" [attr.data-status]="collection.status">{{ statuses[collection.status] }}</span></td><td>{{ collection.processes_count }}</td><td>{{ (collection.starts_on | date:'dd/MM/yyyy') || '—' }}</td><td>{{ (collection.ends_on | date:'dd/MM/yyyy') || '—' }}</td><td><a class="button secondary icon-button" [routerLink]="collectionLink(collection.id)" title="Ver colección" aria-label="Ver colección"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></td></tr>
+          <tr><td class="description-cell"><strong class="collection-name">{{ collection.name }}</strong><small class="collection-description">{{ collection.description || 'Sin descripción' }}</small></td><td><span class="status" [attr.data-status]="collection.status">{{ statuses[collection.status] }}</span></td><td>{{ collection.processes_count }}</td><td>{{ (collection.starts_on | date:'dd/MM/yyyy') || '—' }}</td><td>{{ (collection.ends_on | date:'dd/MM/yyyy') || '—' }}</td><td><div class="row-actions"><a class="button secondary small-button" [routerLink]="collectionLink(collection.id)" [queryParams]="{ view: 'products' }"><i class="fa-solid fa-box" aria-hidden="true"></i>Productos</a><a class="button secondary icon-button" [routerLink]="collectionLink(collection.id)" title="Ver colección" aria-label="Ver colección"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div></td></tr>
         } @empty { <tr><td colspan="7" class="empty"><p>{{ search || status ? 'No hay colecciones con estos filtros.' : 'Todavía no hay colecciones. Crea la primera para organizar sus procesos e inversión.' }}</p><button class="button primary" type="button" (click)="open('collection')"><i class="fa-solid fa-plus" aria-hidden="true"></i>Crear colección</button></td></tr> }
       </tbody></table></div>
       <div class="pagination"><span>{{ total }} colecciones · Página {{ page }} de {{ lastPage }}</span><button class="button secondary" [disabled]="page <= 1" (click)="changePage(-1)"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>Anterior</button><button class="button secondary" [disabled]="page >= lastPage" (click)="changePage(1)"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i>Siguiente</button></div>
@@ -78,31 +78,44 @@
         }
         @if (view === 'products') {
           <div class="section-heading"><div><h2>Productos de la colección</h2><p>Los productos se incorporan desde las producciones y órdenes de compra vinculadas a esta colección.</p></div><button class="button secondary" (click)="navigate('processes')"><i class="fa-solid fa-industry" aria-hidden="true"></i>Ver producciones y órdenes</button></div>
-          <div class="collection-product-filters">
-            <p role="status"><strong>{{ w.products.length }}</strong> {{ w.products.length === 1 ? 'producto agregado' : 'productos agregados' }}@if (productSearch.trim()) { <span> · {{ filteredProducts.length }} {{ filteredProducts.length === 1 ? 'encontrado' : 'encontrados' }}</span> }</p>
-            <div class="collection-product-search"><label for="collection-product-search">Buscar productos</label><div class="process-search-input"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="collection-product-search" type="search" [(ngModel)]="productSearch" placeholder="Nombre, variante o SKU"><button type="button" class="close-dialog" aria-label="Limpiar búsqueda de productos" [disabled]="!productSearch" (click)="productSearch = ''"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div></div>
+          <div class="collection-product-toolbar">
+            <div class="collection-product-totals" aria-label="Totales de la colección">
+              <div class="collection-product-total"><span class="collection-total-icon"><i class="fa-solid fa-box" aria-hidden="true"></i></span><span><strong>{{ w.products.length }}</strong><small>{{ w.products.length === 1 ? 'Producto' : 'Productos' }}</small></span></div>
+              <div class="collection-product-total"><span class="collection-total-icon variants"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span><span><strong>{{ totalProductVariants }}</strong><small>{{ totalProductVariants === 1 ? 'Variante' : 'Variantes' }}</small></span></div>
+            </div>
+            <div class="collection-product-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="collection-product-search" type="search" [ngModel]="productSearch" (ngModelChange)="productSearchChanged($event)" aria-label="Buscar por producto, variante o SKU" placeholder="Buscar por producto, variante o SKU…">@if (productSearch) { <button type="button" aria-label="Limpiar búsqueda de productos" (click)="productSearchChanged('')"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button> }</div>
+            @if (productSearch.trim()) { <p class="collection-product-search-status" role="status">{{ filteredProducts.length }} de {{ w.products.length }} productos coinciden con tu búsqueda.</p> }
           </div>
-          <div class="table-scroll"><table class="collection-products-table" aria-label="Productos y variantes de la colección">
-            <thead><tr><th>Producto</th><th>Variante / SKU</th><th>Orden de compra / producción</th><th>Unidades</th><th>Acciones</th></tr></thead>
+          <div class="collection-inventory-selection" aria-label="Selección de inventario para Shopify">
+            <div class="collection-selection-copy"><strong><i class="fa-solid fa-list-check" aria-hidden="true"></i>Inventario para Shopify</strong><span role="status">{{ selectedInventoryProducts }} productos · {{ selectedInventoryVariantIds.size }} variantes seleccionadas</span></div>
+            <div class="collection-selection-controls"><button type="button" class="button secondary small-button" [disabled]="inventoryBusy || !productVariantIds(filteredProducts).length" (click)="toggleInventoryProducts(filteredProducts)">{{ allInventorySelected(filteredProducts) ? 'Quitar selección visible' : 'Seleccionar visibles' }}</button><label for="collection-inventory-percent">Porcentaje a exportar<select id="collection-inventory-percent" [(ngModel)]="inventoryPercentage" [disabled]="inventoryBusy">@for (percentage of inventoryPercentages; track percentage) { <option [ngValue]="percentage">{{ percentage }} %</option> }</select></label><button type="button" class="button primary small-button" [disabled]="inventoryBusy || !selectedInventoryVariantIds.size || selectedInventoryVariantIds.size > 250" (click)="prepareInventoryExport()"><i class="fa-solid" [class.fa-spinner]="inventoryBusy" [class.fa-spin]="inventoryBusy" [class.fa-cloud-arrow-up]="!inventoryBusy" aria-hidden="true"></i>{{ inventoryBusy ? 'Preparando envío…' : 'Enviar stock a Shopify' }}</button></div>
+            @if (inventoryError && !inventoryReview) { <p class="feedback error" role="alert">{{ inventoryError }}</p> }
+            <div class="collection-export-preview" role="status"><span><strong>{{ selectedPlannedUnits }}</strong> unidades previstas seleccionadas</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i><span><strong>{{ selectedExportUnits }}</strong> unidades a exportar al {{ inventoryPercentage }} %</span><small>El porcentaje se aplica al total previsto de cada variante y se redondea hacia abajo. Hasta 250 variantes vinculadas a Shopify por envío.</small></div>
+          </div>
+          <div class="table-scroll collection-product-table-scroll"><table class="collection-products-table" aria-label="Productos y variantes de la colección">
+            <thead><tr><th><label class="collection-inventory-check"><input type="checkbox" [checked]="allInventorySelected(filteredProducts)" [indeterminate]="someInventorySelected(filteredProducts)" [disabled]="!productVariantIds(filteredProducts).length" (change)="toggleInventoryProducts(filteredProducts)" aria-label="Seleccionar todos los productos visibles"><span>Producto</span></label></th><th>Variante / SKU</th><th>Orden de compra / producción</th><th>Unidades</th><th>Acciones</th></tr></thead>
             @for (product of filteredProducts; track product.id) {
               <tbody class="collection-product-group">
                 @for (line of product.manufacture_variants; track line.id) {
-                  <tr>
-                    @if ($first) { <td class="collection-product-name" [attr.rowspan]="product.manufacture_variants.length"><strong>{{ product.name }}</strong><small>{{ product.manufacture_units }} unidades en manufacturas</small></td> }
-                    <td class="collection-variant"><strong>{{ line.name }}</strong><small><i class="fa-solid fa-barcode" aria-hidden="true"></i>{{ line.sku || 'Sin SKU' }}</small></td>
+                  <tr [class.sku-match]="highlightedSkuRows.has(line.id)">
+                    @if ($first) { <td class="collection-product-name" [attr.rowspan]="product.manufacture_variants.length"><label class="collection-inventory-check"><input type="checkbox" [checked]="allInventorySelected([product])" [indeterminate]="someInventorySelected([product])" [disabled]="inventoryBusy" (change)="toggleInventoryProducts([product])" [attr.aria-label]="'Seleccionar producto ' + product.name"><span><strong>{{ product.name }}</strong><small>{{ product.manufacture_units }} unidades en manufacturas</small></span></label></td> }
+                    <td class="collection-variant"><label class="collection-inventory-check"><input type="checkbox" [checked]="selectedInventoryVariantIds.has(line.variant_id)" [disabled]="inventoryBusy" (change)="toggleInventoryVariant(line.variant_id)" [attr.aria-label]="'Seleccionar variante ' + product.name + ' ' + line.name + ' ' + (line.sku || '')"><span><strong>{{ line.name }}</strong><small><i class="fa-solid fa-barcode" aria-hidden="true"></i>{{ line.sku || 'Sin SKU' }}</small></span></label></td>
                     <td class="collection-product-source"><a [routerLink]="manufactureVariantLink(line)" [queryParams]="line.source_type === 'production' ? { stage: 'corte', view: 'products' } : {}"><i [class]="'fa-solid ' + processIcons[line.source_type]" aria-hidden="true"></i>{{ line.source_name }}</a><small>{{ line.source_type === 'order' ? 'Orden de compra' : 'Producción' }} #{{ line.source_id }}</small></td>
                     <td class="collection-variant-units">{{ line.quantity }}</td>
                     @if ($first) {
-                      <td [attr.rowspan]="product.manufacture_variants.length"><div class="collection-product-actions">
-                        <a class="button secondary icon-button" [routerLink]="productLink(product.id)" title="Ver producto" aria-label="Ver producto"><i class="fa-solid fa-box-open" aria-hidden="true"></i></a>
+                      <td [attr.rowspan]="product.manufacture_variants.length"><div ngbDropdown container="body" [placement]="['bottom-end', 'top-end']" class="collection-product-actions">
+                        <button type="button" ngbDropdownToggle class="button secondary small-button" [id]="'product-menu-' + product.id" [attr.aria-label]="'Acciones de ' + product.name">Acciones</button>
+                        <div ngbDropdownMenu class="collection-product-menu" [attr.aria-labelledby]="'product-menu-' + product.id">
+                        <a ngbDropdownItem [routerLink]="productLink(product.id)" aria-label="Ver producto"><i class="fa-solid fa-box-open" aria-hidden="true"></i><span>Ver producto</span></a>
                         @for (source of productSources(product.manufacture_variants); track source.source_id) {
-                          <a class="button secondary icon-button" [routerLink]="manufactureVariantLink(source)" [queryParams]="source.source_type === 'production' ? { stage: 'corte', view: 'products' } : {}" [title]="(source.source_type === 'order' ? 'Ver orden de compra' : 'Ver producción') + ': ' + source.source_name" [attr.aria-label]="source.source_type === 'order' ? 'Ver orden de compra' : 'Ver producción'"><i [class]="'fa-solid ' + processIcons[source.source_type]" aria-hidden="true"></i></a>
+                          <a ngbDropdownItem [routerLink]="manufactureVariantLink(source)" [queryParams]="source.source_type === 'production' ? { stage: 'corte', view: 'products' } : {}"><i [class]="'fa-solid ' + processIcons[source.source_type]" aria-hidden="true"></i><span>{{ source.source_type === 'order' ? 'Ver orden de compra' : 'Ver producción' }}<small>#{{ source.source_id }} · {{ source.source_name }}</small></span></a>
                         }
+                        </div>
                       </div></td>
                     }
                   </tr>
                 } @empty {
-                  <tr><td class="collection-product-name">{{ product.name }}</td><td colspan="3">Sin variantes vinculadas.</td><td><a class="button secondary icon-button" [routerLink]="productLink(product.id)" title="Ver producto" aria-label="Ver producto"><i class="fa-solid fa-box-open" aria-hidden="true"></i></a></td></tr>
+                  <tr><td class="collection-product-name">{{ product.name }}</td><td colspan="3">Sin variantes vinculadas.</td><td><div ngbDropdown container="body" placement="bottom-end" class="collection-product-actions"><button type="button" ngbDropdownToggle class="button secondary small-button" [id]="'product-menu-' + product.id">Acciones</button><div ngbDropdownMenu class="collection-product-menu" [attr.aria-labelledby]="'product-menu-' + product.id"><a ngbDropdownItem [routerLink]="productLink(product.id)" aria-label="Ver producto"><i class="fa-solid fa-box-open" aria-hidden="true"></i><span>Ver producto</span></a></div></div></td></tr>
                 }
               </tbody>
             } @empty { <tbody><tr><td colspan="5">{{ productSearch.trim() ? 'No se encontraron productos con esa búsqueda.' : 'Los productos aparecerán cuando los agregues a una producción u orden de compra vinculada.' }}</td></tr></tbody> }
@@ -130,6 +143,21 @@
   @if (loading) { <p class="loading" role="status"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Cargando información…</p> }
 </main>
 
+<dialog #inventoryEditor class="collection-dialog inventory-review-dialog" (cancel)="closeInventoryReview($event)" aria-labelledby="inventory-review-title">
+  <form (ngSubmit)="confirmInventoryExport()">
+    <header><h2 id="inventory-review-title"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>Confirmar envío de stock</h2><button type="button" class="close-dialog" aria-label="Cerrar revisión de inventario" [disabled]="inventoryBusy" (click)="closeInventoryReview()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></header>
+    <div class="dialog-body">
+      @if (inventoryError) { <p class="feedback error" role="alert">{{ inventoryError }}</p> }
+      @if (inventoryReview; as review) {
+        <p><strong>{{ review.domain }}</strong> · {{ review.location_name }}</p>
+        <p class="help">Se establecerá el stock disponible de cada SKU al {{ review.percentage }} % de sus unidades previstas, redondeado hacia abajo. Las cantidades del ERP se conservan.</p>
+        <div class="table-scroll"><table aria-label="Revisión de stock para Shopify"><thead><tr><th>Producto / SKU</th><th>Previstas</th><th>Actual en Shopify</th><th>Stock a establecer</th></tr></thead><tbody>@for (item of review.items; track item.variant_id) { <tr><td><strong>{{ item.name }}</strong><small>{{ item.sku }}</small></td><td>{{ item.planned_units }}</td><td>{{ item.current_units }}</td><td><strong>{{ item.export_units }}</strong></td></tr> }</tbody></table></div>
+        <p class="help">{{ review.items.length }} variantes seleccionadas. Confirma para aplicar estas cantidades en Shopify.</p>
+      }
+    </div>
+    <footer><button type="button" class="button secondary" [disabled]="inventoryBusy" (click)="closeInventoryReview()">Cancelar</button><button type="submit" class="button primary" [disabled]="inventoryBusy || !inventoryReview"><i class="fa-solid" [class.fa-spinner]="inventoryBusy" [class.fa-spin]="inventoryBusy" [class.fa-check]="!inventoryBusy" aria-hidden="true"></i>{{ inventoryBusy ? 'Enviando…' : 'Confirmar envío a Shopify' }}</button></footer>
+  </form>
+</dialog>
 <dialog #editor class="collection-dialog" [class.process-bulk-dialog]="addingExisting" (cancel)="close($event)" aria-labelledby="collection-dialog-title">
   <form #entry="ngForm" (ngSubmit)="save()">
     <header><h2 id="collection-dialog-title"><i [class]="'fa-solid ' + (dialogIcons[formKind] || 'fa-folder-open')" aria-hidden="true"></i>{{ dialogTitle }}</h2><button type="button" class="close-dialog" aria-label="Cerrar formulario" [disabled]="saving" (click)="close()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></header>

@@ -27,7 +27,7 @@ describe('Collections workspace', () => {
   beforeEach(() => {
     params = new BehaviorSubject(convertToParamMap({ collection_id: '7' }));
     query = new BehaviorSubject(convertToParamMap({}));
-    service = jasmine.createSpyObj('CollectionService', ['list', 'workspace', 'options', 'createCollection', 'saveCollection', 'process', 'attachProcesses', 'detach', 'sale', 'removeSale', 'receipt']);
+    service = jasmine.createSpyObj('CollectionService', ['list', 'workspace', 'options', 'createCollection', 'saveCollection', 'process', 'attachProcesses', 'detach', 'sale', 'removeSale', 'receipt', 'previewInventory', 'sendInventory']);
     service.workspace.and.returnValue(of({ data: structuredClone(snapshot) }));
     service.list.and.returnValue(of({ data: [], current_page: 1, last_page: 1, total: 0 }));
     service.options.and.returnValue(of({ data: [] }));
@@ -76,7 +76,7 @@ describe('Collections workspace', () => {
     await component.save(); fixture.detectChanges();
     expect(component.selectedSourceIds.has(41)).toBeTrue();
     expect(component.formError).toContain('Ya está vinculado');
-    expect(fixture.nativeElement.querySelector('dialog').open).toBeTrue();
+    expect(fixture.nativeElement.querySelector('dialog:not(.inventory-review-dialog)').open).toBeTrue();
     expect(component.saving).toBeFalse(); fixture.destroy();
   });
   it('keeps filtered collection responses from replacing a newer request', async () => {
@@ -117,7 +117,7 @@ describe('Collections workspace', () => {
     expect(text).not.toContain('Organizar producto');
     expect(text).toContain('Los productos se incorporan desde las producciones');
     const actionCell: HTMLTableCellElement = fixture.nativeElement.querySelector('.table-scroll tbody tr td:last-child');
-    const productAction = actionCell.querySelector('.icon-button')!;
+    const productAction = actionCell.querySelector('.collection-product-actions button')!;
     expect(getComputedStyle(actionCell).textAlign).toBe('right');
     expect(actionCell.getBoundingClientRect().right - productAction.getBoundingClientRect().right).toBeCloseTo(20, 0);
     expect(getComputedStyle(actionCell.previousElementSibling!).fontSize).toBe('16px');
@@ -150,6 +150,88 @@ describe('Collections workspace', () => {
     expect(fixture.nativeElement.querySelectorAll('[aria-label="Ver producto"]').length).toBe(1);
     fixture.destroy();
   });
+  it('selects unique inventory variants across manufactures and preserves selections while filtering', async () => {
+    query.next(convertToParamMap({ view: 'products' }));
+    service.workspace.and.returnValue(of({ data: { ...structuredClone(snapshot), products: [
+      { id: 12, name: 'Blusa', manufacture_units: 20, manufacture_variants: [
+        { id: 1, variant_id: 10, name: 'S', sku: 'B-S', quantity: 9, source_id: 30, source_name: 'Orden', source_type: 'order' },
+        { id: 2, variant_id: 10, name: 'S', sku: 'B-S', quantity: 11, source_id: 37, source_name: 'Produccion', source_type: 'production' },
+      ] },
+      { id: 13, name: 'Polo', manufacture_units: 5, manufacture_variants: [
+        { id: 3, variant_id: 11, name: 'M', sku: 'P-M', quantity: 5, source_id: 37, source_name: 'Produccion', source_type: 'production' },
+      ] },
+    ] } }));
+    const fixture = await setup(), component = fixture.componentInstance;
+    const first: HTMLInputElement = fixture.nativeElement.querySelector('.collection-variant input');
+    first.click(); fixture.detectChanges();
+    expect(component.selectedInventoryVariantIds.size).toBe(1);
+    expect(component.selectedInventoryProducts).toBe(1);
+    expect(fixture.nativeElement.querySelectorAll('.collection-variant input:checked').length).toBe(2);
+    component.productSearch = 'Polo'; fixture.detectChanges();
+    component.toggleInventoryProducts(component.filteredProducts);
+    expect([...component.selectedInventoryVariantIds]).toEqual([10, 11]);
+    component.toggleInventoryProducts(component.filteredProducts);
+    expect([...component.selectedInventoryVariantIds]).toEqual([10]);
+    expect(component.inventoryPercentages[0]).toBe(20);
+    expect(component.inventoryPercentages.at(-1)).toBe(100);
+    const percent: HTMLSelectElement = fixture.nativeElement.querySelector('#collection-inventory-percent');
+    expect(percent.options.length).toBe(9);
+    percent.selectedIndex = 2; percent.dispatchEvent(new Event('change')); fixture.detectChanges();
+    expect(component.inventoryPercentage).toBe(40);
+    expect(component.selectedPlannedUnits).toBe(20);
+    expect(component.selectedExportUnits).toBe(8);
+    expect(component.selectedInventoryPreview).toEqual([{ variant_id: 10, sku: 'B-S', planned_units: 20, export_units: 8 }]);
+    component.toggleInventoryVariant(11); component.inventoryPercentage = 50; fixture.detectChanges();
+    expect(component.selectedPlannedUnits).toBe(25);
+    expect(component.selectedExportUnits).toBe(12);
+    expect(fixture.nativeElement.querySelector('.collection-export-preview').textContent).toContain('12 unidades a exportar al 50 %');
+    fixture.destroy();
+  });
+  it('requires inventory review and confirmation, prevents duplicate sends and removes the clear selection button', async () => {
+    query.next(convertToParamMap({ view: 'products' }));
+    const fixture = await setup(), component = fixture.componentInstance;
+    const review = { domain: 'test-shop.myshopify.com', location_name: 'Principal', percentage: 40, token: 'approved-token',
+      items: [{ variant_id: 10, sku: 'B-S', name: 'Blusa', planned_units: 20, export_units: 8, current_units: 5 }] };
+    service.previewInventory.and.returnValue(of({ data: review }));
+    const pending = new Subject<{ data: { sent_variants: number; sent_units: number; message: string } }>();
+    service.sendInventory.and.returnValue(pending);
+    component.selectedInventoryVariantIds.add(10); component.inventoryPercentage = 40;
+    await component.prepareInventoryExport(); fixture.detectChanges();
+    expect(service.previewInventory).toHaveBeenCalledOnceWith(7, [10], 40);
+    expect(service.sendInventory).not.toHaveBeenCalled();
+    const dialog: HTMLDialogElement = fixture.nativeElement.querySelector('.inventory-review-dialog');
+    expect(dialog.open).toBeTrue(); expect(dialog.textContent).toContain('test-shop.myshopify.com');
+    expect(dialog.textContent).toContain('Confirmar envío a Shopify');
+    expect(fixture.nativeElement.textContent).not.toContain('Limpiar selección');
+    const sending = component.confirmInventoryExport(); await component.confirmInventoryExport();
+    expect(service.sendInventory).toHaveBeenCalledOnceWith(7, 'approved-token');
+    pending.next({ data: { sent_variants: 1, sent_units: 8, message: 'Stock confirmado.' } }); pending.complete();
+    await sending; expect(dialog.open).toBeFalse(); expect(component.notice).toContain('8 unidades');
+    fixture.destroy();
+  });
+  it('preserves the same inventory approval after a failed send so it can be retried safely', async () => {
+    const fixture = await setup(), component = fixture.componentInstance;
+    const review = { domain: 'test-shop.myshopify.com', location_name: 'Principal', percentage: 100, token: 'retry-token', items: [] };
+    component.selectedInventoryVariantIds.add(10);
+    service.previewInventory.and.returnValue(of({ data: review }));
+    service.sendInventory.and.returnValue(throwError(() => ({ error: { message: 'Shopify no confirmó el envío.' } })));
+    await component.prepareInventoryExport(); await component.confirmInventoryExport();
+    expect(component.inventoryReview?.token).toBe('retry-token'); expect(component.inventoryBusy).toBeFalse();
+    expect(component.inventoryError).toContain('Shopify');
+    expect(fixture.nativeElement.querySelector('.inventory-review-dialog').open).toBeTrue();
+    await component.confirmInventoryExport();
+    expect(service.sendInventory).toHaveBeenCalledTimes(2);
+    component.closeInventoryReview(); fixture.destroy();
+  });
+  it('links directly from each collection to its products', async () => {
+    params.next(convertToParamMap({}));
+    service.list.and.returnValue(of({ data: [structuredClone(snapshot.collection)], current_page: 1, last_page: 1, total: 1 }));
+    const fixture = await setup();
+    const link: HTMLAnchorElement = fixture.nativeElement.querySelector('.row-actions a');
+    expect(link.textContent).toContain('Productos');
+    expect(link.getAttribute('href')).toBe('/sorelle/dashboard/collections/7?view=products');
+    fixture.destroy();
+  });
   it('keeps collection actions accessible and opens the selected collection from its edit icon', async () => {
     query.next(convertToParamMap({ view: 'dashboard' }));
     const fixture = await setup();
@@ -157,7 +239,7 @@ describe('Collections workspace', () => {
     expect(edit.textContent).toContain('Editar colección');
     expect(edit.querySelector('i')).not.toBeNull();
     edit.click(); await fixture.whenStable(); fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('dialog').open).toBeTrue();
+    expect(fixture.nativeElement.querySelector('dialog:not(.inventory-review-dialog)').open).toBeTrue();
     expect(fixture.componentInstance.draft.id).toBe(7);
     expect(fixture.componentInstance.draft.name).toBe('Verano');
     fixture.destroy();

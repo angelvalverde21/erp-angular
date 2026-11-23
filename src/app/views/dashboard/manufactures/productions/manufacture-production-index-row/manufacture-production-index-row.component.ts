@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import Swal from 'sweetalert2';
+import { ManufactureProductionService } from '../manufacture.production.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import {
   faScissors, faTape, faEdit,
@@ -39,6 +42,33 @@ export class ManufactureProductionIndexRowComponent implements OnInit {
   faGears = faGears;
 
   @Input() production: any;
+  @Output() deleted = new EventEmitter<number>();
+  deleting = false;
+  private readonly productionService = inject(ManufactureProductionService);
+  private readonly destroyRef = inject(DestroyRef);
+  private destroyed = false;
+  get destructiveAction(): 'delete' | 'archive' | 'restore' {
+    return this.production.archived_at ? 'restore' : (this.production.can_delete === false || this.production.sum_kardexes > 0 ? 'archive' : 'delete');
+  }
+  async deleteProduction(): Promise<void> {
+    if (this.deleting) return;
+    this.deleting = true;
+    const action = this.destructiveAction;
+    const title = action === 'delete' ? '¿Eliminar producción?' : (action === 'archive' ? '¿Archivar producción?' : '¿Restaurar producción?');
+    const text = action === 'delete' ? `Se eliminará «${this.production.name}» con sus compras, pagos y procesos. Los productos y variantes del catálogo se conservarán.`
+      : action === 'archive' ? `«${this.production.name}» pasará a Archivadas. Se conservarán su stock, compras, pagos e historial.` : `«${this.production.name}» volverá al listado de producciones activas.`;
+    const result = await Swal.fire({ title, text, icon: 'warning', showCancelButton: true, confirmButtonText: action === 'delete' ? 'Eliminar producción' : (action === 'archive' ? 'Archivar' : 'Restaurar'), cancelButtonText: 'Cancelar', confirmButtonColor: action === 'delete' ? '#b34454' : '#7055ad' });
+    if (!result.isConfirmed || this.destroyed) { this.deleting = false; return; }
+    const request = action === 'delete' ? this.productionService.destroy(this.production.id) : this.productionService.setArchived(this.production.id, action === 'archive');
+    request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => { this.deleting = false; this.deleted.emit(this.production.id); },
+      error: error => {
+        this.deleting = false;
+        const message = error?.error?.errors ? Object.values(error.error.errors).flat().join(' ') : error?.error?.message || 'No se pudo eliminar la producción. Intenta nuevamente.';
+        void Swal.fire(action === 'delete' ? 'No se pudo eliminar' : 'No se pudo actualizar', message, 'error');
+      },
+    });
+  }
 
   store: string | null = "";
 
@@ -49,6 +79,7 @@ export class ManufactureProductionIndexRowComponent implements OnInit {
   ) {
 
     this.store = this._base.store;
+    this.destroyRef.onDestroy(() => this.destroyed = true);
 
   }
 

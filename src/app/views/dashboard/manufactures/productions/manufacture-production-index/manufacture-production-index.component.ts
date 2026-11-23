@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ManufactureProductionIndexRowComponent } from '../manufacture-production-index-row/manufacture-production-index-row.component';
 
 @Component({
@@ -11,6 +11,7 @@ import { ManufactureProductionIndexRowComponent } from '../manufacture-productio
 })
 export class ManufactureProductionIndexComponent {
 
+   @Output() deleted = new EventEmitter<number>();
    @Input() productions: any; 
 
 }

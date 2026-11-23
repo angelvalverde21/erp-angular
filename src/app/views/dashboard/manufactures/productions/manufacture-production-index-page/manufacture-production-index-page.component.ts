@@ -20,6 +20,8 @@ productions: any[] = [];
   activeFilters: ManufactureListFilters | null = null;
   error = '';
   loading = false;
+  showArchived = false;
+  setArchivedView(archived: boolean): void { this.showArchived = archived; this.productionsInit(); }
 
   private readonly destroy$ = new Subject<void>();
   private readonly cancelLoad$ = new Subject<void>();
@@ -42,12 +44,14 @@ productions: any[] = [];
     this.productionsInit();
   }
 
+  removeDeletedProduction(id: number): void { this.productions = this.productions.filter(production => production.id !== id); }
+
   productionsInit(): void {
     this.cancelLoad$.next();
     this.error = '';
     this.loading = true;
 
-    const request = this.activeFilters
+    const request = this.showArchived ? this._production.search({ ...this.activeFilters, archived: true }) : this.activeFilters
       ? this._production.search(this.activeFilters)
       : this._production.index();
 

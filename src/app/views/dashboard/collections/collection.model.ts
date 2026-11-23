@@ -3,6 +3,10 @@ export interface CollectionRecord {
   starts_on: string | null; ends_on: string | null; launch_on: string | null; processes_count?: number;
 }
 export interface CollectionOption { id: number; name: string; }
+export interface CollectionInventoryReview {
+  domain: string; location_name: string; percentage: number; token: string;
+  items: { variant_id: number; sku: string; name: string; planned_units: number; export_units: number; current_units: number }[];
+}
 export interface CollectionManufactureVariant {
   id: number; variant_id: number; name: string; sku: string | null; quantity: number;
   process_id: number; source_id: number; source_name: string; source_type: 'order' | 'production';

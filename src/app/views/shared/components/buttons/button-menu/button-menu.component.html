@@ -17,9 +17,9 @@
       }
     </div>
     <div class="action-menu-footer">
-      <button type="button" class="action-menu-item action-menu-danger" ngbDropdownItem>
-        <span class="action-menu-icon"><fa-icon [icon]="faTrash" aria-hidden="true"></fa-icon></span>
-        <span class="action-menu-label">Borrar</span>
+      <button type="button" class="action-menu-item" [class.action-menu-danger]="destructiveAction === 'delete'" ngbDropdownItem [disabled]="deleting" (click)="deleteRequested.emit()">
+        <span class="action-menu-icon"><fa-icon [icon]="destructiveAction === 'delete' ? faTrash : (destructiveAction === 'archive' ? faBoxArchive : faRotateLeft)" aria-hidden="true"></fa-icon></span>
+        <span class="action-menu-label">{{ destructiveAction === 'delete' ? 'Borrar' : (destructiveAction === 'archive' ? 'Archivar' : 'Restaurar') }}</span>
       </button>
     </div>
   </div>

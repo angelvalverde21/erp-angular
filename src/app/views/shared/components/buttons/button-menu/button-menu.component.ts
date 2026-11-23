@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEllipsis, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis, faTrash, faBoxArchive, faRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-button-menu',
@@ -18,7 +18,12 @@ export class ButtonMenuComponent {
   readonly toggleId = `action-menu-${ButtonMenuComponent.nextId++}`;
   readonly faEllipsis = faEllipsis;
   readonly faTrash = faTrash;
+  readonly faBoxArchive = faBoxArchive;
+  readonly faRotateLeft = faRotateLeft;
 
   @Input() menus: any[] = [];
   @Input() context = '';
+  @Input() deleting = false;
+  @Input() destructiveAction: 'delete' | 'archive' | 'restore' = 'delete';
+  @Output() deleteRequested = new EventEmitter<void>();
 }

@@ -12,7 +12,7 @@
     </tr></thead>
     <tbody>
       @for (production of productions; track production.id) {
-      <tr app-manufacture-production-index-row [production]="production"></tr>
+      <tr app-manufacture-production-index-row [production]="production" (deleted)="deleted.emit($event)"></tr>
       }
     </tbody>
   </table>

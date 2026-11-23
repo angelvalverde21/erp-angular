@@ -5,13 +5,14 @@
       <h2 id="production-list-title"><span class="production-list-icon" aria-hidden="true"><i class="fa-solid fa-list-ul"></i></span>Listado de producciones</h2>
       <span class="production-list-count">{{ productions.length }} {{ activeFilters ? (productions.length === 1 ? 'resultado' : 'resultados') : (productions.length === 1 ? 'producción' : 'producciones') }}</span>
     </header>
+    <div class="production-archive-tabs" aria-label="Estado de las producciones"><button type="button" [class.active]="!showArchived" [attr.aria-pressed]="!showArchived" (click)="setArchivedView(false)">Activas</button><button type="button" [class.active]="showArchived" [attr.aria-pressed]="showArchived" (click)="setArchivedView(true)"><i class="fa-solid fa-box-archive" aria-hidden="true"></i>Archivadas</button></div>
     <app-manufacture-index-filters searchLabel="Buscar producción" placeholder="Nombre o código de producción" [busy]="loading" [hasAppliedFilters]="!!activeFilters" (applyFilters)="applyFilters($event)" (clearFilters)="clearFilters()"></app-manufacture-index-filters>
     @if (loading) {
     <div class="production-empty" role="status"><app-loading></app-loading><p>Cargando producciones...</p></div>
     } @else if (error) {
     <div class="production-empty" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><h3>No pudimos cargar las producciones</h3><p>{{ error }}</p><button type="button" class="manufacture-secondary-action" (click)="productionsInit()">Reintentar</button></div>
     } @else if (productions.length) {
-    <app-manufacture-production-index [productions]="productions"></app-manufacture-production-index>
+    <app-manufacture-production-index [productions]="productions" (deleted)="removeDeletedProduction($event)"></app-manufacture-production-index>
     } @else {
     <div class="production-empty"><i class="fa-solid fa-gears" aria-hidden="true"></i><h3>No hay producciones para mostrar</h3><p>Prueba con otros filtros o crea una producción para comenzar.</p><a class="manufacture-primary-action" [routerLink]="createPath">Crear producción</a></div>
     }
