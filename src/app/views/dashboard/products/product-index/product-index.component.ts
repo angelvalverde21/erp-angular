@@ -31,16 +31,16 @@ export class ProductIndexComponent implements AfterViewInit, OnChanges, OnDestro
     if (product) product.shopify_linked = event.linked;
   }
   get selectedProducts(): Product[] { return this.products.filter(product => this.selectedIds.has(product.id)); }
-  get allProductsSelected(): boolean { return this.products.length > 0 && this.products.slice(0, 30).every(product => this.selectedIds.has(product.id)); }
+  get allProductsSelected(): boolean { return this.products.length > 0 && this.products.slice(0, 35).every(product => this.selectedIds.has(product.id)); }
   toggleProduct(id: number): void {
     if (this.bulkBusy) return;
     const next = new Set(this.selectedIds);
-    if (next.has(id)) next.delete(id); else if (next.size < 30) next.add(id);
+    if (next.has(id)) next.delete(id); else if (next.size < 35) next.add(id);
     this.selectedIds = next;
   }
   toggleProducts(): void {
     if (this.bulkBusy) return;
-    this.selectedIds = this.allProductsSelected ? new Set() : new Set(this.products.slice(0, 30).map(product => product.id));
+    this.selectedIds = this.allProductsSelected ? new Set() : new Set(this.products.slice(0, 35).map(product => product.id));
   }
   clearProducts(): void { if (!this.bulkBusy) this.selectedIds = new Set(); }
 

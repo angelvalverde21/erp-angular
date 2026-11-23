@@ -9,6 +9,7 @@
     </button>
   }
 </nav>
+<div class="session-panels">
 <div id="session-session" class="session-panel" role="tabpanel" aria-labelledby="session-nav-session" tabindex="0" [hidden]="activeSection !== 'session'">
   @if (!editing) { <app-photo-session-dashboard [resourceCounts]="{ photographers: count('photographers'), models: count('models'), locations: count('locations'), library: count('library') }" [summary]="taskSummary" [taskState]="taskState" (navigate)="goTo($event)" /> }
   <ng-content select="[sessionDetails]" />
@@ -18,3 +19,5 @@
 <div id="session-models" class="session-panel" role="tabpanel" aria-labelledby="session-nav-models" tabindex="0" [hidden]="activeSection !== 'models'"><app-photo-session-assignment-index kind="model" [contacts]="session.models || []" [options]="options?.models || []" [saving]="saving" (changeAssignment)="changeAssignment.emit($event)" (createRelated)="createRelated.emit($event)" /></div>
 <div id="session-locations" class="session-panel" role="tabpanel" aria-labelledby="session-nav-locations" tabindex="0" [hidden]="activeSection !== 'locations'"><app-photo-session-assignment-index kind="location" [locations]="session.locations || []" [options]="options?.locations || []" [saving]="saving" (changeAssignment)="changeAssignment.emit($event)" (createRelated)="createRelated.emit($event)" /></div>
 <div id="session-library" class="session-panel" role="tabpanel" aria-labelledby="session-nav-library" tabindex="0" [hidden]="activeSection !== 'library'"><ng-content select="[sessionLibrary]" /></div>
+
+</div>

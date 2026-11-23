@@ -8,10 +8,9 @@
     @if (isInvalid('name')) { <span class="text-danger small" role="alert">Ingresa un nombre para la orden.</span> }
   </div>
   <div class="purchase-order-field">
-    <label id="purchase-order-supplier-label">Proveedor</label>
+    <label for="purchase-order-supplier">Proveedor</label>
     <div class="purchase-order-supplier-control">
-      <app-supplier-selected formControlName="supplier_id" [suppliers]="suppliers" aria-labelledby="purchase-order-supplier-label"></app-supplier-selected>
-      <app-supplier-address-selection [form]="form" />
+      <app-supplier-selected formControlName="supplier_id" [suppliers]="suppliers" labelForId="purchase-order-supplier"></app-supplier-selected>
       <button type="button" class="btn btn-outline-secondary" (click)="openVerticallyCentered(newSupplier)"><i class="fa-solid fa-plus me-2" aria-hidden="true"></i>Nuevo proveedor</button>
     </div>
     <app-supplier-address-selection [form]="form" />

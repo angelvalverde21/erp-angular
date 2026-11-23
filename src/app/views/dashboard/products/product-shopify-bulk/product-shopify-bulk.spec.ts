@@ -40,12 +40,12 @@ describe('Bulk product selection', () => {
     expect(fixture.componentInstance.selectedIds.size).toBe(0);
     expect(fixture.nativeElement.querySelector('app-product-shopify-bulk')).toBeNull();
   });
-  it('limits each batch to 30 and removes stale selections when the list changes', () => {
-    fixture.componentRef.setInput('products', Array.from({ length: 31 }, (_, i) => ({ id: i + 1, name: 'Producto' }))); fixture.detectChanges();
+  it('limits each batch to 35 and removes stale selections when the list changes', () => {
+    fixture.componentRef.setInput('products', Array.from({ length: 36 }, (_, i) => ({ id: i + 1, name: 'Producto' }))); fixture.detectChanges();
     fixture.componentInstance.toggleProducts(); fixture.detectChanges();
-    expect(fixture.componentInstance.selectedIds.size).toBe(30);
+    expect(fixture.componentInstance.selectedIds.size).toBe(35);
     const inputs = fixture.nativeElement.querySelectorAll('tbody .product-select-column input') as NodeListOf<HTMLInputElement>;
-    expect(inputs[30].disabled).toBeTrue();
+    expect(inputs[35].disabled).toBeTrue();
     fixture.componentRef.setInput('products', []); fixture.detectChanges();
     expect(fixture.componentInstance.selectedIds.size).toBe(0);
   });
@@ -100,7 +100,8 @@ describe('Shopify draft publishing review', () => {
     expect(service.publish).not.toHaveBeenCalled();
     expect((fixture.nativeElement.querySelector('dialog') as HTMLDialogElement).open).toBeTrue();
     expect(fixture.nativeElement.querySelector('dialog').textContent).toContain('borradores');
-    expect(fixture.nativeElement.querySelector('dialog').textContent).toContain('No se enviarán fotos, precios ni stock');
+    expect(fixture.nativeElement.querySelector('dialog').textContent).toContain('No se enviarán fotos ni precios');
+    expect(fixture.nativeElement.querySelector('dialog').textContent).toContain('4 unidades disponibles');
     expect(fixture.nativeElement.querySelector('option:last-child').disabled).toBeTrue();
     expect(component.readyItems.map(item => item.id)).toEqual([1, 2]);
   });

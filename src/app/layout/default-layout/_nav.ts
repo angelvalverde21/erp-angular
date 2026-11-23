@@ -17,6 +17,19 @@ import { navManufactures } from './navs/_nav.manufactures';
 import { navAcquires } from './navs/_nav.acquires';
 
 export const navItems: CustomNavData[] = buildNav([
+  {
+    name: 'Colecciones',
+    url: 'dashboard/collections',
+    icon: 'fa-solid fa-layer-group',
+    roles: ['master', 'ceo', 'admin'],
+    children: [
+      {
+        name: 'colecciones',
+        url: 'dashboard/collections',
+        linkProps: { routerLinkActiveOptions: { exact: true } },
+      },
+    ],
+  },
   ...navDashboards,
 
   // ✅ Combina los módulos aquí

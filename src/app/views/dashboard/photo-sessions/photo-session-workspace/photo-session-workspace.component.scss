@@ -13,6 +13,16 @@
 .section-count { display: grid; place-items: center; min-width: 24px; padding: .2rem .35rem; border-radius: 6px; background: #f0f3f8; color: #60738c; font-size: .72rem; }
 [aria-selected="true"] .section-count { color: var(--photo-accent); background: #ffffffb3; }
 .session-panel:focus-visible { outline: 2px solid var(--photo-line); outline-offset: 4px; border-radius: 12px; }
-.session-panel[hidden] { display: none; }
+.session-panels { display: grid; align-items: start; min-width: 0; }
+.session-panel {
+  grid-area: 1 / 1;
+  min-width: 0;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 280ms ease, transform 280ms ease, display 280ms allow-discrete;
+}
+.session-panel[hidden] { display: none; opacity: 0; transform: translateY(-8px); pointer-events: none; }
+@starting-style { .session-panel:not([hidden]) { opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce) { .session-panel { transition: none; transform: none; } }
 @media(max-width: 1050px) { .session-navigation { grid-template-columns: repeat(3, minmax(0, 1fr)); position: static; } }
 @media(max-width: 650px) { .session-navigation { display: flex; overflow-x: auto; padding: .5rem; gap: .5rem; } .session-navigation button { flex: 0 0 auto; padding: .65rem; font-size: .75rem; } .section-icon { width: 30px; height: 30px; } }

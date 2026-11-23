@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": { "outDir": "./out-tsc/collections-tests", "types": ["jasmine", "@angular/localize"] },
+  "files": ["src/test.ts"],
+  "include": ["src/**/*.d.ts", "src/app/views/dashboard/collections/collections.component.spec.ts"]
+}

@@ -88,6 +88,7 @@ export class ManufactureOrderEditComponent implements OnInit, OnDestroy {
     this.form.patchValue({
       name: this.manufacture_order.name,
       supplier_id: this.manufacture_order.supplier_id,
+      supplier_address_id: this.manufacture_order.supplier_address_id ?? null,
       manufacture_start: this.manufacture_order.manufacture_start?.split(/[ T]/)[0] ?? '',
       manufacture_end: this.manufacture_order.manufacture_end?.split(/[ T]/)[0] ?? '',
     });

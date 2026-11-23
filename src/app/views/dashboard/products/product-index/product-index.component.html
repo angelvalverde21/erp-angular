@@ -12,13 +12,13 @@
     </div>
 
     @if (bulkActions && selectedIds.size) { <app-product-shopify-bulk [products]="selectedProducts" (clearSelection)="clearProducts()" (busyChanged)="bulkBusy = $event" (shopifyLinkChanged)="updateShopifyLink($event)"></app-product-shopify-bulk> }
-    @if (bulkActions && !selectedIds.size) { <p class="product-selection-hint">Selecciona productos para aplicar acciones masivas. Hasta 30 por envío.</p> }
+    @if (bulkActions && !selectedIds.size) { <p class="product-selection-hint">Selecciona productos para aplicar acciones masivas. Hasta 35 por envío.</p> }
     <div class="table-responsive product-table-scroll" tabindex="0" role="region" aria-label="Productos y controles de orden">
     <table class="table table-hover mb-0 align-middle product-table" [class.product-table-sortable]="sortable">
         <caption class="visually-hidden">Catálogo de productos con categoría, stock, precio en soles, fecha de creación y acceso a edición.</caption>
         <thead>
             <tr>
-                @if (bulkActions) { <th scope="col" class="product-select-column"><input type="checkbox" [checked]="allProductsSelected" [indeterminate]="selectedIds.size > 0 && !allProductsSelected" [disabled]="loading || bulkBusy || !products.length" (change)="toggleProducts()" aria-label="Seleccionar productos cargados, hasta 30" /></th> }
+                @if (bulkActions) { <th scope="col" class="product-select-column"><input type="checkbox" [checked]="allProductsSelected" [indeterminate]="selectedIds.size > 0 && !allProductsSelected" [disabled]="loading || bulkBusy || !products.length" (change)="toggleProducts()" aria-label="Seleccionar productos cargados, hasta 35" /></th> }
                 <th scope="col" class="text-center product-code" [class.d-none]="!sortable" [class.d-lg-table-cell]="!sortable" [attr.aria-sort]="columnSort('id')">
                     @if (sortable) {
                     <button type="button" class="product-column-sort" [class.product-column-sort-active]="sortBy === 'id'" (click)="sortChange.emit('id')" aria-label="Ordenar por código">
@@ -70,7 +70,7 @@
             } @else {
             @for (product of products; track product.id) {
             <tr class="product-row" [class.product-row-inserted]="highlightedId === product.id" [class.product-row-selected]="selectedIds.has(product.id)" [attr.data-product-id]="product.id" (click)="getProduct(product.id)">
-                @if (bulkActions) { <td class="product-select-column" (click)="$event.stopPropagation()"><input type="checkbox" [checked]="selectedIds.has(product.id)" [disabled]="bulkBusy || (!selectedIds.has(product.id) && selectedIds.size >= 30)" (change)="toggleProduct(product.id)" [attr.aria-label]="'Seleccionar ' + (product.name || 'producto ' + product.id)" /></td> }
+                @if (bulkActions) { <td class="product-select-column" (click)="$event.stopPropagation()"><input type="checkbox" [checked]="selectedIds.has(product.id)" [disabled]="bulkBusy || (!selectedIds.has(product.id) && selectedIds.size >= 35)" (change)="toggleProduct(product.id)" [attr.aria-label]="'Seleccionar ' + (product.name || 'producto ' + product.id)" /></td> }
                 <td class="text-center product-id" [class.d-none]="!sortable" [class.d-lg-table-cell]="!sortable">#{{ product.id }}</td>
                 <td>
                     <div class="product-identity">

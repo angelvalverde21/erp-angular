@@ -2,6 +2,9 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
+  { path: 'collections', loadChildren: () => import('./collections/routes.collection').then(module => module.routes) },
+  { path: 'projects', redirectTo: 'collections', pathMatch: 'full' },
+  { path: 'projects/:legacy_id', redirectTo: 'collections', pathMatch: 'full' },
   { path: 'photo-sessions', loadChildren: () => import('./photo-sessions/routes.photo-session').then(module => module.routes) },
   {
     path: 'orders-next',
