@@ -9,12 +9,14 @@ export interface CollectionInventoryReview {
 }
 export interface CollectionManufactureVariant {
   id: number; variant_id: number; name: string; sku: string | null; quantity: number;
+  shopify_variant_id?: string | null;
   process_id: number; source_id: number; source_name: string; source_type: 'order' | 'production';
 }
 export interface CollectionProcess {
   id: number; collection_id: number; collection_name: string; name: string; kind: string; source_type: string;
   source_id: number | null; owner_type: string; owner_id: number; status: string; progress: number | null;
   starts_on: string | null; due_on: string | null; notes: string | null; purchases_amount: number; paid: number;
+  source_created_at?: string | null; created_at?: string | null;
   purchases: any[]; stages: any[]; products_count?: number;
   responsible_id?: number | null; responsible?: { id: number; name: string } | null;
 }

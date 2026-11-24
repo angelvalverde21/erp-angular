@@ -18,6 +18,7 @@ export class ManufactureOrderIndexPageComponent implements OnInit, OnDestroy {
   activeFilters: ManufactureListFilters | null = null;
   error = '';
   loading = false;
+  mobileFiltersOpen = false;
 
   private readonly destroy$ = new Subject<void>();
   private readonly cancelLoad$ = new Subject<void>();

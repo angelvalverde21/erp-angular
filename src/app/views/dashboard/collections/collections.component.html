@@ -1,11 +1,15 @@
-<main class="collections-workspace">
+<main class="collections-workspace" [class.collection-detail-compact]="collectionId !== null">
   <header class="collections-header">
     <div class="header-copy"><span class="eyebrow"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> COLECCIONES</span>
       <h1>{{ collectionId ? (workspace?.collection?.name || 'Colección') : 'Colecciones' }}</h1>
       <p>{{ collectionId ? (workspace?.collection?.description || 'Procesos, inversión y recuperación de esta colección.') : 'Organiza tus colecciones y mide la inversión, las ventas y la recuperación de cada una.' }}</p>
     </div>
     <div class="header-actions">
-      @if (collectionId) { <a class="button secondary icon-button" [routerLink]="path" title="Volver a colecciones" aria-label="Volver a colecciones"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a><button type="button" class="button secondary" [disabled]="loading || saving" (click)="open('collection', workspace?.collection)"><i class="fa-solid fa-pen" aria-hidden="true"></i>Editar colección</button><button type="button" class="button primary" [disabled]="loading || saving" (click)="open('process')"><i class="fa-solid fa-plus" aria-hidden="true"></i>Añadir proceso</button> }
+      @if (collectionId) {
+        <a class="button secondary icon-button" [routerLink]="path" title="Volver a colecciones" aria-label="Volver a colecciones"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a>
+        <button type="button" class="button secondary" [disabled]="loading || saving" (click)="open('collection', workspace?.collection)"><i class="fa-solid fa-pen" aria-hidden="true"></i>Editar colección</button>
+        <button type="button" class="button primary" [disabled]="loading || saving" (click)="open('process')"><i class="fa-solid fa-plus" aria-hidden="true"></i>Añadir proceso</button>
+      }
       @else { <button type="button" class="button primary" [disabled]="loading || !!error" (click)="open('collection')"><i class="fa-solid fa-plus" aria-hidden="true"></i>Nueva colección</button> }
     </div>
   </header>
@@ -37,23 +41,68 @@
         @if (view === 'dashboard') {
           <section class="metrics" aria-label="Estado general de la colección">
             <button class="metric" (click)="navigate('purchases')"><span><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>Compras acumuladas</span><strong>{{ w.summary.purchases | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong><small>Compromisos registrados</small></button>
-            <button class="metric" (click)="navigate('purchases')"><span><i class="fa-solid fa-wallet" aria-hidden="true"></i>Inversión desembolsada</span><strong>{{ w.summary.paid | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong><small>{{ w.summary.pending_payment | currency:'PEN':'symbol':'1.2-2':'es-PE' }} por pagar</small></button>
-            <button class="metric" (click)="navigate('sales')"><span><i class="fa-solid fa-receipt" aria-hidden="true"></i>Ventas atribuidas</span><strong>{{ w.summary.sales | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong><small>{{ w.summary.attributed_units }} unidades atribuidas</small></button>
-            <button class="metric accent" (click)="navigate('sales')"><span><i class="fa-solid fa-coins" aria-hidden="true"></i>Cobros netos registrados</span><strong>{{ w.summary.collected | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong><small>Descontando devoluciones de dinero</small></button>
+            <button class="metric" (click)="navigate('sales')"><span><i class="fa-solid fa-receipt" aria-hidden="true"></i>Ventas netas</span><strong>{{ w.overview.total_sales === null ? '—' : (w.overview.total_sales | currency:'PEN':'symbol':'1.2-2':'es-PE') }}</strong><small>{{ w.overview.sales_available === false ? 'Ventas no disponibles todavía' : 'Descontando devoluciones' }}</small></button>
+            <button class="metric collection-units-metric" (click)="navigate('processes')"><span><i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>Unidades planificadas</span><strong>{{ w.summary.planned_units }}</strong><small><i class="fa-solid fa-box-open" aria-hidden="true"></i> {{ w.summary.received_units }} unidades recibidas</small></button>
+            <button class="metric overview-recovery" [attr.data-status]="w.overview.recovery_status" (click)="navigate('sales')">
+              <span><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i>Falta por recuperar</span>
+              <strong>{{ w.overview.remaining_recovery === null ? '—' : ((w.overview.remaining_recovery > 0 ? -w.overview.remaining_recovery : 0) | currency:'PEN':'symbol':'1.2-2':'es-PE') }}</strong>
+              @if (w.overview.sales_available !== false && w.overview.recovery_percent !== null) {
+                <progress class="collection-recovery-progress" [value]="recoveryProgress" max="100" [attr.aria-label]="'Recuperación de la colección: ' + w.overview.recovery_percent + ' %'"></progress>
+              }
+              <small>{{ w.overview.sales_available === false ? 'Falta información de pedidos' : w.overview.recovery_percent === null ? 'Sin gasto registrado' : w.overview.recovery_percent + ' % recuperado' }}</small>
+            </button>
           </section>
           <div class="dashboard-grid">
-            <section class="panel recovery dashboard-results" aria-labelledby="collection-results-title">
-          <div class="section-heading"><h2 id="collection-results-title"><i class="fa-solid fa-chart-line" aria-hidden="true"></i> Resultados</h2></div>
-          <div class="financial-overview" aria-label="Resumen de inversión de la colección">
-            <div class="overview-metric"><span><i class="fa-solid fa-receipt" aria-hidden="true"></i>Ventas totales ({{ w.overview.orders_count ?? '—' }})</span><strong>{{ w.overview.total_sales === null ? '—' : (w.overview.total_sales | currency:'PEN':'symbol':'1.2-2':'es-PE') }}</strong><small>{{ w.overview.sales_available === false ? 'Ventas no disponibles todavía' : 'Pedidos con productos de esta colección' }}</small></div>
-            <div class="overview-metric"><span><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>Monto gastado</span><strong>{{ w.overview.total_spent | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong><small>Compras de los procesos de la colección</small></div>
-            <div class="overview-metric overview-recovery" [attr.data-status]="w.overview.recovery_status"><span><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i>Falta por recuperar</span><strong>{{ w.overview.remaining_recovery === null ? '—' : (w.overview.remaining_recovery | currency:'PEN':'symbol':'1.2-2':'es-PE') }}</strong><small>{{ w.overview.sales_available === false ? 'Falta información de pedidos' : w.overview.recovery_percent === null ? 'Sin gasto registrado' : w.overview.recovery_percent + ' % recuperado' }}</small></div>
+            <section class="panel dashboard-process-panel" aria-labelledby="dashboard-process-title">
+              <div class="section-heading dashboard-panel-heading"><div class="dashboard-panel-title"><span class="dashboard-panel-icon"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span><div><h2 id="dashboard-process-title">Avance de los procesos</h2><p>Los más recientes de tu colección.</p></div></div><button type="button" class="button secondary small-button" (click)="navigate('processes')">Ver todos<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+              <div class="dashboard-process-summary" aria-label="Resumen de procesos">
+                <span><strong>{{ w.summary.processes }}</strong> procesos</span>
+                <span class="is-completed"><i class="fa-solid fa-circle-check" aria-hidden="true"></i><strong>{{ w.summary.completed }}</strong> terminados</span>
+                <span [class.is-overdue]="w.summary.overdue > 0"><i class="fa-regular fa-clock" aria-hidden="true"></i><strong>{{ w.summary.overdue }}</strong> con fecha vencida</span>
+              </div>
+              <div class="dashboard-process-columns" aria-hidden="true"><span>Proceso</span><span>Avance</span><span>Fecha prevista</span><span>Estado</span><span></span></div>
+              <div class="dashboard-process-list">
+                @for (process of processes.slice(0, 4); track process.id) {
+                  <button type="button" class="dashboard-process-row" (click)="navigate('processes')" [attr.aria-label]="'Ver procesos: ' + process.name">
+                    <span class="dashboard-process-identity"><span class="process-kind-icon" [attr.data-kind]="process.kind"><i [class]="'fa-solid ' + (processIcons[process.kind] || 'fa-gears')" aria-hidden="true"></i></span><span><strong>{{ process.name }}</strong><small>{{ kinds[process.kind] }}@if (process.source_created_at) { · {{ process.source_created_at | date:'dd/MM/yyyy':'-0500' }} }</small></span></span>
+                    <span class="dashboard-process-progress">@if (process.progress !== null) { <span><small>Avance</small><strong>{{ process.progress }} %</strong></span><progress [value]="process.progress" max="100" [attr.aria-label]="'Avance de ' + process.name"></progress> } @else { <small>Sin etapas de avance</small> }</span>
+                    <span class="dashboard-process-due"><i class="fa-regular fa-calendar" aria-hidden="true"></i>{{ (process.due_on | date:'dd/MM/yyyy') || 'Sin fecha prevista' }}</span>
+                    <span class="status" [attr.data-status]="process.status">{{ statuses[process.status] || process.status }}</span>
+                    <i class="fa-solid fa-chevron-right dashboard-row-arrow" aria-hidden="true"></i>
+                  </button>
+                } @empty {
+                  <div class="dashboard-empty"><span class="dashboard-empty-icon"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span><strong>Tu colección empieza con un proceso</strong><p>Añade una producción, orden de compra o actividad para ver su avance.</p></div>
+                }
+              </div>
+              <div class="dashboard-process-footer"><span><i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>{{ w.summary.planned_units }} unidades previstas</span><span><i class="fa-solid fa-box-open" aria-hidden="true"></i>{{ w.summary.received_units }} unidades recibidas</span><span>Mostrando {{ processes.slice(0, 4).length }} de {{ processes.length }}</span></div>
+            </section>
           </div>
-          </section>
-            <section class="panel"><div class="section-heading"><div><h2>Avance de los procesos</h2><p>Cada área conserva su propio avance.</p></div><button type="button" class="button secondary small-button" (click)="navigate('processes')"><i class="fa-solid fa-list-check" aria-hidden="true"></i>Ver todos</button></div><div class="process-totals"><div><strong>{{ w.summary.processes }}</strong><span>Procesos</span></div><div><strong>{{ w.summary.completed }}</strong><span>Terminados</span></div><div><strong>{{ w.summary.overdue }}</strong><span>Con fecha vencida</span></div></div><div class="small-metrics"><span>{{ w.summary.planned_units }} unidades previstas</span><span>{{ w.summary.received_units }} unidades recibidas</span></div>@for (process of processes.slice(0, 4); track process.id) { <button class="process-preview" (click)="navigate('processes')"><span>{{ process.name }}<small>{{ kinds[process.kind] }}</small></span><span class="status" [attr.data-status]="process.status">{{ statuses[process.status] || process.status }}</span><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button> } @empty { <p class="muted">Añade una producción, orden, sesión o actividad para empezar.</p> }</section>
+          <div class="dashboard-bottom-grid">
+            <section class="panel dashboard-agenda" aria-labelledby="dashboard-agenda-title">
+              <div class="section-heading dashboard-panel-heading"><div class="dashboard-panel-title"><span class="dashboard-panel-icon"><i class="fa-regular fa-calendar" aria-hidden="true"></i></span><div><h2 id="dashboard-agenda-title">Próximas actividades</h2><p>Fechas previstas y pendientes de la colección.</p></div></div><span class="dashboard-count">{{ upcoming.length }}</span></div>
+              <div class="dashboard-agenda-list">
+                @for (activity of upcoming; track activity.name + activity.date) {
+                  <button type="button" class="dashboard-agenda-row" [class.is-overdue]="activity.overdue" (click)="navigate(activity.view)">
+                    <time class="dashboard-calendar" [attr.datetime]="activity.date"><strong>{{ activity.date | date:'dd' }}</strong><small>{{ activity.date | date:'MMM' }}</small></time>
+                    <span class="dashboard-agenda-copy"><strong>{{ activity.name }}</strong><small>{{ activity.view === 'dashboard' ? 'Lanzamiento de colección' : 'Fecha prevista del proceso' }}</small></span>
+                    <span class="dashboard-agenda-status" [class.is-today]="activity.date === today">{{ activity.overdue ? 'Vencida' : activity.date === today ? 'Hoy' : 'Programada' }}</span>
+                    <i class="fa-solid fa-chevron-right dashboard-row-arrow" aria-hidden="true"></i>
+                  </button>
+                } @empty {
+                  <div class="dashboard-empty"><span class="dashboard-empty-icon"><i class="fa-regular fa-calendar-check" aria-hidden="true"></i></span><strong>Sin actividades programadas</strong><p>Añade fechas previstas a tus procesos para organizar las próximas actividades.</p></div>
+                }
+              </div>
+            </section>
+            <section class="panel dashboard-cash" aria-labelledby="dashboard-cash-title">
+              <div class="section-heading dashboard-panel-heading"><div class="dashboard-panel-title"><span class="dashboard-panel-icon"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span><div><h2 id="dashboard-cash-title">Evolución de pagos y cobros</h2><p>Importes acumulados por fecha.</p></div></div></div>
+              <div class="chart-legend"><span><i aria-hidden="true"></i>Pagos</span><span><i aria-hidden="true"></i>Cobros</span></div>
+              @if (w.timeline.length) {
+                <svg class="cash-chart" viewBox="0 0 600 205" role="img" aria-label="Evolución acumulada de pagos y cobros"><g class="dashboard-chart-grid"><path d="M20 30H580M20 80H580M20 130H580M20 180H580"/></g><polyline [attr.points]="chartPoints('paid')" fill="none" stroke="#7660b5" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><polyline [attr.points]="chartPoints('collected')" fill="none" stroke="#2a8b73" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg><div class="chart-dates"><span>{{ w.timeline[0].date | date:'dd/MM/yyyy' }}</span><span>{{ w.timeline[w.timeline.length - 1].date | date:'dd/MM/yyyy' }}</span></div>
+              } @else {
+                <div class="dashboard-empty"><span class="dashboard-empty-icon"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span><strong>Aún no hay movimientos registrados</strong><p>Al registrar pagos o cobros podrás seguir aquí su evolución.</p></div>
+              }
+            </section>
           </div>
-          <section class="panel"><div class="section-heading"><div><h2>Próximas actividades</h2><p>Fechas previstas de procesos y lanzamientos.</p></div></div>@for (activity of upcoming; track activity.name + activity.date) { <button type="button" class="process-preview" (click)="navigate(activity.view)"><span>{{ activity.name }}</span><span [class.text-danger]="activity.overdue">{{ activity.date | date:'dd/MM/yyyy' }}{{ activity.overdue ? ' · Fecha vencida' : '' }}</span><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button> } @empty { <p class="empty-inline">Añade fechas previstas en tus procesos o colecciones para organizar las próximas actividades.</p> }</section>
-          <section class="panel"><div class="section-heading"><div><h2>Evolución de pagos y cobros</h2><p>Importes acumulados por fecha.</p></div><span class="chart-legend"><span>● Pagos</span><span>● Cobros</span></span></div>@if (w.timeline.length) { <svg class="cash-chart" viewBox="0 0 600 205" role="img" aria-label="Evolución acumulada de pagos y cobros"><path d="M20 180H580" stroke="currentColor" opacity=".15"/><polyline [attr.points]="chartPoints('paid')" fill="none" stroke="#7660b5" stroke-width="3"/><polyline [attr.points]="chartPoints('collected')" fill="none" stroke="#2a8b73" stroke-width="3"/></svg><div class="chart-dates"><span>{{ w.timeline[0].date | date:'dd/MM/yyyy' }}</span><span>{{ w.timeline[w.timeline.length - 1].date | date:'dd/MM/yyyy' }}</span></div> } @else { <p class="empty-inline">La gráfica aparecerá cuando registres pagos o cobros.</p> }</section>
         }
         @if (view === 'processes') {
           @if (purchaseProcess; as process) {
@@ -61,11 +110,11 @@
               <app-purchase-index [purchases]="process.purchases" [purchaseable_type]="process.owner_type" [purchaseable_id]="process.owner_id" [productionName]="process.name" [productionSections]="process.stages" (purchasesChanged)="refreshPurchases()"></app-purchase-index>
             </section>
           } @else {
-            <div class="section-heading"><div><h2>Procesos de la colección</h2><p>Crea uno nuevo o incorpora uno existente con su historial completo.</p></div><button class="button primary" (click)="open('process')"><i class="fa-solid fa-plus" aria-hidden="true"></i>Añadir proceso</button></div>
+            <div class="section-heading"><div><h2>Procesos de la colección</h2><p>Crea uno nuevo o incorpora uno existente con su historial completo.</p></div></div>
             <div class="process-table-layout">
-              <div class="process-data-scroll"><table class="process-table" aria-label="Procesos de la colección"><thead><tr><th>Proceso</th><th>Productos</th><th>Responsable</th><th>Fecha prevista</th><th>Estado / avance</th><th>Compras</th><th>Pagado</th></tr></thead><tbody>
+              <div class="process-data-scroll"><table class="process-table" aria-label="Procesos de la colección"><thead><tr><th>Proceso</th><th>Productos</th><th>Responsable</th><th>Fechas</th><th>Estado / avance</th><th>Compras</th><th>Pagado</th></tr></thead><tbody>
               @for (process of processes; track process.id) {
-                <tr><td class="process-name-cell"><div class="process-identity"><span class="process-kind-icon" [attr.data-kind]="process.kind" [title]="kinds[process.kind] || 'Proceso'"><i [class]="'fa-solid ' + (processIcons[process.kind] || 'fa-gears')" aria-hidden="true"></i></span><div class="process-identity-text"><strong [id]="'collection-process-' + process.id" [title]="process.name">@if (process.source_type !== 'other') { <a class="process-name-link" [routerLink]="originLink(process)">{{ process.name }}</a> } @else { {{ process.name }} }</strong><small>{{ kinds[process.kind] }}</small></div></div></td><td class="process-products-count">{{ process.products_count ?? 0 }}</td><td class="process-responsible"><span [title]="process.responsible?.name || 'Sin asignar'">{{ process.responsible?.name || 'Sin asignar' }}</span></td><td>{{ (process.due_on | date:'dd/MM/yyyy') || '—' }}</td><td class="progress-cell"><span class="status" [attr.data-status]="process.status">{{ statuses[process.status] || process.status }}</span>@if (process.progress !== null) { <progress [value]="process.progress" max="100" aria-label="Avance del proceso"></progress><small>{{ process.progress }} %</small> }</td><td>{{ process.purchases_amount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td><td>{{ process.paid | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td></tr>
+                <tr><td class="process-name-cell"><div class="process-identity"><span class="process-kind-icon" [attr.data-kind]="process.kind" [title]="kinds[process.kind] || 'Proceso'"><i [class]="'fa-solid ' + (processIcons[process.kind] || 'fa-gears')" aria-hidden="true"></i></span><div class="process-identity-text"><strong [id]="'collection-process-' + process.id" [title]="process.name">@if (process.source_type !== 'other') { <a class="process-name-link" [routerLink]="originLink(process)">{{ process.name }}</a> } @else { {{ process.name }} }</strong><small>{{ kinds[process.kind] }}</small></div></div></td><td class="process-products-count">{{ process.products_count ?? 0 }}</td><td class="process-responsible"><span [title]="process.responsible?.name || 'Sin asignar'">{{ process.responsible?.name || 'Sin asignar' }}</span></td><td class="process-dates"><span>Creado: {{ ((process.source_created_at || process.created_at) | date:'dd/MM/yyyy':'-0500') || 'Sin fecha' }}</span><small>{{ process.due_on ? 'Prevista: ' + (process.due_on | date:'dd/MM/yyyy') : 'Sin fecha prevista' }}</small></td><td class="progress-cell"><span class="status" [attr.data-status]="process.status">{{ statuses[process.status] || process.status }}</span>@if (process.progress !== null) { <progress [value]="process.progress" max="100" aria-label="Avance del proceso"></progress><small>{{ process.progress }} %</small> }</td><td>{{ process.purchases_amount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td><td>{{ process.paid | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td></tr>
               } @empty { <tr><td colspan="7" class="empty">Añade una producción, orden, sesión o actividad para empezar.</td></tr> }
               </tbody></table></div>
               <div class="process-actions-fixed"><table class="process-table" aria-label="Acciones de los procesos"><thead><tr><th>Acciones</th></tr></thead><tbody>
@@ -77,6 +126,7 @@
           }
         }
         @if (view === 'products') {
+          <section class="collection-products-view" aria-label="Inventario de la colección">
           <div class="section-heading"><div><h2>Productos de la colección</h2><p>Los productos se incorporan desde las producciones y órdenes de compra vinculadas a esta colección.</p></div><button class="button secondary" (click)="navigate('processes')"><i class="fa-solid fa-industry" aria-hidden="true"></i>Ver producciones y órdenes</button></div>
           <div class="collection-product-toolbar">
             <div class="collection-product-totals" aria-label="Totales de la colección">
@@ -87,21 +137,33 @@
             @if (productSearch.trim()) { <p class="collection-product-search-status" role="status">{{ filteredProducts.length }} de {{ w.products.length }} productos coinciden con tu búsqueda.</p> }
           </div>
           <div class="collection-inventory-selection" aria-label="Selección de inventario para Shopify">
-            <div class="collection-selection-copy"><strong><i class="fa-solid fa-list-check" aria-hidden="true"></i>Inventario para Shopify</strong><span role="status">{{ selectedInventoryProducts }} productos · {{ selectedInventoryVariantIds.size }} variantes seleccionadas</span></div>
+            <div class="collection-selection-identity"><span class="collection-shopify-mark"><i class="fa-brands fa-shopify" aria-hidden="true"></i></span><div class="collection-selection-copy"><strong>Inventario para Shopify</strong><span role="status">{{ selectedInventoryProducts }} productos · {{ selectedInventoryVariantIds.size }} variantes seleccionadas</span></div></div>
             <div class="collection-selection-controls"><button type="button" class="button secondary small-button" [disabled]="inventoryBusy || !productVariantIds(filteredProducts).length" (click)="toggleInventoryProducts(filteredProducts)">{{ allInventorySelected(filteredProducts) ? 'Quitar selección visible' : 'Seleccionar visibles' }}</button><label for="collection-inventory-percent">Porcentaje a exportar<select id="collection-inventory-percent" [(ngModel)]="inventoryPercentage" [disabled]="inventoryBusy">@for (percentage of inventoryPercentages; track percentage) { <option [ngValue]="percentage">{{ percentage }} %</option> }</select></label><button type="button" class="button primary small-button" [disabled]="inventoryBusy || !selectedInventoryVariantIds.size || selectedInventoryVariantIds.size > 250" (click)="prepareInventoryExport()"><i class="fa-solid" [class.fa-spinner]="inventoryBusy" [class.fa-spin]="inventoryBusy" [class.fa-cloud-arrow-up]="!inventoryBusy" aria-hidden="true"></i>{{ inventoryBusy ? 'Preparando envío…' : 'Enviar stock a Shopify' }}</button></div>
             @if (inventoryError && !inventoryReview) { <p class="feedback error" role="alert">{{ inventoryError }}</p> }
-            <div class="collection-export-preview" role="status"><span><strong>{{ selectedPlannedUnits }}</strong> unidades previstas seleccionadas</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i><span><strong>{{ selectedExportUnits }}</strong> unidades a exportar al {{ inventoryPercentage }} %</span><small>El porcentaje se aplica al total previsto de cada variante y se redondea hacia abajo. Hasta 250 variantes vinculadas a Shopify por envío.</small></div>
+            <div class="collection-export-preview" role="status">
+              <div class="collection-export-calculation"><span><small>Unidades previstas</small><strong>{{ selectedPlannedUnits }}</strong></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i><span class="collection-export-result"><small>A exportar al {{ inventoryPercentage }} %</small><strong>{{ selectedExportUnits }} <span>unidades</span></strong></span></div>
+              <p><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>El porcentaje se calcula por variante y se redondea hacia abajo. Puedes revisar las cantidades antes de confirmar el envío.<small>Hasta 250 variantes vinculadas por envío.</small></span></p>
+            </div>
           </div>
           <div class="table-scroll collection-product-table-scroll"><table class="collection-products-table" aria-label="Productos y variantes de la colección">
             <thead><tr><th><label class="collection-inventory-check"><input type="checkbox" [checked]="allInventorySelected(filteredProducts)" [indeterminate]="someInventorySelected(filteredProducts)" [disabled]="!productVariantIds(filteredProducts).length" (change)="toggleInventoryProducts(filteredProducts)" aria-label="Seleccionar todos los productos visibles"><span>Producto</span></label></th><th>Variante / SKU</th><th>Orden de compra / producción</th><th>Unidades</th><th>Acciones</th></tr></thead>
             @for (product of filteredProducts; track product.id) {
+              @let shopify = productShopifyLink(product);
               <tbody class="collection-product-group">
                 @for (line of product.manufacture_variants; track line.id) {
-                  <tr [class.sku-match]="highlightedSkuRows.has(line.id)">
-                    @if ($first) { <td class="collection-product-name" [attr.rowspan]="product.manufacture_variants.length"><label class="collection-inventory-check"><input type="checkbox" [checked]="allInventorySelected([product])" [indeterminate]="someInventorySelected([product])" [disabled]="inventoryBusy" (change)="toggleInventoryProducts([product])" [attr.aria-label]="'Seleccionar producto ' + product.name"><span><strong>{{ product.name }}</strong><small>{{ product.manufacture_units }} unidades en manufacturas</small></span></label></td> }
+                  <tr [class.sku-match]="highlightedSkuRows.has(line.id)" [class.collection-variant-selected]="selectedInventoryVariantIds.has(line.variant_id)">
+                    @if ($first) {
+                      <td class="collection-product-name" [attr.rowspan]="product.manufacture_variants.length">
+                        <label class="collection-inventory-check"><input type="checkbox" [checked]="allInventorySelected([product])" [indeterminate]="someInventorySelected([product])" [disabled]="inventoryBusy" (change)="toggleInventoryProducts([product])" [attr.aria-label]="'Seleccionar producto ' + product.name"><span>
+                          <strong>{{ product.name }}</strong>
+                          <span class="collection-shopify-badge" [attr.data-state]="shopify.state" [title]="shopify.detail"><i class="fa-brands fa-shopify" aria-hidden="true"></i>{{ shopify.label }}</span>
+                          <small>{{ product.manufacture_units }} unidades en manufacturas</small>
+                        </span></label>
+                      </td>
+                    }
                     <td class="collection-variant"><label class="collection-inventory-check"><input type="checkbox" [checked]="selectedInventoryVariantIds.has(line.variant_id)" [disabled]="inventoryBusy" (change)="toggleInventoryVariant(line.variant_id)" [attr.aria-label]="'Seleccionar variante ' + product.name + ' ' + line.name + ' ' + (line.sku || '')"><span><strong>{{ line.name }}</strong><small><i class="fa-solid fa-barcode" aria-hidden="true"></i>{{ line.sku || 'Sin SKU' }}</small></span></label></td>
                     <td class="collection-product-source"><a [routerLink]="manufactureVariantLink(line)" [queryParams]="line.source_type === 'production' ? { stage: 'corte', view: 'products' } : {}"><i [class]="'fa-solid ' + processIcons[line.source_type]" aria-hidden="true"></i>{{ line.source_name }}</a><small>{{ line.source_type === 'order' ? 'Orden de compra' : 'Producción' }} #{{ line.source_id }}</small></td>
-                    <td class="collection-variant-units">{{ line.quantity }}</td>
+                    <td class="collection-variant-units"><span class="collection-unit-count">{{ line.quantity }}</span></td>
                     @if ($first) {
                       <td [attr.rowspan]="product.manufacture_variants.length"><div ngbDropdown container="body" [placement]="['bottom-end', 'top-end']" class="collection-product-actions">
                         <button type="button" ngbDropdownToggle class="button secondary small-button" [id]="'product-menu-' + product.id" [attr.aria-label]="'Acciones de ' + product.name">Acciones</button>
@@ -119,7 +181,8 @@
                 }
               </tbody>
             } @empty { <tbody><tr><td colspan="5">{{ productSearch.trim() ? 'No se encontraron productos con esa búsqueda.' : 'Los productos aparecerán cuando los agregues a una producción u orden de compra vinculada.' }}</td></tr></tbody> }
-          </table></div><p class="help">Las unidades corresponden a las cantidades pedidas en cada orden de compra o previstas en cada producción vinculada. Se actualizan desde su manufactura de origen.</p>
+          </table></div><p class="help collection-products-footnote"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Las unidades corresponden a las cantidades pedidas o previstas. Se actualizan desde la producción u orden de compra de origen.</span></p>
+          </section>
         }
         @if (view === 'purchases') {
           <div class="section-heading"><div><h2>Compras consolidadas</h2><p>Cada compra conserva su proceso de origen y se contabiliza una sola vez.</p></div><button class="button secondary" (click)="navigate('processes')"><i class="fa-solid fa-cart-plus" aria-hidden="true"></i>Registrar desde un proceso</button></div><div class="table-scroll"><table><thead><tr><th>Compra / proveedor</th><th>Colección</th><th>Proceso</th><th>Importe</th><th>Pagado</th></tr></thead><tbody>@for (purchase of w.purchases; track purchase.id) { <tr><td>#{{ purchase.id }} · {{ purchase.supplier?.user?.name || purchase.supplier?.name || 'Sin proveedor' }}</td><td>{{ purchase.collection_name }}</td><td><button type="button" class="button secondary small-button" (click)="navigate('processes', purchase.collection_id)"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>{{ purchase.process_name }}</button></td><td>{{ purchase.amount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td><td>{{ purchase.paid | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td></tr> } @empty { <tr><td colspan="5">Las compras de tus procesos aparecerán aquí.</td></tr> }</tbody></table></div>

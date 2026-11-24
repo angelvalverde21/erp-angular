@@ -64,6 +64,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   readonly today = todayInLima();
   collections: CollectionRecord[] = [];
   workspace: CollectionWorkspace | null = null;
+  get recoveryProgress(): number {
+    return Math.min(100, Math.max(0, this.workspace?.overview.recovery_percent ?? 0));
+  }
   page = 1; lastPage = 1; total = 0; search = ''; status = '';
   loading = true; saving = false; optionsLoading = false; error = ''; formError = ''; notice = '';
   formKind = ''; draft: any = {}; options: any[] = []; optionSearch = '';
@@ -82,6 +85,16 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   responsibles: { id: number; name: string }[] = [];
   purchaseProcess: CollectionProcess | null = null;
   productSearch = '';
+  productShopifyLink(product: { manufacture_variants?: CollectionManufactureVariant[] }): { state: string; label: string; detail: string } {
+    const variants = new Map((product.manufacture_variants ?? []).map(line => [line.variant_id, line]));
+    const linked = [...variants.values()].filter(line => /^(?:gid:\/\/shopify\/ProductVariant\/)?\d+$/.test(line.shopify_variant_id ?? '')).length;
+    const total = variants.size;
+    return {
+      state: linked === 0 ? 'unlinked' : linked === total ? 'linked' : 'partial',
+      label: linked === 0 ? 'Sin enlace a Shopify' : linked === total ? 'Enlazado a Shopify' : 'Enlace parcial a Shopify',
+      detail: `${linked} de ${total} variantes de la colección con vínculo guardado en el ERP.`,
+    };
+  }
   readonly inventoryPercentages = [20, 30, 40, 50, 60, 70, 80, 90, 100];
   inventoryPercentage = 100;
   selectedInventoryVariantIds = new Set<number>();
@@ -258,7 +271,12 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         : this.formKind === 'sale' ? this.service.sale(id, data)
         : this.service.receipt(id, data.sale_id, data);
       await firstValueFrom(request.pipe(takeUntil(this.destroy$)));
-      this.editor?.nativeElement.close(); this.notice = 'Cambios guardados.'; this.purchaseProcess = null; await this.load();
+      this.editor?.nativeElement.close(); this.notice = 'Cambios guardados.'; this.purchaseProcess = null;
+      if (this.formKind === 'process') {
+        this.view = 'processes';
+        this.navigate('processes');
+      }
+      await this.load();
     } catch (error) { if (!this.destroyed) this.formError = this.message(error); }
     finally { this.saving = false; }
   }

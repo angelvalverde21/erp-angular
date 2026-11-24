@@ -1,3 +1,14 @@
 @use '../purchase-order-ui';
 .manufacture-list-heading { padding-block: 1rem; }
+.purchase-order-heading-copy { display: flex; align-items: center; justify-content: space-between; flex: 1; gap: 1rem; min-width: 0; }
 .purchase-order-list-count { color: var(--cui-secondary-color, #64748b); background: rgba(100, 116, 139, .06); padding: .35rem .7rem; border-radius: 2rem; font-size: .75rem; }
+.purchase-order-mobile-search { display: none; }
+@media (max-width: 767px) {
+  .manufacture-list-heading { flex-direction: row; align-items: center; gap: .75rem; }
+  .purchase-order-heading-copy { display: grid; justify-content: start; gap: .3rem; }
+  .purchase-order-list-count { padding: 0; background: transparent; font-size: .7rem; }
+  .purchase-order-mobile-search { display: flex; flex-direction: column; align-items: flex-end; gap: .3rem; flex-shrink: 0; }
+  .purchase-order-mobile-search button { font-size: .75rem; padding: .55rem .65rem; white-space: nowrap; }
+  .purchase-order-active-filters { color: var(--manufacture-accent, #087f76); font-size: .75rem; font-weight: 600; }
+  .purchase-order-filters:not(.is-open) { display: none; }
+}

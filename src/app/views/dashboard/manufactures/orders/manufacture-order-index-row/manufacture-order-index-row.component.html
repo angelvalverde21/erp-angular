@@ -4,6 +4,10 @@
     <span>#{{ manufacture.id }}</span>
     @if (manufacture.supplier?.user?.name || manufacture.supplier?.name; as supplierName) { <span>{{ supplierName }}</span> }
   </div>
+  @if (updatedDate; as updated) {
+    @let recent = recentUpdateLabel(updated);
+    <div class="purchase-order-updated" [class.is-recent]="recent" [title]="(updated | date:'dd/MM/yyyy, HH:mm':'-0500') || ''"><i class="fa-regular fa-clock" aria-hidden="true"></i><span>Actualizado {{ recent || ('el ' + (updated | date:'dd/MM/yyyy':'-0500')) }} a las {{ updated | date:'HH:mm':'-0500' }}</span></div>
+  }
 </td>
 <td class="text-end purchase-order-number">{{ manufacture.sum_variants ?? 0 }}</td>
 <td class="text-end"><span class="purchase-order-received">{{ manufacture.sum_kardexes ?? 0 }}</span></td>

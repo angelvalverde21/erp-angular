@@ -2,10 +2,20 @@
   <app-manufacture-section-header section="order" title="Órdenes de compra" description="Gestiona pedidos a proveedores, pagos y entregas de mercadería." actionLabel="Nueva orden de compra" [actionLink]="['./create']" [showNavigation]="true"></app-manufacture-section-header>
   <section class="production-panel" aria-labelledby="order-list-title">
     <header class="production-section-heading manufacture-list-heading">
+      <div class="purchase-order-heading-copy">
       <h2 id="order-list-title">Órdenes registradas</h2>
       <span class="purchase-order-list-count">{{ manufactures.length }} {{ activeFilters ? 'resultados' : 'registros en esta vista' }}</span>
+      </div>
+    <div class="purchase-order-mobile-search">
+      <button type="button" class="manufacture-secondary-action" [attr.aria-expanded]="mobileFiltersOpen" aria-controls="purchase-order-filters" (click)="mobileFiltersOpen = !mobileFiltersOpen">
+        <i class="fa-solid" [class.fa-magnifying-glass]="!mobileFiltersOpen" [class.fa-xmark]="mobileFiltersOpen" aria-hidden="true"></i>{{ mobileFiltersOpen ? 'Ocultar búsqueda' : 'Buscar y filtrar' }}
+      </button>
+      @if (activeFilters) { <span class="purchase-order-active-filters">Filtros activos</span> }
+    </div>
     </header>
-    <app-manufacture-index-filters searchLabel="Buscar orden de compra" placeholder="Nombre o código de la orden" [busy]="loading" [hasAppliedFilters]="!!activeFilters" (applyFilters)="applyFilters($event)" (clearFilters)="clearFilters()"></app-manufacture-index-filters>
+    <div id="purchase-order-filters" class="purchase-order-filters" [class.is-open]="mobileFiltersOpen">
+      <app-manufacture-index-filters searchLabel="Buscar orden de compra" placeholder="Nombre o código de la orden" [busy]="loading" [hasAppliedFilters]="!!activeFilters" (applyFilters)="applyFilters($event)" (clearFilters)="clearFilters()"></app-manufacture-index-filters>
+    </div>
     @if (loading) {
     <div class="production-empty" role="status"><app-loading></app-loading><p>Cargando órdenes de compra...</p></div>
     } @else if (error) {

@@ -8,6 +8,8 @@ td { padding: 1.1rem 1rem; border-color: var(--cui-border-color, #e2e8f0); font-
 .manufacture-row-open:hover { border-color: var(--manufacture-accent, #087f76); background: rgba(var(--manufacture-accent-rgb, 8, 127, 118), .06); }
 .manufacture-row-open:focus-visible { outline: 2px solid var(--manufacture-accent, #087f76); outline-offset: 2px; }
 .purchase-order-row-meta { display: flex; flex-wrap: wrap; gap: .3rem .8rem; color: var(--cui-secondary-color, #64748b); font-size: .75rem; margin-top: .4rem; }
+.purchase-order-updated { display: flex; align-items: baseline; gap: .35rem; margin-top: .4rem; color: var(--cui-secondary-color, #64748b); font-size: .72rem; line-height: 1.5; }
+.purchase-order-updated.is-recent { display: inline-flex; padding: .25rem .5rem; border-radius: .35rem; background: var(--cui-success-bg-subtle, #e8f5ee); color: var(--cui-success-text-emphasis, #166534); font-weight: 650; }
 .purchase-order-number { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .purchase-order-received { display: inline-block; min-width: 2.5rem; padding: .3rem .6rem; border-radius: .4rem; background: var(--cui-success-bg-subtle, #e8f5ee); color: var(--cui-success-text-emphasis, #166534); font-weight: 600; font-variant-numeric: tabular-nums; }
 .purchase-order-date { font-size: .8rem; color: var(--cui-secondary-color, #64748b); min-width: 140px; }

@@ -39,20 +39,23 @@ describe('Collections workspace', () => {
     const fixture = TestBed.createComponent(CollectionsComponent); fixture.detectChanges();
     await fixture.whenStable(); fixture.detectChanges(); return fixture;
   }
-  it('restores the original dashboard with four indicators and recovery beside process progress', async () => {
+  it('shows four indicators including planned and received units without a Results panel', async () => {
     const fixture = await setup();
     expect(service.workspace).toHaveBeenCalledWith(7);
     expect(fixture.nativeElement.querySelector('h1').textContent).toContain('Verano');
     expect(fixture.nativeElement.querySelectorAll('.metrics .metric').length).toBe(4);
+    expect(fixture.nativeElement.querySelector('.collection-units-metric').textContent).toContain('Unidades planificadas');
+    expect(fixture.nativeElement.querySelector('.collection-units-metric strong').textContent).toBe('10');
+    expect(fixture.nativeElement.querySelector('.collection-units-metric small').textContent).toContain('4 unidades recibidas');
     expect(fixture.nativeElement.textContent).toContain('Compras acumuladas');
-    expect(fixture.nativeElement.textContent).toContain('Cobros netos registrados');
-    expect(fixture.nativeElement.querySelector('.recovery .overview-recovery').textContent).toContain('50 % recuperado');
-    expect(fixture.nativeElement.querySelectorAll('.dashboard-grid > .panel').length).toBe(2);
+    expect(fixture.nativeElement.textContent).toContain('Ventas netas');
+    expect(fixture.nativeElement.querySelector('.metrics .metric:last-child').textContent).toContain('50 % recuperado');
+    expect(fixture.nativeElement.querySelectorAll('.dashboard-grid > .panel').length).toBe(1);
     expect(fixture.nativeElement.querySelector('.dashboard-grid').textContent).toContain('Avance de los procesos');
     expect(fixture.nativeElement.querySelector('.dashboard-grid').textContent).toContain('10 unidades previstas');
     expect(fixture.nativeElement.textContent).toContain('Próximas actividades');
     expect(fixture.nativeElement.querySelector('svg').getAttribute('aria-label')).toContain('pagos y cobros');
-    expect(fixture.nativeElement.querySelector('.recovery .financial-overview')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.dashboard-results')).toBeNull();
     fixture.destroy();
   });
   it('creates a project without a budget and blocks duplicate submissions', async () => {
@@ -120,8 +123,8 @@ describe('Collections workspace', () => {
     const productAction = actionCell.querySelector('.collection-product-actions button')!;
     expect(getComputedStyle(actionCell).textAlign).toBe('right');
     expect(actionCell.getBoundingClientRect().right - productAction.getBoundingClientRect().right).toBeCloseTo(20, 0);
-    expect(getComputedStyle(actionCell.previousElementSibling!).fontSize).toBe('16px');
-    expect(getComputedStyle(fixture.nativeElement.querySelector('.section-heading button')).fontSize).toBe('16px');
+    expect(getComputedStyle(actionCell.previousElementSibling!).fontSize).toBe('14px');
+    expect(getComputedStyle(fixture.nativeElement.querySelector('.section-heading button')).fontSize).toBe('14px');
     const navigate = spyOn(fixture.componentInstance, 'navigate');
     const action = fixture.nativeElement.querySelector('.section-heading button');
     action.click();
@@ -184,7 +187,8 @@ describe('Collections workspace', () => {
     component.toggleInventoryVariant(11); component.inventoryPercentage = 50; fixture.detectChanges();
     expect(component.selectedPlannedUnits).toBe(25);
     expect(component.selectedExportUnits).toBe(12);
-    expect(fixture.nativeElement.querySelector('.collection-export-preview').textContent).toContain('12 unidades a exportar al 50 %');
+    expect(fixture.nativeElement.querySelector('.collection-export-result strong').textContent).toContain('12 unidades');
+    expect(fixture.nativeElement.querySelector('.collection-export-result small').textContent).toContain('50 %');
     fixture.destroy();
   });
   it('requires inventory review and confirmation, prevents duplicate sends and removes the clear selection button', async () => {
@@ -266,11 +270,14 @@ describe('Collections workspace', () => {
     expect([...component.selectedSourceIds]).toEqual([41]);
     component.optionSearch = ''; component.toggleVisibleProcesses();
     service.attachProcesses.and.returnValue(of({}));
+    const navigate = spyOn(component, 'navigate');
     await component.save();
     expect(service.attachProcesses).toHaveBeenCalledWith(7, jasmine.objectContaining({ sources: [
       { source_id: 41, kind: 'production' }, { source_id: 42, kind: 'order' },
     ] }));
     expect(service.process).not.toHaveBeenCalled();
+    expect(navigate).toHaveBeenCalledOnceWith('processes');
+    expect(component.view).toBe('processes');
     fixture.destroy();
   });
   it('blocks an empty batch and clears selections when changing the process type', async () => {
@@ -313,18 +320,19 @@ describe('Collections workspace', () => {
     expect(getComputedStyle(actions.querySelector('th')!).textAlign).toBe('right');
     fixture.destroy();
   });
-  it('shows the three figures in the dashboard recovery card and maps old Results links to dashboard', async () => {
+  it('keeps recovery in the top row and redirects old Results links to dashboard', async () => {
     query.next(convertToParamMap({ view: 'results' }));
     const fixture = await setup();
     expect(fixture.componentInstance.view).toBe('dashboard');
-    expect(fixture.nativeElement.querySelectorAll('.overview-metric').length).toBe(3);
-    expect(fixture.nativeElement.textContent).toContain('Ventas totales (2)');
-    expect(fixture.nativeElement.textContent).toContain('Monto gastado');
+    expect(fixture.nativeElement.querySelector('.dashboard-results')).toBeNull();
+    expect(fixture.nativeElement.querySelectorAll('.overview-metric').length).toBe(0);
+    expect(fixture.nativeElement.querySelector('.metrics .metric:nth-child(2)').textContent).toContain('Ventas netas');
+    expect(fixture.nativeElement.querySelector('.metrics .metric:last-child').textContent).toContain('Falta por recuperar');
     expect(fixture.nativeElement.querySelector('.overview-recovery').getAttribute('data-status')).toBe('progress');
     expect(fixture.nativeElement.querySelector('.overview-recovery').textContent).toContain('50 % recuperado');
-    expect(fixture.nativeElement.querySelectorAll('.recovery .overview-metric').length).toBe(3);
+    expect(fixture.nativeElement.querySelector('.overview-recovery strong').textContent).toContain('-');
+    expect(fixture.nativeElement.querySelector('.collection-recovery-progress').value).toBe(50);
     expect(fixture.nativeElement.querySelector('.collection-tabs').textContent).not.toContain('Resultados');
-    expect(fixture.nativeElement.querySelector('.recovery button')).toBeNull();
     expect(fixture.nativeElement.querySelector('.dashboard-grid')).not.toBeNull();
     fixture.destroy();
   });

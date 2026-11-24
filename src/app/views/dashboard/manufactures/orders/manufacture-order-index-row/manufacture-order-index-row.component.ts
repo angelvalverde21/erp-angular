@@ -39,6 +39,19 @@ export class ManufactureOrderIndexRowComponent implements OnInit {
 
   @Input() manufacture: any;
 
+  get updatedDate(): Date | null {
+    if (!this.manufacture?.created_at || !this.manufacture?.updated_at) return null;
+    const created = new Date(this.manufacture.created_at).getTime();
+    const updated = new Date(this.manufacture.updated_at);
+    return Number.isFinite(created) && Number.isFinite(updated.getTime()) && created !== updated.getTime() ? updated : null;
+  }
+
+  recentUpdateLabel(updated: Date): 'hoy' | 'ayer' | null {
+    const dayInLima = (time: number) => Math.floor((time - 5 * 60 * 60 * 1000) / 86400000);
+    const daysAgo = dayInLima(Date.now()) - dayInLima(updated.getTime());
+    return daysAgo === 0 ? 'hoy' : daysAgo === 1 ? 'ayer' : null;
+  }
+
   store: string | null = "";
 
   constructor(
