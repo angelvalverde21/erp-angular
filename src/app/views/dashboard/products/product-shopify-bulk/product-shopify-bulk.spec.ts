@@ -8,6 +8,7 @@ import { ProductIndexComponent } from '../product-index/product-index.component'
 import { ProductService } from '../product.service';
 import { CatalogPreview, CatalogPublishResult, ShopifyCatalogService } from '../shopify-catalog.service';
 import { ProductShopifyBulkComponent } from './product-shopify-bulk.component';
+import { ProductBulkTitlesComponent } from '../product-bulk-titles/product-bulk-titles.component';
 
 const products = [1, 2, 3].map(id => ({ id, name: 'Producto ' + id } as Product));
 const preview: CatalogPreview = {
@@ -21,12 +22,36 @@ describe('Bulk product selection', () => {
   let fixture: ComponentFixture<ProductIndexComponent>;
   beforeEach(() => {
     TestBed.configureTestingModule({ providers: [provideRouter([]), { provide: BaseService, useValue: { store: 'sorelle' } },
-      { provide: ProductService, useValue: { duplicate: jasmine.createSpy() } },
+      { provide: ProductService, useValue: { duplicate: jasmine.createSpy(), updateTitles: jasmine.createSpy().and.returnValue(of({ data: [{ id: 1, name: 'Nuevo título' }] })) } },
       { provide: ShopifyCatalogService, useValue: { preview: jasmine.createSpy(), publish: jasmine.createSpy() } }] });
     fixture = TestBed.createComponent(ProductIndexComponent);
     fixture.componentRef.setInput('bulkActions', true); fixture.componentRef.setInput('products', products); fixture.detectChanges();
   });
   afterEach(() => fixture.destroy());
+  it('shows actions after selection and saves edited titles back into the catalog', async () => {
+    fixture.componentRef.setInput('products', products.map(product => ({ ...product })));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('#catalog-actions')).toBeNull();
+    fixture.componentInstance.toggleProduct(1); fixture.detectChanges();
+    const actions = fixture.nativeElement.querySelector('#catalog-actions') as HTMLButtonElement;
+    actions.click(); fixture.detectChanges();
+    const items = fixture.nativeElement.querySelectorAll('.catalog-actions-menu button') as NodeListOf<HTMLButtonElement>;
+    expect(items.length).toBe(3);
+    expect(items[1].textContent).toContain('Publicar en Shopify');
+    expect(items[2].textContent).toContain('Restablecer en Shopify');
+    items[0].click(); fixture.detectChanges();
+    const editor = fixture.debugElement.query(By.directive(ProductBulkTitlesComponent)).componentInstance as ProductBulkTitlesComponent;
+    expect(fixture.componentInstance.bulkBusy).toBeTrue();
+    editor.rows[0].name = 'Nuevo título';
+    const closed = new Promise<void>(resolve => editor.editor.nativeElement.addEventListener('close', () => resolve(), { once: true }));
+    await editor.save();
+    await closed;
+    await fixture.whenStable(); fixture.detectChanges();
+    expect(fixture.componentInstance.products[0].name).toBe('Nuevo título');
+    expect(fixture.componentInstance.selectedIds.has(1)).toBeTrue();
+    expect(fixture.componentInstance.bulkBusy).toBeFalse();
+    expect(fixture.nativeElement.querySelector('app-product-bulk-titles')).toBeNull();
+  });
   it('selects a row without opening its editor, supports select-all and clears the selection', () => {
     const navigate = spyOn(TestBed.inject(Router), 'navigate');
     (fixture.nativeElement.querySelector('tbody .product-select-column input') as HTMLInputElement).click(); fixture.detectChanges();
@@ -61,6 +86,78 @@ describe('Bulk product selection', () => {
     expect(fixture.nativeElement.querySelectorAll('.product-shopify-badge').length).toBe(2);
     bulk.shopifyLinkChanged.emit({ productId: 1, linked: false }); fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll('.product-shopify-badge').length).toBe(1);
+  });
+});
+
+describe('Bulk product title editing', () => {
+  let fixture: ComponentFixture<ProductBulkTitlesComponent>;
+  let component: ProductBulkTitlesComponent;
+  let service: jasmine.SpyObj<ProductService>;
+  beforeEach(() => {
+    service = jasmine.createSpyObj('ProductService', ['updateTitles']);
+    TestBed.configureTestingModule({ providers: [{ provide: ProductService, useValue: service }] });
+    fixture = TestBed.createComponent(ProductBulkTitlesComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('products', products);
+    fixture.detectChanges();
+  });
+  afterEach(() => fixture.destroy());
+
+  it('edits a draft without changing products and can restore every original title', () => {
+    expect(component.editor.nativeElement.open).toBeTrue();
+    component.find = 'Producto'; component.replacement = 'Pantalón'; component.prefix = 'Nuevo '; component.suffix = ' verano';
+    component.apply();
+    expect(component.rows[0].name).toBe('Nuevo Pantalón 1 verano');
+    expect(products[0].name).toBe('Producto 1');
+    expect(service.updateTitles).not.toHaveBeenCalled();
+    expect(component.changes.length).toBe(3);
+    component.restore();
+    expect(component.changes).toEqual([]);
+  });
+
+  it('rejects blank and overlong titles and skips unchanged batches', async () => {
+    await component.save();
+    component.rows[0].name = '   '; await component.save();
+    expect(component.invalid).toBeTrue();
+    component.rows[0].name = 'x'.repeat(256); await component.save();
+    expect(component.invalid).toBeTrue();
+    expect(service.updateTitles).not.toHaveBeenCalled();
+  });
+
+  it('sends only changed titles with whitespace trimmed and emits confirmed results', async () => {
+    const saved = spyOn(component.saved, 'emit');
+    component.rows[1].name = '  Nuevo título  ';
+    service.updateTitles.and.returnValue(of({ data: [{ id: 2, name: 'Nuevo título' }] }));
+    await component.save();
+    expect(service.updateTitles).toHaveBeenCalledOnceWith([{ id: 2, name: 'Nuevo título' }]);
+    expect(saved).toHaveBeenCalledOnceWith([{ id: 2, name: 'Nuevo título' }]);
+    expect(component.editor.nativeElement.open).toBeFalse();
+  });
+
+  it('keeps drafts after a failure so they can be retried', async () => {
+    component.rows[0].name = 'Nuevo título';
+    service.updateTitles.and.returnValue(throwError(() => ({ status: 500 })));
+    await component.save();
+    expect(component.error).toContain('reintentar');
+    expect(component.rows[0].name).toBe('Nuevo título');
+    expect(component.editor.nativeElement.open).toBeTrue();
+    service.updateTitles.and.returnValue(of({ data: component.changes }));
+    await component.save();
+    expect(service.updateTitles).toHaveBeenCalledTimes(2);
+  });
+
+  it('blocks duplicate saves and closing while the batch is being saved', async () => {
+    const pending = new Subject<{ data: { id: number; name: string }[] }>();
+    service.updateTitles.and.returnValue(pending);
+    component.rows[0].name = 'Nuevo';
+    const saving = component.save();
+    await component.save(); component.close();
+    const cancel = new Event('cancel', { cancelable: true }); component.cancel(cancel);
+    expect(cancel.defaultPrevented).toBeTrue();
+    expect(component.editor.nativeElement.open).toBeTrue();
+    expect(service.updateTitles).toHaveBeenCalledTimes(1);
+    pending.next({ data: [{ id: 1, name: 'Nuevo' }] }); pending.complete(); await saving;
+    expect(component.saving).toBeFalse();
   });
 });
 

@@ -1,0 +1,36 @@
+<dialog #editor class="catalog-dialog" aria-labelledby="bulk-titles-title" (cancel)="cancel($event)" (close)="closed.emit()">
+  <header class="catalog-dialog-header">
+    <div><span class="catalog-eyebrow">{{ products.length }} productos seleccionados</span><h2 id="bulk-titles-title">Edición masiva de títulos</h2><p>Edita cada título o aplica un cambio a todos. Revisa el resultado antes de guardar.</p></div>
+    <button type="button" class="catalog-close" aria-label="Cerrar edición" [disabled]="saving" (click)="close()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+  </header>
+  <div class="catalog-dialog-body">
+    <p class="catalog-scope">Se actualizarán los títulos en el ERP. Los títulos publicados en Shopify se conservan.</p>
+    <details class="title-advanced">
+      <summary>Opciones avanzadas<i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
+    <fieldset class="title-tools" [disabled]="saving">
+      <legend>Aplicar a todos los títulos</legend>
+      <label>Buscar texto<input type="text" [(ngModel)]="find" maxlength="255" /></label>
+      <label>Reemplazar por<input type="text" [(ngModel)]="replacement" maxlength="255" /></label>
+      <label>Agregar al inicio<input type="text" [(ngModel)]="prefix" maxlength="255" placeholder="Ej.: Colección " /></label>
+      <label>Agregar al final<input type="text" [(ngModel)]="suffix" maxlength="255" placeholder="Ej.: 2026" /></label>
+      <p>La búsqueda distingue mayúsculas y minúsculas. Incluye los espacios que necesites.</p>
+      <button type="button" class="bulk-outline" [disabled]="!find && !prefix && !suffix" (click)="apply()">Aplicar a todos</button>
+    </fieldset>
+    </details>
+    <div class="catalog-review-scroll"><table class="catalog-review-table title-table"><thead><tr><th scope="col">Título actual</th><th scope="col">Nuevo título</th></tr></thead><tbody>
+      @for (row of rows; track row.id) {
+        <tr><th scope="row">{{ row.original }}<small>#{{ row.id }}</small></th><td><label class="visually-hidden" [for]="'bulk-title-' + row.id">Nuevo título del producto #{{ row.id }}</label><input [id]="'bulk-title-' + row.id" type="text" [(ngModel)]="row.name" [disabled]="saving" required [attr.aria-invalid]="!row.name.trim() || row.name.trim().length > 255" />
+          @if (!row.name.trim()) { <small class="title-error">Ingresa un título.</small> }
+          @if (row.name.trim().length > 255) { <small class="title-error">Máximo 255 caracteres.</small> }
+        </td></tr>
+      }
+    </tbody></table></div>
+    @if (error) { <p class="catalog-error" role="alert">{{ error }}</p> }
+    <p class="catalog-help" role="status">{{ changes.length }} títulos con cambios.</p>
+  </div>
+  <footer class="catalog-dialog-footer">
+    <button type="button" class="bulk-clear" [disabled]="saving || !changes.length" (click)="restore()">Restaurar títulos</button>
+    <button type="button" class="bulk-outline" [disabled]="saving" (click)="close()">Cancelar</button>
+    <button type="button" class="bulk-primary" [disabled]="saving || invalid || !changes.length" (click)="save()">{{ saving ? 'Guardando…' : 'Guardar cambios (' + changes.length + ')' }}</button>
+  </footer>
+</dialog>

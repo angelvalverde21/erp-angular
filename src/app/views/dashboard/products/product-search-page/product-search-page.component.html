@@ -12,6 +12,8 @@
 
     <div class="card-body p-0">
 
+        @if (error) { <div class="p-4" role="alert"><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="loading" (click)="initSearch(page)">Reintentar</button></div> }
+
         @if (loading) {
             <div class="p-4 text-center" role="status"><app-loading></app-loading></div>
         } @else {
@@ -20,8 +22,12 @@
 
     </div>
 
-    <div class="card-footer text-end" style="border-top: 0;">
-        <small class="text-muted">Productos encontrados: {{ products.length }}</small>
-    </div>
+    <footer class="product-pagination">
+        <span role="status">Página {{ page }} de {{ lastPage }}</span>
+        <nav aria-label="Paginación de productos encontrados">
+            <button type="button" [disabled]="loading || page <= 1" (click)="changePage(page - 1)"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>Anterior</button>
+            <button type="button" [disabled]="loading || page >= lastPage" (click)="changePage(page + 1)">Siguiente<i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        </nav>
+    </footer>
 
 </div>

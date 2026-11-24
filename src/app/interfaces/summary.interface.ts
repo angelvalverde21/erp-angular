@@ -9,5 +9,9 @@ export interface SummaryPurchase {
     sum_kardexes?: number;        // Costo total de las recepciones
     sum_payments?: number;        // Costo total de las recepciones
     tracked_purchases_count?: number;
+    estimated_order_cost?: number;
+    estimated_order_cost_valid?: boolean;
+    zero_cost_variants?: number;
+    has_pending_cost?: boolean;
 
 }

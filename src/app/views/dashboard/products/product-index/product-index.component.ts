@@ -1,5 +1,6 @@
 import { ProductShopifyBulkComponent } from '../product-shopify-bulk/product-shopify-bulk.component';
-import { afterNextRender, inject, Injector, OnChanges, SimpleChanges, AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { ProductBulkTitlesComponent } from '../product-bulk-titles/product-bulk-titles.component';
+import { afterNextRender, inject, Injector, OnChanges, SimpleChanges, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Product } from 'src/app/interfaces/product.interface';
@@ -15,17 +16,28 @@ import { ProductService } from '../product.service';
   selector: 'app-product-index',
   imports: [
     ProductShopifyBulkComponent,
+    ProductBulkTitlesComponent,
     CurrencyPipe,
     DateShopifyPipe
   ],
   templateUrl: './product-index.component.html',
   styleUrl: './product-index.component.scss'
 })
-export class ProductIndexComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class ProductIndexComponent implements OnChanges, OnDestroy {
 
   @Input() bulkActions = false;
   selectedIds = new Set<number>();
   bulkBusy = false;
+  editingTitles = false;
+  openTitleEditor(): void { if (!this.bulkBusy) { this.editingTitles = true; this.bulkBusy = true; } }
+  closeTitleEditor(): void { this.editingTitles = false; this.bulkBusy = false; }
+  updateTitles(titles: { id: number; name: string }[]): void {
+    for (const title of titles) {
+      const product = this.products.find(product => product.id === title.id);
+      if (product) product.name = title.name;
+    }
+    this.insertionMessage = `${titles.length} títulos actualizados correctamente.`;
+  }
   updateShopifyLink(event: { productId: number; linked: boolean }): void {
     const product = this.products.find(product => product.id === event.productId);
     if (product) product.shopify_linked = event.linked;
@@ -72,28 +84,7 @@ export class ProductIndexComponent implements AfterViewInit, OnChanges, OnDestro
 
   private readonly destroy$ = new Subject<void>();
 
-  /** funcion que detectas si se llego al final */
-
-  @Output() loadMore = new EventEmitter<void>();
   @Output() productDuplicated = new EventEmitter<Product>();
-
-  @ViewChild('bottom', { static: true }) bottom!: ElementRef;
-
-  observer!: IntersectionObserver;
-
-  ngAfterViewInit(): void {
-
-    this.observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        this.loadMore.emit(); // 🔥 avisar al padre
-      }
-    });
-
-    this.observer.observe(this.bottom.nativeElement);
-
-  }
-
-  /** fin funcion que detectas si se llego al final */
 
   constructor(
     private router: Router,
@@ -170,7 +161,6 @@ export class ProductIndexComponent implements AfterViewInit, OnChanges, OnDestro
     this.destroy$.next();
     this.destroy$.complete();
     if (this.duplicating) { Swal.close(); }
-    this.observer?.disconnect();
   }
 
 }

@@ -5,7 +5,6 @@ import { faMagnifyingGlass, faFilter, faTag } from '@fortawesome/free-solid-svg-
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Subject, takeUntil } from 'rxjs';
 import { ProductService } from '../product.service'
-import Swal from 'sweetalert2';
 import { HeadPageComponent } from "@shared/components/head-page/head-page.component";
 import { ButtonComponent } from "@shared/components/buttons/button/button.component";
 import { Product } from '../../../../interfaces/product.interface';
@@ -50,6 +49,15 @@ export class ProductSearchPageComponent implements OnInit, OnDestroy {
 
   products: any[] = [];
   loading: boolean = false;
+  page = 1;
+  lastPage = 1;
+  total: number | null = null;
+  error = '';
+
+  changePage(page: number): void {
+    if (this.loading || page < 1 || page > this.lastPage || page === this.page) return;
+    this.initSearch(page);
+  }
 
   ngOnInit() {
     this.initSearch();
@@ -60,22 +68,30 @@ export class ProductSearchPageComponent implements OnInit, OnDestroy {
     if (this.products.some(item => item.id === product.id)) return;
     this.products = [product, ...this.products];
     this.insertedProductId = product.id;
+    if (this.total !== null) this.total++;
   }
 
-  initSearch() {
+  initSearch(page = 1) {
     this.cancelSearch$.next();
+    this.page = page;
+    if (page === 1) { this.lastPage = 1; this.total = null; }
+    this.products = [];
+    this.insertedProductId = null;
+    this.error = '';
     this.loading = true;
 
-    this._product.search({ ...this.params }).pipe(takeUntil(this.destroy$), takeUntil(this.cancelSearch$)).subscribe({
+    this._product.search({ ...this.params, page }).pipe(takeUntil(this.destroy$), takeUntil(this.cancelSearch$)).subscribe({
 
       next: (resp: any) => {
         this.products = resp.data;
+        this.lastPage = Math.max(1, resp.meta?.last_page ?? resp.last_page ?? (resp.links?.next || resp.next_page_url ? page + 1 : page));
+        this.total = resp.meta?.total ?? resp.total ?? null;
         this.loading = false;
       },
 
       error: (error: any) => {
         this.loading = false;
-        Swal.fire('Error', 'No se pudo completar la búsqueda. Inténtalo nuevamente.', 'error');
+        this.error = 'No se pudo completar la búsqueda. Inténtalo nuevamente.';
         console.error(error);
       },
 

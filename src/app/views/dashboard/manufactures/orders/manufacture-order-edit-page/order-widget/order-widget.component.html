@@ -3,14 +3,19 @@
   <a class="purchase-order-metric" [routerLink]="widget.link" routerLinkActive="purchase-order-metric-active"
     [routerLinkActiveOptions]="{ exact: widget.exact ?? false }" ariaCurrentWhenActive="page">
     <div class="purchase-order-metric-label"><span><fa-icon [icon]="widget.icon" aria-hidden="true"></fa-icon>{{ widget.title }}</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></div>
+    @if (widget.showCost) {
+      <strong class="purchase-order-product-cost">{{ widget.estimatedCost === null ? '—' : (widget.estimatedCost | pen) }}</strong>
+      <span class="purchase-order-metric-subtitle">{{ widget.value }} unidades pedidas</span>
+    } @else {
     <strong>
       @switch (widget.type) {
-      @case ('currency') { {{ widget.value | pen }} }
+      @case ('currency') { {{ widget.value === null ? '—' : (widget.value | pen) }} }
       @case ('date') { {{ widget.value ? (widget.value | date:'dd/MM/yyyy') : 'Sin fecha' }} }
       @default { {{ widget.value }} }
       }
     </strong>
     <span class="purchase-order-metric-subtitle">{{ widget.subtitle }}</span>
+    }
   </a>
   }
 </nav>

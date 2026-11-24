@@ -100,6 +100,10 @@ export class ManufactureOrderEditPageComponent implements OnInit {
           sum_payments: this.manufacture.sum_payments,
           count_variants: this.manufacture.count_variants,
           count_payments: this.manufacture.count_payments,
+          estimated_order_cost: (this.manufacture.variants ?? []).reduce((cents: number, variant: any) => cents + Number(variant.pivot?.quantity ?? 0) * Math.round(Number(variant.pivot?.price ?? 0) * 100), 0) / 100,
+          estimated_order_cost_valid: true,
+          zero_cost_variants: (this.manufacture.variants ?? []).filter((variant: any) => Number(variant.pivot?.quantity) > 0 && Number(variant.pivot?.price ?? 0) === 0).length,
+          has_pending_cost: false,
         };
 
 

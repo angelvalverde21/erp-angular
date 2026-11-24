@@ -1,5 +1,11 @@
 @use '../../productions/production-ui';
 
+.purchase-order-variant-editor {
+  .production-table .purchase-order-totals-footer td { padding: 18px 16px; vertical-align: middle; border-top: 2px solid var(--cui-border-color, #e2e8f0); small { display: block; margin-top: 5px; color: var(--cui-secondary-color, #64748b); font-size: 11px; font-weight: 400; } }
+  .purchase-order-totals-footer .purchase-order-total-units { text-align: center; strong { display: block; font-size: 26px; line-height: 1.2; font-weight: 700; font-variant-numeric: tabular-nums; } }
+  .purchase-order-totals-footer .purchase-order-footer-cost { text-align: right; white-space: nowrap; strong { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--section-accent, #087f76); } }
+}
+
 .order-toolbar {
   display: flex;
   flex-wrap: wrap;

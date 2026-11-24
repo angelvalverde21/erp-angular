@@ -2,6 +2,7 @@
   <div class="production-identity"><span class="production-mark" aria-hidden="true"><i class="fa-solid fa-gears"></i></span><div class="production-name-content">
     <a class="production-name" [routerLink]="manageLink">{{ production.name || 'Producción sin nombre' }}</a>
     <div class="production-row-meta"><span class="production-code">PRD-{{ production.id.toString().padStart(4, '0') }}</span><span>{{ production.count_variants ?? 0 }} {{ production.count_variants === 1 ? 'variante' : 'variantes' }}</span></div>
+    <app-manufacture-collection-badge [collection]="production.collection"></app-manufacture-collection-badge>
   </div></div>
 </td>
 <td class="text-end production-number" data-label="Planificadas">{{ production.sum_variants ?? 0 }}</td>

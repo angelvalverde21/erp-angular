@@ -1,5 +1,6 @@
 import { ManufactureVariantRowsPipe } from '../../shared/manufacture-variant-rows.pipe';
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, QueryList, TemplateRef, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ManufactureVariantRowComponent } from '../manufacture-variant-row/manufacture-variant-row.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBarcode, faInbox } from '@fortawesome/free-solid-svg-icons';
@@ -12,7 +13,9 @@ import { ButtonPrintComponent } from '../../../../shared/components/buttons/butt
 
 @Component({
   selector: 'app-manufacture-variant-index',
+  host: { class: 'purchase-order-variant-editor' },
   imports: [
+    CurrencyPipe, DecimalPipe,
     ManufactureVariantRowsPipe,
     ManufactureVariantRowComponent,
     FontAwesomeModule,
@@ -24,11 +27,30 @@ import { ButtonPrintComponent } from '../../../../shared/components/buttons/butt
   encapsulation: ViewEncapsulation.None
 })
 
-export class ManufactureVariantIndexComponent implements OnInit {
+export class ManufactureVariantIndexComponent implements OnInit, OnChanges {
   @ViewChildren(ManufactureVariantRowComponent) rows!: QueryList<ManufactureVariantRowComponent>;
   saving = false;
   saveMessage = '';
   saveFailed = false;
+
+  get orderTotals(): { units: number; cost: number; products: number; variants: number; zeroCostVariants: number; valid: boolean } {
+    const drafts = new Map(this.rows?.map(row => [row.manufacture_variant.id, row]) ?? []);
+    const products = new Set<unknown>();
+    let units = 0, cents = 0, zeroCostVariants = 0, valid = true;
+    for (const item of this.manufacture_variants ?? []) {
+      const row = drafts.get(item.id);
+      const draft = row?.form?.getRawValue() ?? item;
+      if (row?.form?.invalid) valid = false;
+      const quantity = Number(draft.quantity), price = Number(draft.price);
+      products.add(item.variant?.product?.id ?? item.variant?.product_id ?? item.variant?.product?.name ?? item.variant_id ?? item.id);
+      if (String(draft.quantity ?? '').trim() === '' || String(draft.price ?? '').trim() === '' || !Number.isInteger(quantity) || quantity < 0 || !Number.isFinite(price) || price < 0) { valid = false; continue; }
+      units += quantity;
+      cents += quantity * Math.round(price * 100);
+      if (quantity > 0 && price === 0) zeroCostVariants++;
+    }
+    valid = valid && Number.isSafeInteger(units) && Number.isSafeInteger(cents);
+    return { units, cost: cents / 100, products: products.size, variants: (this.manufacture_variants ?? []).length, zeroCostVariants, valid };
+  }
 
   get pendingRows(): ManufactureVariantRowComponent[] {
     return this.rows?.filter(row => row.hasChanges) ?? [];
@@ -42,7 +64,13 @@ export class ManufactureVariantIndexComponent implements OnInit {
   onDraftChanged(): void {
     this.saveMessage = '';
     this.saveFailed = false;
+    this.publishOrderTotals();
   }
+
+  @Output() emitOrderTotals = new EventEmitter<ReturnType<ManufactureVariantIndexComponent['totalsSnapshot']>>();
+  totalsSnapshot() { return { ...this.orderTotals, pending: this.pendingRows.length > 0 }; }
+  private publishOrderTotals(): void { this.emitOrderTotals.emit(this.totalsSnapshot()); }
+  ngOnChanges(): void { this.publishOrderTotals(); }
 
   saveChanges(): void {
     if (!this.canSave) return;
@@ -107,6 +135,7 @@ export class ManufactureVariantIndexComponent implements OnInit {
     );
 
     this.emitSumManufactureVariant.emit(this.sum_variants);
+    this.publishOrderTotals();
 
   }
 
@@ -171,7 +200,13 @@ export class ManufactureVariantIndexComponent implements OnInit {
       next: (resp: any) => {
         Swal.fire('Guardado', 'Las variantes han sido agregadas', 'success');
         console.log(resp);
-        this.manufacture_variants = [...this.manufacture_variants, ...resp.data];
+        const existingIds = new Set(this.manufacture_variants.map((item: any) => item.id));
+        const added = resp.data.filter((item: any) => {
+          if (existingIds.has(item.id)) return false;
+          existingIds.add(item.id);
+          return true;
+        });
+        this.manufacture_variants = [...this.manufacture_variants, ...added];
         this.sumQuantity();
         this.loading = false;
         this.modal.close();

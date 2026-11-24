@@ -1,12 +1,14 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, inject } from '@angular/core';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { Product } from 'src/app/interfaces/product.interface';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { CatalogPreview, CatalogPreviewItem, CatalogPublishResult, ShopifyCatalogService } from '../shopify-catalog.service';
 
-@Component({ selector: 'app-product-shopify-bulk', standalone: true, templateUrl: './product-shopify-bulk.component.html', styleUrl: './product-shopify-bulk.component.scss' })
+@Component({ selector: 'app-product-shopify-bulk', standalone: true, imports: [NgbDropdownModule], templateUrl: './product-shopify-bulk.component.html', styleUrl: './product-shopify-bulk.component.scss' })
 export class ProductShopifyBulkComponent implements OnDestroy {
   @Input() products: Product[] = [];
   @Output() clearSelection = new EventEmitter<void>();
+  @Output() editTitles = new EventEmitter<void>();
   @Output() busyChanged = new EventEmitter<boolean>();
   @Output() shopifyLinkChanged = new EventEmitter<{ productId: number; linked: boolean }>();
   @ViewChild('reviewDialog') dialog?: ElementRef<HTMLDialogElement>;

@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { BaseService } from 'src/app/views/base.service';
 import { SupplierService } from '../../users/suppliers/supplier.service';
 import { ManufactureVariantService } from '../manufacture.variants.service';
+import { ManufactureService } from '../manufacture.service';
 import { ManufactureKardexService } from '../manufacture.kardex.service';
 import { ManufactureVariantIndexComponent } from '../variants/manufacture-variant-index/manufacture-variant-index.component';
 import { ManufactureOrderService } from './manufacture.order.service';
@@ -74,7 +75,7 @@ describe('Purchase order screens', () => {
   it('keeps the summary link and displays quantities in aligned columns', () => {
     const fixture = TestBed.createComponent(ManufactureOrderIndexPageComponent);
     fixture.detectChanges();
-    listing.next({ data: [{ id: 41, name: 'Pedido de prendas', sum_variants: 30, sum_kardexes: 8, manufacture_end: '2026-11-02' }] });
+    listing.next({ data: [{ id: 41, name: 'Pedido de prendas', sum_variants: 30, sum_kardexes: 8, manufacture_end: '2026-11-02', collection: { id: 1, name: 'Verano' } }] });
     listing.complete();
     fixture.detectChanges();
     const element: HTMLElement = fixture.nativeElement;
@@ -83,26 +84,32 @@ describe('Purchase order screens', () => {
     expect(element.querySelector('.purchase-order-name')?.getAttribute('href')).toBe('/sorelle/dashboard/manufactures/orders/41');
     expect(element.querySelector('.purchase-order-received')?.textContent?.trim()).toBe('8');
     expect(element.textContent).toContain('02/11/2026');
+    expect(element.querySelector('.manufacture-collection-badge')?.textContent).toContain('Verano');
+    expect(element.querySelector('.manufacture-collection-badge')?.getAttribute('href')).toBe('/sorelle/dashboard/collections/1?view=processes');
   });
 
-  it('links all detail sections and safely displays an order with no date', async () => {
+  it('shows three top cards with estimated cost inside Ordered products', async () => {
     const fixture = TestBed.createComponent(OrderWidgetComponent);
     fixture.componentRef.setInput('summary', {});
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('Sin fecha');
+    expect(fixture.nativeElement.textContent).not.toContain('Resumen');
     expect(fixture.nativeElement.textContent).not.toContain('undefined');
-    fixture.componentRef.setInput('summary', { created_at: '2026-10-29', sum_variants: 30, count_variants: 2, sum_payments: 80, count_payments: 1, sum_kardexes: 8 });
+    fixture.componentRef.setInput('summary', { created_at: '2026-10-29', sum_variants: 30, count_variants: 2, sum_payments: 80, count_payments: 1, sum_kardexes: 8, estimated_order_cost: 50.17 });
     await TestBed.inject(Router).navigateByUrl('/');
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
     const links: NodeListOf<HTMLAnchorElement> = fixture.nativeElement.querySelectorAll('nav a');
-    expect(links.length).toBe(4);
-    expect(links[0].getAttribute('aria-current')).toBe('page');
-    expect(links[1].getAttribute('href')).toBe('/variants');
-    expect(links[2].getAttribute('href')).toBe('/payments');
-    expect(links[2].textContent).toContain('80.00');
-    expect(links[3].getAttribute('href')).toBe('/kardexes');
+    expect(links.length).toBe(3);
+    expect(links[0].getAttribute('aria-current')).toBeNull();
+    expect(links[0].getAttribute('href')).toBe('/variants');
+    expect(links[0].textContent).toContain('Productos pedidos');
+    expect(links[0].querySelector('.purchase-order-product-cost')!.textContent).toContain('50.17');
+    expect(links[0].querySelector('.purchase-order-metric-subtitle')!.textContent).toContain('30 unidades pedidas');
+    expect(links[0].textContent).toContain('50.17');
+    expect(links[1].getAttribute('href')).toBe('/payments');
+    expect(links[1].textContent).toContain('80.00');
+    expect(links[2].getAttribute('href')).toBe('/kardexes');
   });
 
   it('validates creation, prevents duplicate submissions and retains fields after an error', () => {
@@ -113,7 +120,7 @@ describe('Purchase order screens', () => {
     fixture.detectChanges();
     expect(store).not.toHaveBeenCalled();
     expect(fixture.nativeElement.textContent).toContain('Ingresa un nombre');
-    fixture.componentInstance.form.patchValue({ name: 'Pedido de verano', supplier_id: 7 });
+    fixture.componentInstance.form.patchValue({ name: 'Pedido de verano', supplier_id: null });
     const payload = fixture.componentInstance.form.value;
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
@@ -140,6 +147,28 @@ describe('Purchase order screens', () => {
     saving.error(new Error('Network error'));
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('button[type="submit"]').disabled).toBeFalse();
+  });
+
+  it('shows live ordered units and the sum of quantity times unit cost without saving drafts', () => {
+    const fixture = TestBed.createComponent(ManufactureVariantIndexComponent);
+    fixture.componentRef.setInput('manufacture_variants', [
+      { id: 12, quantity: 2, price: '10.10', variant: { id: 4, sku: 'A-S', product: { id: 1, name: 'Blusa' } } },
+      { id: 13, quantity: 3, price: '9.99', variant: { id: 5, sku: 'A-M', product: { id: 1, name: 'Blusa' } } },
+    ]);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.orderTotals).toEqual({ units: 5, cost: 50.17, products: 1, variants: 2, zeroCostVariants: 0, valid: true });
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('input[aria-label="Unidades del pedido"]');
+    const emitTotals = spyOn(fixture.componentInstance.emitOrderTotals, 'emit');
+    input.value = '4'; input.dispatchEvent(new Event('input')); fixture.detectChanges();
+    expect(fixture.componentInstance.orderTotals.cost).toBe(70.37);
+    expect(fixture.nativeElement.querySelector('.purchase-order-total-units strong').textContent.trim()).toBe('7');
+    expect(getComputedStyle(fixture.nativeElement.querySelector('.purchase-order-total-units')).textAlign).toBe('center');
+    expect(emitTotals).toHaveBeenCalledWith(jasmine.objectContaining({ cost: 70.37, units: 7, pending: true }));
+    expect(fixture.nativeElement.querySelector('.purchase-order-totals')).toBeNull();
+    expect(updateVariant).not.toHaveBeenCalled();
+    input.value = ''; input.dispatchEvent(new Event('input')); fixture.detectChanges();
+    expect(fixture.componentInstance.orderTotals.valid).toBeFalse();
+    expect(fixture.nativeElement.querySelector('.purchase-order-footer-cost strong').textContent).toContain('—');
   });
 
   it('saves changed quantities only when the fixed save button is pressed', () => {
@@ -261,22 +290,16 @@ describe('Purchase order screens', () => {
     expect(input.readOnly).toBeFalse();
   });
 
-  it('reloads grouped receptions after a movement is registered', () => {
+  it('refreshes inventory totals and the ledger revision after a movement is registered', () => {
     const fixture = TestBed.createComponent(ManufactureOrderKardexIndexComponent);
+    fixture.componentInstance.manufacture_id = 41;
     fixture.detectChanges();
-    movements.next({ data: [] });
-    movements.complete();
-    fixture.detectChanges();
-    const refreshed = new Subject();
-    movementIndex.and.returnValue(refreshed);
+    const summary = spyOn(TestBed.inject(ManufactureService), 'summary').and.returnValue(of({ data: { sum_kardexes: 5 } } as any));
     const close = jasmine.createSpy('close');
-    fixture.componentInstance.modal = { close };
+    fixture.componentInstance.modal = { close } as unknown as typeof fixture.componentInstance.modal;
     fixture.componentInstance.receiveKardexes([]);
     expect(close).toHaveBeenCalled();
-    expect(movementIndex).toHaveBeenCalledTimes(2);
-    refreshed.next({ data: [{ date: '2026-10-29', groups: [{ direction: 'in', kardexes: [{ id: 99, variant_id: 4, direction: 'in', quantity: 5 }] }] }] });
-    refreshed.complete();
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.kardex-quantity-badge').textContent.trim()).toBe('+5');
+    expect(summary).toHaveBeenCalledOnceWith(41);
+    expect(fixture.componentInstance.kardexRevision).toBe(1);
   });
 });

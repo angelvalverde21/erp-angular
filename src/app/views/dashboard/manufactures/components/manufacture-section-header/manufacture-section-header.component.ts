@@ -14,6 +14,7 @@ export class ManufactureSectionHeaderComponent {
   @Input() description = '';
   @Input() reference = '';
   @Input() actionLabel = '';
+  @Input() actionIcon = 'fa-plus';
   @Input() actionLink: string[] | null = null;
   @Input() backLink: string[] | null = null;
   @Input() backLabel = 'Volver al listado';

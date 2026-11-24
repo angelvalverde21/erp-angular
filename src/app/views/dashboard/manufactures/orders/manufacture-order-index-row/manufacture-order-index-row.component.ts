@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { ManufactureCollectionBadgeComponent } from '../../components/manufacture-collection-badge/manufacture-collection-badge.component';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import {
@@ -14,6 +15,7 @@ import { ButtonMenuComponent } from 'src/app/views/shared/components/buttons/but
 @Component({
   selector: '[app-manufacture-order-index-row]',
   imports: [
+    ManufactureCollectionBadgeComponent,
     DateShopifyPipe,
     CommonModule,
     RouterModule,

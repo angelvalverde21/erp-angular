@@ -1,4 +1,5 @@
 @use '../product-actions';
+@use '../product-pagination';
 
 .product-catalog-panel { border-radius: .85rem; }
 .product-search-header { padding: 1.25rem 1.5rem; background: var(--cui-body-bg, #fff); border-radius: .85rem .85rem 0 0; }

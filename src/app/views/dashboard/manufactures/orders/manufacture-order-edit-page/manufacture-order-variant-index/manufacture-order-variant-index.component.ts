@@ -107,6 +107,11 @@ export class ManufactureOrderVariantIndexComponent implements OnInit, OnDestroy 
 
 
   sum_variants: number = 0;
+  receiveOrderTotals(totals: { units: number; cost: number; variants: number; zeroCostVariants: number; valid: boolean; pending: boolean }): void {
+    this._manufacture.setSummary({ sum_variants: totals.units, count_variants: totals.variants,
+      estimated_order_cost: totals.cost, estimated_order_cost_valid: totals.valid,
+      zero_cost_variants: totals.zeroCostVariants, has_pending_cost: totals.pending });
+  }
 
   receiveSumManufactureVariant(sum_variants: number) {
 

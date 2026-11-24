@@ -11,7 +11,8 @@
         <span class="product-list-count">{{ products.length }} {{ products.length === 1 ? 'producto cargado' : 'productos cargados' }}</span>
     </div>
 
-    @if (bulkActions && selectedIds.size) { <app-product-shopify-bulk [products]="selectedProducts" (clearSelection)="clearProducts()" (busyChanged)="bulkBusy = $event" (shopifyLinkChanged)="updateShopifyLink($event)"></app-product-shopify-bulk> }
+    @if (bulkActions && selectedIds.size) { <app-product-shopify-bulk [products]="selectedProducts" (editTitles)="openTitleEditor()" (clearSelection)="clearProducts()" (busyChanged)="bulkBusy = $event" (shopifyLinkChanged)="updateShopifyLink($event)"></app-product-shopify-bulk> }
+    @if (editingTitles) { <app-product-bulk-titles [products]="selectedProducts" (saved)="updateTitles($event)" (closed)="closeTitleEditor()"></app-product-bulk-titles> }
     @if (bulkActions && !selectedIds.size) { <p class="product-selection-hint">Selecciona productos para aplicar acciones masivas. Hasta 35 por envío.</p> }
     <div class="table-responsive product-table-scroll" tabindex="0" role="region" aria-label="Productos y controles de orden">
     <table class="table table-hover mb-0 align-middle product-table" [class.product-table-sortable]="sortable">
@@ -133,5 +134,4 @@
         </tbody>
     </table>
     </div>
-    <div #bottom class="product-load-trigger" aria-hidden="true"></div>
 </section>

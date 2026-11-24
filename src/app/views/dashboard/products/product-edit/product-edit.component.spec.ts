@@ -40,10 +40,12 @@ describe('ProductEditComponent', () => {
     expect(component.form.touched).toBeTrue();
   });
 
-  it('saves a product with no material', () => {
-    component.form.get('material')!.setValue('');
+  it('preserves HTML descriptions and does not submit the unused material field', () => {
+    const html = '<h2>Detalles</h2><p>Tejido <strong>suave</strong></p>';
+    component.form.get('body')!.setValue(html);
     component.update();
-    expect(update).toHaveBeenCalledWith(7, jasmine.objectContaining({ material: '' }));
+    expect(update).toHaveBeenCalledWith(7, jasmine.objectContaining({ body: html }));
+    expect(update.calls.mostRecent().args[1].material).toBeUndefined();
   });
 
   it('saves once and notifies the page of the updated product', () => {

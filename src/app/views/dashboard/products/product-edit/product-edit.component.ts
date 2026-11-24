@@ -99,7 +99,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       // color: ['', [Validators.required]],
-      material: [''],
       body: [''],
       tags: [''],
       category_id: ['null'],

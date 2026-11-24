@@ -3,12 +3,13 @@ import localeEsPe from '@angular/common/locales/es-PE';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { of, Subject } from 'rxjs';
 import { Product } from 'src/app/interfaces/product.interface';
 import { BaseService } from 'src/app/views/base.service';
 import { ProductService } from '../product.service';
 import { ProductIndexPageComponent } from './product-index-page.component';
+import { ProductSearchPageComponent } from '../product-search-page/product-search-page.component';
 
 registerLocaleData(localeEsPe);
 
@@ -63,7 +64,7 @@ describe('Product catalog ordering', () => {
     expect(fixture.nativeElement.querySelector('th[aria-sort="ascending"]').textContent).toContain('Stock');
   });
 
-  it('keeps the ordering for later pages and blocks overlapping loads', () => {
+  it('replaces each page, keeps ordering and blocks overlapping or out-of-range loads', () => {
     const fixture = TestBed.createComponent(ProductIndexPageComponent);
     fixture.detectChanges();
     firstPage.next({ data: [product(1)], meta: { last_page: 2, total: 2 } });
@@ -71,36 +72,46 @@ describe('Product catalog ordering', () => {
     fixture.detectChanges();
     const nextPage = new Subject();
     catalog.and.returnValue(nextPage);
-    fixture.componentInstance.loadMoreProducts();
-    fixture.componentInstance.loadMoreProducts();
+    const buttons = fixture.nativeElement.querySelectorAll('.product-pagination button') as NodeListOf<HTMLButtonElement>;
+    expect(buttons[0].disabled).toBeTrue();
+    buttons[1].click(); fixture.detectChanges();
+    fixture.componentInstance.changePage(2);
+    expect(buttons[1].disabled).toBeTrue();
     expect(catalog).toHaveBeenCalledTimes(2);
     expect(catalog).toHaveBeenCalledWith(2, 'created_at', 'desc');
-    nextPage.next({ data: [product(1), product(2)], meta: { last_page: 2, total: 2 } });
+    nextPage.next({ data: [product(2)], meta: { last_page: 2, total: 2 } });
     nextPage.complete();
-    expect(fixture.componentInstance.products.map(item => item.id)).toEqual([1, 2]);
-    expect(fixture.componentInstance.hasMore).toBeFalse();
-    fixture.componentInstance.loadMoreProducts();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.products.map(item => item.id)).toEqual([2]);
+    expect(fixture.nativeElement.querySelector('.product-pagination').textContent).toContain('Página 2 de 2');
+    expect(buttons[1].disabled).toBeTrue();
+    expect(buttons[0].disabled).toBeFalse();
+    fixture.componentInstance.changePage(3);
     expect(catalog).toHaveBeenCalledTimes(2);
+    catalog.and.returnValue(of({ data: [product(1)], last_page: 2, total: 2 }));
+    buttons[0].click(); fixture.detectChanges();
+    expect(catalog.calls.mostRecent().args).toEqual([1, 'created_at', 'desc']);
+    expect(fixture.componentInstance.products.map(item => item.id)).toEqual([1]);
   });
 
-  it('retries a failed page without skipping it or losing loaded products', () => {
+  it('retries the failed page without skipping it or mixing products from other pages', () => {
     const fixture = TestBed.createComponent(ProductIndexPageComponent);
     fixture.detectChanges();
     firstPage.next({ data: [product(1)], meta: { last_page: 3 } });
     firstPage.complete();
     const failedPage = new Subject();
     catalog.and.returnValue(failedPage);
-    fixture.componentInstance.loadMoreProducts();
+    fixture.componentInstance.changePage(2);
     failedPage.error(new Error('Network error'));
-    expect(fixture.componentInstance.page).toBe(1);
-    expect(fixture.componentInstance.products.length).toBe(1);
+    expect(fixture.componentInstance.page).toBe(2);
+    expect(fixture.componentInstance.products.length).toBe(0);
     const retryPage = new Subject();
     catalog.and.returnValue(retryPage);
     fixture.componentInstance.retry();
     expect(catalog.calls.mostRecent().args).toEqual([2, 'created_at', 'desc']);
     retryPage.next({ data: [product(2)], meta: { last_page: 3 } });
     retryPage.complete();
-    expect(fixture.componentInstance.products.map(item => item.id)).toEqual([1, 2]);
+    expect(fixture.componentInstance.products.map(item => item.id)).toEqual([2]);
     expect(fixture.componentInstance.error).toBe('');
   });
 
@@ -123,6 +134,31 @@ describe('Product catalog ordering', () => {
     fixture.detectChanges();
     expect(catalog.calls.mostRecent().args).toEqual([1, 'name', 'asc']);
     expect(fixture.nativeElement.querySelector('th[aria-sort="ascending"]').textContent).toContain('Producto');
+  });
+});
+
+describe('Product search pagination', () => {
+  it('paginates filtered results, replaces rows and returns to page one for a new search', async () => {
+    const search = jasmine.createSpy('search').and.returnValue(of({ data: [{ id: 1, name: 'Blusa' }], last_page: 3, total: 120 }));
+    TestBed.configureTestingModule({ providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(),
+      { provide: ActivatedRoute, useValue: { queryParams: of({ search: 'Blusa', sort_by: 'name', sort_direction: 'asc' }) } },
+      { provide: ProductService, useValue: { search } }, { provide: BaseService, useValue: { store: 'sorelle' } }] });
+    const fixture = TestBed.createComponent(ProductSearchPageComponent); fixture.detectChanges();
+    expect(search).toHaveBeenCalledWith({ search: 'Blusa', sort_by: 'name', sort_direction: 'asc', page: 1 });
+    const next = new Subject(); search.and.returnValue(next);
+    (fixture.nativeElement.querySelectorAll('.product-pagination button')[1] as HTMLButtonElement).click(); fixture.detectChanges();
+    expect(search.calls.mostRecent().args[0]).toEqual({ search: 'Blusa', sort_by: 'name', sort_direction: 'asc', page: 2 });
+    fixture.componentInstance.changePage(3);
+    expect(search).toHaveBeenCalledTimes(2);
+    next.next({ data: [{ id: 2, name: 'Blusa 2' }], last_page: 3, total: 120 }); next.complete(); fixture.detectChanges();
+    expect(fixture.componentInstance.products.map(product => product.id)).toEqual([2]);
+    expect(fixture.nativeElement.querySelector('.product-pagination').textContent).toContain('Página 2 de 3');
+    search.and.returnValue(of({ data: [], last_page: 1, total: 0 }));
+    fixture.componentInstance.receiveParams({ search: 'Falda' }); fixture.detectChanges();
+    expect(search.calls.mostRecent().args[0]).toEqual({ search: 'Falda', sort_by: 'name', sort_direction: 'asc', page: 1 });
+    const buttons = fixture.nativeElement.querySelectorAll('.product-pagination button') as NodeListOf<HTMLButtonElement>;
+    expect(buttons[0].disabled).toBeTrue(); expect(buttons[1].disabled).toBeTrue();
+    fixture.destroy();
   });
 });
 

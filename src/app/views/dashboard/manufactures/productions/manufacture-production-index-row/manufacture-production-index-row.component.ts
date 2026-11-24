@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { ManufactureCollectionBadgeComponent } from '../../components/manufacture-collection-badge/manufacture-collection-badge.component';
 import { Component, EventEmitter, Input, OnInit, Output, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Swal from 'sweetalert2';
@@ -19,6 +20,7 @@ import { ButtonMenuComponent } from 'src/app/views/shared/components/buttons/but
 @Component({
   selector: '[app-manufacture-production-index-row]',
   imports: [
+    ManufactureCollectionBadgeComponent,
     DateShopifyPipe,
     CommonModule,
     RouterModule,

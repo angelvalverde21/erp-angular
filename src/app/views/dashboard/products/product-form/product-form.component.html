@@ -10,10 +10,14 @@
   </div>
 
   <div class="product-details-field">
-    <label for="product-form-description">Descripción <span class="product-details-optional">Opcional</span></label>
-    <!-- <quill-editor class="w-100" formControlName="body" [modules]="modules" theme="snow"
-      [style.height.px]="100"></quill-editor> -->
-    <textarea id="product-form-description" class="form-control" formControlName="body" rows="5" placeholder="Describe las características principales del producto…"></textarea>
+    <div class="product-description-heading"><label id="product-description-label" for="product-form-description">Descripción <span class="product-details-optional">Opcional</span></label>
+      @if (richDescription) { <button type="button" class="product-description-mode" [disabled]="form.disabled" [attr.aria-pressed]="descriptionHtmlMode" (click)="descriptionHtmlMode = !descriptionHtmlMode"><i class="fa-solid" [class.fa-code]="!descriptionHtmlMode" [class.fa-pen-to-square]="descriptionHtmlMode" aria-hidden="true"></i>{{ descriptionHtmlMode ? 'Texto con formato' : 'Ver HTML' }}</button> }
+    </div>
+    @if (richDescription && !descriptionHtmlMode) {
+      <quill-editor class="product-description-editor" formControlName="body" format="html" [sanitize]="true" [modules]="modules" theme="snow" placeholder="Describe las características principales del producto…" (onEditorCreated)="descriptionEditorCreated($event)"></quill-editor>
+    } @else {
+      <textarea id="product-form-description" class="form-control" [class.product-description-source]="richDescription" formControlName="body" rows="8" [placeholder]="richDescription ? '<p>Descripción del producto</p>' : 'Describe las características principales del producto…'"></textarea>
+    }
   </div>
 
   }

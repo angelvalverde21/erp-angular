@@ -160,7 +160,13 @@ export class ManufactureProductionVariantIndexComponent implements OnInit {
       next: (resp: any) => {
         Swal.fire('Guardado', 'Las variantes han sido agregadas', 'success');
         console.log(resp);
-        this.manufacture_variants = [...this.manufacture_variants, ...resp.data];
+        const existingIds = new Set(this.manufacture_variants.map((item: any) => item.id));
+        const added = resp.data.filter((item: any) => {
+          if (existingIds.has(item.id)) return false;
+          existingIds.add(item.id);
+          return true;
+        });
+        this.manufacture_variants = [...this.manufacture_variants, ...added];
         this.sumQuantity();
         this.loading = false;
         this.modal.close();

@@ -12,7 +12,7 @@
       </div>
     </div>
     @if (actionLink) {
-    <a class="manufacture-primary-action" [class.manufacture-primary-action-dark]="section === 'production'" [routerLink]="actionLink"><i class="fa-solid fa-plus" aria-hidden="true"></i>{{ actionLabel }}</a>
+    <a class="manufacture-primary-action" [class.manufacture-primary-action-dark]="section === 'production'" [routerLink]="actionLink"><i [class]="'fa-solid ' + actionIcon" aria-hidden="true"></i>{{ actionLabel }}</a>
     }
   </div>
   @if (showNavigation) {

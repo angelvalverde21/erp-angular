@@ -22,12 +22,14 @@ describe('Production deletion', () => {
   });
   function setup() {
     const fixture = TestBed.createComponent(ManufactureProductionIndexRowComponent);
-    fixture.componentInstance.production = { id: 10, name: 'Lote de prueba' };
+    fixture.componentInstance.production = { id: 10, name: 'Lote de prueba', collection: { id: 1, name: 'Verano' } };
     fixture.detectChanges(); return fixture;
   }
   it('deletes the confirmed production and emits its ID for removing the list row', async () => {
     spyOn(Swal, 'fire').and.resolveTo({ isConfirmed: true } as any);
     const fixture = setup(), component = fixture.componentInstance;
+    expect(fixture.nativeElement.querySelector('.manufacture-collection-badge').textContent).toContain('Verano');
+    expect(fixture.nativeElement.querySelector('.manufacture-collection-badge').getAttribute('href')).toBe('/sorelle/dashboard/collections/1?view=processes');
     const emitted = spyOn(component.deleted, 'emit');
     await component.deleteProduction();
     expect(destroy).toHaveBeenCalledOnceWith(10);

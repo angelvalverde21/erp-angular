@@ -9,9 +9,10 @@
   @if (!manufacture_variants?.length) {
   <div class="production-empty"><fa-icon [icon]="faInbox" aria-hidden="true"></fa-icon><h3>No hay productos registrados</h3><p>Agrega las variantes del pedido y define sus cantidades y precios.</p><button type="button" class="btn btn-outline-secondary" (click)="openVerticallyCentered(content)">Agregar primer producto</button></div>
   } @else {
+  @let totals = orderTotals;
   <div class="table-responsive">
     <table class="table production-table align-middle mb-0">
-      <thead><tr><th scope="col">Unidades</th><th scope="col">Producto / variante</th><th scope="col">SKU</th><th scope="col">Precio unitario (S/)</th><th scope="col" class="text-end">Acciones</th></tr></thead>
+      <thead><tr><th scope="col">Unidades</th><th scope="col">Producto / variante</th><th scope="col">SKU</th><th scope="col">Costo unitario (S/)</th><th scope="col" class="text-end">Acciones</th></tr></thead>
       <tbody>
         @for (item of manufacture_variants | manufactureVariantRows; track item.record.id) {
           <tr app-manufacture-variant-row [manufacture_variant]="item.record" [attr.data-variant-id]="item.record.id"
@@ -21,7 +22,7 @@
             (emitDeleteManufactureVariantId)="receiveDeleteManufactureVariantId($event)"></tr>
         }
       </tbody>
-      <tfoot><tr><td>{{ sum_variants }}</td><td colspan="4">Total</td></tr></tfoot>
+      <tfoot class="purchase-order-totals-footer"><tr><td class="purchase-order-total-units"><strong>{{ totals.valid ? (totals.units | number:'1.0-0':'es-PE') : '—' }}</strong><small>Unidades pedidas</small></td><td colspan="2"><strong>Total de la orden</strong><small>{{ totals.products }} productos · {{ totals.variants }} variantes</small></td><td class="purchase-order-footer-cost"><strong>{{ totals.valid ? (totals.cost | currency:'PEN':'symbol':'1.2-2':'es-PE') : '—' }}</strong><small>Cantidad × costo unitario</small></td><td></td></tr></tfoot>
     </table>
   </div>
   }

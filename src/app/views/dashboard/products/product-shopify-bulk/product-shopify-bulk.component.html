@@ -1,6 +1,17 @@
 <div class="catalog-bulk-bar">
   <div class="catalog-selection-summary"><span class="catalog-selection-count">{{ products.length }}</span><div><strong>{{ products.length === 1 ? 'Producto seleccionado' : 'Productos seleccionados' }}</strong><span>Hasta 35 por envío</span></div></div>
-  <div class="catalog-bulk-actions"><button type="button" class="bulk-outline" [disabled]="sending || loading || !products.length" (click)="open('reset')">Restablecer en Shopify</button><button type="button" class="bulk-clear" [disabled]="sending || loading || !products.length" (click)="clearSelection.emit()">Quitar selección</button><button type="button" class="bulk-primary bulk-shopify-trigger" [disabled]="sending || loading || !products.length" (click)="open('catalog')"><i class="fa-brands fa-shopify" aria-hidden="true"></i>Publicar en Shopify</button></div>
+  <div class="catalog-bulk-actions">
+    <div ngbDropdown placement="bottom-end">
+      <button type="button" ngbDropdownToggle class="bulk-outline" [disabled]="sending || loading || !products.length" id="catalog-actions"><i class="fa-solid fa-bolt" aria-hidden="true"></i>Acciones</button>
+      <div ngbDropdownMenu aria-labelledby="catalog-actions" class="catalog-actions-menu">
+        <button type="button" ngbDropdownItem (click)="editTitles.emit()"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>Edición masiva de títulos</button>
+        <div class="dropdown-divider"></div>
+        <button type="button" ngbDropdownItem (click)="open('catalog')"><i class="fa-brands fa-shopify" aria-hidden="true"></i>Publicar en Shopify</button>
+        <button type="button" ngbDropdownItem (click)="open('reset')"><i class="fa-solid fa-arrow-rotate-left" aria-hidden="true"></i>Restablecer en Shopify</button>
+      </div>
+    </div>
+    <button type="button" class="bulk-clear" [disabled]="sending || loading || !products.length" (click)="clearSelection.emit()">Quitar selección</button>
+  </div>
 </div>
 <dialog #reviewDialog class="catalog-dialog" aria-labelledby="catalog-review-title" (cancel)="cancel($event)" (close)="busyChanged.emit(false)">
   <header class="catalog-dialog-header"><div><span class="catalog-eyebrow">ERP → SHOPIFY</span><h2 id="catalog-review-title">{{ mode === 'reset' ? 'Restablecer productos de Shopify' : 'Publicar productos como borradores' }}</h2><p>{{ mode === 'reset' ? 'Revisa los productos antes de eliminar.' : 'Revisa el título y las variantes antes de enviar.' }}</p></div><button type="button" class="catalog-close" aria-label="Cerrar revisión" [disabled]="sending" (click)="close()" autofocus><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></header>

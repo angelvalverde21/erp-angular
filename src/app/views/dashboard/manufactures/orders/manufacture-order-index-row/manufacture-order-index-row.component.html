@@ -1,5 +1,6 @@
 <td class="purchase-order-name-cell">
   <a class="purchase-order-name" [routerLink]="variantLink">{{ manufacture.name || 'Orden sin nombre' }}</a>
+  <app-manufacture-collection-badge [collection]="manufacture.collection"></app-manufacture-collection-badge>
   <div class="purchase-order-row-meta">
     <span>#{{ manufacture.id }}</span>
     @if (manufacture.supplier?.user?.name || manufacture.supplier?.name; as supplierName) { <span>{{ supplierName }}</span> }

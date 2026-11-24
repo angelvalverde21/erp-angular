@@ -3,13 +3,15 @@
 </app-head-page>
 <section class="card product-catalog-panel">
   <div class="card-header product-search-header"><app-product-search (searchSubmit)="receiveParams($event)"></app-product-search></div>
-  <div class="card-body p-0" [attr.aria-busy]="loading || loadingMore">
-    <app-product-index [bulkActions]="true" [products]="products" [insertedProductId]="insertedProductId" [sortable]="true" [sortBy]="sortBy" [sortDirection]="sortDirection" [loading]="loading" (productDuplicated)="insertDuplicate($event)" (sortChange)="changeSort($event)" (loadMore)="loadMoreProducts()"></app-product-index>
-    @if (loadingMore) { <div class="product-loading-state" role="status"><app-loading></app-loading><p>Cargando más productos...</p></div> }
+  <div class="card-body p-0" [attr.aria-busy]="loading">
+    <app-product-index [bulkActions]="true" [products]="products" [insertedProductId]="insertedProductId" [sortable]="true" [sortBy]="sortBy" [sortDirection]="sortDirection" [loading]="loading" (productDuplicated)="insertDuplicate($event)" (sortChange)="changeSort($event)"></app-product-index>
     @if (error) { <div class="product-catalog-error" role="alert"><p>{{ error }}</p><button type="button" class="btn btn-outline-secondary btn-sm" (click)="retry()">Reintentar</button></div> }
   </div>
-  <footer class="product-catalog-footer">
-    <span>{{ products.length }} productos cargados@if (total !== null) { de {{ total }} }</span>
-    @if (!hasMore && products.length) { <span>Todos los productos cargados</span> }
+  <footer class="product-pagination">
+    <span role="status">Página {{ page }} de {{ lastPage }}</span>
+    <nav aria-label="Paginación de productos">
+      <button type="button" [disabled]="loading || page <= 1" (click)="changePage(page - 1)"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i>Anterior</button>
+      <button type="button" [disabled]="loading || page >= lastPage" (click)="changePage(page + 1)">Siguiente<i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+    </nav>
   </footer>
 </section>

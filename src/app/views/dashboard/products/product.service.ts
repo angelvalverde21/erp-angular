@@ -56,6 +56,10 @@ export class ProductService extends BaseCrudDashboardService{
     return this.http.post<{ data: Product }>(`${this.baseUrl}/${productId}/duplicate`, { name });
   }
 
+  updateTitles(products: { id: number; name: string }[]): Observable<{ data: { id: number; name: string }[] }> {
+    return this.http.put<{ data: { id: number; name: string }[] }>(`${this.baseUrl}/bulk-titles`, { products });
+  }
+
   savePrice(productId: number, data: Omit<ProductPrice, 'id'>, priceId?: number): Observable<{ data: ProductPrice }> {
     const url = `${this.baseUrl}/${productId}/prices`;
     return priceId

@@ -27,30 +27,52 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   @ViewChild('editor') editor?: ElementRef<HTMLDialogElement>;
   @ViewChild('inventoryEditor') inventoryEditor?: ElementRef<HTMLDialogElement>;
   inventoryBusy = false; inventoryError = ''; inventoryReview: CollectionInventoryReview | null = null;
+  reviewedInventoryIds = new Set<number>();
+  get reviewedInventoryItems(): CollectionInventoryReview['items'] { return this.inventoryReview?.items.filter(item => this.reviewedInventoryIds.has(item.variant_id)) ?? []; }
+  get reviewedInventoryUnits(): number { return this.reviewedInventoryItems.reduce((sum, item) => sum + item.export_units, 0); }
+  get allReviewedInventorySelected(): boolean { return !!this.inventoryReview?.items.length && this.reviewedInventoryIds.size === this.inventoryReview.items.length; }
+  toggleReviewedInventory(id: number): void {
+    if (this.inventoryBusy) return;
+    this.reviewedInventoryIds.has(id) ? this.reviewedInventoryIds.delete(id) : this.reviewedInventoryIds.add(id);
+  }
+  toggleAllReviewedInventory(): void {
+    if (this.inventoryBusy) return;
+    this.reviewedInventoryIds = this.allReviewedInventorySelected ? new Set() : new Set(this.inventoryReview?.items.map(item => item.variant_id));
+  }
   async prepareInventoryExport(): Promise<void> {
     if (this.inventoryBusy || !this.collectionId || !this.selectedInventoryVariantIds.size) return;
     if (this.selectedInventoryVariantIds.size > 250) { this.inventoryError = 'Selecciona hasta 250 variantes por envío.'; return; }
     const id = this.collectionId;
-    this.inventoryBusy = true; this.inventoryError = '';
+    const ids = [...this.selectedInventoryVariantIds];
+    const percentage = this.inventoryPercentage;
+    this.inventoryBusy = true; this.inventoryError = ''; this.notice = '';
     try {
-      const response = await firstValueFrom(this.service.previewInventory(id, [...this.selectedInventoryVariantIds], this.inventoryPercentage).pipe(takeUntil(this.destroy$)));
-      if (!this.destroyed && this.collectionId === id) { this.inventoryReview = response.data; this.inventoryEditor?.nativeElement.showModal(); }
+      // Refresh persisted quantities before review so a stale tab cannot display a different total.
+      const current = await firstValueFrom(this.service.workspace(id).pipe(takeUntil(this.destroy$)));
+      if (this.destroyed || this.collectionId !== id) return;
+      this.workspace = current.data;
+      const response = await firstValueFrom(this.service.previewInventory(id, ids, percentage).pipe(takeUntil(this.destroy$)));
+      if (!this.destroyed && this.collectionId === id) {
+        this.inventoryReview = response.data;
+        this.reviewedInventoryIds = new Set(response.data.items.map(item => item.variant_id));
+        this.inventoryEditor?.nativeElement.showModal();
+      }
     } catch (error) { if (!this.destroyed) this.inventoryError = this.message(error); }
     finally { this.inventoryBusy = false; }
   }
   async confirmInventoryExport(): Promise<void> {
-    if (this.inventoryBusy || !this.inventoryReview || !this.collectionId) return;
+    if (this.inventoryBusy || !this.inventoryReview || !this.collectionId || !this.reviewedInventoryItems.length) return;
     this.inventoryBusy = true; this.inventoryError = '';
     try {
-      const response = await firstValueFrom(this.service.sendInventory(this.collectionId, this.inventoryReview.token).pipe(takeUntil(this.destroy$)));
-      this.inventoryEditor?.nativeElement.close(); this.inventoryReview = null;
+      const response = await firstValueFrom(this.service.sendInventory(this.collectionId, this.inventoryReview.token, this.reviewedInventoryItems.map(item => item.variant_id)).pipe(takeUntil(this.destroy$)));
+      this.inventoryEditor?.nativeElement.close(); this.inventoryReview = null; this.reviewedInventoryIds.clear();
       this.notice = `${response.data.message} ${response.data.sent_variants} variantes · ${response.data.sent_units} unidades.`;
     } catch (error) { if (!this.destroyed) this.inventoryError = this.message(error); }
     finally { this.inventoryBusy = false; }
   }
   closeInventoryReview(event?: Event): void {
     if (this.inventoryBusy) { event?.preventDefault(); return; }
-    this.inventoryEditor?.nativeElement.close(); this.inventoryReview = null; this.inventoryError = '';
+    this.inventoryEditor?.nativeElement.close(); this.inventoryReview = null; this.reviewedInventoryIds.clear(); this.inventoryError = '';
   }
   collectionId: number | null = null;
   view = 'dashboard';
@@ -85,6 +107,8 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   responsibles: { id: number; name: string }[] = [];
   purchaseProcess: CollectionProcess | null = null;
   productSearch = '';
+  mobileProductSearchOpen = false;
+  mobileInventoryOpen = false;
   productShopifyLink(product: { manufacture_variants?: CollectionManufactureVariant[] }): { state: string; label: string; detail: string } {
     const variants = new Map((product.manufacture_variants ?? []).map(line => [line.variant_id, line]));
     const linked = [...variants.values()].filter(line => /^(?:gid:\/\/shopify\/ProductVariant\/)?\d+$/.test(line.shopify_variant_id ?? '')).length;
@@ -163,6 +187,20 @@ export class CollectionsComponent implements OnInit, OnDestroy {
 
   get path(): string[] { return ['/', this.base.store ?? '', 'dashboard', 'collections']; }
   get processes(): CollectionProcess[] { return this.workspace?.processes ?? []; }
+  processSearch = '';
+  processSearchTerm = '';
+  searchProcesses(): void { this.processSearchTerm = this.processSearch.trim(); }
+  clearProcessSearch(): void { this.processSearch = ''; this.processSearchTerm = ''; }
+  get filteredProcesses(): CollectionProcess[] {
+    const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
+    const terms = normalize(this.processSearchTerm).trim().split(/\s+/).filter(Boolean);
+    return this.processes.filter(process => {
+      const text = normalize([process.name, `#${process.id}`, process.source_id == null ? '' : `#${process.source_id}`,
+        this.kinds[process.kind] ?? process.kind, process.responsible?.name ?? 'Sin asignar',
+        this.statuses[process.status] ?? process.status].join(' '));
+      return terms.every(term => text.includes(term));
+    });
+  }
   get manufacturing(): CollectionProcess[] { return this.processes.filter(p => p.source_type === 'manufacture'); }
   get selectedOrder(): any { return this.options.find(o => o.id === Number(this.draft.order_id)); }
   get orderLines(): any[] { return this.selectedOrder?.lines ?? []; }
@@ -186,7 +224,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       this.collectionId = collectionId;
       this.view = this.tabs.some(t => t.id === query.get('view')) ? query.get('view')! : 'dashboard';
       this.purchaseProcess = null;
-      if (changedCollection) { this.productSearchChanged(''); this.selectedInventoryVariantIds.clear(); this.inventoryPercentage = 100; void this.load(); }
+      if (changedCollection) { this.clearProcessSearch(); this.productSearchChanged(''); this.selectedInventoryVariantIds.clear(); this.inventoryPercentage = 100; void this.load(); }
     });
   }
   async load(): Promise<void> {

@@ -77,21 +77,17 @@ export class OrderWidgetComponent implements OnInit {
 
     this.widgets = [
       {
-        title: 'Resumen',
-        subtitle: 'Fecha de creación',
-        value: this.summary?.created_at ?? null,
-        link: ['./'],
-        exact: true,
-        icon: faCalendar,
-        type: 'date'
-      },
-      {
         title: 'Productos pedidos',
         subtitle: `${this.summary?.count_variants ?? 0} variantes · Unidades pedidas`,
         value: this.summary?.sum_variants ? this.summary?.sum_variants : 0,
         link: ['./variants'],
         icon: faCalculator,
-        type: 'units'
+        type: 'units',
+        showCost: true,
+        estimatedCost: this.summary?.estimated_order_cost_valid === false ? null : this.summary?.estimated_order_cost ?? null,
+        costValid: this.summary?.estimated_order_cost_valid !== false,
+        zeroCostVariants: this.summary?.zero_cost_variants ?? 0,
+        pending: this.summary?.has_pending_cost ?? false,
       },
       {
         title: 'Pagos',

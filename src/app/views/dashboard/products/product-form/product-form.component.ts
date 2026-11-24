@@ -47,9 +47,11 @@ export class ProductFormComponent{
 
   modules = {
     toolbar: [
-      ['bold', 'italic', 'underline'],         
+      [{ header: [2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
       [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link', 'image']
+      ['blockquote', 'link'],
+      ['clean'],
     ]
   };
 
@@ -60,6 +62,12 @@ export class ProductFormComponent{
 
   @Input() form!: FormGroup;
   @Input() section: 'all' | 'basic' | 'category' = 'all';
+  @Input() richDescription = false;
+  descriptionHtmlMode = false;
+  descriptionEditorCreated(editor: { root: HTMLElement }): void {
+    editor.root.id = 'product-form-description';
+    editor.root.setAttribute('aria-labelledby', 'product-description-label');
+  }
   @Input() categories: Category[] = [];
   @Input() brands: Brand[] = [];
   @Output() emitCategorySelected = new EventEmitter<Category>();
