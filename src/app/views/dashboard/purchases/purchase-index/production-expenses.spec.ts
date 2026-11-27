@@ -10,6 +10,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { PurchaseEditComponent } from '../purchase-edit/purchase-edit.component';
 import { PurchaseCreateComponent } from '../purchase-create/purchase-create.component';
 import { PurchaseService } from '../purchase.service';
+import { UnitService } from '../../units/unit.service';
 import { SupplierService } from '../../users/suppliers/supplier.service';
 import { BaseService } from 'src/app/views/base.service';
 import { ManufactureService } from '../../manufactures/manufacture.service';
@@ -27,7 +28,7 @@ registerLocaleData(localeEsPe);
 
 describe('Purchase suppliers', () => {
   beforeEach(() => TestBed.configureTestingModule({ providers: [
-    provideHttpClient(), provideHttpClientTesting(), { provide: BaseService, useValue: { store: 'sorelle' } },
+    provideHttpClient(), provideHttpClientTesting(), { provide: UnitService, useValue: { options: () => of({ data: [{ id: 1, name: 'Unidad(s)' }] }) } }, { provide: BaseService, useValue: { store: 'sorelle' } },
   ] }));
   it('shows nested and flattened suppliers arriving after initialization and preserves the selected supplier ID', async () => {
     const fixture = TestBed.createComponent(SupplierSelectedComponent);
@@ -80,7 +81,7 @@ describe('Purchase editor', () => {
     service = jasmine.createSpyObj('PurchaseService', ['get', 'update']);
     service.get.and.returnValue(of({ data: structuredClone(purchase) }));
     TestBed.configureTestingModule({ providers: [
-      provideRouter([]), provideHttpClient(), provideHttpClientTesting(),
+      provideRouter([]), provideHttpClient(), provideHttpClientTesting(), { provide: UnitService, useValue: { options: () => of({ data: [{ id: 1, name: 'Unidad(s)' }] }) } },
       { provide: BaseService, useValue: { store: 'sorelle' } },
       { provide: PurchaseService, useValue: service },
       { provide: SupplierService, useValue: { index: () => of({ data: [] }) } },
@@ -204,7 +205,7 @@ describe('Production expenses', () => {
     await TestBed.configureTestingModule({
       imports: [PurchaseIndexComponent, ManufactureProductionPurchaseIndexComponent],
       providers: [
-        provideRouter([]), provideHttpClient(), provideHttpClientTesting(),
+        provideRouter([]), provideHttpClient(), provideHttpClientTesting(), { provide: UnitService, useValue: { options: () => of({ data: [{ id: 1, name: 'Unidad(s)' }] }) } },
         { provide: BaseService, useValue: { store: 'sorelle' } },
         { provide: NgbModal, useValue: { open } },
         { provide: ManufactureService, useValue: { setSummary, manufactureSingnalEvent: () => null } },
@@ -457,7 +458,7 @@ describe('Purchase registration', () => {
   beforeEach(() => {
     service = jasmine.createSpyObj('PurchaseService', ['store']);
     TestBed.configureTestingModule({ providers: [
-      provideHttpClient(), provideHttpClientTesting(),
+      provideHttpClient(), provideHttpClientTesting(), { provide: UnitService, useValue: { options: () => of({ data: [{ id: 1, name: 'Unidad(s)' }] }) } },
       { provide: BaseService, useValue: { store: 'sorelle' } },
       { provide: PurchaseService, useValue: service },
       { provide: SupplierService, useValue: { index: () => of({ data: [] }) } },

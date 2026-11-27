@@ -44,6 +44,19 @@ export class PhotoSessionEditPageComponent implements OnInit {
   openUpload(): void { this.uploadDialog?.open(); }
   refreshAssets(): void { this.gallery?.refreshAfterUpload(); }
   canLeave(): boolean { return !this.uploading || window.confirm('Hay archivos subiendo. Si sales, se detendrán las cargas pendientes. ¿Salir de la sesión?'); }
+  openRelated(kind: PhotoRelatedKind): void { this.error = ''; this.addingKind = kind; }
+  get relatedOptions() {
+    return this.addingKind === 'location' ? this.options?.locations || [] : this.addingKind === 'model' ? this.options?.models || [] : this.options?.photographers || [];
+  }
+  get relatedAssignedIds(): number[] {
+    if (!this.session) return [];
+    if (this.addingKind === 'location') return (this.session.locations || []).map(record => record.id);
+    if (this.addingKind === 'model') return (this.session.models || []).map(record => record.id);
+    return (this.session.photographers || (this.session.photographer_contact ? [this.session.photographer_contact] : [])).map(record => record.id);
+  }
+  selectRelated(ids: number[]): void {
+    if (this.addingKind) this.changeAssignment({ kind: this.addingKind, ids, mode: 'attach' });
+  }
   relatedCreated(created: CreatedPhotoRelated): void {
     if (this.options) this.options = addPhotoRelatedOption(this.options, created);
     this.addingKind = null;
@@ -53,7 +66,10 @@ export class PhotoSessionEditPageComponent implements OnInit {
     if (!this.session || this.assignmentSaving || this.saving) return;
     this.assignmentSaving = true; this.error = ''; this.saved = false;
     this.api.assignments(this.session.id, change.kind, change.ids, change.mode).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.assignmentSaving = false)).subscribe({
-      next: result => Object.assign(this.session!, result.data), error: error => this.error = photoSessionError(error),
+      next: result => {
+        Object.assign(this.session!, result.data);
+        if (change.mode === 'attach' && this.addingKind === change.kind) this.addingKind = null;
+      }, error: error => this.error = photoSessionError(error),
     });
   }
   save(payload: PhotoSessionPayload): void {

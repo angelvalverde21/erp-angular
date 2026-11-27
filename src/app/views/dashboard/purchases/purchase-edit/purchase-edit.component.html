@@ -26,7 +26,8 @@
         <summary><span><i class="fa-solid fa-sliders" aria-hidden="true"></i>Datos de la compra<small>Opcional</small></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
         <div class="purchase-editor-options-body">
           @if (supplierError) { <p role="alert">{{ supplierError }} <button type="button" (click)="loadSuppliers()">Reintentar</button></p> }
-          <app-purchase-form [form]="form" [suppliers]="suppliers" [suppliersLoading]="suppliersLoading" [manageDelivery]="manageDelivery" [deliveryExpanded]="deliveryExpanded" [deliveryTracked]="deliveryTracked" (deliveryRequested)="deliveryRequested.emit()"><ng-content select="[purchase-delivery-panel]" ngProjectAs="[purchase-delivery-panel]" /></app-purchase-form>
+          @if (photoRecipientName) { <p>Proveedor: <strong>{{ photoRecipientName }}</strong></p> }
+          <app-purchase-form [form]="form" [supplier_id]="photoRecipientName ? null : 0" [suppliers]="suppliers" [suppliersLoading]="suppliersLoading" [manageDelivery]="manageDelivery" [deliveryExpanded]="deliveryExpanded" [deliveryTracked]="deliveryTracked" (deliveryRequested)="deliveryRequested.emit()"><ng-content select="[purchase-delivery-panel]" ngProjectAs="[purchase-delivery-panel]" /></app-purchase-form>
         </div>
       </details>
     </fieldset>

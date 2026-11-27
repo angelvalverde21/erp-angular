@@ -1,6 +1,21 @@
+import { PhotoPaymentTreeComponent } from './expenses/photo-payment-tree.component';
 import { BaseService } from '../../base.service';
 import { PhotoSectionHeaderComponent } from './shared/photo-section-header.component';
 import { PhotoSessionWorkspaceComponent } from './photo-session-workspace/photo-session-workspace.component';
+import { PhotoExpenseDialogComponent } from './expenses/photo-expense-dialog.component';
+import { PhotoExpenseService } from './expenses/photo-expense.service';
+import { PurchaseCreateComponent } from '../purchases/purchase-create/purchase-create.component';
+import { PurchaseService } from '../purchases/purchase.service';
+import { SupplierService } from '../users/suppliers/supplier.service';
+import { SupplierAddressService } from '../users/suppliers/supplier-address-selection/supplier-address.service';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { UnitService } from '../units/unit.service';
+import { UnitSelectedComponent } from '../units/unit-selected/unit-selected.component';
+import { getDebugNode } from '@angular/core';
+import { GatewayService } from '../gateways/gateway.service';
+import { registerLocaleData } from '@angular/common';
+import localeEsPe from '@angular/common/locales/es-PE';
 import { PhotoSessionDashboardComponent } from './photo-session-dashboard/photo-session-dashboard.component';
 import { PhotoSessionAssignmentIndexComponent } from './photo-session-assignment-index/photo-session-assignment-index.component';
 import { PhotoSessionTaskService } from './tasks/photo-session-task.service';
@@ -44,6 +59,8 @@ const session: PhotoSession = { id: 3, name: 'Catálogo verano', status: 'planne
 const options: PhotoSessionOptions = { employees: [], storage: { configured: false, provider: 'Backblaze B2', max_bytes: 100 * 1024 ** 3 } };
 
 describe('Photo sessions', () => {
+  registerLocaleData(localeEsPe);
+  let expenses: jasmine.SpyObj<PhotoExpenseService>;
   let service: jasmine.SpyObj<PhotoSessionService>;
   let contacts: jasmine.SpyObj<PhotoContactService>;
   let images: jasmine.SpyObj<ImageService>;
@@ -65,7 +82,9 @@ describe('Photo sessions', () => {
     tasks = jasmine.createSpyObj('PhotoSessionTaskService', ['list', 'createTask', 'editTask', 'changeStatus', 'events']);
     tasks.list.and.returnValue(of({ data: [], total: 0, current_page: 1, last_page: 1, can_manage: false, assignees: [], summary: EMPTY_TASK_SUMMARY }));
     tasks.events.and.returnValue(of({ data: [] }));
-    TestBed.configureTestingModule({ providers: [provideRouter([]), { provide: BaseService, useValue: { store: 'sorelle' } }, { provide: PhotoSessionService, useValue: service }, { provide: PhotoContactService, useValue: contacts }, { provide: ImageService, useValue: images }, { provide: PhotoLocationService, useValue: locations }, { provide: DistrictService, useValue: districts }, { provide: PhotoSessionTaskService, useValue: tasks },
+    expenses = jasmine.createSpyObj('PhotoExpenseService', ['context']);
+    expenses.context.and.returnValue(of({ data: { source: { kind: 'photographer', id: 10, name: 'Jon', recipient_name: 'Jon' }, purchases: [], legacy_expenses: [], total_paid: 0, total_purchases: 0 } }));
+    TestBed.configureTestingModule({ providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(), { provide: UnitService, useValue: { options: () => of({ data: [{ id: 1, name: 'Unidad(s)' }, { id: 9, name: 'Hora(s)' }] }) } }, { provide: PhotoExpenseService, useValue: expenses }, { provide: GatewayService, useValue: { index: () => of({ data: [{ id: 1, name: 'cash', title: 'Efectivo' }] }) } }, { provide: BaseService, useValue: { store: 'sorelle' } }, { provide: PhotoSessionService, useValue: service }, { provide: PhotoContactService, useValue: contacts }, { provide: ImageService, useValue: images }, { provide: PhotoLocationService, useValue: locations }, { provide: DistrictService, useValue: districts }, { provide: PhotoSessionTaskService, useValue: tasks },
       { provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap({ photo_session_id: '3' })), snapshot: { queryParams: {}, params: {}, data: {}, url: [] } } },
     ] });
   });
@@ -96,6 +115,50 @@ describe('Photo sessions', () => {
     expect(fixture.nativeElement.querySelector('#session-photographers a')?.getAttribute('href')).toBe('/sorelle/dashboard/photo-sessions/photographers/10');
     expect(fixture.nativeElement.querySelector('#session-locations a')?.getAttribute('href')).toBe('/sorelle/dashboard/photo-sessions/locations/30');
     expect(fixture.componentInstance.count('photographers')).toBe(2); expect(fixture.componentInstance.count('locations')).toBe(2);
+    fixture.destroy();
+  });
+  it('opens the existing purchase form directly with its provider and keeps the card actions aligned', async () => {
+    const store = jasmine.createSpy('store').and.returnValue(of({ data: { id: 1 } }));
+    const supplierIndex = jasmine.createSpy('index').and.returnValue(of({ data: [] }));
+    TestBed.overrideProvider(PurchaseService, { useValue: { store } });
+    TestBed.overrideProvider(SupplierService, { useValue: { index: supplierIndex } });
+    const fixture = TestBed.createComponent(PhotoSessionWorkspaceComponent);
+    fixture.componentRef.setInput('session', { ...session, photographers: [{ id: 10, name: 'Jon', phone: '900000001' }] }); fixture.detectChanges();
+    fixture.componentInstance.goTo('photographers'); fixture.detectChanges();
+    const actions = fixture.nativeElement.querySelector('#session-photographers .record-expense-actions') as HTMLElement;
+    const button = actions.querySelector('.payment-action') as HTMLButtonElement;
+    expect(actions.querySelectorAll('.record-action-button').length).toBe(2);
+    expect(button.textContent).toContain('Agregar gastos'); button.click(); fixture.detectChanges(); await fixture.whenStable();
+    const node = document.querySelector('app-purchase-create')!;
+    const form = getDebugNode(node)!.injector.get(PurchaseCreateComponent);
+    expect(document.querySelector('.modal-title')?.textContent).toContain('Agregar gastos');
+    expect(document.querySelector('.purchase-known-supplier')?.textContent).toContain('Jon');
+    expect(document.querySelector('app-payment-form')).toBeNull();
+    expect(document.querySelector('app-supplier-selected')).toBeNull();
+    expect(supplierIndex).not.toHaveBeenCalled();
+    form.purchase_items.at(0).patchValue({ name: 'Horas de servicio', quantity: 3, price: 100 });
+    form.addItem(); form.purchase_items.at(1).patchValue({ name: 'Edicion', quantity: 2, price: 50 });
+    expect(form.totalAmount).toBe(400);
+    form.create();
+    expect(store).toHaveBeenCalledTimes(1);
+    expect(store.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({ photo_source_kind: 'photographer', photo_source_id: 10, purchaseable_type: 'photo_session', purchaseable_id: 3 }));
+    fixture.destroy();
+  });
+  it('requires the supplier for a task purchase and preserves its concepts after a failed save', () => {
+    const store = jasmine.createSpy('store').and.returnValue(throwError(() => ({ error: { errors: { purchase_items: ['Revisa los conceptos'] } } })));
+    TestBed.overrideProvider(PurchaseService, { useValue: { store } });
+    TestBed.overrideProvider(SupplierService, { useValue: { index: () => of({ data: [] }) } });
+    TestBed.overrideProvider(SupplierAddressService, { useValue: { addresses: () => of({ data: [] }) } });
+    const fixture = TestBed.createComponent(PurchaseCreateComponent);
+    fixture.componentRef.setInput('photoSource', { kind: 'task', id: 20, name: 'Maquillaje', recipient_name: null });
+    fixture.componentRef.setInput('purchaseable_type', 'photo_session'); fixture.componentRef.setInput('purchaseable_id', 3); fixture.detectChanges();
+    const form = fixture.componentInstance;
+    form.purchase_items.at(0).patchValue({ quantity: 2, price: 50 });
+    form.create(); expect(store).not.toHaveBeenCalled();
+    form.form.patchValue({ supplier_id: 8 }); form.create();
+    expect(form.error).toContain('Revisa los conceptos');
+    expect(form.totalAmount).toBe(100);
+    expect(form.form.value.supplier_id).toBe(8);
     fixture.destroy();
   });
   it('supports keyboard navigation between the session sections', () => {
@@ -147,7 +210,7 @@ describe('Photo sessions', () => {
     expect(fixture.componentInstance.count('locations')).toBe(0);
     const create = spyOn(fixture.componentInstance.createRelated, 'emit');
     expect(fixture.nativeElement.querySelector('#session-models .person-card')).toBeNull();
-    (fixture.nativeElement.querySelector('#session-models .create-button') as HTMLButtonElement).click();
+    (fixture.nativeElement.querySelector('#session-models .add-related-button') as HTMLButtonElement).click();
     expect(create).toHaveBeenCalledWith('model');
     fixture.componentRef.setInput('session', { ...session, models: [{ id: 40, name: 'Otra modelo', active: true }] });
     fixture.detectChanges();
@@ -218,15 +281,47 @@ describe('Photo sessions', () => {
     service.assets.and.returnValue(of({ data: [], total: 14, current_page: 1, last_page: 1 }));
     fixture.componentInstance.refreshAfterUpload(); expect(total.calls.mostRecent().args).toEqual([14]); fixture.destroy();
   });
-  it('adds directory records without duplicating assignments and detaches only the session link', () => {
+  it('detaches only the session link after confirmation', () => {
     const fixture = TestBed.createComponent(PhotoSessionAssignmentIndexComponent);
-    fixture.componentRef.setInput('kind', 'photographer'); fixture.componentRef.setInput('contacts', [{ id: 10, name: 'Asignado' }]);
-    fixture.componentRef.setInput('options', [{ id: 10, name: 'Asignado', active: true }, { id: 11, name: 'Disponible', active: true }]); fixture.detectChanges();
-    expect(fixture.componentInstance.availableOptions.map(option => option.id)).toEqual([11]);
+    fixture.componentRef.setInput('kind', 'photographer'); fixture.componentRef.setInput('contacts', [{ id: 10, name: 'Asignado' }]); fixture.detectChanges();
     const change = spyOn(fixture.componentInstance.changeAssignment, 'emit');
-    fixture.componentInstance.selectedIds = [11]; fixture.componentInstance.attach();
-    expect(change).toHaveBeenCalledWith({ kind: 'photographer', ids: [11], mode: 'attach' });
-    fixture.componentInstance.remove(10); expect(change).toHaveBeenCalledWith({ kind: 'photographer', ids: [10], mode: 'detach' });
+    fixture.componentInstance.remove(10); expect(change).not.toHaveBeenCalled();
+    fixture.componentInstance.confirmRemoval(); expect(change).toHaveBeenCalledWith({ kind: 'photographer', ids: [10], mode: 'detach' }); fixture.destroy();
+  });
+  for (const kind of ['photographer', 'model', 'location'] as const) it(`links the ${kind} name and paid total and confirms removal`, () => {
+    const fixture = TestBed.createComponent(PhotoSessionAssignmentIndexComponent);
+    fixture.componentRef.setInput('kind', kind); fixture.componentRef.setInput(kind === 'location' ? 'locations' : 'contacts', [{ id: 11, name: 'Ficha de prueba', active: true }]);
+    fixture.componentRef.setInput('expenseTotals', { [kind + ':11']: 800 }); fixture.detectChanges();
+    const card = fixture.nativeElement.querySelector('.person-card') as HTMLElement;
+    expect(card.querySelector('.profile-action')!.getAttribute('href')).toContain('/11'); expect(card.querySelector('.actions-toggle')).toBeNull();
+    expect(card.querySelectorAll('.record-expense-actions button').length).toBe(2);
+    const expense = spyOn(fixture.componentInstance.registerPayment, 'emit');
+    (card.querySelector('.paid-amount') as HTMLButtonElement).click(); expect(expense).toHaveBeenCalledWith({ kind, id: 11, name: 'Ficha de prueba', history: true });
+    expect(card.querySelector('.paid-amount')!.textContent).toContain('800.00');
+    (card.querySelector('.payment-action') as HTMLButtonElement).click(); expect(expense).toHaveBeenCalledWith({ kind, id: 11, name: 'Ficha de prueba' });
+    const change = spyOn(fixture.componentInstance.changeAssignment, 'emit');
+    (card.querySelector('.delete-action') as HTMLButtonElement).click(); fixture.detectChanges(); expect(change).not.toHaveBeenCalled();
+    expect((fixture.nativeElement.querySelector('dialog') as HTMLDialogElement).open).toBeTrue();
+    (fixture.nativeElement.querySelector('.confirm-delete') as HTMLButtonElement).click(); expect(change).toHaveBeenCalledOnceWith({ kind, ids: [11], mode: 'detach' }); fixture.destroy();
+  });
+  for (const kind of ['photographer', 'model', 'location'] as const) it(`selects an existing ${kind} inside the add modal`, async () => {
+    const fixture = TestBed.createComponent(PhotoRelatedCreateDialogComponent);
+    fixture.componentRef.setInput('kind', kind); fixture.componentRef.setInput('allowSelection', true);
+    fixture.componentRef.setInput('options', [{ id: 10, name: 'Asignado', active: true }, { id: 11, name: 'Jon jairo', active: true }, { id: 12, name: 'Otra ficha', active: true }]);
+    fixture.componentRef.setInput('assignedIds', [10]); fixture.detectChanges(); await fixture.whenStable(); fixture.detectChanges();
+    expect((fixture.nativeElement.querySelector('dialog') as HTMLDialogElement).open).toBeTrue();
+    expect(fixture.nativeElement.querySelector('.directory-options').textContent).not.toContain('Asignado');
+    const search = fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement;
+    search.value = 'jon'; search.dispatchEvent(new Event('input')); fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('.directory-option').length).toBe(1);
+    const option = fixture.nativeElement.querySelector('.directory-option') as HTMLLabelElement;
+    fixture.detectChanges(); expect(fixture.nativeElement.querySelector('.directory-option')).toBe(option);
+    option.click(); fixture.detectChanges(); expect(fixture.componentInstance.selectedIds).toEqual([11]);
+    const selected = spyOn(fixture.componentInstance.selectionSave, 'emit');
+    (fixture.nativeElement.querySelector('.attach-selection') as HTMLButtonElement).click();
+    expect(selected).toHaveBeenCalledOnceWith([11]);
+    fixture.componentRef.setInput('saving', true); fixture.detectChanges();
+    expect((fixture.nativeElement.querySelector('.attach-selection') as HTMLButtonElement).disabled).toBeTrue();
     fixture.destroy();
   });
   it('opens a location in Maps without loading an embedded map in the session', () => {
@@ -258,7 +353,8 @@ describe('Photo sessions', () => {
     service.assignments.and.returnValue(of({ data: { ...session, model_ids: [21], models: [model] } }));
     const fixture = TestBed.createComponent(PhotoSessionEditPageComponent); fixture.detectChanges();
     const library = fixture.nativeElement.querySelector('app-photo-session-asset-index');
-    (fixture.nativeElement.querySelector('#session-models .create-button') as HTMLButtonElement).click(); fixture.detectChanges();
+    (fixture.nativeElement.querySelector('#session-models .add-related-button') as HTMLButtonElement).click(); fixture.detectChanges();
+    (fixture.nativeElement.querySelector('.create-mode') as HTMLButtonElement).click(); fixture.detectChanges();
     const create = fixture.debugElement.query(By.directive(PhotoContactCreateComponent)).componentInstance as PhotoContactCreateComponent;
     create.form.controls.name.setValue('Modelo nueva'); create.submit(); await fixture.whenStable(); fixture.detectChanges();
     expect(service.assignments).toHaveBeenCalledWith(3, 'model', [21], 'attach');
@@ -266,6 +362,30 @@ describe('Photo sessions', () => {
     expect(fixture.nativeElement.querySelector('app-photo-session-asset-index')).toBe(library);
     expect(service.show).toHaveBeenCalledTimes(1); fixture.destroy();
   });
+  it('keeps a failed directory selection in the modal and closes only after a successful retry', async () => {
+    service.options.and.returnValue(of({ data: { ...options, photographers: [{ id: 11, name: 'John Jairo', active: true }] } }));
+    const response = new Subject<{ data: PhotoSession }>(); service.assignments.and.returnValue(response);
+    const fixture = TestBed.createComponent(PhotoSessionEditPageComponent); fixture.detectChanges();
+    const heading = fixture.nativeElement.querySelector('#session-photographers .assignment-heading') as HTMLElement;
+    expect(heading.querySelectorAll('button').length).toBe(1);
+    expect(heading.textContent).toContain('Agregar fotógrafo');
+    (heading.querySelector('button') as HTMLButtonElement).click(); fixture.detectChanges(); await fixture.whenStable(); fixture.detectChanges();
+    const shell = fixture.nativeElement.querySelector('app-photo-related-create dialog') as HTMLDialogElement;
+    expect(shell.open).toBeTrue(); expect(shell.textContent).toContain('Seleccionar existente');
+    const checkbox = shell.querySelector('.directory-option input') as HTMLInputElement;
+    checkbox.click(); fixture.detectChanges();
+    (shell.querySelector('.attach-selection') as HTMLButtonElement).click(); fixture.detectChanges();
+    expect(service.assignments).toHaveBeenCalledOnceWith(3, 'photographer', [11], 'attach');
+    expect((shell.querySelector('.close-dialog') as HTMLButtonElement).disabled).toBeTrue();
+    (shell.querySelector('.attach-selection') as HTMLButtonElement).click(); expect(service.assignments).toHaveBeenCalledTimes(1);
+    response.error({ error: { message: 'No se pudo agregar' } }); fixture.detectChanges();
+    expect(shell.open).toBeTrue(); expect(checkbox.checked).toBeTrue(); expect(shell.querySelector('[role="alert"]')?.textContent).toContain('No se pudo agregar');
+    service.assignments.and.returnValue(of({ data: { ...session, photographers: [{ id: 11, name: 'John Jairo', active: true }] } }));
+    (shell.querySelector('.attach-selection') as HTMLButtonElement).click(); fixture.detectChanges();
+    expect(service.assignments).toHaveBeenCalledTimes(2); expect(fixture.nativeElement.querySelector('app-photo-related-create')).toBeNull();
+    expect(fixture.nativeElement.querySelector('#session-photographers .person-card').textContent).toContain('John Jairo'); fixture.destroy();
+  });
+
   it('keeps the planning draft when assigning people and saves planning without overwriting assignments', () => {
     service.assignments.and.returnValue(of({ data: { ...session, model_ids: [21], models: [{ id: 21, name: 'Modelo agregada', active: true }] } }));
     service.saveChanges.and.returnValue(of({ data: { ...session, name: 'Nombre en edición' } }));
@@ -722,5 +842,66 @@ describe('Photo sessions', () => {
     if (failPreview) { expect(error).toBeInstanceOf(Error); expect(service.confirmPreviews).not.toHaveBeenCalled(); }
     else { expect(error).toBeNull(); expect(service.confirmPreviews).toHaveBeenCalledOnceWith(3, plan.id); }
     expect(task.file).toBe(file);
+  });
+});
+
+
+describe('Live unit selection', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting(), { provide: BaseService, useValue: { store: 'sorelle' } }] }));
+  afterEach(() => TestBed.inject(HttpTestingController).verify());
+  it('loads new units from the API and retains the unit selected before the response arrives', async () => {
+    const fixture = TestBed.createComponent(UnitSelectedComponent);
+    const changed = jasmine.createSpy('changed'); fixture.componentInstance.registerOnChange(changed);
+    fixture.componentInstance.writeValue(9); fixture.detectChanges();
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne(request => request.url.endsWith('/units')).flush({ data: [{ id: 1, name: 'Unidad(s)' }, { id: 9, name: 'Hora(s)' }] });
+    fixture.detectChanges(); await fixture.whenStable(); fixture.detectChanges();
+    const select = fixture.nativeElement.querySelector('select') as HTMLSelectElement;
+    expect(select.textContent).toContain('Hora(s)'); expect(select.value).toBe('9');
+    expect(changed).not.toHaveBeenCalled();
+    select.value = '1'; select.dispatchEvent(new Event('change')); expect(changed).toHaveBeenCalledWith(1);
+    fixture.componentInstance.setDisabledState(true); fixture.detectChanges(); await fixture.whenStable(); fixture.detectChanges(); expect(select.disabled).toBeTrue();
+    fixture.destroy();
+  });
+  it('shares concurrent unit loads and refreshes the list when another form is opened', () => {
+    const first = TestBed.createComponent(UnitSelectedComponent); const second = TestBed.createComponent(UnitSelectedComponent);
+    first.detectChanges(); second.detectChanges();
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne(request => request.url.endsWith('/units')).flush({ data: [{ id: 1, name: 'Unidad(s)' }] });
+    first.detectChanges(); second.detectChanges(); expect(second.componentInstance.units.length).toBe(1);
+    first.destroy(); second.destroy();
+    const next = TestBed.createComponent(UnitSelectedComponent); next.detectChanges();
+    http.expectOne(request => request.url.endsWith('/units')).flush({ data: [{ id: 1, name: 'Unidad(s)' }, { id: 9, name: 'Hora(s)' }] });
+    next.detectChanges(); expect(next.componentInstance.units.length).toBe(2); next.destroy();
+  });
+  it('allows retrying a failed load without losing the selected unit', () => {
+    const fixture = TestBed.createComponent(UnitSelectedComponent); fixture.componentInstance.writeValue(9); fixture.detectChanges();
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne(request => request.url.endsWith('/units')).flush({}, { status: 500, statusText: 'Error' }); fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[role="alert"]')).not.toBeNull();
+    (fixture.nativeElement.querySelector('button') as HTMLButtonElement).click();
+    http.expectOne(request => request.url.endsWith('/units')).flush({ data: [{ id: 9, name: 'Hora(s)' }] }); fixture.detectChanges();
+    expect(fixture.componentInstance.value).toBe(9); expect(fixture.componentInstance.error).toBe(''); fixture.destroy();
+  });
+});
+
+describe('Participant payment hierarchy', () => {
+  it('groups payments under their own expense and refreshes only when the revision changes', () => {
+    const api = jasmine.createSpyObj('PhotoExpenseService', ['context']);
+    api.context.and.returnValue(of({ data: { source: { kind: 'photographer', id: 10, name: 'Jon', recipient_name: 'Jon' }, total_paid: 50, total_purchases: 200,
+      legacy_expenses: [], purchases: [
+        { id: 1, items: [{ id: 1, name: 'Fotografia', quantity: 2, price: 50 }], payments: [{ id: 1, amount: 50, date: '2026-11-25', status: 'paid', direction: 'out', gateway: { title: 'Transferencia' } }] },
+        { id: 2, items: [{ id: 2, name: 'Edicion', quantity: 1, price: 100 }], payments: [] }
+      ] } }));
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting(), { provide: BaseService, useValue: { store: 'sorelle' } }, { provide: PhotoExpenseService, useValue: api }] });
+    const fixture = TestBed.createComponent(PhotoPaymentTreeComponent);
+    fixture.componentRef.setInput('sessionId', 3); fixture.componentRef.setInput('target', { kind: 'photographer', id: 10, name: 'Jon' }); fixture.detectChanges();
+    const list = fixture.debugElement.query(By.css('app-purchase-index')).componentInstance;
+    expect(list.purchases.length).toBe(2); expect(list.purchaseable_type).toBe('photo_session'); expect(list.purchaseable_id).toBe(3);
+    expect(list.photoSource).toEqual(jasmine.objectContaining({ kind: 'photographer', id: 10 }));
+    expect(list.productionView).toBeTrue(); expect(list.compactHeader).toBeTrue();
+    expect(fixture.nativeElement.querySelectorAll('.production-expense-card').length).toBe(2);
+    fixture.componentRef.setInput('target', { kind: 'photographer', id: 10, name: 'Jon' }); fixture.detectChanges(); expect(api.context).toHaveBeenCalledTimes(1);
+    fixture.componentRef.setInput('revision', 1); fixture.detectChanges(); expect(api.context).toHaveBeenCalledTimes(2); fixture.destroy();
   });
 });

@@ -76,3 +76,16 @@ prefers-reduced-motion y evitan envíos o cierres repetidos durante la salida.
 
 Verificación: npx ng test --configuration initial-import-module y ng build con
 configuration development. Las migraciones y permisos se verifican en PhotoSessionTest.
+
+Las tarjetas de fotógrafo, modelo y locación ofrecen Agregar compra junto a Ver ficha.
+El botón abre directamente PurchaseCreate con los mismos conceptos, cantidades,
+unidades y precios del resto del ERP. Las tareas también permiten crear compras.
+El proveedor se muestra con el nombre de la ficha sin duplicar personas; para tareas
+y locaciones sin contacto se selecciona un proveedor de la tienda. El servidor valida
+el vínculo con la sesión y conserva el origen al editar la compra.
+
+El importe Compras de cada ítem abre su historial con PurchaseIndex: desde allí se
+consultan conceptos, adjuntos y pagos de cada compra. Los pagos directos anteriores
+se conservan en un apartado del historial. Las compras y sus pagos se consolidan una
+sola vez en la colección. Se requiere la migración
+2026_11_25_110000_add_photo_source_to_purchases.php junto al backend y frontend.

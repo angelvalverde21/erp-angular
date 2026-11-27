@@ -7,7 +7,7 @@
       <div><dt>Registros</dt><dd>{{ purchases.length }}</dd></div>
       @if (!compactHeader) { <div><dt>Conceptos</dt><dd>{{ conceptCount }}</dd></div> }
     </dl>
-    <button type="button" class="production-expense-primary" (click)="openVerticallyCentered(content)"><i class="fa-solid fa-plus" aria-hidden="true"></i>{{ compactHeader ? 'Registrar compra' : 'Registrar compra o gasto' }}</button>
+    <button type="button" class="production-expense-primary" (click)="openVerticallyCentered(content)"><i class="fa-solid fa-plus" aria-hidden="true"></i>{{ photoSource ? 'Agregar gastos' : compactHeader ? 'Registrar compra' : 'Registrar compra o gasto' }}</button>
   </header>
   @if (createdNotice) { <p class="production-purchase-confirmation" role="status"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>{{ createdNotice }}</p> }
   @for (purchase of purchases; track purchase.id) {
@@ -15,7 +15,7 @@
     <header class="production-expense-card-header">
       <span class="production-expense-icon" aria-hidden="true"><i class="fa-solid fa-receipt"></i></span>
       <div class="production-expense-identity">
-        <h3>{{ purchase.supplier?.user?.name || purchase.supplier?.name || 'Compra sin proveedor' }}</h3>
+        <h3>{{ purchase.supplier?.user?.name || purchase.supplier?.name || purchase.photo_recipient_name || 'Compra sin proveedor' }}</h3>
         <div class="production-expense-meta"><span>Registro #{{ purchase.id }}</span><span>{{ purchase.created_at ? (purchase.created_at | DateShopify) : 'Sin fecha' }}</span></div>
       </div>
       <app-purchase-index-head [productionName]="productionName" [productionSections]="productionSections" [actionsOnly]="true" [purchase]="purchase" [purchaseable_type]="purchaseable_type"
@@ -180,11 +180,11 @@
 <ng-template #content let-modal>
     <div class="modal-header purchase-create-heading">
         <span class="purchase-create-icon" aria-hidden="true"><i class="fa-solid fa-cart-plus"></i></span>
-        <div><h6 class="modal-title">Registrar compra</h6>@if (productionName) { <p class="purchase-create-production-name">Producción: <strong>{{ productionName }}</strong></p> }<p>Añade materiales o servicios y sus fechas de entrega.</p></div>
+        <div><h6 class="modal-title">{{ photoSource ? 'Agregar gastos' : 'Registrar compra' }}</h6>@if (productionName) { <p class="purchase-create-production-name">Producción: <strong>{{ productionName }}</strong></p> }<p>Añade materiales o servicios y sus fechas de entrega.</p></div>
         <button type="button" class="btn-close" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body p-0">
-        <app-purchase-create [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id" [production_stage_id]="productionStageId" [productionSections]="productionSections" [deliveryDefault]="deliveryDefault"
+        <app-purchase-create [actionLabel]="photoSource ? 'Agregar gastos' : 'Registrar compra'" [photoSource]="photoSource" [purchaseable_type]="purchaseable_type" [purchaseable_id]="purchaseable_id" [production_stage_id]="productionStageId" [productionSections]="productionSections" [deliveryDefault]="deliveryDefault"
             (emitPurchaseCreate)="receivePurchaseCreate($event)" (cancelled)="modal.dismiss('cancel')"></app-purchase-create>
     </div>
 

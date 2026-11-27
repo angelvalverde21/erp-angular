@@ -14,10 +14,10 @@
     </div>
     <label class="payment-field payment-label"><span><i class="fa-regular fa-calendar" aria-hidden="true"></i>Fecha del pago <span aria-hidden="true">*</span></span><input type="date" formControlName="date" required></label>
   </div>
-  <fieldset class="payment-direction"><legend>Tipo de movimiento</legend>
+  @if (!outgoingOnly) { <fieldset class="payment-direction"><legend>Tipo de movimiento</legend>
     <label [class.payment-direction-selected]="form.get('direction')?.value === 'out'" class="payment-direction-out"><input type="radio" formControlName="direction" value="out"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i><span><strong>Salida de dinero</strong><small>Pago realizado</small></span></label>
     <label [class.payment-direction-selected]="form.get('direction')?.value === 'in'" class="payment-direction-in"><input type="radio" formControlName="direction" value="in"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i><span><strong>Ingreso de dinero</strong><small>Dinero recibido</small></span></label>
-  </fieldset>
+  </fieldset> }
   <label class="payment-field payment-label"><span>Concepto u observación <small>Opcional</small></span><textarea formControlName="comment" rows="2" maxlength="255" placeholder="Ej. Adelanto al proveedor o saldo de la orden"></textarea></label>
   <details class="payment-receipts">
     <summary><span class="payment-receipts-icon"><i class="fa-solid fa-paperclip" aria-hidden="true"></i></span><span><strong>Comprobantes</strong><small>Adjunta la constancia o captura del pago</small></span><span class="payment-receipts-count">{{ payment ? (payment.images?.length || 0) : images.length }}</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>

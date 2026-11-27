@@ -1,0 +1,15 @@
+.directory-modes { display: flex; gap: 6px; padding: 4px; margin-bottom: 18px; border: 1px solid #dfe5ef; border-radius: 9px; background: #edf1f6;
+  button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 40px; padding: 8px 12px; border: 1px solid transparent; border-radius: 6px; background: transparent; color: #607087; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  button.active { background: #fff; border-color: #dce3ed; color: #263c57; box-shadow: 0 1px 3px #24354b0d; }
+}
+.directory-picker { padding: 18px; border: 1px solid #dfe5ef; border-radius: 10px; background: #fff; > label { font-size: 14px; } }
+.directory-search { display: flex; align-items: center; gap: 10px; padding-left: 13px; border: 1px solid #d7e0ec; border-radius: 8px; color: #7b899c; &:focus-within { outline: 2px solid #c5d4eb; } input { min-width: 0; border: 0; outline: 0; padding: 10px 12px 10px 0; font-size: 15px; background: transparent; } }
+.directory-options { display: grid; gap: 8px; max-height: 260px; overflow-y: auto; margin-top: 14px; padding: 2px; }
+.directory-option { display: flex; align-items: center; gap: 12px; min-height: 54px; margin: 0; padding: 10px 12px; border: 1px solid #e3e9f1; border-radius: 8px; cursor: pointer; &:hover { background: #f5f8fc; } &.selected { border-color: #91adcf; background: #eef4fc; } input { width: 17px; height: 17px; margin: 0; padding: 0; flex-shrink: 0; accent-color: #3867a6; } }
+.directory-avatar { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: #edf3fb; color: #3867a6; flex-shrink: 0; }
+.directory-name { min-width: 0; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; small { display: block; margin-top: 3px; font-size: 13px; font-weight: 400; color: #946421; } }
+.directory-empty { padding: 20px 12px; text-align: center; color: #7c8ca1; > i { font-size: 24px; } p { font-size: 14px; margin: 10px 0 14px; } }
+.directory-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 16px 20px; border-top: 1px solid #e6ebf2; background: #fff; > span { margin-right: auto; color: #65758c; font-size: 14px; } .button { font-size: 14px; min-height: 40px; } .primary { background: #252b36; border-color: #252b36; } }
+.error { font-size: 14px; }
+button:disabled, input:disabled { opacity: .5; cursor: default; }
+@media(max-width: 480px) { .directory-modes button { font-size: 13px; padding-inline: 8px; } .directory-picker { padding: 12px; } .directory-footer { padding: 14px 16px; > span { flex-basis: 100%; } .attach-selection { flex: 1; } } }

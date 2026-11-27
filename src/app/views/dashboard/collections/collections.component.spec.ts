@@ -45,17 +45,17 @@ describe('Collections workspace', () => {
     await fixture.whenStable(); fixture.detectChanges(); return fixture;
   }
   it('searches processes with the search button or form submit and keeps matching actions aligned', async () => {
-    query.next(convertToParamMap({ view: 'processes' }));
+    query.next(convertToParamMap({ view: 'photo-sessions' }));
     const fixture = await setup(); const component = fixture.componentInstance;
-    component.workspace!.processes.push({ ...snapshot.processes[0], id: 9, source_id: 52, name: 'Sesión Natalia', kind: 'photo_session', status: 'planned', responsible: { id: 5, name: 'Pamela' } });
-    fixture.detectChanges();
+    component.workspace!.processes.push({ ...snapshot.processes[0], id: 9, source_id: 52, name: 'Sesión Natalia', kind: 'photo_session', source_type: 'photo_session', status: 'planned', responsible: { id: 5, name: 'Pamela' } });
+    fixture.detectChanges(); await fixture.whenStable(); fixture.detectChanges();
     const input = fixture.nativeElement.querySelector('#collection-process-search') as HTMLInputElement;
     const searchForm = fixture.nativeElement.querySelector('form.collection-process-search') as HTMLFormElement;
     const searchButton = searchForm.querySelector('button[type="submit"]') as HTMLButtonElement;
     for (const term of ['  SESION natalia  ', '#52', 'fotografica', 'pamela', 'programado']) {
       input.value = term; input.dispatchEvent(new Event('input')); fixture.detectChanges();
       if (term === '  SESION natalia  ') {
-        expect(component.filteredProcesses.length).toBe(2);
+        expect(component.filteredProcesses.length).toBe(1);
         searchButton.click();
       } else { searchForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); }
       fixture.detectChanges();
@@ -69,12 +69,85 @@ describe('Collections workspace', () => {
     expect(fixture.nativeElement.querySelector('.process-data-scroll').textContent).toContain('No se encontraron procesos');
     expect(fixture.nativeElement.querySelector('.process-actions-fixed button')).toBeNull();
     (fixture.nativeElement.querySelector('[aria-label="Limpiar búsqueda de procesos"]') as HTMLButtonElement).click(); fixture.detectChanges();
-    expect(component.filteredProcesses.length).toBe(2);
+    expect(component.filteredProcesses.length).toBe(1);
     expect(component.processSearchTerm).toBe('');
     expect(service.workspace).toHaveBeenCalledTimes(1);
     params.next(convertToParamMap({ collection_id: '8' }));
     expect(component.processSearch).toBe('');
     fixture.destroy();
+  });
+  it('separates photo sessions from both kinds of manufacture and nests Products under Manufacturas', async () => {
+    const data = structuredClone(snapshot);
+    data.processes.push({ ...data.processes[0], id: 4, source_id: 42, name: 'Orden de blusas', kind: 'order' },
+      { ...data.processes[0], id: 5, source_id: 3, name: 'Fotos verano', kind: 'photo_session', source_type: 'photo_session' });
+    service.workspace.and.returnValue(of({ data })); query.next(convertToParamMap({ view: 'processes', manufacture: 'productions' }));
+    const fixture = await setup(); const component = fixture.componentInstance;
+    const labels = Array.from(fixture.nativeElement.querySelectorAll('.collection-tabs button') as NodeListOf<HTMLButtonElement>).map(button => button.textContent!.trim());
+    expect(labels).toEqual(['Dashboard', 'Manufacturas', 'Sesiones fotográficas', 'Resumen de gastos', 'Ventas']);
+    expect(component.filteredProcesses.map(process => process.id)).toEqual([3]);
+    const changeTab = spyOn(component, 'navigate');
+    const subtabs = fixture.nativeElement.querySelectorAll('.manufacture-subtabs button') as NodeListOf<HTMLButtonElement>;
+    expect(subtabs.length).toBe(2); expect(subtabs[0].textContent).toContain('Órdenes de compra'); expect(subtabs[1].textContent).toContain('Producciones');
+    component.processSearchTerm = 'anterior'; subtabs[0].click(); fixture.detectChanges();
+    expect(component.processSearchTerm).toBe(''); expect(component.filteredProcesses.map(process => process.id)).toEqual([4]);
+    subtabs[1].click(); fixture.detectChanges(); expect(component.filteredProcesses.map(process => process.id)).toEqual([3]);
+    const products = fixture.nativeElement.querySelector('.collection-manufacture-products') as HTMLButtonElement;
+    expect(products.closest('.manufacture-subtabs')).toBeNull();
+    component.workspace!.products = [{ id: 12, name: 'Blusa', stock_total: 0 }, { id: 13, name: 'Polo', stock_total: 0 }]; fixture.detectChanges();
+    expect(products.textContent).toContain('Ver productos (2)');
+    expect(products.disabled).toBeFalse(); products.click(); expect(changeTab).toHaveBeenCalledWith('products');
+    query.next(convertToParamMap({ view: 'products' })); fixture.detectChanges();
+    expect(component.activeTab).toBe('processes'); expect(fixture.nativeElement.querySelector('.collection-tabs .active')!.textContent).toContain('Manufacturas');
+    expect(fixture.nativeElement.querySelector('.manufacture-subtabs .active')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.collection-manufacture-products').getAttribute('aria-current')).toBe('page');
+    query.next(convertToParamMap({ view: 'photo-sessions' })); fixture.detectChanges();
+    expect(component.filteredProcesses.map(process => process.id)).toEqual([5]);
+    expect(fixture.nativeElement.querySelector('.process-name-link')!.getAttribute('href')).toBe('/sorelle/dashboard/photo-sessions/3');
+    expect(fixture.nativeElement.querySelector('.collection-manufacture-products')).toBeNull();
+    expect(service.workspace).toHaveBeenCalledTimes(1); fixture.destroy();
+  });
+  it('keeps consolidated purchases read-only without registration or creation actions', async () => {
+    query.next(convertToParamMap({ view: 'purchases' })); const fixture = await setup();
+    expect(fixture.nativeElement.textContent).toContain('Compras consolidadas');
+    expect(fixture.nativeElement.textContent).not.toContain('Registrar desde un proceso');
+    expect(fixture.nativeElement.querySelector('.header-actions .primary')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.section-heading button')).toBeNull(); fixture.destroy();
+  });
+  it('defaults to purchase orders and keeps the selected manufacture type in product navigation', async () => {
+    query.next(convertToParamMap({ view: 'processes' })); const fixture = await setup(); const component = fixture.componentInstance;
+    expect(component.manufactureTab).toBe('orders'); expect(component.filteredProcesses).toEqual([]);
+    await component.open('process'); expect(component.draft.kind).toBe('order'); component.close();
+    const navigate = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+    component.selectManufacture('productions');
+    expect(navigate).toHaveBeenCalledWith([], jasmine.objectContaining({ queryParams: { view: 'processes', manufacture: 'productions' } }));
+    component.navigate('products');
+    expect(navigate).toHaveBeenCalledWith([], jasmine.objectContaining({ queryParams: { view: 'products', manufacture: 'productions' } }));
+    await component.open('process'); expect(component.draft.kind).toBe('production');
+    expect(component.processView(snapshot.processes[0])).toBe('productions');
+    expect(component.processView({ ...snapshot.processes[0], kind: 'order' })).toBe('orders'); fixture.destroy();
+  });
+  it('disables Products when the collection contains only photo sessions', async () => {
+    const data = structuredClone(snapshot);
+    data.processes = [{ ...data.processes[0], kind: 'photo_session', source_type: 'photo_session' }];
+    service.workspace.and.returnValue(of({ data })); query.next(convertToParamMap({ view: 'processes', manufacture: 'productions' }));
+    const fixture = await setup();
+    expect((fixture.nativeElement.querySelector('.collection-manufacture-products') as HTMLButtonElement).disabled).toBeTrue();
+    const navigate = spyOn(TestBed.inject(Router), 'navigate'); fixture.componentInstance.navigate('products'); expect(navigate).not.toHaveBeenCalled();
+    query.next(convertToParamMap({ view: 'products' })); fixture.detectChanges();
+    expect(fixture.componentInstance.view).toBe('processes'); expect(fixture.nativeElement.querySelector('.collection-products-view')).toBeNull(); fixture.destroy();
+  });
+  it('offers session creation in an empty photo tab and retains that tab after saving', async () => {
+    query.next(convertToParamMap({ view: 'photo-sessions' })); const fixture = await setup(); const component = fixture.componentInstance;
+    const create = fixture.nativeElement.querySelector('.create-collection-photo') as HTMLButtonElement;
+    expect(create.textContent).toContain('Crear sesión fotográfica'); create.click(); await fixture.whenStable(); fixture.detectChanges();
+    expect(component.draft.kind).toBe('photo_session'); expect(component.draft.collection_id).toBe(7);
+    expect(Array.from(fixture.nativeElement.querySelectorAll('select[name="kind"] option') as NodeListOf<HTMLOptionElement>).map(option => option.value)).toEqual(['photo_session']);
+    component.draft.name = 'Sesión nueva'; service.process.and.returnValue(of({}));
+    const data = structuredClone(snapshot); data.processes.push({ ...data.processes[0], id: 5, name: 'Sesión nueva', kind: 'photo_session', source_type: 'photo_session' });
+    service.workspace.and.returnValue(of({ data })); const navigate = spyOn(component, 'navigate'); await component.save(); fixture.detectChanges();
+    expect(service.process).toHaveBeenCalledWith(7, jasmine.objectContaining({ collection_id: 7, kind: 'photo_session', name: 'Sesión nueva', source_id: null }), undefined);
+    expect(navigate).toHaveBeenCalledWith('photo-sessions'); expect(component.view).toBe('photo-sessions');
+    expect(fixture.nativeElement.querySelector('.create-collection-photo')).toBeNull(); fixture.destroy();
   });
   it('shows four indicators including planned and received units without a Results panel', async () => {
     const fixture = await setup();
@@ -128,7 +201,7 @@ describe('Collections workspace', () => {
     expect(component.workspace!.summary.paid).toBe(120); fixture.destroy();
   });
   it('uses existing manufacture and product workspaces and provides independent project tabs', async () => {
-    query.next(convertToParamMap({ view: 'processes' })); const fixture = await setup();
+    query.next(convertToParamMap({ view: 'processes', manufacture: 'productions' })); const fixture = await setup();
     expect(fixture.componentInstance.originLink(snapshot.processes[0])).toEqual(['/', 'sorelle', 'dashboard', 'manufactures', 'productions', '41']);
     expect(fixture.nativeElement.querySelectorAll('.collection-tabs button').length).toBe(5);
     expect(fixture.nativeElement.querySelector('button[aria-label="Desvincular proceso"] i')).not.toBeNull();
@@ -405,9 +478,9 @@ describe('Collections workspace', () => {
     trigger.click(); await fixture.whenStable(); fixture.detectChanges();
     const menu = document.querySelector('[aria-labelledby="collection-section-menu-7"]') as HTMLElement;
     const links = Array.from(menu.querySelectorAll('a'));
-    expect(links.map(link => link.textContent?.trim())).toEqual(['Procesos', 'Productos', 'Compras', 'Ventas y cobros']);
+    expect(links.map(link => link.textContent?.trim())).toEqual(['Manufacturas', 'Sesiones fotográficas', 'Resumen de gastos', 'Ventas']);
     expect(links.map(link => link.getAttribute('href'))).toEqual([
-      '/sorelle/dashboard/collections/7?view=processes', '/sorelle/dashboard/collections/7?view=products',
+      '/sorelle/dashboard/collections/7?view=processes', '/sorelle/dashboard/collections/7?view=photo-sessions',
       '/sorelle/dashboard/collections/7?view=purchases', '/sorelle/dashboard/collections/7?view=sales',
     ]);
     expect(service.workspace).not.toHaveBeenCalled();
@@ -477,7 +550,7 @@ describe('Collections workspace', () => {
     fixture.destroy();
   });
   it('keeps process actions outside the horizontal scrolling area and aligned with their row', async () => {
-    query.next(convertToParamMap({ view: 'processes' }));
+    query.next(convertToParamMap({ view: 'processes', manufacture: 'productions' }));
     const fixture = await setup();
     fixture.nativeElement.style.width = '800px';
     const scroller: HTMLElement = fixture.nativeElement.querySelector('.process-data-scroll');
@@ -495,6 +568,22 @@ describe('Collections workspace', () => {
     const lastAction = actions.querySelector('tbody .row-actions')!.lastElementChild!;
     expect(actionRow.right - lastAction.getBoundingClientRect().right).toBeCloseTo(20, 0);
     expect(getComputedStyle(actions.querySelector('th')!).textAlign).toBe('right');
+    fixture.destroy();
+  });
+  it('highlights the entire manufacture row across the data and fixed action tables', async () => {
+    query.next(convertToParamMap({ view: 'processes', manufacture: 'productions' }));
+    const fixture = await setup();
+    const dataRow = fixture.nativeElement.querySelector('.process-data-scroll tbody tr') as HTMLElement;
+    const actionRow = fixture.nativeElement.querySelector('.process-actions-fixed tbody tr') as HTMLElement;
+    for (const row of [dataRow, actionRow]) {
+      row.dispatchEvent(new MouseEvent('mouseenter')); fixture.detectChanges();
+      expect(dataRow.classList.contains('row-highlighted')).toBeTrue();
+      expect(actionRow.classList.contains('row-highlighted')).toBeTrue();
+      expect(getComputedStyle(actionRow.querySelector('td')!).backgroundColor).toBe(getComputedStyle(dataRow.querySelector('td')!).backgroundColor);
+      row.dispatchEvent(new MouseEvent('mouseleave')); fixture.detectChanges();
+      expect(dataRow.classList.contains('row-highlighted')).toBeFalse();
+      expect(actionRow.classList.contains('row-highlighted')).toBeFalse();
+    }
     fixture.destroy();
   });
   it('keeps recovery in the top row and redirects old Results links to dashboard', async () => {
@@ -516,13 +605,13 @@ describe('Collections workspace', () => {
   it('switches collection sections without reloading data or flashing the loading screen', async () => {
     const fixture = await setup();
     const first = fixture.nativeElement.querySelector('.collection-section');
-    query.next(convertToParamMap({ view: 'processes' }));
+    query.next(convertToParamMap({ view: 'processes', manufacture: 'productions' }));
     fixture.detectChanges(); await fixture.whenStable(); fixture.detectChanges();
     expect(service.workspace).toHaveBeenCalledTimes(1);
     expect(fixture.componentInstance.loading).toBeFalse();
     expect(fixture.nativeElement.querySelector('.loading')).toBeNull();
     expect(fixture.nativeElement.querySelector('.collection-section')).not.toBe(first);
-    expect(fixture.nativeElement.querySelector('[aria-label="Procesos de la colección"]')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('[aria-label="Manufacturas de la colección"]')).not.toBeNull();
     fixture.destroy();
   });
 });

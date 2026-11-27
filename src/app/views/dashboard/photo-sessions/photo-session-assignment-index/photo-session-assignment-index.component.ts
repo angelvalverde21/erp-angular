@@ -1,16 +1,17 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { CurrencyPipe, NgTemplateOutlet } from '@angular/common';
+import { PhotoExpenseTarget } from '../expenses/photo-expense.model';
 import { RouterLink } from '@angular/router';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { BaseService } from '../../../base.service';
 import { ImagePreviewComponent } from '../../../shared/components/image-preview/image-preview.component';
 import { PhotoAssignedContact } from '../photo-session.model';
 import { PhotoLocation } from '../locations/photo-location.model';
 import type { PhotoRelatedKind } from '../shared/photo-related-create-dialog/photo-related-create-dialog.component';
+import { PhotoDialogComponent } from '../shared/photo-dialog/photo-dialog.component';
 
 export interface PhotoAssignmentChange { kind: PhotoRelatedKind; ids: number[]; mode: 'attach' | 'detach'; }
 
-@Component({ selector: 'app-photo-session-assignment-index', imports: [FormsModule, RouterLink, NgSelectModule, ImagePreviewComponent],
+@Component({ selector: 'app-photo-session-assignment-index', imports: [CurrencyPipe, NgTemplateOutlet, RouterLink, ImagePreviewComponent, PhotoDialogComponent],
   templateUrl: './photo-session-assignment-index.component.html',
   styleUrls: ['../photo-session.scss', './photo-session-assignment-index.component.scss'],
 })
@@ -18,24 +19,30 @@ export class PhotoSessionAssignmentIndexComponent {
   @Input({ required: true }) kind!: PhotoRelatedKind;
   @Input() contacts: PhotoAssignedContact[] = [];
   @Input() locations: PhotoLocation[] = [];
-  @Input() options: { id: number; name: string; active: boolean }[] = [];
   @Input() saving = false;
+  @Input() expenseTotals: Record<string, number> = {};
+  @Input() purchaseTotals: Record<string, number> = {};
+  @Output() registerPayment = new EventEmitter<PhotoExpenseTarget>();
   @Output() changeAssignment = new EventEmitter<PhotoAssignmentChange>();
   @Output() createRelated = new EventEmitter<PhotoRelatedKind>();
   readonly base = inject(BaseService);
-  choosing = false; selectedIds: number[] = [];
+  pendingRemoval: { id: number; name: string; kind: PhotoRelatedKind } | null = null;
   get title() { return this.kind === 'location' ? 'Locaciones' : this.kind === 'model' ? 'Modelos' : 'Fotógrafos'; }
   get singular() { return this.kind === 'location' ? 'locación' : this.kind === 'model' ? 'modelo' : 'fotógrafo'; }
   get icon() { return this.kind === 'location' ? 'fa-location-dot' : this.kind === 'model' ? 'fa-user' : 'fa-camera'; }
   get path() { return this.kind === 'location' ? 'locations' : this.kind === 'model' ? 'models' : 'photographers'; }
   get assignedIds() { return this.kind === 'location' ? this.locations.map(item => item.id) : this.contacts.map(item => item.id); }
-  get availableOptions() { const assigned = new Set(this.assignedIds); return this.options.filter(option => !assigned.has(option.id)); }
-  attach(): void {
-    if (!this.selectedIds.length || this.saving) return;
-    this.changeAssignment.emit({ kind: this.kind, ids: this.selectedIds, mode: 'attach' });
-    this.choosing = false; this.selectedIds = [];
+  remove(id: number): void {
+    if (this.saving) return;
+    const record = (this.kind === 'location' ? this.locations : this.contacts).find(item => item.id === id);
+    if (record) this.pendingRemoval = { id, name: record.name, kind: this.kind };
   }
-  remove(id: number): void { if (!this.saving) this.changeAssignment.emit({ kind: this.kind, ids: [id], mode: 'detach' }); }
+  confirmRemoval(): void {
+    if (!this.pendingRemoval || this.saving) return;
+    const { id, kind } = this.pendingRemoval;
+    this.pendingRemoval = null;
+    this.changeAssignment.emit({ kind, ids: [id], mode: 'detach' });
+  }
 
   mapUrl(location: PhotoLocation): string | null {
     const address = location.address;

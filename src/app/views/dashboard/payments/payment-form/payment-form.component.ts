@@ -13,6 +13,7 @@ export class PaymentFormComponent {
   @Input({ required: true }) form!: FormGroup;
   @Input() payment: any;
   @Input() disabled = false;
+  @Input() outgoingOnly = false;
   @Output() emitUpdatePayment = new EventEmitter<any>();
   images: File[] = [];
   fileError = '';

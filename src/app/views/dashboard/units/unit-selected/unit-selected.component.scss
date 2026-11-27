@@ -2,3 +2,4 @@
   min-height: var(--unit-select-min-height, 0);
   font-size: var(--unit-select-font-size, .875rem);
 }
+.unit-load-error { display: grid; gap: 6px; margin-top: 6px; font-size: 13px; color: #9c3546; button { justify-self: start; padding: 5px 9px; border: 1px solid #dfb8c0; border-radius: 5px; background: #fff; color: inherit; font-size: 13px; } }

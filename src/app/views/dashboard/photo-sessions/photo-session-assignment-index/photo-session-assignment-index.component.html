@@ -1,22 +1,21 @@
 <section class="assignment-section" [attr.data-kind]="kind">
-  <header class="assignment-heading"><h2><i [class]="'fa-solid ' + icon" aria-hidden="true"></i>{{ title }}<span class="count">{{ assignedIds.length }}</span></h2><div><button type="button" class="button" [disabled]="saving" (click)="choosing = !choosing" [attr.aria-expanded]="choosing"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar</button><button type="button" class="button create-button" [disabled]="saving" (click)="createRelated.emit(kind)"><i [class]="kind === 'location' ? 'fa-solid fa-map-location-dot' : 'fa-solid fa-user-plus'" aria-hidden="true"></i>Crear {{ singular }}</button></div></header>
-  @if (choosing) {
-    <div class="assignment-picker"><label [for]="'add-' + kind">Selecciona del directorio</label><div><ng-select [labelForId]="'add-' + kind" [items]="availableOptions" bindValue="id" bindLabel="name" [multiple]="true" [closeOnSelect]="false" [(ngModel)]="selectedIds" placeholder="Busca y selecciona" notFoundText="No hay más fichas disponibles" appendTo="body" /><button type="button" class="button primary" [disabled]="saving || !selectedIds.length" (click)="attach()">Agregar a la sesión</button><button type="button" class="button" (click)="choosing = false">Cancelar</button></div></div>
-  }
+  <header class="assignment-heading"><h2><i [class]="'fa-solid ' + icon" aria-hidden="true"></i>{{ title }}<span class="count">{{ assignedIds.length }}</span></h2><button type="button" class="button add-related-button" [disabled]="saving" (click)="createRelated.emit(kind)"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar {{ singular }}</button></header>
+
   @if (kind !== 'location' && contacts.length) {
     <div class="assignment-cards">@for (contact of contacts; track contact.id) {
       <article class="person-card">
         <header class="record-header">
           @if (contact.images?.[0]; as image) { <app-image-preview [image]="image" [title]="contact.name" [height]="56" [width]="44" previewVariant="large" /> }
           @else { <span class="record-avatar"><i [class]="'fa-solid ' + icon" aria-hidden="true"></i></span> }
-          <div class="record-identity"><h3><a class="record-name" [routerLink]="['/', base.store, 'dashboard', 'photo-sessions', path, contact.id]">{{ contact.name }}</a></h3>@if (contact.company) { <p>{{ contact.company }}</p> }@if (contact.active === false) { <small class="inactive">Ficha inactiva</small> }</div>
-          <button class="remove-record" type="button" [disabled]="saving" [attr.aria-label]="'Quitar de la sesión a ' + contact.name" title="Quitar de esta sesión" (click)="remove(contact.id)"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+          <div class="record-identity"><h3 class="record-name"><a class="profile-action" [routerLink]="['/', base.store, 'dashboard', 'photo-sessions', path, contact.id]">{{ contact.name }}</a></h3>@if (contact.company) { <p>{{ contact.company }}</p> }@if (contact.active === false) { <small class="inactive">Ficha inactiva</small> }</div>
+          <ng-container *ngTemplateOutlet="expenseActions; context: { $implicit: contact }" />
         </header>
         <div class="record-copy contact-details">
           @if (contact.phone) { <div class="record-field"><span class="field-label">Teléfono</span><span class="field-value"><i class="fa-solid fa-phone" aria-hidden="true"></i>{{ contact.phone }}</span></div> }
           @if (contact.email) { <div class="record-field"><span class="field-label">Correo</span><span class="field-value">{{ contact.email }}</span></div> }
-          <div class="record-actions"><a class="record-link" [routerLink]="['/', base.store, 'dashboard', 'photo-sessions', path, contact.id]">Ver ficha<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></div>
+          <div class="record-paid-total"><span>Total pagado</span><button type="button" class="paid-amount history-action" [attr.aria-label]="'Ver gastos de ' + contact.name" (click)="registerPayment.emit({ kind: kind, id: contact.id, name: contact.name, history: true })">{{ (expenseTotals[kind + ':' + contact.id] || 0) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</button></div>
         </div>
+
       </article>
     }</div>
   }
@@ -25,8 +24,8 @@
       <article class="person-card location-card">
         <header class="record-header">
           <span class="record-avatar"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
-          <div class="record-identity"><h3><a class="record-name" [routerLink]="['/', base.store, 'dashboard', 'photo-sessions', 'locations', location.id]">{{ location.name }}</a></h3></div>
-          <button class="remove-record" type="button" [disabled]="saving" [attr.aria-label]="'Quitar de la sesión ' + location.name" title="Quitar de esta sesión" (click)="remove(location.id)"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+          <div class="record-identity"><h3 class="record-name"><a class="profile-action" [routerLink]="['/', base.store, 'dashboard', 'photo-sessions', path, location.id]">{{ location.name }}</a></h3></div>
+          <ng-container *ngTemplateOutlet="expenseActions; context: { $implicit: location }" />
         </header>
         <div class="record-copy location-details">
           @if (location.display_address || location.address?.primary || location.district_name) {
@@ -35,9 +34,21 @@
           @if (location.contact_name || location.phone || location.email) {
             <div class="record-field"><span class="field-label">Contacto</span>@if (location.contact_name) { <span class="field-value">{{ location.contact_name }}</span> }@if (location.phone) { <span class="field-value"><i class="fa-solid fa-phone" aria-hidden="true"></i>{{ location.phone }}</span> }@if (location.email) { <span class="field-value">{{ location.email }}</span> }</div>
           }
-          <div class="record-actions"><a class="record-link" [routerLink]="['/', base.store, 'dashboard', 'photo-sessions', 'locations', location.id]">Ver ficha<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>@if (mapUrl(location); as url) { <a class="map-link" [href]="url" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>Ver en Google Maps<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a> }</div>
+          @if (mapUrl(location); as url) { <a class="map-link" [href]="url" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>Ver en Google Maps</a> }
+          <div class="record-paid-total"><span>Total pagado</span><button type="button" class="paid-amount history-action" [attr.aria-label]="'Ver gastos de ' + location.name" (click)="registerPayment.emit({ kind: kind, id: location.id, name: location.name, history: true })">{{ (expenseTotals[kind + ':' + location.id] || 0) | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</button></div>
         </div>
+
       </article>
     }</div>
   }
 </section>
+
+<ng-template #expenseActions let-record>
+  <div class="record-expense-actions"><button type="button" class="record-action-button payment-action" [disabled]="saving" (click)="registerPayment.emit({ kind: kind, id: record.id, name: record.name })"><i class="fa-solid fa-plus" aria-hidden="true"></i>Agregar gastos</button><button type="button" class="record-action-button delete-action" [disabled]="saving" (click)="remove(record.id)"><i class="fa-solid fa-trash-can" aria-hidden="true"></i>Eliminar</button></div>
+</ng-template>
+@if (pendingRemoval; as record) {
+  <app-photo-dialog style="--photo-dialog-width: 540px" title="Eliminar de la sesión" icon="fa-trash-can" [autoOpen]="true" [closeDisabled]="saving" (closed)="pendingRemoval = null">
+    <div class="removal-copy"><p>¿Quieres eliminar a <strong>{{ record.name }}</strong> de esta sesión?</p><p>La ficha del directorio y sus gastos registrados se conservarán.</p></div>
+    <div photoDialogFooter class="removal-actions"><button type="button" class="record-action-button" [disabled]="saving" (click)="pendingRemoval = null">Cancelar</button><button type="button" class="record-action-button confirm-delete" [disabled]="saving" (click)="confirmRemoval()"><i class="fa-solid fa-trash-can" aria-hidden="true"></i>Eliminar de la sesión</button></div>
+  </app-photo-dialog>
+}

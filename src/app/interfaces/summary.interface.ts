@@ -7,6 +7,7 @@ export interface SummaryPurchase {
     count_payments?: number;   // Cantidad total de productos
     sum_purchases?: number;   // Costo total de las compras
     sum_kardexes?: number;        // Costo total de las recepciones
+    pending_reception_units?: number;
     sum_payments?: number;        // Costo total de las recepciones
     tracked_purchases_count?: number;
     estimated_order_cost?: number;

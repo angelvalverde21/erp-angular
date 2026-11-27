@@ -1,4 +1,4 @@
-.purchase-order-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.purchase-order-form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
 .purchase-order-field { min-width: 0; }
 .purchase-order-form label { display: block; margin-bottom: .6rem; font-size: .875rem; font-weight: 600; }
 .purchase-order-field > p { margin: .5rem 0 0; color: var(--cui-secondary-color, #64748b); font-size: .8rem; line-height: 1.6; }

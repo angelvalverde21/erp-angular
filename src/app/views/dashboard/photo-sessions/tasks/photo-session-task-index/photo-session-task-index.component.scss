@@ -1,4 +1,7 @@
 @use '../../photo-section-themes' as themes;
+.panel { .button, .history-button { min-height: 42px; padding: 9px 14px; font-size: 14px; } .history-button { border: 1px solid #dbe3ee; border-radius: 8px; background: #fff; color: #405976; } .panel-header h2 { font-size: 18px; } p, label, input, select, textarea { font-size: 14px; } }
+.panel { .task-copy h3 { font-size: 17px; } .task-meta, .session-name, .completion, .task-metrics, .task-expense small, .history-event strong, .history-event small { font-size: 14px; } .task-status { font-size: 13px; } .task-metrics strong { font-size: 18px; } }
+.task-expense { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 12px; padding: 8px 18px; small { color: #65748b; font-size: 12px; } }
 :host { @include themes.apply(tasks); }
 @include themes.card-headers;
 .task-metrics { display: flex; flex-wrap: wrap; gap: .7rem 1.5rem; padding: 1rem 1.25rem; border-bottom: 1px solid #e7ecf3; font-size: .74rem; color: #63738b; }

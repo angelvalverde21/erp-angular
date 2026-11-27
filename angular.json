@@ -131,6 +131,7 @@
               "browsers": "ChromeHeadless",
               "include": [
                 "src/app/views/dashboard/users/shared/contact-workflow.spec.ts",
+                "src/app/views/dashboard/manufactures/orders/purchase-order-ui.spec.ts",
     "src/app/views/dashboard/payments/payment-workflow.spec.ts",
                 "src/app/views/dashboard/kardex/kardex-history/kardex-history.component.spec.ts",
                 "src/app/views/dashboard/inventory-receptions/inventory-reception-index/inventory-reception-index.component.spec.ts",

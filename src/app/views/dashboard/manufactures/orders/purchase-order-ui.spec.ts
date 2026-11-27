@@ -103,13 +103,38 @@ describe('Purchase order screens', () => {
     expect(links.length).toBe(3);
     expect(links[0].getAttribute('aria-current')).toBeNull();
     expect(links[0].getAttribute('href')).toBe('/variants');
-    expect(links[0].textContent).toContain('Productos pedidos');
+    expect(links[0].textContent).toContain('Monto total pedido');
     expect(links[0].querySelector('.purchase-order-product-cost')!.textContent).toContain('50.17');
     expect(links[0].querySelector('.purchase-order-metric-subtitle')!.textContent).toContain('30 unidades pedidas');
     expect(links[0].textContent).toContain('50.17');
     expect(links[1].getAttribute('href')).toBe('/payments');
     expect(links[1].textContent).toContain('80.00');
     expect(links[2].getAttribute('href')).toBe('/kardexes');
+  });
+
+  it('counts saved receptions and explains pending stock without duplicating posted units', () => {
+    const fixture = TestBed.createComponent(OrderWidgetComponent);
+    fixture.componentRef.setInput('summary', { sum_kardexes: 0, pending_reception_units: '124' }); fixture.detectChanges();
+    const card = () => fixture.nativeElement.querySelectorAll('nav a')[2] as HTMLElement;
+    expect(card().querySelector('strong')!.textContent!.trim()).toBe('124');
+    expect(card().textContent).toContain('124 pendientes de ingreso al kardex');
+    fixture.componentRef.setInput('summary', { sum_kardexes: '124', pending_reception_units: 0 }); fixture.detectChanges();
+    expect(card().querySelector('strong')!.textContent!.trim()).toBe('124');
+    expect(card().textContent).toContain('Unidades recibidas');
+    expect(card().textContent).not.toContain('pendientes'); fixture.destroy();
+  });
+
+  it('refreshes reception totals after saving and retains pending units when the ledger reports its own balance', () => {
+    const summary = jasmine.createSpy('summary').and.returnValue(of({ data: { sum_kardexes: 0, pending_reception_units: 124 } }));
+    const setSummary = jasmine.createSpy('setSummary');
+    TestBed.overrideProvider(ManufactureService, { useValue: { summary, setSummary } });
+    const fixture = TestBed.createComponent(ManufactureOrderKardexIndexComponent);
+    fixture.componentInstance.manufacture_id = 39;
+    fixture.componentInstance.receptionSaved();
+    expect(summary).toHaveBeenCalledWith(39);
+    expect(setSummary).toHaveBeenCalledWith({ sum_kardexes: 0, pending_reception_units: 124 });
+    fixture.componentInstance.receiveKardexSummary({ reception: 0 });
+    expect(setSummary.calls.mostRecent().args[0]).toEqual({ sum_kardexes: 0 }); fixture.destroy();
   });
 
   it('validates creation, prevents duplicate submissions and retains fields after an error', () => {

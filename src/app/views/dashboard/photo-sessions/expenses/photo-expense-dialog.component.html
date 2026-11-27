@@ -1,0 +1,18 @@
+<ng-template #content>
+  <header class="modal-header purchase-create-heading"><span class="purchase-create-icon" aria-hidden="true"><i class="fa-solid fa-cart-plus"></i></span><div><h2 class="modal-title">{{ target.history ? 'Gastos registrados' : 'Agregar gastos' }}</h2><p class="mb-0">{{ target.name }}</p><small>Añade servicios o productos con sus cantidades y precios.</small></div><button type="button" class="btn-close" aria-label="Cerrar compras" (click)="close()"></button></header>
+  <div class="modal-body" [class.p-0]="!target.history">
+    @if (loading) { <p role="status">Actualizando compras…</p> }
+    @if (error) { <p class="error" role="alert">{{ error }}</p><button type="button" class="button" (click)="load()">Reintentar</button> }
+    @if (context; as current) {
+      @if (target.history) {
+        <div class="expense-summary"><span>Compras: <strong>{{ current.total_purchases | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></span><span>Pagado: <strong>{{ current.total_paid | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></span></div>
+        <app-purchase-index [purchases]="current.purchases" purchaseable_type="photo_session" [purchaseable_id]="sessionId" [photoSource]="current.source" [productionView]="true" [compactHeader]="true" [stageName]="'Compras de ' + target.name" stageDescription="Consulta los conceptos y registra los pagos dentro de cada compra." (purchasesChanged)="load()" />
+      } @else {
+        <app-purchase-create actionLabel="Agregar gastos" purchaseable_type="photo_session" [purchaseable_id]="sessionId" [photoSource]="current.source" (emitPurchaseCreate)="load(true)" (cancelled)="close()" />
+      }
+      @if (target.history && current.legacy_expenses.length) {
+        <details class="expense-history"><summary>Pagos directos anteriores</summary>@for (expense of current.legacy_expenses; track expense.id) { <article><strong>{{ expense.payment.amount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong><span> · {{ expense.payment.date | date:'dd/MM/yyyy' }}</span><p>{{ expense.payment.comment }} · {{ expense.recipient_name }}</p></article> }</details>
+      }
+    }
+  </div>
+</ng-template>

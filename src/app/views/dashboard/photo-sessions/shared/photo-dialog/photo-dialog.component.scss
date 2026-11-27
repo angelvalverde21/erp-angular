@@ -1,4 +1,4 @@
-dialog { width: min(900px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); margin: auto; padding: 0; border: 1px solid #dce3ed; border-radius: 15px; box-shadow: 0 20px 70px #172a4a40; color: #293e59; }
+dialog { width: min(var(--photo-dialog-width, 900px), calc(100vw - 32px)); max-height: calc(100dvh - 48px); margin: auto; padding: 0; border: 1px solid #dce3ed; border-radius: 15px; box-shadow: 0 20px 70px #172a4a40; color: #293e59; }
 dialog::backdrop { background: #13243b88; }
 dialog[open] { animation: related-dialog-enter 220ms cubic-bezier(.2, .8, .2, 1) both; }
 dialog[open]::backdrop { animation: related-backdrop-enter 220ms ease-out both; }

@@ -1,6 +1,7 @@
 ﻿<form class="purchase-editor" [formGroup]="form" (ngSubmit)="create()">
-  <fieldset class="purchase-editor-content" [disabled]="loadingIcon">
+  <fieldset class="purchase-editor-content" [disabled]="loadingIcon || completed">
     @if (error) { <div class="purchase-editor-error" role="alert">{{ error }}</div> }
+    @if (photoSource?.recipient_name) { <p class="purchase-known-supplier">Proveedor: <strong>{{ photoSource!.recipient_name }}</strong></p> }
     @if (productionSections.length) {
       <div class="purchase-production-section">
         <label for="purchase-production-section"><i class="fa-solid fa-folder-tree" aria-hidden="true"></i>Sección de la producción <span aria-hidden="true">*</span></label>
@@ -14,7 +15,7 @@
       <summary><span><i class="fa-solid fa-sliders" aria-hidden="true"></i>Datos de la compra<small>Opcional</small></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
       <div class="purchase-editor-options-body">
         @if (supplierError) { <p role="alert">{{ supplierError }} <button type="button" (click)="loadSuppliers()">Reintentar</button></p> }
-        <app-purchase-form [form]="form" [suppliers]="suppliers" [suppliersLoading]="suppliersLoading"></app-purchase-form>
+        <app-purchase-form [form]="form" [supplier_id]="photoSource?.recipient_name ? null : 0" [suppliers]="suppliers" [suppliersLoading]="suppliersLoading"></app-purchase-form>
       </div>
     </details>
   </fieldset>
@@ -22,9 +23,9 @@
     <div><small>Total de la compra · {{ purchase_items.length }} {{ purchase_items.length === 1 ? 'concepto' : 'conceptos' }}</small><strong>{{ totalAmount | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</strong></div>
     <div class="purchase-editor-actions">
       <button type="button" class="purchase-editor-cancel" [disabled]="loadingIcon" (click)="cancelled.emit()">Cancelar</button>
-      <button type="submit" class="purchase-editor-save" [disabled]="loadingIcon || form.invalid">
+      <button type="submit" class="purchase-editor-save" [disabled]="loadingIcon || completed || form.invalid">
         <i class="fa-solid" [class.fa-spinner]="loadingIcon" [class.fa-spin]="loadingIcon" [class.fa-check]="!loadingIcon" aria-hidden="true"></i>
-        {{ loadingIcon ? 'Registrando…' : 'Registrar compra' }}
+        {{ loadingIcon ? 'Registrando…' : actionLabel }}
       </button>
     </div>
   </footer>

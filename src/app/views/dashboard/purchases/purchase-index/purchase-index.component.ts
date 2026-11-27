@@ -16,6 +16,7 @@ import { ButtonEditComponent } from 'src/app/views/shared/components/buttons/but
 import { PurchaseIndexHeadComponent } from './purchase-index-head/purchase-index-head.component';
 import { DELIVERY_LABELS } from '@shared/components/delivery-tracking/delivery-tracking.model';
 import { ProductionPurchaseSection } from '../production-purchase-section.model';
+import { PurchasePhotoSource } from '../photo-purchase-source.model';
 
 @Component({
   selector: 'app-purchase-index',
@@ -57,6 +58,7 @@ export class PurchaseIndexComponent implements OnChanges, OnDestroy {
   @Input() stageName = '';
   @Input() stageDescription = 'Materiales, insumos y servicios asociados a esta etapa.';
   @Input() deliveryDefault = false;
+  @Input() photoSource: PurchasePhotoSource | null = null;
   @Output() purchasesChanged = new EventEmitter<any[]>();
   createdNotice = '';
   readonly deliveryLabels: Record<string, string> = DELIVERY_LABELS;

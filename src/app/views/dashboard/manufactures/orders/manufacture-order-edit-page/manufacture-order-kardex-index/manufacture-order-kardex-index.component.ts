@@ -53,7 +53,10 @@ export class ManufactureOrderKardexIndexComponent implements OnDestroy {
     this.kardexRevision++;
     // Only totals are refreshed here. The ledger fetches rows only while expanded.
     this.manufacture.summary(this.manufacture_id).pipe(takeUntil(this.destroy$)).subscribe({
-      next: response => this.manufacture.setSummary({ sum_kardexes: Number(response.data?.sum_kardexes) || 0 }),
+      next: response => this.manufacture.setSummary({
+        sum_kardexes: Number(response.data?.sum_kardexes) || 0,
+        pending_reception_units: Number(response.data?.pending_reception_units) || 0,
+      }),
       error: () => {},
     });
   }
@@ -65,6 +68,7 @@ export class ManufactureOrderKardexIndexComponent implements OnDestroy {
   receptionSaved(): void {
     this.modal?.close();
     if (this.receptionIndex) this.receptionIndex.refresh(this.editingReception ? this.receptionIndex.page : 1);
+    this.inventoryChanged();
   }
   closeModal(): void { this.modal?.close(); }
   openVerticallyCentered(content: TemplateRef<any>, reception?: InventoryReception): void {

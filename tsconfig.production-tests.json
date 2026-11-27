@@ -23,6 +23,7 @@
     "src/app/views/dashboard/manufactures/productions/production-stages/production-stages.spec.ts",
     "src/app/views/dashboard/manufactures/productions/production-stages/production-stage-attachments.spec.ts",
     "src/app/views/dashboard/manufactures/productions/production-overview.spec.ts",
+    "src/app/views/dashboard/manufactures/orders/purchase-order-ui.spec.ts",
     "src/app/views/dashboard/purchases/purchase-index/production-expenses.spec.ts",
     "src/app/views/dashboard/area-dashboards/area-dashboard.spec.ts",
     "src/app/views/dashboard/manufactures/productions/manufacture-production-index-row/manufacture-production-index-row.component.spec.ts"

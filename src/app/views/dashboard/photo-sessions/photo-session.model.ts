@@ -11,6 +11,8 @@ export interface PhotoSessionPayload {
   photographer: string | null; team: string | null; brief: string | null; notes: string | null; budget: number | null;
 }
 export interface PhotoSession extends PhotoSessionPayload {
+  expense_totals?: Record<string, number>;
+  purchase_totals?: Record<string, number>;
   can_open_workspace?: boolean;
   photographers?: PhotoAssignedContact[]; locations?: PhotoLocation[];
   tasks_count?: number; completed_tasks_count?: number; overdue_tasks_count?: number;

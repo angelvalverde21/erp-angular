@@ -24,9 +24,15 @@ export function addPhotoRelatedOption(options: PhotoSessionOptions, created: Cre
 
 /** Directory creation is orchestrated once for both session create and edit. */
 @Component({ selector: 'app-photo-related-create', imports: [PhotoRelatedCreateDialogComponent],
-  template: `<app-photo-related-create-dialog [kind]="kind" [saving]="saving" [error]="error" (contactSave)="saveContact($event)" (locationSave)="saveLocation($event)" (cancel)="cancel.emit()" />` })
+  template: `<app-photo-related-create-dialog [kind]="kind" [allowSelection]="allowSelection" [options]="options" [assignedIds]="assignedIds" [saving]="saving || selectionSaving" [error]="error || selectionError" (selectionSave)="selected.emit($event)" (contactSave)="saveContact($event)" (locationSave)="saveLocation($event)" (cancel)="cancel.emit()" />` })
 export class PhotoRelatedCreateComponent {
   @Input({ required: true }) kind!: PhotoRelatedKind;
+  @Input() allowSelection = false;
+  @Input() options: { id: number; name: string; active: boolean }[] = [];
+  @Input() assignedIds: number[] = [];
+  @Input() selectionSaving = false;
+  @Input() selectionError = '';
+  @Output() selected = new EventEmitter<number[]>();
   @Output() created = new EventEmitter<CreatedPhotoRelated>();
   @Output() cancel = new EventEmitter<void>();
   @Output() busy = new EventEmitter<boolean>();

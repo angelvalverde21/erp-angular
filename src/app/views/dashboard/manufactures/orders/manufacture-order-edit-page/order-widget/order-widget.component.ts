@@ -77,7 +77,7 @@ export class OrderWidgetComponent implements OnInit {
 
     this.widgets = [
       {
-        title: 'Productos pedidos',
+        title: 'Monto total pedido',
         subtitle: `${this.summary?.count_variants ?? 0} variantes · Unidades pedidas`,
         value: this.summary?.sum_variants ? this.summary?.sum_variants : 0,
         link: ['./variants'],
@@ -99,8 +99,10 @@ export class OrderWidgetComponent implements OnInit {
       },
       {
         title: 'Recepción',
-        subtitle: 'Unidades recibidas',
-        value: this.summary?.sum_kardexes ? this.summary?.sum_kardexes : 0,
+        subtitle: Number(this.summary?.pending_reception_units) > 0
+          ? `${Number(this.summary.pending_reception_units)} pendientes de ingreso al kardex`
+          : 'Unidades recibidas',
+        value: (Number(this.summary?.sum_kardexes) || 0) + (Number(this.summary?.pending_reception_units) || 0),
         link: ['./kardexes'],
         icon: faRightLeft,
         type: 'units'

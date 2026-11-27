@@ -44,6 +44,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
   supplierError = '';
   suppliersLoading = false;
   suppliers: unknown[] = [];
+  photoRecipientName: string | null = null;
   private readonly destroy$ = new Subject<void>();
 
   constructor(private fb: FormBuilder, private purchases: PurchaseService, private supplierService: SupplierService) {}
@@ -77,6 +78,7 @@ export class PurchaseEditComponent implements OnInit, OnDestroy {
     this.purchases.get(this.purchase_id).pipe(takeUntil(this.destroy$), finalize(() => this.loading = false)).subscribe({
       next: response => {
         const { items, ...data } = response.data;
+        this.photoRecipientName = data.photo_recipient_name && !data.supplier_id ? data.photo_recipient_name : null;
         this.detailsInitiallyOpen = !!(data.supplier_id || data.supplier_address_id || data.purchase_start || data.observations?.trim() || data.delivery_tracking);
         this.purchase_items.clear();
         (items ?? []).forEach((item: PurchaseItemDraft) => this.purchase_items.push(this.createPurchaseItem(item)));

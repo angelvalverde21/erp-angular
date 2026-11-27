@@ -9,6 +9,7 @@ import { PurchaseItemIndexComponent } from '../purchase-item-index/purchase-item
 import { createDeliveryForm } from '@shared/components/delivery-tracking/delivery-setup.component';
 import { todayInLima } from '@shared/components/delivery-tracking/delivery-tracking.model';
 import { ProductionPurchaseSection } from '../production-purchase-section.model';
+import { PurchasePhotoSource } from '../photo-purchase-source.model';
 
 @Component({
   selector: 'app-purchase-create',
@@ -23,11 +24,14 @@ export class PurchaseCreateComponent implements OnInit, OnDestroy {
   @Input() production_stage_id: number | null = null;
   @Input() productionSections: readonly ProductionPurchaseSection[] = [];
   @Input() deliveryDefault = false;
+  @Input() photoSource: PurchasePhotoSource | null = null;
+  @Input() actionLabel = 'Registrar compra';
   @Output() emitPurchaseCreate = new EventEmitter<any | boolean>();
   @Output() cancelled = new EventEmitter<void>();
 
   form!: FormGroup;
   loadingIcon = false;
+  completed = false;
   error = '';
   supplierError = '';
   suppliersLoading = false;
@@ -43,12 +47,14 @@ export class PurchaseCreateComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       purchase_start: [today], purchase_end: [null],
       purchaseable_type: [this.purchaseable_type], purchaseable_id: [this.purchaseable_id],
-      observations: [''], supplier_id: [this.supplier_id || null], supplier_address_id: [null], gateway_id: [2, Validators.required],
+      observations: [''], supplier_id: [this.supplier_id || null, this.photoSource && !this.photoSource.recipient_name ? Validators.required : []], supplier_address_id: [null], gateway_id: [2, Validators.required],
+      ...(this.photoSource ? { photo_source_kind: [this.photoSource.kind], photo_source_id: [this.photoSource.id] } : {}),
       ...(this.productionSections.length || sectionId ? { production_stage_id: [sectionId, this.productionSections.length ? Validators.required : []] } : {}),
       delivery: createDeliveryForm(this.fb, false),
       purchase_items: this.fb.array([this.createPurchaseItem()], Validators.required),
     });
-    this.loadSuppliers();
+    if (this.photoSource) this.purchase_items.at(0).get('name')?.setValue(this.photoSource.name.slice(0, 255));
+    if (!this.photoSource?.recipient_name) this.loadSuppliers();
   }
 
   get purchase_items(): FormArray<FormGroup> {
@@ -75,13 +81,13 @@ export class PurchaseCreateComponent implements OnInit, OnDestroy {
   addItem(): void { this.purchase_items.push(this.createPurchaseItem()); }
 
   create(): void {
-    if (this.loadingIcon) return;
+    if (this.loadingIcon || this.completed) return;
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.loadingIcon = true;
     this.error = '';
     this.purchases.store(this.form.getRawValue())
       .pipe(takeUntil(this.destroy$), finalize(() => this.loadingIcon = false)).subscribe({
-        next: response => this.emitPurchaseCreate.emit(response.data),
+        next: response => { this.completed = true; this.emitPurchaseCreate.emit(response.data); },
         error: response => {
           const errors = response.error?.errors as Record<string, string[]> | undefined;
           this.error = errors ? Object.values(errors).flat().join(' ') : 'No se pudo registrar la compra. Tus datos se mantienen para reintentar.';

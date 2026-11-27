@@ -1,15 +1,5 @@
-@if(loading){
-<app-loading></app-loading>
-}@else{
-<select id="SubUnits" class="form-select form-select-sm py-1" aria-label="Default select example" [ngModel]="value"
-    (change)="onUnitChange($event)">
-
-    <option [value]="null">Seleccione</option>
-
-    @for (unit of units; track unit.id) {
-    <option [value]="unit.id">{{ unit.name }}</option>
-    }
-
-
+<select class="form-select" aria-label="Unidad de medida" [ngModel]="value" [disabled]="disabled || loading || !units.length" [attr.aria-busy]="loading" (change)="onUnitChange($event)" (blur)="onTouched()">
+  <option value="">{{ loading ? 'Cargando…' : 'Seleccione' }}</option>
+  @for (unit of units; track unit.id) { <option [value]="unit.id">{{ unit.name }}</option> }
 </select>
-}
+@if (error) { <div class="unit-load-error" role="alert"><span>{{ error }}</span><button type="button" [disabled]="disabled || loading" (click)="load()">Reintentar</button></div> }

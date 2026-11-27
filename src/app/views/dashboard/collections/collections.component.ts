@@ -76,10 +76,27 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
   collectionId: number | null = null;
   view = 'dashboard';
-  readonly tabs = [{ id: 'dashboard', name: 'Dashboard' }, { id: 'processes', name: 'Procesos' },
-    { id: 'products', name: 'Productos' }, { id: 'purchases', name: 'Compras' }, { id: 'sales', name: 'Ventas y cobros' }];
+  readonly tabs = [{ id: 'dashboard', name: 'Dashboard' }, { id: 'processes', name: 'Manufacturas' },
+    { id: 'photo-sessions', name: 'Sesiones fotográficas' }, { id: 'purchases', name: 'Resumen de gastos' }, { id: 'sales', name: 'Ventas' }];
+  get activeTab(): string { return this.view === 'products' ? 'processes' : this.view; }
+  manufactureTab: 'orders' | 'productions' = 'orders';
+  readonly manufactureTabs = [{ id: 'orders' as const, kind: 'order', name: 'Órdenes de compra', icon: 'fa-clipboard-list' },
+    { id: 'productions' as const, kind: 'production', name: 'Producciones', icon: 'fa-industry' }];
+  get selectedManufactures(): CollectionProcess[] { return this.manufacturing.filter(process => process.kind === (this.manufactureTab === 'orders' ? 'order' : 'production')); }
+  manufacturingCount(kind: string): number { return this.manufacturing.filter(process => process.kind === kind).length; }
+  selectManufacture(tab: 'orders' | 'productions'): void {
+    this.manufactureTab = tab; this.clearProcessSearch(); this.purchaseProcess = null; this.navigate('processes');
+  }
+  get photoSessions(): CollectionProcess[] { return this.processes.filter(process => process.kind === 'photo_session'); }
+  get visibleProcesses(): CollectionProcess[] { return this.view === 'photo-sessions' ? this.photoSessions : this.selectedManufactures; }
+  get processSectionTitle(): string { return this.view === 'photo-sessions' ? 'Sesiones fotográficas' : 'Manufacturas'; }
+  processView(process: CollectionProcess): string { return process.kind === 'photo_session' ? 'photo-sessions' : process.kind === 'order' ? 'orders' : 'productions'; }
+  processViewForId(id: number): string {
+    const process = this.processes.find(item => item.id === id);
+    return process ? this.processView(process) : 'processes';
+  }
   readonly statuses: Record<string, string> = { planning: 'Planificación', planned: 'Programado', pending: 'Pendiente', in_progress: 'En curso', commercializing: 'Comercialización', completed: 'Terminado', closed: 'Cerrado', archived: 'Archivado', editing: 'Edición', cancelled: 'Cancelado' };
-  readonly tabIcons: Record<string, string> = { dashboard: 'fa-chart-pie', collections: 'fa-layer-group', processes: 'fa-list-check', products: 'fa-box', purchases: 'fa-cart-shopping', sales: 'fa-receipt', results: 'fa-chart-line' };
+  readonly tabIcons: Record<string, string> = { dashboard: 'fa-chart-pie', collections: 'fa-layer-group', processes: 'fa-industry', 'photo-sessions': 'fa-camera', products: 'fa-box', purchases: 'fa-cart-shopping', sales: 'fa-receipt', results: 'fa-chart-line' };
   readonly dialogIcons: Record<string, string> = { collection: 'fa-layer-group', process: 'fa-list-check', sale: 'fa-receipt', receipt: 'fa-money-bill-transfer' };
   readonly kinds: Record<string, string> = { production: 'Producción', order: 'Orden de manufactura', photo_session: 'Sesión fotográfica', other: 'Otro proceso' };
   readonly processIcons: Record<string, string> = { production: 'fa-industry', order: 'fa-clipboard-list', photo_session: 'fa-camera', other: 'fa-gears' };
@@ -188,33 +205,34 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   get path(): string[] { return ['/', this.base.store ?? '', 'dashboard', 'collections']; }
   get processes(): CollectionProcess[] { return this.workspace?.processes ?? []; }
   processSearch = '';
+  hoveredProcessId: number | null = null;
   processSearchTerm = '';
   searchProcesses(): void { this.processSearchTerm = this.processSearch.trim(); }
-  clearProcessSearch(): void { this.processSearch = ''; this.processSearchTerm = ''; }
+  clearProcessSearch(): void { this.processSearch = ''; this.processSearchTerm = ''; this.hoveredProcessId = null; }
   get filteredProcesses(): CollectionProcess[] {
     const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
     const terms = normalize(this.processSearchTerm).trim().split(/\s+/).filter(Boolean);
-    return this.processes.filter(process => {
+    return this.visibleProcesses.filter(process => {
       const text = normalize([process.name, `#${process.id}`, process.source_id == null ? '' : `#${process.source_id}`,
         this.kinds[process.kind] ?? process.kind, process.responsible?.name ?? 'Sin asignar',
         this.statuses[process.status] ?? process.status].join(' '));
       return terms.every(term => text.includes(term));
     });
   }
-  get manufacturing(): CollectionProcess[] { return this.processes.filter(p => p.source_type === 'manufacture'); }
+  get manufacturing(): CollectionProcess[] { return this.processes.filter(p => p.source_type === 'manufacture' && ['production', 'order'].includes(p.kind)); }
   get selectedOrder(): any { return this.options.find(o => o.id === Number(this.draft.order_id)); }
   get orderLines(): any[] { return this.selectedOrder?.lines ?? []; }
   get upcoming(): { name: string; date: string; view: string; overdue: boolean }[] {
     return [
       ...this.processes.filter(p => p.due_on && !['completed', 'cancelled', 'archived'].includes(p.status))
-        .map(p => ({ name: p.name, date: p.due_on!, view: 'processes', overdue: p.due_on! < this.today })),
+        .map(p => ({ name: p.name, date: p.due_on!, view: this.processView(p), overdue: p.due_on! < this.today })),
       ...(this.workspace?.collection.launch_on ? [{ name: 'Lanzamiento · ' + this.workspace.collection.name,
         date: this.workspace.collection.launch_on, view: 'dashboard', overdue: this.workspace.collection.launch_on < this.today }] : []),
     ].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6);
   }
   get dialogTitle(): string {
     return ({ collection: this.draft.id ? 'Editar colección' : 'Nueva colección',
-      process: this.draft.id ? 'Organizar proceso' : 'Añadir proceso', sale: 'Atribuir una venta', receipt: 'Registrar cobro o devolución' } as Record<string, string>)[this.formKind] ?? '';
+      process: this.draft.id ? 'Organizar proceso' : this.draft.kind === 'photo_session' ? 'Añadir sesión fotográfica' : 'Añadir manufactura', sale: 'Atribuir una venta', receipt: 'Registrar cobro o devolución' } as Record<string, string>)[this.formKind] ?? '';
   }
   ngOnInit(): void {
     combineLatest([this.route.paramMap, this.route.queryParamMap]).pipe(takeUntil(this.destroy$)).subscribe(([params, query]) => {
@@ -222,7 +240,12 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       const changedCollection = !this.routeInitialized || this.collectionId !== collectionId;
       this.routeInitialized = true;
       this.collectionId = collectionId;
-      this.view = this.tabs.some(t => t.id === query.get('view')) ? query.get('view')! : 'dashboard';
+      const previousView = this.view;
+      const previousManufactureTab = this.manufactureTab;
+      this.manufactureTab = query.get('manufacture') === 'productions' ? 'productions' : 'orders';
+      this.view = this.tabs.some(t => t.id === query.get('view')) || query.get('view') === 'products' ? query.get('view')! : 'dashboard';
+      if (previousView !== this.view || previousManufactureTab !== this.manufactureTab) this.clearProcessSearch();
+      if (!changedCollection && this.workspace && this.view === 'products' && !this.manufacturing.length) this.view = 'processes';
       this.purchaseProcess = null;
       if (changedCollection) { this.clearProcessSearch(); this.productSearchChanged(''); this.selectedInventoryVariantIds.clear(); this.inventoryPercentage = 100; void this.load(); }
     });
@@ -235,6 +258,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
         const response = await firstValueFrom(this.service.workspace(this.collectionId).pipe(takeUntil(this.destroy$)));
         if (version === this.version) {
           this.workspace = response.data;
+          if (this.view === 'products' && !this.manufacturing.length) { this.view = 'processes'; this.navigate('processes'); }
           const available = new Set(this.productVariantIds(response.data.products));
           this.selectedInventoryVariantIds = new Set([...this.selectedInventoryVariantIds].filter(id => available.has(id)));
         }
@@ -246,8 +270,11 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     finally { if (version === this.version) this.loading = false; }
   }
   navigate(view: string, collection: number | null = this.collectionId): void {
-    if (collection && collection !== this.collectionId) { void this.router.navigate([...this.path, String(collection)], { queryParams: { view } }); return; }
-    void this.router.navigate([], { relativeTo: this.route, queryParams: { view } });
+    if (view === 'orders' || view === 'productions') { this.manufactureTab = view; view = 'processes'; }
+    if (view === 'products' && collection === this.collectionId && !this.manufacturing.length) return;
+    const queryParams = view === 'processes' || view === 'products' ? { view, manufacture: this.manufactureTab } : { view };
+    if (collection && collection !== this.collectionId) { void this.router.navigate([...this.path, String(collection)], { queryParams }); return; }
+    void this.router.navigate([], { relativeTo: this.route, queryParams });
   }
   async open(kind: string, value?: any): Promise<void> {
     if (this.saving) return;
@@ -255,7 +282,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.selectedSourceIds.clear();
     const collection = this.collectionId ?? this.workspace?.collection.id ?? null;
     this.draft = kind === 'collection' ? { status: 'planning', name: '', description: '', starts_on: '', ends_on: '', launch_on: '', ...value }
-      : kind === 'process' ? { collection_id: collection, kind: 'production', mode: 'new', source_id: null, name: '', status: 'pending', starts_on: '', due_on: '', notes: '', responsible_id: null, ...value }
+      : kind === 'process' ? { collection_id: collection, kind: this.view === 'photo-sessions' ? 'photo_session' : this.view === 'processes' && this.manufactureTab === 'orders' ? 'order' : 'production', mode: 'new', source_id: null, name: '', status: 'pending', starts_on: '', due_on: '', notes: '', responsible_id: null, ...value }
       : kind === 'sale' ? { process_id: this.manufacturing[0]?.id ?? null, order_id: null, line_key: '', quantity: 1 }
       : { sale_id: value.id, direction: 'in', amount: '', date: this.today, reference: '', notes: '', sale_amount: value.amount, collected: value.collected };
     if (kind === 'process' && value) this.draft.status = ['pending', 'in_progress', 'completed', 'cancelled'].includes(value.status) ? value.status : 'pending';
@@ -311,8 +338,9 @@ export class CollectionsComponent implements OnInit, OnDestroy {
       await firstValueFrom(request.pipe(takeUntil(this.destroy$)));
       this.editor?.nativeElement.close(); this.notice = 'Cambios guardados.'; this.purchaseProcess = null;
       if (this.formKind === 'process') {
-        this.view = 'processes';
-        this.navigate('processes');
+        if (data.kind === 'order' || data.kind === 'production') this.manufactureTab = data.kind === 'order' ? 'orders' : 'productions';
+        this.view = data.kind === 'photo_session' ? 'photo-sessions' : 'processes';
+        this.navigate(this.view);
       }
       await this.load();
     } catch (error) { if (!this.destroyed) this.formError = this.message(error); }

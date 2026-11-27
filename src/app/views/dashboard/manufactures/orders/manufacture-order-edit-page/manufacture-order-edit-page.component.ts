@@ -97,6 +97,7 @@ export class ManufactureOrderEditPageComponent implements OnInit {
           created_at: this.manufacture.created_at,
           sum_variants: this.manufacture.sum_variants,
           sum_kardexes: this.manufacture.sum_kardexes,
+          pending_reception_units: Number(this.manufacture.pending_reception_units) || 0,
           sum_payments: this.manufacture.sum_payments,
           count_variants: this.manufacture.count_variants,
           count_payments: this.manufacture.count_payments,

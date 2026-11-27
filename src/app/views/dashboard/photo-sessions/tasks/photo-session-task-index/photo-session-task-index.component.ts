@@ -1,5 +1,6 @@
 import { Component, DestroyRef, EventEmitter, Input, OnChanges, Output, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { PhotoExpenseTarget } from '../../expenses/photo-expense.model';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
@@ -10,12 +11,15 @@ import { PhotoSessionTaskEditComponent } from '../photo-session-task-edit/photo-
 import { photoSessionError } from '../../photo-session.model';
 
 @Component({
-  selector: 'app-photo-session-task-index', imports: [DatePipe, FormsModule, PhotoSessionTaskCreateComponent, PhotoSessionTaskEditComponent],
+  selector: 'app-photo-session-task-index', imports: [CurrencyPipe, DatePipe, FormsModule, PhotoSessionTaskCreateComponent, PhotoSessionTaskEditComponent],
   templateUrl: './photo-session-task-index.component.html',
   styleUrls: ['../../photo-session.scss', './photo-session-task-index.component.scss'],
 })
 export class PhotoSessionTaskIndexComponent implements OnChanges {
   @Input() sessionId: number | null = null;
+  @Input() expenseTotals: Record<string, number> = {};
+  @Input() purchaseTotals: Record<string, number> = {};
+  @Output() registerPayment = new EventEmitter<PhotoExpenseTarget>();
   @Output() summaryChange = new EventEmitter<PhotoTaskSummary>(true);
   @Output() summaryStateChange = new EventEmitter<PhotoTaskSummaryState>(true);
   private readonly service = inject(PhotoSessionTaskService);
